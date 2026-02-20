@@ -1,0 +1,45 @@
+DISCOVERY LAYOUT
+
+[Layout files under app/ and src/app/]
+src/app/(app)/layout.tsx
+src/app/layout.tsx
+
+[Shell component candidates by filename/export]
+files:
+  - src/components/app/app-header.tsx
+  - src/components/app/bottom-nav.tsx
+  - src/components/app/mobile-header.tsx
+  - src/components/app/right-rail.tsx
+exports:
+  - src/components/app/app-header.tsx:11:export function AppHeader({
+  - src/components/app/bottom-nav.tsx:17:export function BottomNav({
+  - src/components/app/mobile-header.tsx:64:export function MobileHeader() {
+  - src/components/app/right-rail.tsx:25:export function RightRail() {
+
+[Providers]
+./src/app/layout.tsx:25:        <ThemeProvider
+./src/app/layout.tsx:34:        </ThemeProvider>
+./src/app/layout.tsx:3:import { ThemeProvider } from "@/components/theme-provider";
+./src/components/theme-provider.tsx:4:import { ThemeProvider as NextThemesProvider } from "next-themes";
+./src/components/theme-provider.tsx:6:export function ThemeProvider({
+
+[Layout composition evidence]
+src/app/(app)/layout.tsx:14:      <MobileHeader />
+src/app/(app)/layout.tsx:15:      <AppHeader className="hidden md:block" />
+src/app/(app)/layout.tsx:1:import { AppHeader } from "@/components/app/app-header";
+src/app/(app)/layout.tsx:20:          {children}
+src/app/(app)/layout.tsx:23:          <RightRail />
+src/app/(app)/layout.tsx:26:      <BottomNav />
+src/app/(app)/layout.tsx:27:      <ChatBubble />
+src/app/(app)/layout.tsx:2:import { BottomNav } from "@/components/app/bottom-nav";
+src/app/(app)/layout.tsx:3:import { ChatBubble } from "@/components/app/chat-bubble";
+src/app/(app)/layout.tsx:4:import { MobileHeader } from "@/components/app/mobile-header";
+src/app/(app)/layout.tsx:5:import { RightRail } from "@/components/app/right-rail";
+src/app/layout.tsx:1:import type { Metadata } from "next";
+src/app/layout.tsx:25:        <ThemeProvider
+src/app/layout.tsx:2:import { Geist } from "next/font/google";
+src/app/layout.tsx:32:          {children}
+src/app/layout.tsx:33:          <Toaster />
+src/app/layout.tsx:3:import { ThemeProvider } from "@/components/theme-provider";
+src/app/layout.tsx:4:import { Toaster } from "@/components/ui/sonner";
+src/app/layout.tsx:5:import "./globals.css";

@@ -1,0 +1,52 @@
+DISCOVERY ROUTES
+scope_include: src/**/*, app/**/*, pages/**/*, components/**/*, lib/**/*
+scope_exclude: docs/**, scripts/**, public/**, *.md, *.txt, node_modules, .next, dist, build, coverage, .git
+
+[App Router entry files under app/ and src/app/]
+base: app
+none found (directory missing)
+
+base: src/app
+src/app/(app)/artistler/page.tsx
+src/app/(app)/book/page.tsx
+src/app/(app)/explore/page.tsx
+src/app/(app)/galeri/page.tsx
+src/app/(app)/gallery/page.tsx
+src/app/(app)/iletisim/page.tsx
+src/app/(app)/kesfet/[hub]/page.tsx
+src/app/(app)/kesfet/page.tsx
+src/app/(app)/layout.tsx
+src/app/(app)/page.tsx
+src/app/(app)/piercing/page.tsx
+src/app/(app)/profile/page.tsx
+src/app/layout.tsx
+src/app/styleguide/page.tsx
+
+[Pages Router files under pages/ and src/pages/]
+base: pages
+none found (directory missing)
+
+base: src/pages
+none found (directory missing)
+
+[Route Map]
+LAYOUT_SCOPE / <= src/app/(app)/layout.tsx
+LAYOUT_SCOPE / <= src/app/layout.tsx
+PAGE / <= src/app/(app)/page.tsx
+PAGE /artistler <= src/app/(app)/artistler/page.tsx
+PAGE /book <= src/app/(app)/book/page.tsx
+PAGE /explore <= src/app/(app)/explore/page.tsx
+PAGE /galeri <= src/app/(app)/galeri/page.tsx
+PAGE /gallery <= src/app/(app)/gallery/page.tsx
+PAGE /iletisim <= src/app/(app)/iletisim/page.tsx
+PAGE /kesfet <= src/app/(app)/kesfet/page.tsx
+PAGE /kesfet/[hub] [dynamic] <= src/app/(app)/kesfet/[hub]/page.tsx
+PAGE /piercing <= src/app/(app)/piercing/page.tsx
+PAGE /profile <= src/app/(app)/profile/page.tsx
+PAGE /styleguide <= src/app/styleguide/page.tsx
+
+[Next redirects evidence]
+6:      { source: "/book", destination: "/iletisim", permanent: true },
+7:      { source: "/explore", destination: "/kesfet", permanent: true },
+8:      { source: "/gallery", destination: "/galeri", permanent: true },
+9:      { source: "/profile", destination: "/artistler", permanent: true },

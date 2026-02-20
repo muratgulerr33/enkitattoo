@@ -1,0 +1,51 @@
+ENKI TATTO — Repo Discovery (Auto)
+Generated: 17 Şub 2026 Sal +03 18:31:19
+--------------------------------------------------------------------------------
+PWD: /Users/apple/dev/enkitattoo
+Git: yes
+rg: yes
+tree: yes
+--------------------------------------------------------------------------------
+[Top-level map]
+total 696
+drwxr-xr-x   21 apple  staff     672 10 Şub 02:57 .
+drwxr-xr-x   15 apple  staff     480 17 Şub 15:35 ..
+-rw-r--r--@   1 apple  staff    8196 17 Şub 17:06 .DS_Store
+-rw-r--r--    1 apple  staff     187 10 Şub 02:57 .editorconfig
+-rw-r--r--    1 apple  staff     100 10 Şub 02:57 .env.example
+-rw-r--r--    1 apple  staff     499 10 Şub 02:46 .gitignore
+drwxr-xr-x   25 apple  staff     800 10 Şub 03:01 .next
+-rw-r--r--    1 apple  staff     467  6 Şub 04:23 components.json
+drwxr-xr-x   10 apple  staff     320 17 Şub 17:06 docs
+-rw-r--r--    1 apple  staff     465  6 Şub 04:22 eslint.config.mjs
+-rw-r--r--    1 apple  staff     251 10 Şub 03:09 next-env.d.ts
+-rw-r--r--    1 apple  staff     438 10 Şub 02:58 next.config.ts
+drwxr-xr-x  310 apple  staff    9920  9 Şub 20:12 node_modules
+-rw-r--r--    1 apple  staff  295721  9 Şub 20:12 package-lock.json
+-rw-r--r--    1 apple  staff     943 10 Şub 02:58 package.json
+-rw-r--r--    1 apple  staff      94  6 Şub 04:27 postcss.config.mjs
+drwxr-xr-x    7 apple  staff     224  6 Şub 04:22 public
+-rw-r--r--    1 apple  staff    1844 10 Şub 02:47 README.md
+drwxr-xr-x    3 apple  staff      96 10 Şub 02:57 scripts
+drwxr-xr-x    5 apple  staff     160  6 Şub 04:24 src
+-rw-r--r--    1 apple  staff     670  6 Şub 04:22 tsconfig.json
+--------------------------------------------------------------------------------
+[package.json summary]
+name: enkitattoo
+private: true
+type: (commonjs)
+
+[scripts]
+- dev: next dev
+- build: next build
+- start: next start
+- lint: eslint
+- check:no-palette: bash scripts/check-no-palette.sh
+- check:all: npm run lint && npm run build && npm run check:no-palette
+
+[key deps]
+- next: 16.1.6
+- react: 19.2.3
+- react-dom: 19.2.3
+- tailwindcss: ^4.1.18
+- typescript: ^5

@@ -1,0 +1,267 @@
+DISCOVERY STYLEGUIDE
+
+[Config files]
+tailwind.config.*: none found
+postcss.config.mjs
+
+[Global/theme token CSS candidates]
+src/app/globals.css
+
+[Token and typography evidence matches]
+./src/app/globals.css:101:  --surface-1: oklch(0.975 0 0);
+./src/app/globals.css:102:  --surface-2: oklch(0.99 0 0);
+./src/app/globals.css:103:  --overlay: oklch(0 0 0 / 40%);
+./src/app/globals.css:104:  --overlay-strong: oklch(0 0 0 / 50%);
+./src/app/globals.css:10:  --color-surface-2: var(--surface-2);
+./src/app/globals.css:110:  --background: oklch(0.145 0 0);
+./src/app/globals.css:111:  --foreground: oklch(0.985 0 0);
+./src/app/globals.css:113:  --card: oklch(0.205 0 0);
+./src/app/globals.css:114:  --card-foreground: var(--foreground);
+./src/app/globals.css:115:  --popover: oklch(0.269 0 0);
+./src/app/globals.css:116:  --popover-foreground: var(--foreground);
+./src/app/globals.css:118:  --primary: oklch(0.922 0 0);
+./src/app/globals.css:119:  --primary-foreground: oklch(0.205 0 0);
+./src/app/globals.css:11:  --color-overlay: var(--overlay);
+./src/app/globals.css:121:  --secondary: oklch(0.269 0 0);
+./src/app/globals.css:122:  --secondary-foreground: oklch(0.985 0 0);
+./src/app/globals.css:124:  --muted: oklch(0.269 0 0);
+./src/app/globals.css:125:  --muted-foreground: oklch(0.708 0 0);
+./src/app/globals.css:127:  --accent: oklch(0.371 0 0);
+./src/app/globals.css:128:  --accent-foreground: oklch(0.985 0 0);
+./src/app/globals.css:12:  --color-overlay-strong: var(--overlay-strong);
+./src/app/globals.css:130:  --destructive: oklch(0.704 0.191 22.216);
+./src/app/globals.css:131:  --destructive-foreground: oklch(0.985 0 0);
+./src/app/globals.css:133:  --border: oklch(1 0 0 / 10%);
+./src/app/globals.css:134:  --input: oklch(1 0 0 / 15%);
+./src/app/globals.css:135:  --ring: oklch(0.556 0 0);
+./src/app/globals.css:137:  --chart-1: oklch(0.488 0.243 264.376);
+./src/app/globals.css:138:  --chart-2: oklch(0.696 0.171 62.48);
+./src/app/globals.css:139:  --chart-3: oklch(0.769 0.188 70.08);
+./src/app/globals.css:140:  --chart-4: oklch(0.627 0.265 303.9);
+./src/app/globals.css:141:  --chart-5: oklch(0.645 0.246 16.439);
+./src/app/globals.css:143:  --sidebar: oklch(0.205 0 0);
+./src/app/globals.css:144:  --sidebar-foreground: oklch(0.985 0 0);
+./src/app/globals.css:145:  --sidebar-primary: oklch(0.488 0.243 264.376);
+./src/app/globals.css:146:  --sidebar-primary-foreground: oklch(0.985 0 0);
+./src/app/globals.css:147:  --sidebar-accent: oklch(0.269 0 0);
+./src/app/globals.css:148:  --sidebar-accent-foreground: oklch(0.985 0 0);
+./src/app/globals.css:149:  --sidebar-border: oklch(1 0 0 / 10%);
+./src/app/globals.css:14:  --shadow-soft: 0 1px 3px 0 oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06);
+./src/app/globals.css:150:  --sidebar-ring: oklch(0.439 0 0);
+./src/app/globals.css:153:  --surface-1: oklch(0.205 0 0);
+./src/app/globals.css:154:  --surface-2: oklch(0.269 0 0);
+./src/app/globals.css:155:  --overlay: oklch(0 0 0 / 55%);
+./src/app/globals.css:156:  --overlay-strong: oklch(0 0 0 / 65%);
+./src/app/globals.css:15:  --shadow-popover: 0 4px 6px -1px oklch(0 0 0 / 0.08), 0 2px 4px -2px oklch(0 0 0 / 0.06);
+./src/app/globals.css:17:  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+./src/app/globals.css:18:  --font-display: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+./src/app/globals.css:20:  --color-ring: var(--ring);
+./src/app/globals.css:21:  --color-input: var(--input);
+./src/app/globals.css:22:  --color-border: var(--border);
+./src/app/globals.css:24:  --color-primary: var(--primary);
+./src/app/globals.css:25:  --color-primary-foreground: var(--primary-foreground);
+./src/app/globals.css:26:  --color-secondary: var(--secondary);
+./src/app/globals.css:27:  --color-secondary-foreground: var(--secondary-foreground);
+./src/app/globals.css:28:  --color-muted: var(--muted);
+./src/app/globals.css:29:  --color-muted-foreground: var(--muted-foreground);
+./src/app/globals.css:30:  --color-accent: var(--accent);
+./src/app/globals.css:31:  --color-accent-foreground: var(--accent-foreground);
+./src/app/globals.css:32:  --color-destructive: var(--destructive);
+./src/app/globals.css:33:  --color-destructive-foreground: var(--destructive-foreground);
+./src/app/globals.css:35:  --color-card: var(--card);
+./src/app/globals.css:36:  --color-card-foreground: var(--card-foreground);
+./src/app/globals.css:37:  --color-popover: var(--popover);
+./src/app/globals.css:38:  --color-popover-foreground: var(--popover-foreground);
+./src/app/globals.css:40:  --color-chart-1: var(--chart-1);
+./src/app/globals.css:41:  --color-chart-2: var(--chart-2);
+./src/app/globals.css:42:  --color-chart-3: var(--chart-3);
+./src/app/globals.css:43:  --color-chart-4: var(--chart-4);
+./src/app/globals.css:44:  --color-chart-5: var(--chart-5);
+./src/app/globals.css:46:  --radius-sm: calc(var(--radius) - 4px);
+./src/app/globals.css:47:  --radius-md: calc(var(--radius) - 2px);
+./src/app/globals.css:48:  --radius-lg: var(--radius);
+./src/app/globals.css:49:  --radius-xl: calc(var(--radius) + 4px);
+./src/app/globals.css:50:  --radius-2xl: calc(var(--radius) + 8px);
+./src/app/globals.css:53::root {
+./src/app/globals.css:55:  --radius: 0.625rem;
+./src/app/globals.css:58:  --background: oklch(0.985 0 0);
+./src/app/globals.css:59:  --foreground: oklch(0.145 0 0);
+./src/app/globals.css:61:  --card: oklch(0.99 0 0);
+./src/app/globals.css:62:  --card-foreground: var(--foreground);
+./src/app/globals.css:63:  --popover: oklch(0.99 0 0);
+./src/app/globals.css:64:  --popover-foreground: var(--foreground);
+./src/app/globals.css:66:  --primary: oklch(0.205 0 0);
+./src/app/globals.css:67:  --primary-foreground: oklch(0.985 0 0);
+./src/app/globals.css:69:  --secondary: oklch(0.97 0 0);
+./src/app/globals.css:6:@theme inline {
+./src/app/globals.css:70:  --secondary-foreground: oklch(0.205 0 0);
+./src/app/globals.css:72:  --muted: oklch(0.97 0 0);
+./src/app/globals.css:73:  --muted-foreground: oklch(0.556 0 0);
+./src/app/globals.css:75:  --accent: oklch(0.97 0 0);
+./src/app/globals.css:76:  --accent-foreground: oklch(0.205 0 0);
+./src/app/globals.css:78:  --destructive: oklch(0.577 0.245 27.325);
+./src/app/globals.css:79:  --destructive-foreground: oklch(0.985 0 0);
+./src/app/globals.css:7:  --color-background: var(--background);
+./src/app/globals.css:81:  --border: oklch(0.922 0 0);
+./src/app/globals.css:82:  --input: oklch(0.922 0 0);
+./src/app/globals.css:83:  --ring: oklch(0.708 0 0);
+./src/app/globals.css:85:  --chart-1: oklch(0.646 0.222 41.116);
+./src/app/globals.css:86:  --chart-2: oklch(0.6 0.118 184.704);
+./src/app/globals.css:87:  --chart-3: oklch(0.398 0.072 27.392);
+./src/app/globals.css:88:  --chart-4: oklch(0.828 0.189 84.429);
+./src/app/globals.css:89:  --chart-5: oklch(0.769 0.188 70.08);
+./src/app/globals.css:8:  --color-foreground: var(--foreground);
+./src/app/globals.css:91:  --sidebar: oklch(0.985 0 0);
+./src/app/globals.css:92:  --sidebar-foreground: oklch(0.145 0 0);
+./src/app/globals.css:93:  --sidebar-primary: oklch(0.205 0 0);
+./src/app/globals.css:94:  --sidebar-primary-foreground: oklch(0.985 0 0);
+./src/app/globals.css:95:  --sidebar-accent: oklch(0.97 0 0);
+./src/app/globals.css:96:  --sidebar-accent-foreground: oklch(0.205 0 0);
+./src/app/globals.css:97:  --sidebar-border: oklch(0.922 0 0);
+./src/app/globals.css:98:  --sidebar-ring: oklch(0.708 0 0);
+./src/app/globals.css:9:  --color-surface-1: var(--surface-1);
+./src/app/layout.tsx:2:import { Geist } from "next/font/google";
+./src/app/page.module.css:10:  --button-secondary-border: #ebebeb;
+./src/app/page.module.css:131:    --background: #000;
+./src/app/page.module.css:132:    --foreground: #000;
+./src/app/page.module.css:134:    --text-primary: #ededed;
+./src/app/page.module.css:135:    --text-secondary: #999;
+./src/app/page.module.css:137:    --button-primary-hover: #ccc;
+./src/app/page.module.css:138:    --button-secondary-hover: #1a1a1a;
+./src/app/page.module.css:139:    --button-secondary-border: #1a1a1a;
+./src/app/page.module.css:16:  font-family: var(--font-geist-sans);
+./src/app/page.module.css:2:  --background: #fafafa;
+./src/app/page.module.css:3:  --foreground: #fff;
+./src/app/page.module.css:5:  --text-primary: #000;
+./src/app/page.module.css:6:  --text-secondary: #666;
+./src/app/page.module.css:8:  --button-primary-hover: #383838;
+./src/app/page.module.css:9:  --button-secondary-hover: #f2f2f2;
+
+[Summary]
+colors:
+  - ./src/app/globals.css:101:  --surface-1: oklch(0.975 0 0);
+  - ./src/app/globals.css:102:  --surface-2: oklch(0.99 0 0);
+  - ./src/app/globals.css:103:  --overlay: oklch(0 0 0 / 40%);
+  - ./src/app/globals.css:104:  --overlay-strong: oklch(0 0 0 / 50%);
+  - ./src/app/globals.css:10:  --color-surface-2: var(--surface-2);
+  - ./src/app/globals.css:110:  --background: oklch(0.145 0 0);
+  - ./src/app/globals.css:111:  --foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:113:  --card: oklch(0.205 0 0);
+  - ./src/app/globals.css:114:  --card-foreground: var(--foreground);
+  - ./src/app/globals.css:115:  --popover: oklch(0.269 0 0);
+  - ./src/app/globals.css:116:  --popover-foreground: var(--foreground);
+  - ./src/app/globals.css:118:  --primary: oklch(0.922 0 0);
+  - ./src/app/globals.css:119:  --primary-foreground: oklch(0.205 0 0);
+  - ./src/app/globals.css:121:  --secondary: oklch(0.269 0 0);
+  - ./src/app/globals.css:122:  --secondary-foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:124:  --muted: oklch(0.269 0 0);
+  - ./src/app/globals.css:125:  --muted-foreground: oklch(0.708 0 0);
+  - ./src/app/globals.css:127:  --accent: oklch(0.371 0 0);
+  - ./src/app/globals.css:128:  --accent-foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:130:  --destructive: oklch(0.704 0.191 22.216);
+  - ./src/app/globals.css:131:  --destructive-foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:133:  --border: oklch(1 0 0 / 10%);
+  - ./src/app/globals.css:134:  --input: oklch(1 0 0 / 15%);
+  - ./src/app/globals.css:135:  --ring: oklch(0.556 0 0);
+  - ./src/app/globals.css:137:  --chart-1: oklch(0.488 0.243 264.376);
+  - ./src/app/globals.css:138:  --chart-2: oklch(0.696 0.171 62.48);
+  - ./src/app/globals.css:139:  --chart-3: oklch(0.769 0.188 70.08);
+  - ./src/app/globals.css:140:  --chart-4: oklch(0.627 0.265 303.9);
+  - ./src/app/globals.css:141:  --chart-5: oklch(0.645 0.246 16.439);
+  - ./src/app/globals.css:143:  --sidebar: oklch(0.205 0 0);
+  - ./src/app/globals.css:144:  --sidebar-foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:145:  --sidebar-primary: oklch(0.488 0.243 264.376);
+  - ./src/app/globals.css:146:  --sidebar-primary-foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:147:  --sidebar-accent: oklch(0.269 0 0);
+  - ./src/app/globals.css:148:  --sidebar-accent-foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:149:  --sidebar-border: oklch(1 0 0 / 10%);
+  - ./src/app/globals.css:14:  --shadow-soft: 0 1px 3px 0 oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06);
+  - ./src/app/globals.css:150:  --sidebar-ring: oklch(0.439 0 0);
+  - ./src/app/globals.css:153:  --surface-1: oklch(0.205 0 0);
+  - ./src/app/globals.css:154:  --surface-2: oklch(0.269 0 0);
+  - ./src/app/globals.css:155:  --overlay: oklch(0 0 0 / 55%);
+  - ./src/app/globals.css:156:  --overlay-strong: oklch(0 0 0 / 65%);
+  - ./src/app/globals.css:15:  --shadow-popover: 0 4px 6px -1px oklch(0 0 0 / 0.08), 0 2px 4px -2px oklch(0 0 0 / 0.06);
+  - ./src/app/globals.css:24:  --color-primary: var(--primary);
+  - ./src/app/globals.css:25:  --color-primary-foreground: var(--primary-foreground);
+  - ./src/app/globals.css:26:  --color-secondary: var(--secondary);
+  - ./src/app/globals.css:27:  --color-secondary-foreground: var(--secondary-foreground);
+  - ./src/app/globals.css:28:  --color-muted: var(--muted);
+  - ./src/app/globals.css:29:  --color-muted-foreground: var(--muted-foreground);
+  - ./src/app/globals.css:30:  --color-accent: var(--accent);
+  - ./src/app/globals.css:31:  --color-accent-foreground: var(--accent-foreground);
+  - ./src/app/globals.css:32:  --color-destructive: var(--destructive);
+  - ./src/app/globals.css:33:  --color-destructive-foreground: var(--destructive-foreground);
+  - ./src/app/globals.css:35:  --color-card: var(--card);
+  - ./src/app/globals.css:36:  --color-card-foreground: var(--card-foreground);
+  - ./src/app/globals.css:37:  --color-popover: var(--popover);
+  - ./src/app/globals.css:38:  --color-popover-foreground: var(--popover-foreground);
+  - ./src/app/globals.css:40:  --color-chart-1: var(--chart-1);
+  - ./src/app/globals.css:41:  --color-chart-2: var(--chart-2);
+  - ./src/app/globals.css:42:  --color-chart-3: var(--chart-3);
+  - ./src/app/globals.css:43:  --color-chart-4: var(--chart-4);
+  - ./src/app/globals.css:44:  --color-chart-5: var(--chart-5);
+  - ./src/app/globals.css:58:  --background: oklch(0.985 0 0);
+  - ./src/app/globals.css:59:  --foreground: oklch(0.145 0 0);
+  - ./src/app/globals.css:61:  --card: oklch(0.99 0 0);
+  - ./src/app/globals.css:62:  --card-foreground: var(--foreground);
+  - ./src/app/globals.css:63:  --popover: oklch(0.99 0 0);
+  - ./src/app/globals.css:64:  --popover-foreground: var(--foreground);
+  - ./src/app/globals.css:66:  --primary: oklch(0.205 0 0);
+  - ./src/app/globals.css:67:  --primary-foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:69:  --secondary: oklch(0.97 0 0);
+  - ./src/app/globals.css:70:  --secondary-foreground: oklch(0.205 0 0);
+  - ./src/app/globals.css:72:  --muted: oklch(0.97 0 0);
+  - ./src/app/globals.css:73:  --muted-foreground: oklch(0.556 0 0);
+  - ./src/app/globals.css:75:  --accent: oklch(0.97 0 0);
+  - ./src/app/globals.css:76:  --accent-foreground: oklch(0.205 0 0);
+  - ./src/app/globals.css:78:  --destructive: oklch(0.577 0.245 27.325);
+  - ./src/app/globals.css:79:  --destructive-foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:7:  --color-background: var(--background);
+  - ./src/app/globals.css:81:  --border: oklch(0.922 0 0);
+  - ./src/app/globals.css:82:  --input: oklch(0.922 0 0);
+  - ./src/app/globals.css:83:  --ring: oklch(0.708 0 0);
+  - ./src/app/globals.css:85:  --chart-1: oklch(0.646 0.222 41.116);
+  - ./src/app/globals.css:86:  --chart-2: oklch(0.6 0.118 184.704);
+  - ./src/app/globals.css:87:  --chart-3: oklch(0.398 0.072 27.392);
+  - ./src/app/globals.css:88:  --chart-4: oklch(0.828 0.189 84.429);
+  - ./src/app/globals.css:89:  --chart-5: oklch(0.769 0.188 70.08);
+  - ./src/app/globals.css:8:  --color-foreground: var(--foreground);
+  - ./src/app/globals.css:91:  --sidebar: oklch(0.985 0 0);
+  - ./src/app/globals.css:92:  --sidebar-foreground: oklch(0.145 0 0);
+  - ./src/app/globals.css:93:  --sidebar-primary: oklch(0.205 0 0);
+  - ./src/app/globals.css:94:  --sidebar-primary-foreground: oklch(0.985 0 0);
+  - ./src/app/globals.css:95:  --sidebar-accent: oklch(0.97 0 0);
+  - ./src/app/globals.css:96:  --sidebar-accent-foreground: oklch(0.205 0 0);
+  - ./src/app/globals.css:97:  --sidebar-border: oklch(0.922 0 0);
+  - ./src/app/globals.css:98:  --sidebar-ring: oklch(0.708 0 0);
+  - ./src/app/globals.css:9:  --color-surface-1: var(--surface-1);
+  - ./src/app/page.module.css:131:    --background: #000;
+  - ./src/app/page.module.css:132:    --foreground: #000;
+  - ./src/app/page.module.css:17:  background-color: var(--background);
+  - ./src/app/page.module.css:28:  background-color: var(--foreground);
+  - ./src/app/page.module.css:2:  --background: #fafafa;
+  - ./src/app/page.module.css:3:  --foreground: #fff;
+  - ./src/app/page.module.css:88:  color: var(--background);
+  - ./src/components/ui/sonner.tsx:29:          "--normal-bg": "var(--popover)",
+  - ./src/components/ui/sonner.tsx:30:          "--normal-text": "var(--popover-foreground)",
+radius:
+  - ./src/app/globals.css:46:  --radius-sm: calc(var(--radius) - 4px);
+  - ./src/app/globals.css:47:  --radius-md: calc(var(--radius) - 2px);
+  - ./src/app/globals.css:48:  --radius-lg: var(--radius);
+  - ./src/app/globals.css:49:  --radius-xl: calc(var(--radius) + 4px);
+  - ./src/app/globals.css:50:  --radius-2xl: calc(var(--radius) + 8px);
+  - ./src/app/globals.css:55:  --radius: 0.625rem;
+  - ./src/app/styleguide/page.tsx:193:                --radius (base), rounded-md, rounded-lg, rounded-xl
+  - ./src/components/ui/sonner.tsx:32:          "--border-radius": "var(--radius)",
+spacing:
+  - ./src/app/page.module.css:121:    letter-spacing: -1.92px;
+  - ./src/app/page.module.css:45:  letter-spacing: -2.4px;
+  - ./src/app/styleguide/page.tsx:145:                  A second paragraph keeps the same line height and spacing so
+typography:
+  - ./src/app/globals.css:17:  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  - ./src/app/globals.css:18:  --font-display: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  - ./src/app/layout.tsx:2:import { Geist } from "next/font/google";
+  - ./src/app/layout.tsx:9:  variable: "--font-geist",
+  - ./src/app/page.module.css:16:  font-family: var(--font-geist-sans);
+  - 3:    "@tailwindcss/postcss": {},

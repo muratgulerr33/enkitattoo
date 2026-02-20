@@ -1,0 +1,86 @@
+DISCOVERY SERVICES
+
+[Service/data-layer roots]
+root: src/lib
+src/lib/hub/hubs.v1.ts
+src/lib/mock/categories.ts
+src/lib/mock/enki.ts
+src/lib/mock/feed.ts
+src/lib/ui/metrics.ts
+src/lib/utils.ts
+
+root: lib
+MISSING
+
+root: src/services
+MISSING
+
+root: services
+MISSING
+
+root: src/api
+MISSING
+
+root: api
+MISSING
+
+root: src/server
+MISSING
+
+root: server
+MISSING
+
+root: src/app/api
+MISSING
+
+root: app/api
+MISSING
+
+[Network call evidence: fetch/axios/graphql/trpc]
+UNKNOWN
+
+[Server action evidence: use server]
+UNKNOWN
+
+[Data-fetch pattern summary]
+local lib data imports detected:
+  - ./src/app/(app)/galeri/galeri-filters.tsx:11:import { mainHubs, specialHubs, themeFilters } from "@/lib/hub/hubs.v1";
+  - ./src/app/(app)/iletisim/page.tsx:18:} from "@/lib/mock/enki";
+  - ./src/app/(app)/kesfet/[hub]/page.tsx:3:import { getHubBySlug, isValidHubSlug } from "@/lib/hub/hubs.v1";
+  - ./src/app/(app)/kesfet/[hub]/page.tsx:4:import { whatsappUrl } from "@/lib/mock/enki";
+  - ./src/app/(app)/kesfet/page.tsx:2:import { mainHubs, specialHubs } from "@/lib/hub/hubs.v1";
+  - ./src/app/(app)/page.tsx:12:} from "@/lib/mock/enki";
+  - ./src/app/(app)/page.tsx:5:import { mainHubs, specialHubs } from "@/lib/hub/hubs.v1";
+  - ./src/app/(app)/piercing/page.tsx:1:import { piercingCategories } from "@/lib/hub/hubs.v1";
+  - ./src/app/(app)/piercing/page.tsx:2:import { whatsappUrl } from "@/lib/mock/enki";
+  - ./src/app/styleguide/page.tsx:24:import { feedItems } from "@/lib/mock/feed";
+  - ./src/components/app/app-header.tsx:7:import { icon, iconBtn } from "@/lib/ui/metrics";
+  - ./src/components/app/app-header.tsx:9:import { cn } from "@/lib/utils";
+  - ./src/components/app/bottom-nav.tsx:6:import { cn } from "@/lib/utils";
+  - ./src/components/app/mobile-header.tsx:19:import { cn } from "@/lib/utils";
+  - ./src/components/app/mobile-header.tsx:35:import { mainHubs, specialHubs } from "@/lib/hub/hubs.v1";
+  - ./src/components/app/mobile-header.tsx:36:import { whatsappUrl } from "@/lib/mock/enki";
+  - ./src/components/app/mobile-header.tsx:37:import { icon, iconBtn } from "@/lib/ui/metrics";
+  - ./src/components/app/right-rail.tsx:12:import { mainHubs } from "@/lib/hub/hubs.v1";
+  - ./src/components/app/right-rail.tsx:17:} from "@/lib/mock/enki";
+  - ./src/components/legacy/social-mock/feed-list.tsx:8:import type { FeedItem } from "@/lib/mock/feed";
+  - ./src/components/legacy/social-mock/home-composer.tsx:6:import { whatsappUrl } from "@/lib/mock/enki";
+  - ./src/components/legacy/social-mock/post-card.tsx:7:import type { FeedItem } from "@/lib/mock/feed";
+  - ./src/components/legacy/social-mock/post-card.tsx:8:import { cn } from "@/lib/utils";
+  - ./src/components/legacy/social-mock/stories-row.tsx:4:import { storyItems, type StoryItem } from "@/lib/mock/feed";
+  - ./src/components/legacy/social-mock/stories-row.tsx:5:import { cn } from "@/lib/utils";
+  - ./src/components/styleguide/token-grid.tsx:4:import { cn } from "@/lib/utils";
+  - ./src/components/ui/avatar.tsx:6:import { cn } from "@/lib/utils"
+  - ./src/components/ui/badge.tsx:5:import { cn } from "@/lib/utils"
+  - ./src/components/ui/button.tsx:5:import { cn } from "@/lib/utils"
+  - ./src/components/ui/card.tsx:3:import { cn } from "@/lib/utils"
+  - ./src/components/ui/dialog.tsx:7:import { cn } from "@/lib/utils"
+  - ./src/components/ui/dropdown-menu.tsx:7:import { cn } from "@/lib/utils"
+  - ./src/components/ui/input.tsx:3:import { cn } from "@/lib/utils"
+  - ./src/components/ui/label.tsx:6:import { cn } from "@/lib/utils"
+  - ./src/components/ui/select.tsx:7:import { cn } from "@/lib/utils"
+  - ./src/components/ui/separator.tsx:6:import { cn } from "@/lib/utils"
+  - ./src/components/ui/sheet.tsx:7:import { cn } from "@/lib/utils"
+  - ./src/components/ui/skeleton.tsx:1:import { cn } from "@/lib/utils"
+  - ./src/components/ui/tabs.tsx:7:import { cn } from "@/lib/utils"
+  - ./src/components/ui/textarea.tsx:3:import { cn } from "@/lib/utils"

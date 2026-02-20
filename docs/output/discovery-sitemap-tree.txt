@@ -1,0 +1,95 @@
+DISCOVERY SITEMAP TREE
+scope_include: src/**/*, app/**/*, pages/**/*, components/**/*, lib/**/*
+scope_exclude: docs/**, scripts/**, public/**, *.md, *.txt, node_modules, .next, dist, build, coverage, .git
+
+## src
+src
+├── app
+│   ├── (app)
+│   │   ├── artistler
+│   │   │   └── page.tsx
+│   │   ├── book
+│   │   │   └── page.tsx
+│   │   ├── explore
+│   │   │   └── page.tsx
+│   │   ├── galeri
+│   │   │   ├── galeri-filters.tsx
+│   │   │   └── page.tsx
+│   │   ├── gallery
+│   │   │   └── page.tsx
+│   │   ├── iletisim
+│   │   │   └── page.tsx
+│   │   ├── kesfet
+│   │   │   ├── [hub]
+│   │   │   │   └── page.tsx
+│   │   │   └── page.tsx
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── piercing
+│   │   │   └── page.tsx
+│   │   └── profile
+│   │       └── page.tsx
+│   ├── .DS_Store
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.module.css
+│   └── styleguide
+│       └── page.tsx
+├── components
+│   ├── app
+│   │   ├── app-header.tsx
+│   │   ├── bottom-nav.tsx
+│   │   ├── chat-bubble.tsx
+│   │   ├── mobile-header.tsx
+│   │   └── right-rail.tsx
+│   ├── legacy
+│   │   └── social-mock
+│   │       ├── feed-list.tsx
+│   │       ├── feed-skeleton.tsx
+│   │       ├── home-composer.tsx
+│   │       ├── post-card.tsx
+│   │       └── stories-row.tsx
+│   ├── styleguide
+│   │   └── token-grid.tsx
+│   ├── theme
+│   │   └── theme-switch.tsx
+│   ├── theme-provider.tsx
+│   ├── theme-toggle.tsx
+│   └── ui
+│       ├── avatar.tsx
+│       ├── badge.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── dialog.tsx
+│       ├── dropdown-menu.tsx
+│       ├── input.tsx
+│       ├── label.tsx
+│       ├── select.tsx
+│       ├── separator.tsx
+│       ├── sheet.tsx
+│       ├── skeleton.tsx
+│       ├── sonner.tsx
+│       ├── tabs.tsx
+│       └── textarea.tsx
+└── lib
+    ├── hub
+    │   └── hubs.v1.ts
+    ├── mock
+    │   ├── categories.ts
+    │   ├── enki.ts
+    │   └── feed.ts
+    ├── ui
+    │   └── metrics.ts
+    └── utils.ts
+
+25 directories, 54 files
+
+MISSING: app
+
+MISSING: pages
+
+MISSING: components
+
+MISSING: lib
+

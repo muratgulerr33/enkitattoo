@@ -1,0 +1,23 @@
+DISCOVERY REFERENCES
+patterns: <Link ... href=, href="/...", router.push/replace, redirect/permanentRedirect
+
+./src/app/(app)/artistler/page.tsx:48:                <Link href={`/galeri?artist=${artist.id}`}>İşlerini gör</Link>
+./src/app/(app)/book/page.tsx:4:  redirect("/iletisim");
+./src/app/(app)/explore/page.tsx:4:  redirect("/kesfet");
+./src/app/(app)/galeri/galeri-filters.tsx:50:    router.push(`/galeri?${next.toString()}`);
+./src/app/(app)/galeri/galeri-filters.tsx:54:    router.push("/galeri");
+./src/app/(app)/gallery/page.tsx:4:  redirect("/galeri");
+./src/app/(app)/kesfet/[hub]/page.tsx:45:          <Link href={`/galeri?style=${styleParam}`}>Galeri&apos;de gör</Link>
+./src/app/(app)/kesfet/page.tsx:81:          href="/piercing"
+./src/app/(app)/page.tsx:107:          href="/piercing"
+./src/app/(app)/page.tsx:135:            <Link href="/galeri" className="gap-2">
+./src/app/(app)/page.tsx:173:          <Link href="/iletisim" className="gap-2">
+./src/app/(app)/page.tsx:45:            <Link href="/kesfet" className="gap-2">
+./src/app/(app)/profile/page.tsx:4:  redirect("/artistler");
+./src/components/app/app-header.tsx:19:        <Link href="/" className="flex shrink-0 flex-col leading-tight">
+./src/components/app/mobile-header.tsx:190:                    href="/iletisim"
+./src/components/app/mobile-header.tsx:240:          href="/"
+./src/components/app/mobile-header.tsx:339:            <Link href="/iletisim">
+./src/components/app/mobile-header.tsx:82:      router.push("/");
+./src/components/app/right-rail.tsx:120:            <Link href="/kesfet">Tümünü keşfet</Link>
+./src/components/app/right-rail.tsx:83:            <Link href="/iletisim" className="inline-flex items-center">
