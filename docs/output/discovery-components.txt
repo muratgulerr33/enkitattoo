@@ -1,17 +1,23 @@
-DISCOVERY COMPONENTS
-
-[Component inventory by folder]
-folder: src/components
+COMPONENTS DISCOVERY (inventory)
+Generated: 21 Şub 2026 Cts +03 01:50:18
+--------------------------------------------------------------------------------
+[component folders]
+--------------------------------------------------------------------------------
+## src/components
+src/components/app/app-footer.tsx
 src/components/app/app-header.tsx
+src/components/app/app-shell.tsx
 src/components/app/bottom-nav.tsx
 src/components/app/chat-bubble.tsx
 src/components/app/mobile-header.tsx
 src/components/app/right-rail.tsx
+src/components/icons/nandd.tsx
 src/components/legacy/social-mock/feed-list.tsx
 src/components/legacy/social-mock/feed-skeleton.tsx
 src/components/legacy/social-mock/home-composer.tsx
 src/components/legacy/social-mock/post-card.tsx
 src/components/legacy/social-mock/stories-row.tsx
+src/components/mode-toggle.tsx
 src/components/styleguide/token-grid.tsx
 src/components/theme-provider.tsx
 src/components/theme-toggle.tsx
@@ -29,20 +35,12 @@ src/components/ui/separator.tsx
 src/components/ui/sheet.tsx
 src/components/ui/skeleton.tsx
 src/components/ui/sonner.tsx
+src/components/ui/table.tsx
 src/components/ui/tabs.tsx
 src/components/ui/textarea.tsx
-
-folder: components
-MISSING
-
-folder: src/app/components
-MISSING
-
-folder: app/components
-MISSING
-
-[shadcn/ui candidates]
-folder: src/components/ui
+--------------------------------------------------------------------------------
+[shadcn/ui hint: components/ui]
+--------------------------------------------------------------------------------
 src/components/ui/avatar.tsx
 src/components/ui/badge.tsx
 src/components/ui/button.tsx
@@ -56,37 +54,39 @@ src/components/ui/separator.tsx
 src/components/ui/sheet.tsx
 src/components/ui/skeleton.tsx
 src/components/ui/sonner.tsx
+src/components/ui/table.tsx
 src/components/ui/tabs.tsx
 src/components/ui/textarea.tsx
-
-[Top 30 largest TSX files by line count in scope]
-     378 src/components/app/mobile-header.tsx
-     356 src/app/styleguide/page.tsx
-     257 src/components/ui/dropdown-menu.tsx
-     190 src/components/ui/select.tsx
-     180 src/app/(app)/page.tsx
-     158 src/components/ui/dialog.tsx
-     143 src/components/ui/sheet.tsx
-     126 src/components/app/right-rail.tsx
-     119 src/app/(app)/kesfet/page.tsx
-     109 src/app/(app)/galeri/galeri-filters.tsx
-     109 src/components/ui/avatar.tsx
-      92 src/components/ui/card.tsx
-      91 src/app/(app)/piercing/page.tsx
-      91 src/components/ui/tabs.tsx
-      90 src/components/legacy/social-mock/post-card.tsx
-      85 src/app/(app)/iletisim/page.tsx
-      80 src/components/legacy/social-mock/feed-list.tsx
-      79 src/components/styleguide/token-grid.tsx
-      64 src/components/ui/button.tsx
-      61 src/app/(app)/kesfet/[hub]/page.tsx
-      56 src/app/(app)/artistler/page.tsx
-      56 src/components/app/bottom-nav.tsx
-      50 src/components/app/app-header.tsx
-      49 src/components/legacy/social-mock/home-composer.tsx
-      48 src/components/ui/badge.tsx
-      47 src/components/legacy/social-mock/feed-skeleton.tsx
-      40 src/components/ui/sonner.tsx
-      39 src/components/legacy/social-mock/stories-row.tsx
-      38 src/app/layout.tsx
-      37 src/app/(app)/galeri/page.tsx
+--------------------------------------------------------------------------------
+[Largest TSX files (top 30 by lines)]
+--------------------------------------------------------------------------------
+     953 ./node_modules/@radix-ui/react-one-time-password-field/src/one-time-password-field.tsx
+     479 ./node_modules/@radix-ui/react-password-toggle-field/src/password-toggle-field.tsx
+     435 ./src/app/styleguide/page.tsx
+     354 ./src/components/app/mobile-header.tsx
+     308 ./node_modules/@radix-ui/react-alert-dialog/src/alert-dialog.tsx
+     257 ./src/components/ui/dropdown-menu.tsx
+     240 ./src/components/icons/nandd.tsx
+     219 ./node_modules/@radix-ui/react-password-toggle-field/src/password-toggle-field.test.tsx
+     190 ./src/components/ui/select.tsx
+     182 ./src/app/(app)/page.tsx
+     174 ./src/app/(app)/iletisim/page.tsx
+     158 ./src/components/ui/dialog.tsx
+     143 ./src/components/ui/sheet.tsx
+     127 ./src/components/app/right-rail.tsx
+     119 ./src/app/(app)/kesfet/page.tsx
+     111 ./src/components/ui/table.tsx
+     109 ./src/components/ui/avatar.tsx
+     105 ./src/components/app/app-footer.tsx
+      92 ./src/components/ui/card.tsx
+      91 ./src/components/ui/tabs.tsx
+      91 ./src/app/(app)/piercing/page.tsx
+      90 ./src/components/legacy/social-mock/post-card.tsx
+      89 ./src/components/mode-toggle.tsx
+      86 ./src/app/(app)/galeri/galeri-filters.tsx
+      86 ./node_modules/@radix-ui/react-one-time-password-field/src/one-time-password-field.test.tsx
+      80 ./src/components/legacy/social-mock/feed-list.tsx
+      79 ./src/components/styleguide/token-grid.tsx
+      64 ./src/components/ui/button.tsx
+      64 ./node_modules/@radix-ui/react-alert-dialog/src/alert-dialog.test.tsx
+      61 ./src/app/(app)/kesfet/[hub]/page.tsx

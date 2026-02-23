@@ -1,0 +1,47 @@
+ENKI Tattoo Card Audit Notes
+Date: 2026-02-21
+
+Scope
+- src/app/**
+- src/components/**
+- src/lib/**
+
+High-confidence findings
+- Core app card language is consistent: rounded-xl + border-border + bg-surface-2 + shadow-soft.
+- Grid behavior is centralized in globals via .grid-cards and .grid-cards-compact.
+- Media ratio policy exists (.card-media) and is responsive (5/4 mobile, 4/3 md+).
+
+Risks / inconsistencies
+1) Gallery interactivity mismatch
+- File: src/app/(app)/galeri/page.tsx
+- Gallery cards are static article blocks (no hover/focus/link), while home/kesfet hub cards are interactive.
+
+2) Duplication of hub card pattern
+- Files: src/app/(app)/kesfet/page.tsx, src/app/(app)/page.tsx
+- Same structural pattern is repeated with slight text/slot changes.
+
+3) Shadow policy drift
+- Files: src/components/ui/card.tsx, src/components/app/right-rail.tsx, src/app/(app)/iletisim/page.tsx
+- Base Card uses shadow-sm, many app cards use shadow-soft; both coexist without explicit policy.
+
+4) Truncation policy drift
+- Files: src/app/(app)/galeri/page.tsx, src/app/(app)/kesfet/page.tsx, src/app/(app)/page.tsx
+- Mostly truncate/line-clamp-1; no shared utility for title/subtitle clamp levels.
+
+5) Legacy ratio divergence
+- Files: src/components/legacy/social-mock/post-card.tsx, src/components/legacy/social-mock/feed-list.tsx
+- legacy media uses aspect-video (16/9), unlike app card-media (5/4->4/3).
+
+Recommended lock (V1)
+- Interactive media cards:
+  rounded-xl border border-border bg-surface-2 shadow-soft overflow-hidden transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+- Media slot:
+  .card-media => aspect-[5/4] md:aspect-[4/3]
+- Text policy:
+  title line-clamp-2, subtitle line-clamp-1
+- Profile placeholder:
+  square (1/1), default size tokenized
+
+Notes
+- next/image is not used in gallery or hub cards.
+- Gallery visuals are currently placeholder gradients/skeletons; no public/remote image pipeline in active gallery path.

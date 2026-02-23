@@ -1,23 +1,73 @@
-DISCOVERY REFERENCES
-patterns: <Link ... href=, href="/...", router.push/replace, redirect/permanentRedirect
-
-./src/app/(app)/artistler/page.tsx:48:                <Link href={`/galeri?artist=${artist.id}`}>İşlerini gör</Link>
-./src/app/(app)/book/page.tsx:4:  redirect("/iletisim");
-./src/app/(app)/explore/page.tsx:4:  redirect("/kesfet");
-./src/app/(app)/galeri/galeri-filters.tsx:50:    router.push(`/galeri?${next.toString()}`);
-./src/app/(app)/galeri/galeri-filters.tsx:54:    router.push("/galeri");
-./src/app/(app)/gallery/page.tsx:4:  redirect("/galeri");
-./src/app/(app)/kesfet/[hub]/page.tsx:45:          <Link href={`/galeri?style=${styleParam}`}>Galeri&apos;de gör</Link>
-./src/app/(app)/kesfet/page.tsx:81:          href="/piercing"
-./src/app/(app)/page.tsx:107:          href="/piercing"
-./src/app/(app)/page.tsx:135:            <Link href="/galeri" className="gap-2">
-./src/app/(app)/page.tsx:173:          <Link href="/iletisim" className="gap-2">
-./src/app/(app)/page.tsx:45:            <Link href="/kesfet" className="gap-2">
+INTERNAL PATH REFERENCES (href / Link / router.push / redirect)
+Generated: 21 Şub 2026 Cts +03 01:50:18
+--------------------------------------------------------------------------------
+./src/app/styleguide/page.tsx:130:                <a href="#theme" className="typo-link">
+./src/components/legacy/social-mock/home-composer.tsx:32:            <a href={chip.href}>{chip.label}</a>
+./src/components/legacy/social-mock/home-composer.tsx:42:        <a href={whatsappUrl} className="gap-2">
+./src/app/(app)/piercing/page.tsx:31:          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+./src/components/app/app-footer.tsx:88:                    href={href}
+./src/components/app/mobile-header.tsx:93:      router.push("/");
+./src/components/app/mobile-header.tsx:139:                          href={href}
+./src/components/app/mobile-header.tsx:151:                        href="/iletisim"
+./src/components/app/mobile-header.tsx:165:                            href={`/kesfet/${hub.slug}`}
+./src/components/app/mobile-header.tsx:188:                        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+./src/components/app/mobile-header.tsx:210:              href="/"
+./src/components/app/mobile-header.tsx:248:                          href={`/kesfet/${hub.slug}`}
+./src/components/app/mobile-header.tsx:258:                          href={`/kesfet/${hub.slug}`}
+./src/components/app/mobile-header.tsx:269:                      href={WHATSAPP_URL}
+./src/components/app/mobile-header.tsx:308:                <Link href="/iletisim">
+./src/components/app/mobile-header.tsx:326:                  href={href}
+./src/components/app/app-header.tsx:21:        <Link href="/" className="flex shrink-0 flex-col leading-tight">
+./src/components/app/right-rail.tsx:45:                href={WHATSAPP_URL}
+./src/components/app/right-rail.tsx:74:              href={WHATSAPP_URL}
+./src/components/app/right-rail.tsx:84:            <Link href="/iletisim" className="inline-flex items-center">
+./src/components/app/right-rail.tsx:112:                  href={`/kesfet/${hub.slug}`}
+./src/components/app/right-rail.tsx:121:            <Link href="/kesfet">Tümünü keşfet</Link>
 ./src/app/(app)/profile/page.tsx:4:  redirect("/artistler");
-./src/components/app/app-header.tsx:19:        <Link href="/" className="flex shrink-0 flex-col leading-tight">
-./src/components/app/mobile-header.tsx:190:                    href="/iletisim"
-./src/components/app/mobile-header.tsx:240:          href="/"
-./src/components/app/mobile-header.tsx:339:            <Link href="/iletisim">
-./src/components/app/mobile-header.tsx:82:      router.push("/");
-./src/components/app/right-rail.tsx:120:            <Link href="/kesfet">Tümünü keşfet</Link>
-./src/components/app/right-rail.tsx:83:            <Link href="/iletisim" className="inline-flex items-center">
+./src/app/(app)/kesfet/page.tsx:17:      href={`/kesfet/${slug}`}
+./src/app/(app)/kesfet/page.tsx:81:          href="/piercing"
+./src/app/(app)/gallery/page.tsx:4:  redirect("/galeri");
+./docs/output/run-repo-discovery.zsh:156:  rg_or_grep '(<Link[^>]+href=|\bhref=|router\.push\(|router\.replace\(|\bredirect\(|\bpermanentRedirect\(|navigate\(|to="/)' '*'
+./src/app/(app)/iletisim/page.tsx:86:          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+./src/app/(app)/iletisim/page.tsx:100:                  href={href}
+./src/app/(app)/iletisim/page.tsx:121:                href={PHONE_TEL_URL}
+./src/app/(app)/iletisim/page.tsx:136:                <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+./src/app/(app)/iletisim/page.tsx:141:                <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">
+./src/app/(app)/iletisim/page.tsx:146:                <a href={GOOGLE_MAPS_BUSINESS_URL} target="_blank" rel="noopener noreferrer">
+./src/app/(app)/iletisim/page.tsx:151:                <a href={directionsUrl} target="_blank" rel="noopener noreferrer">
+./src/app/(app)/galeri/galeri-filters.tsx:40:    router.push(`/galeri?${next.toString()}`);
+./src/app/(app)/galeri/galeri-filters.tsx:44:    router.push("/galeri");
+./src/app/(app)/book/page.tsx:4:  redirect("/iletisim");
+./docs/output/run-sitemap.zsh:156:  rg_or_grep '(<Link[^>]+href=|\bhref=|router\.push\(|router\.replace\(|\bredirect\(|\bpermanentRedirect\(|navigate\(|to="/)' '*'
+./src/app/(app)/explore/page.tsx:4:  redirect("/kesfet");
+./src/app/(app)/page.tsx:35:              href={whatsappUrl}
+./src/app/(app)/page.tsx:45:            <Link href="/kesfet" className="gap-2">
+./src/app/(app)/page.tsx:62:              href={`/kesfet/${hub.slug}`}
+./src/app/(app)/page.tsx:89:              href={`/kesfet/${hub.slug}`}
+./src/app/(app)/page.tsx:109:          href="/piercing"
+./src/app/(app)/page.tsx:137:            <Link href="/galeri" className="gap-2">
+./src/app/(app)/page.tsx:163:            href={`tel:${phoneE164}`}
+./src/app/(app)/page.tsx:175:          <Link href="/iletisim" className="gap-2">
+./src/app/(app)/kesfet/[hub]/page.tsx:40:          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+./src/app/(app)/kesfet/[hub]/page.tsx:45:          <Link href={`/galeri?style=${styleParam}`}>Galeri&apos;de gör</Link>
+./docs/output/discovery.md:684:patterns: <Link ... href=, href="/...", router.push/replace, redirect/permanentRedirect
+./docs/output/discovery.md:686:./src/app/(app)/artistler/page.tsx:48:                <Link href={`/galeri?artist=${artist.id}`}>İşlerini gör</Link>
+./docs/output/discovery.md:687:./src/app/(app)/book/page.tsx:4:  redirect("/iletisim");
+./docs/output/discovery.md:688:./src/app/(app)/explore/page.tsx:4:  redirect("/kesfet");
+./docs/output/discovery.md:689:./src/app/(app)/galeri/galeri-filters.tsx:50:    router.push(`/galeri?${next.toString()}`);
+./docs/output/discovery.md:690:./src/app/(app)/galeri/galeri-filters.tsx:54:    router.push("/galeri");
+./docs/output/discovery.md:691:./src/app/(app)/gallery/page.tsx:4:  redirect("/galeri");
+./docs/output/discovery.md:692:./src/app/(app)/kesfet/[hub]/page.tsx:45:          <Link href={`/galeri?style=${styleParam}`}>Galeri&apos;de gör</Link>
+./docs/output/discovery.md:693:./src/app/(app)/kesfet/page.tsx:81:          href="/piercing"
+./docs/output/discovery.md:694:./src/app/(app)/page.tsx:107:          href="/piercing"
+./docs/output/discovery.md:695:./src/app/(app)/page.tsx:135:            <Link href="/galeri" className="gap-2">
+./docs/output/discovery.md:696:./src/app/(app)/page.tsx:173:          <Link href="/iletisim" className="gap-2">
+./docs/output/discovery.md:697:./src/app/(app)/page.tsx:45:            <Link href="/kesfet" className="gap-2">
+./docs/output/discovery.md:698:./src/app/(app)/profile/page.tsx:4:  redirect("/artistler");
+./docs/output/discovery.md:699:./src/components/app/app-header.tsx:19:        <Link href="/" className="flex shrink-0 flex-col leading-tight">
+./docs/output/discovery.md:700:./src/components/app/mobile-header.tsx:190:                    href="/iletisim"
+./docs/output/discovery.md:701:./src/components/app/mobile-header.tsx:240:          href="/"
+./docs/output/discovery.md:702:./src/components/app/mobile-header.tsx:339:            <Link href="/iletisim">
+./docs/output/discovery.md:703:./src/components/app/mobile-header.tsx:82:      router.push("/");
+./docs/output/discovery.md:704:./src/components/app/right-rail.tsx:120:            <Link href="/kesfet">Tümünü keşfet</Link>
+./docs/output/discovery.md:705:./src/components/app/right-rail.tsx:83:            <Link href="/iletisim" className="inline-flex items-center">

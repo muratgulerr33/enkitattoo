@@ -1,6 +1,3 @@
-````md
-<!-- FILE: /doc/00-prod-vps-deploy.md -->
-
 # ENKI TATTOO — PROD VPS Deploy & Mimari Kilit Dokümanı (2026)
 
 > Amaç: “Sunucuya nasıl girilir, neler açık, hangi domain hangi porta gider, servisler nerede çalışır, nasıl deploy edilir, nasıl kontrol edilir?”  
@@ -42,7 +39,7 @@ hostname
 uname -a
 lsb_release -a || cat /etc/os-release
 ip a
-````
+```
 
 ---
 
@@ -372,13 +369,9 @@ curl -sL http://80.78.26.92:8000/payload.sh | sed -n '1,120p'
 
 ## 10) Sonraki Dokümanlar (MasterPack sırası önerisi)
 
-* `01-styleguide-lock.md` (Tailwind v4 + OKLCH + Geist + shadcn/ui token standardı)
-* `02-routing-sitemap.md` (route map + SEO hedef sayfalar)
-* `03-components-inventory.md` (UI bileşen standardı, header/footer, layout)
-* `04-seo-content-system.md` (Mersin lokal SEO, içerik modeli, schema)
-
-```
-
-**Başlık / dosya adı önerim:** `/doc/00-prod-vps-deploy.md` ✅
-::contentReference[oaicite:0]{index=0}
-```
+* `./00-masterpack.md` (tek giriş noktası)
+* `./01-design-system-styleguide.md` (design rules / source of truth)
+* `./02-responsive-checklist.md` (responsive QA checklist)
+* `./03-icons-and-safe-area.md` (ikon sistemi ve safe-area kuralları)
+* `./04-repo-hygiene.md` (repo düzeni ve dokümantasyon hijyeni)
+* `./90-timeline.md` (tarihçe)

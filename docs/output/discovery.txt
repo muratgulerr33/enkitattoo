@@ -1,5 +1,5 @@
 ENKI TATTO — Repo Discovery (Auto)
-Generated: 17 Şub 2026 Sal +03 18:31:19
+Generated: 21 Şub 2026 Cts +03 01:50:17
 --------------------------------------------------------------------------------
 PWD: /Users/apple/dev/enkitattoo
 Git: yes
@@ -8,26 +8,27 @@ tree: yes
 --------------------------------------------------------------------------------
 [Top-level map]
 total 696
-drwxr-xr-x   21 apple  staff     672 10 Şub 02:57 .
-drwxr-xr-x   15 apple  staff     480 17 Şub 15:35 ..
--rw-r--r--@   1 apple  staff    8196 17 Şub 17:06 .DS_Store
+drwxr-xr-x@  22 apple  staff     704 20 Şub 17:41 .
+drwxr-xr-x@  15 apple  staff     480 19 Şub 22:05 ..
+-rw-r--r--@   1 apple  staff   10244 21 Şub 01:34 .DS_Store
 -rw-r--r--    1 apple  staff     187 10 Şub 02:57 .editorconfig
 -rw-r--r--    1 apple  staff     100 10 Şub 02:57 .env.example
+drwxr-xr-x   12 apple  staff     384 21 Şub 01:18 .git
 -rw-r--r--    1 apple  staff     499 10 Şub 02:46 .gitignore
-drwxr-xr-x   25 apple  staff     800 10 Şub 03:01 .next
--rw-r--r--    1 apple  staff     467  6 Şub 04:23 components.json
-drwxr-xr-x   10 apple  staff     320 17 Şub 17:06 docs
+drwxr-xr-x   25 apple  staff     800 21 Şub 00:53 .next
+-rw-r--r--    1 apple  staff     464 20 Şub 17:31 components.json
+drwxr-xr-x   11 apple  staff     352 21 Şub 01:18 docs
 -rw-r--r--    1 apple  staff     465  6 Şub 04:22 eslint.config.mjs
--rw-r--r--    1 apple  staff     251 10 Şub 03:09 next-env.d.ts
+-rw-r--r--    1 apple  staff     247 21 Şub 00:17 next-env.d.ts
 -rw-r--r--    1 apple  staff     438 10 Şub 02:58 next.config.ts
-drwxr-xr-x  310 apple  staff    9920  9 Şub 20:12 node_modules
+drwxr-xr-x  310 apple  staff    9920 20 Şub 17:41 node_modules
 -rw-r--r--    1 apple  staff  295721  9 Şub 20:12 package-lock.json
 -rw-r--r--    1 apple  staff     943 10 Şub 02:58 package.json
 -rw-r--r--    1 apple  staff      94  6 Şub 04:27 postcss.config.mjs
 drwxr-xr-x    7 apple  staff     224  6 Şub 04:22 public
 -rw-r--r--    1 apple  staff    1844 10 Şub 02:47 README.md
 drwxr-xr-x    3 apple  staff      96 10 Şub 02:57 scripts
-drwxr-xr-x    5 apple  staff     160  6 Şub 04:24 src
+drwxr-xr-x    7 apple  staff     224 20 Şub 21:08 src
 -rw-r--r--    1 apple  staff     670  6 Şub 04:22 tsconfig.json
 --------------------------------------------------------------------------------
 [package.json summary]

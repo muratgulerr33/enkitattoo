@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-02-21",
+  "routes": [
+    "src/app/(app)/galeri/page.tsx",
+    "src/app/(app)/galeri/galeri-filters.tsx"
+  ],
+  "inventory": [
+    {
+      "component": "src/app/(app)/galeri/page.tsx",
+      "usage": [
+        "src/app/(app)/galeri/page.tsx"
+      ],
+      "imageSourceType": "mock placeholder (CSS gradient block)",
+      "imagePaths": [],
+      "renderMode": "div placeholder (no next/image, no <img>)",
+      "sizes": null,
+      "aspectRatio": "card-media => 5/4 mobile, 4/3 md+",
+      "notes": "Primary gallery grid item. Uses .card-media token; no real image URL binding yet."
+    },
+    {
+      "component": "src/app/globals.css",
+      "usage": [
+        "src/app/(app)/galeri/page.tsx",
+        "src/app/(app)/page.tsx",
+        "src/app/(app)/kesfet/page.tsx",
+        "src/app/(app)/kesfet/[hub]/page.tsx"
+      ],
+      "imageSourceType": "N/A (style token)",
+      "imagePaths": [],
+      "renderMode": "utility class",
+      "sizes": null,
+      "aspectRatio": ".card-media: aspect-[5/4] + md aspect-ratio 4/3",
+      "notes": "Single source of truth for gallery-like media slots."
+    },
+    {
+      "component": "src/app/(app)/page.tsx",
+      "usage": [
+        "src/app/(app)/page.tsx"
+      ],
+      "imageSourceType": "mock placeholder (Skeleton)",
+      "imagePaths": [],
+      "renderMode": "Skeleton with card-media class",
+      "sizes": null,
+      "aspectRatio": "card-media => 5/4 mobile, 4/3 md+",
+      "notes": "Mini gallery preview block on home route."
+    },
+    {
+      "component": "src/app/(app)/kesfet/[hub]/page.tsx",
+      "usage": [
+        "src/app/(app)/kesfet/[hub]/page.tsx"
+      ],
+      "imageSourceType": "mock placeholder (Skeleton)",
+      "imagePaths": [],
+      "renderMode": "Skeleton with card-media class",
+      "sizes": null,
+      "aspectRatio": "card-media => 5/4 mobile, 4/3 md+",
+      "notes": "Hub detail sample gallery grid."
+    }
+  ],
+  "summary": {
+    "galleryImageCardTypes": 3,
+    "currentAspectStandard": "card-media (5/4 mobile, 4/3 md+)",
+    "nextImageUsed": false,
+    "imgTagUsed": false,
+    "publicOrRemoteImageUsedInGallery": false
+  }
+}

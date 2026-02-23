@@ -1,0 +1,740 @@
+{
+  "generatedAt": "2026-02-21",
+  "scope": [
+    "src/app/**",
+    "src/components/**",
+    "src/lib/**"
+  ],
+  "excluded": [
+    "docs/output",
+    "node_modules",
+    ".next",
+    "dist",
+    "build",
+    "coverage",
+    ".git"
+  ],
+  "cards": [
+    {
+      "id": "hub-card-kesfet",
+      "name": "HubCard",
+      "type": "Category/Hub Card",
+      "sourceFile": "src/app/(app)/kesfet/page.tsx",
+      "usage": [
+        "src/app/(app)/kesfet/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "grid",
+        "containerClass": "grid-cards",
+        "columns": "base:2, md:3, xl:4, <=360px:1",
+        "gap": "base:gap-3, sm:gap-4, md:gap-5, xl:gap-6"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": true,
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "description line-clamp-1",
+        "actions": "inline text action + chevron"
+      },
+      "styleTokens": {
+        "padding": "p-3 sm:p-4",
+        "gap": "gap-1",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "hover:bg-accent/50"
+      },
+      "media": {
+        "aspectRatio": "card-media => 5/4 (mobile), 4/3 (>=md)",
+        "objectFit": "N/A (real image yok)",
+        "sizes": "N/A",
+        "heightSignals": "min-h-28; >=md min-height:9rem"
+      },
+      "notes": "Category/hub kartı için kanonik pattern; home ve galeri ile yüksek benzerlikte."
+    },
+    {
+      "id": "hub-card-home-main",
+      "name": "Home Main Hub Link Card",
+      "type": "Category/Hub Card",
+      "sourceFile": "src/app/(app)/page.tsx",
+      "usage": [
+        "src/app/(app)/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "grid",
+        "containerClass": "grid-cards",
+        "columns": "base:2, md:3, xl:4, <=360px:1"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": true,
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "title truncate + description line-clamp-1",
+        "actions": "chevron icon"
+      },
+      "styleTokens": {
+        "padding": "p-3 sm:p-4",
+        "gap": "gap-1",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "hover:bg-accent/50 + group-hover icon"
+      },
+      "media": {
+        "aspectRatio": "card-media => 5/4 (mobile), 4/3 (>=md)",
+        "objectFit": "N/A",
+        "sizes": "N/A"
+      },
+      "notes": "Kesfet HubCard ile aynı DNA; component duplication fırsatı."
+    },
+    {
+      "id": "hub-card-home-special",
+      "name": "Home Special Hub Card",
+      "type": "Category/Hub Card",
+      "sourceFile": "src/app/(app)/page.tsx",
+      "usage": [
+        "src/app/(app)/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "grid",
+        "containerClass": "grid-cards",
+        "columns": "base:2, md:3, xl:4, <=360px:1"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": true,
+        "title": true,
+        "subtitle": false,
+        "truncateClamp": "title truncate",
+        "actions": false
+      },
+      "styleTokens": {
+        "padding": "p-3 sm:p-4",
+        "gap": "body centered",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "hover:bg-accent/50"
+      },
+      "media": {
+        "aspectRatio": "card-media => 5/4 (mobile), 4/3 (>=md)",
+        "objectFit": "N/A",
+        "sizes": "N/A"
+      },
+      "notes": "Aynı görsel alanı kullanmasına rağmen info yoğunluğu düşük; kompakt alt varyant."
+    },
+    {
+      "id": "gallery-grid-card",
+      "name": "Galeri Grid Item",
+      "type": "Gallery Card",
+      "sourceFile": "src/app/(app)/galeri/page.tsx",
+      "usage": [
+        "src/app/(app)/galeri/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "grid",
+        "containerClass": "grid-cards",
+        "columns": "base:2, md:3, xl:4, <=360px:1"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": true,
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "title truncate + description line-clamp-1",
+        "actions": false
+      },
+      "styleTokens": {
+        "padding": "p-3 sm:p-4",
+        "gap": "gap-1",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "none"
+      },
+      "media": {
+        "aspectRatio": "card-media => 5/4 (mobile), 4/3 (>=md)",
+        "objectFit": "N/A (placeholder gradient)",
+        "sizes": "N/A"
+      },
+      "notes": "Asıl gallery kartı; şu an tıklanabilir değil, hover state yok."
+    },
+    {
+      "id": "gallery-preview-skeleton-card",
+      "name": "Mini Gallery Preview Skeleton Card",
+      "type": "Gallery Card",
+      "sourceFile": "src/app/(app)/page.tsx",
+      "usage": [
+        "src/app/(app)/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "compact grid",
+        "containerClass": "grid-cards-compact",
+        "columns": "base:2, md:3, xl:4, <=360px:1",
+        "gap": "base:2, sm:3, md:4, xl:5"
+      },
+      "structure": {
+        "header": false,
+        "body": false,
+        "footer": false,
+        "imageSlot": true,
+        "title": false,
+        "subtitle": false,
+        "truncateClamp": "N/A",
+        "actions": false
+      },
+      "styleTokens": {
+        "padding": "none",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "none",
+        "hover": "none"
+      },
+      "media": {
+        "aspectRatio": "card-media => 5/4 (mobile), 4/3 (>=md)",
+        "objectFit": "N/A",
+        "sizes": "N/A"
+      },
+      "notes": "Skeleton kart, production gallery oranını önizlemede tekrar ediyor."
+    },
+    {
+      "id": "hub-detail-skeleton-card",
+      "name": "Hub Detail Sample Gallery Card",
+      "type": "Gallery Card",
+      "sourceFile": "src/app/(app)/kesfet/[hub]/page.tsx",
+      "usage": [
+        "src/app/(app)/kesfet/[hub]/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "grid",
+        "containerClass": "grid-cards",
+        "columns": "base:2, md:3, xl:4, <=360px:1"
+      },
+      "structure": {
+        "header": false,
+        "body": false,
+        "footer": false,
+        "imageSlot": true,
+        "title": false,
+        "subtitle": false,
+        "truncateClamp": "N/A",
+        "actions": false
+      },
+      "styleTokens": {
+        "padding": "none",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "none",
+        "hover": "none"
+      },
+      "media": {
+        "aspectRatio": "card-media => 5/4 (mobile), 4/3 (>=md)",
+        "objectFit": "N/A",
+        "sizes": "N/A"
+      },
+      "notes": "Hub detayında galeri placeholder grid, oran standardıyla tutarlı."
+    },
+    {
+      "id": "artist-profile-card",
+      "name": "Artist Profile List Card",
+      "type": "Profile Card",
+      "sourceFile": "src/app/(app)/artistler/page.tsx",
+      "usage": [
+        "src/app/(app)/artistler/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "list",
+        "containerClass": "flex flex-col gap-4",
+        "columns": "single-column list"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": true,
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "title truncate",
+        "actions": "Button İncele"
+      },
+      "styleTokens": {
+        "padding": "p-4",
+        "gap": "outer gap-4; inner gap-3",
+        "radius": "rounded-xl; avatar placeholder rounded-lg",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "none"
+      },
+      "media": {
+        "aspectRatio": "placeholder square 1/1 (size-20)",
+        "objectFit": "N/A",
+        "sizes": "fixed size"
+      },
+      "notes": "Profile görseli sabit 80x80 placeholder; responsive ölçeklenmiyor."
+    },
+    {
+      "id": "piercing-category-card",
+      "name": "Piercing Category Item Card",
+      "type": "Info/Stat Card",
+      "sourceFile": "src/app/(app)/piercing/page.tsx",
+      "usage": [
+        "src/app/(app)/piercing/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "grid",
+        "containerClass": "grid-cards",
+        "columns": "base:2, md:3, xl:4, <=360px:1"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": "icon slot (size-10)",
+        "title": true,
+        "subtitle": false,
+        "truncateClamp": "none",
+        "actions": false
+      },
+      "styleTokens": {
+        "padding": "p-4",
+        "gap": "gap-3",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "hover:bg-accent/50"
+      },
+      "media": {
+        "aspectRatio": "N/A",
+        "objectFit": "N/A",
+        "sizes": "icon fixed"
+      },
+      "notes": "Text+icon bilgi kartı, media card değil."
+    },
+    {
+      "id": "piercing-cta-card",
+      "name": "Piercing CTA Card",
+      "type": "CTA Card",
+      "sourceFile": "src/app/(app)/page.tsx",
+      "usage": [
+        "src/app/(app)/page.tsx",
+        "src/app/(app)/kesfet/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "standalone block",
+        "containerClass": "responsive flex",
+        "columns": "N/A"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": "icon panel size-14",
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "none",
+        "actions": "primary button"
+      },
+      "styleTokens": {
+        "padding": "px-4 py-5 sm:px-6 sm:py-6 lg:px-8",
+        "gap": "mobile stacked, sm gap-4",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "hover:bg-accent/50"
+      },
+      "media": {
+        "aspectRatio": "N/A",
+        "objectFit": "N/A",
+        "sizes": "icon container fixed"
+      },
+      "notes": "Home ve Kesfet varyant metni farklı ama stil eşdeğer."
+    },
+    {
+      "id": "home-contact-strip-card",
+      "name": "Home Contact Strip Card",
+      "type": "CTA Card",
+      "sourceFile": "src/app/(app)/page.tsx",
+      "usage": [
+        "src/app/(app)/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "standalone block",
+        "columns": "N/A"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": "icons only",
+        "title": false,
+        "subtitle": true,
+        "truncateClamp": "none",
+        "actions": "outline button"
+      },
+      "styleTokens": {
+        "padding": "p-4",
+        "gap": "flex-col gap-2",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "link hover:text-foreground"
+      },
+      "media": {
+        "aspectRatio": "N/A",
+        "objectFit": "N/A",
+        "sizes": "N/A"
+      },
+      "notes": "CTA/info hibrit kartı."
+    },
+    {
+      "id": "iletisim-studio-info-card",
+      "name": "Iletisim Studio Info Card",
+      "type": "Info/Stat Card",
+      "sourceFile": "src/app/(app)/iletisim/page.tsx",
+      "usage": [
+        "src/app/(app)/iletisim/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "two-column page on xl",
+        "containerClass": "xl:grid xl:grid-cols-[1fr_360px]",
+        "columns": "content column"
+      },
+      "structure": {
+        "header": true,
+        "body": true,
+        "footer": false,
+        "imageSlot": false,
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "none",
+        "actions": "button group"
+      },
+      "styleTokens": {
+        "padding": "Card primitive defaults (py-4 + px-4/5)",
+        "gap": "Card gap-6 + content space-y-4",
+        "radius": "rounded-xl (primitive)",
+        "border": "border border-border",
+        "shadow": "default shadow-sm (primitive)",
+        "hover": "none"
+      },
+      "media": {
+        "aspectRatio": "N/A",
+        "objectFit": "N/A",
+        "sizes": "N/A"
+      },
+      "notes": "shadcn Card primitive tabanlı bilgi kartı."
+    },
+    {
+      "id": "iletisim-map-card",
+      "name": "Iletisim Map Card",
+      "type": "Media Card",
+      "sourceFile": "src/app/(app)/iletisim/page.tsx",
+      "usage": [
+        "src/app/(app)/iletisim/page.tsx"
+      ],
+      "layoutContext": {
+        "container": "right column (xl sticky)",
+        "columns": "fixed 360px aside"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": "iframe map",
+        "title": false,
+        "subtitle": false,
+        "truncateClamp": "N/A",
+        "actions": false
+      },
+      "styleTokens": {
+        "padding": "CardContent p-0",
+        "gap": "none",
+        "radius": "rounded-xl + overflow-hidden",
+        "border": "border border-border",
+        "shadow": "default shadow-sm (primitive)",
+        "hover": "none"
+      },
+      "media": {
+        "aspectRatio": "height-based: h-64 md:h-80 xl:h-[400px]",
+        "objectFit": "N/A (iframe)",
+        "sizes": "w-full"
+      },
+      "notes": "Media kart ama image değil; iframe kullanıyor."
+    },
+    {
+      "id": "right-rail-quick-actions-card",
+      "name": "RightRail Quick Actions Card",
+      "type": "CTA Card",
+      "sourceFile": "src/components/app/right-rail.tsx",
+      "usage": [
+        "src/components/app/right-rail.tsx",
+        "src/components/app/app-shell.tsx"
+      ],
+      "layoutContext": {
+        "container": "desktop aside stack",
+        "containerClass": "flex flex-col gap-6",
+        "columns": "single column (xl only)"
+      },
+      "structure": {
+        "header": true,
+        "body": true,
+        "footer": false,
+        "imageSlot": false,
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "none",
+        "actions": "full-width buttons"
+      },
+      "styleTokens": {
+        "padding": "Card primitive defaults",
+        "gap": "content gap-3",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "button/link hover states"
+      },
+      "media": {
+        "aspectRatio": "N/A",
+        "objectFit": "N/A",
+        "sizes": "N/A"
+      },
+      "notes": "Desktop-only surfaced card."
+    },
+    {
+      "id": "right-rail-popular-hubs-card",
+      "name": "RightRail Popular Hubs Card",
+      "type": "Category/Hub Card",
+      "sourceFile": "src/components/app/right-rail.tsx",
+      "usage": [
+        "src/components/app/right-rail.tsx",
+        "src/components/app/app-shell.tsx"
+      ],
+      "layoutContext": {
+        "container": "desktop aside stack",
+        "columns": "single column (xl only)"
+      },
+      "structure": {
+        "header": true,
+        "body": true,
+        "footer": false,
+        "imageSlot": false,
+        "title": true,
+        "subtitle": false,
+        "truncateClamp": "none",
+        "actions": "list of links + button"
+      },
+      "styleTokens": {
+        "padding": "Card primitive defaults",
+        "gap": "list gap-1",
+        "radius": "rounded-xl; item rounded-lg",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "item hover:bg-accent/50"
+      },
+      "media": {
+        "aspectRatio": "N/A",
+        "objectFit": "N/A",
+        "sizes": "N/A"
+      },
+      "notes": "Kart içinde mini hub-list tile yapısı var."
+    },
+    {
+      "id": "right-rail-piercing-booking-card",
+      "name": "RightRail Piercing Booking Card",
+      "type": "CTA Card",
+      "sourceFile": "src/components/app/right-rail.tsx",
+      "usage": [
+        "src/components/app/right-rail.tsx",
+        "src/components/app/app-shell.tsx"
+      ],
+      "layoutContext": {
+        "container": "desktop aside stack",
+        "conditional": "only /piercing route"
+      },
+      "structure": {
+        "header": true,
+        "body": true,
+        "footer": false,
+        "imageSlot": false,
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "none",
+        "actions": "primary full-width button"
+      },
+      "styleTokens": {
+        "padding": "Card primitive defaults",
+        "gap": "content space-y-3",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-soft",
+        "hover": "button hover"
+      },
+      "media": {
+        "aspectRatio": "N/A",
+        "objectFit": "N/A",
+        "sizes": "N/A"
+      },
+      "notes": "Route-conditional CTA card." 
+    },
+    {
+      "id": "token-card-styleguide",
+      "name": "TokenCard",
+      "type": "Info/Stat Card",
+      "sourceFile": "src/components/styleguide/token-grid.tsx",
+      "usage": [
+        "src/components/styleguide/token-grid.tsx"
+      ],
+      "layoutContext": {
+        "container": "grid",
+        "containerClass": "grid-cards",
+        "columns": "base:2, md:3, xl:4"
+      },
+      "structure": {
+        "header": true,
+        "body": true,
+        "footer": false,
+        "imageSlot": "swatch demo",
+        "title": true,
+        "subtitle": false,
+        "truncateClamp": "code block truncate",
+        "actions": false
+      },
+      "styleTokens": {
+        "padding": "Card + header py-3 + content pt-0",
+        "gap": "space-y-2",
+        "radius": "rounded-xl outer + rounded-lg inner",
+        "border": "Card border",
+        "shadow": "shadow-sm (primitive)",
+        "hover": "none"
+      },
+      "media": {
+        "aspectRatio": "N/A",
+        "objectFit": "N/A",
+        "sizes": "min-h-[56px] swatch area"
+      },
+      "notes": "Styleguide/demo alanı; production route tarafından kullanılmıyor."
+    },
+    {
+      "id": "legacy-post-card",
+      "name": "PostCard",
+      "type": "Media Card",
+      "sourceFile": "src/components/legacy/social-mock/post-card.tsx",
+      "usage": [
+        "src/components/legacy/social-mock/post-card.tsx"
+      ],
+      "layoutContext": {
+        "container": "list/feed",
+        "columns": "single column"
+      },
+      "structure": {
+        "header": true,
+        "body": true,
+        "footer": true,
+        "imageSlot": "optional skeleton media",
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "author truncate",
+        "actions": "like/comment/share buttons"
+      },
+      "styleTokens": {
+        "padding": "p-4",
+        "gap": "gap-4 + space-y-3",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "shadow-sm",
+        "hover": "button hover states"
+      },
+      "media": {
+        "aspectRatio": "aspect-video (16/9)",
+        "objectFit": "N/A",
+        "sizes": "w-full"
+      },
+      "notes": "Legacy mock; aktif route zincirinde değil."
+    },
+    {
+      "id": "legacy-feed-card",
+      "name": "FeedCard",
+      "type": "Media Card",
+      "sourceFile": "src/components/legacy/social-mock/feed-list.tsx",
+      "usage": [
+        "src/components/legacy/social-mock/feed-list.tsx"
+      ],
+      "layoutContext": {
+        "container": "list",
+        "containerClass": "ul space-y-6",
+        "columns": "single column"
+      },
+      "structure": {
+        "header": true,
+        "body": true,
+        "footer": true,
+        "imageSlot": "optional skeleton media",
+        "title": true,
+        "subtitle": true,
+        "truncateClamp": "author truncate",
+        "actions": "like/comment/share"
+      },
+      "styleTokens": {
+        "padding": "Card primitive defaults",
+        "gap": "content space-y-3",
+        "radius": "rounded-xl",
+        "border": "Card border",
+        "shadow": "shadow-sm",
+        "hover": "buttons muted"
+      },
+      "media": {
+        "aspectRatio": "aspect-video (16/9)",
+        "objectFit": "N/A",
+        "sizes": "w-full"
+      },
+      "notes": "Legacy mock; PostCard ile görsel oran uyuşuyor ama base primitive farklı."
+    },
+    {
+      "id": "legacy-stories-row-card",
+      "name": "StoriesRow Container",
+      "type": "Other",
+      "sourceFile": "src/components/legacy/social-mock/stories-row.tsx",
+      "usage": [
+        "src/components/legacy/social-mock/stories-row.tsx"
+      ],
+      "layoutContext": {
+        "container": "horizontal scroll row",
+        "columns": "N/A"
+      },
+      "structure": {
+        "header": false,
+        "body": true,
+        "footer": false,
+        "imageSlot": "avatar circles",
+        "title": true,
+        "subtitle": false,
+        "truncateClamp": "name truncate",
+        "actions": "story button items"
+      },
+      "styleTokens": {
+        "padding": "p-3",
+        "gap": "inner gap-2",
+        "radius": "rounded-xl",
+        "border": "border border-border",
+        "shadow": "none",
+        "hover": "item hover:bg-accent/50"
+      },
+      "media": {
+        "aspectRatio": "avatars square/circle",
+        "objectFit": "N/A",
+        "sizes": "avatar size-14"
+      },
+      "notes": "Row/panel kartı; taxonomy'de Other çünkü klasik card+media değil."
+    }
+  ]
+}
