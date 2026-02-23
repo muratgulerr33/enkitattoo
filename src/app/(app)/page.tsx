@@ -144,7 +144,7 @@ export default function HomePage() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <span className="t-small text-muted-foreground">Galeri önizleme</span>
           <Button asChild variant="outline" size="sm">
-            <Link href="/galeri" className="gap-2">
+            <Link href="/galeri-tasarim" className="gap-2">
               <Images className="size-4" aria-hidden />
               Galeri&apos;ye git
             </Link>

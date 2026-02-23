@@ -1,9 +1,12 @@
-# Routes Lock — Kesfet
+# Routes Lock — Kesfet + Galeri + Artistler + Piercing
 
-Tarih: 2026-02-23
+Tarih: 2026-02-24
 
 ## Kilitlenen Prefix
 - `/kesfet/<slug>`
+- `/artistler/<slug>`
+- `/piercing/<slug>`
+- `/galeri-tasarim`
 
 ## Final Slug Listesi (Yeni)
 - `minimal-fine-line-dovme`
@@ -32,3 +35,18 @@ Tarih: 2026-02-23
 ## Kural
 - Eski sluglar için redirect/301 uygulanmadı.
 - Eski sluglar 404 dönebilir (PR-1 kabulü ile uyumlu).
+- `/galeri` route'u kaldırıldı; pre-launch dönemde 404 kabul.
+
+## Artistler Slug (PR-3)
+- `halit-yalvac`
+
+## Piercing Slug Listesi (PR-3)
+- `kulak`
+- `burun`
+- `kas`
+- `dudak`
+- `dil`
+- `gobek`
+- `septum`
+- `industrial`
+- `kisiye-ozel`

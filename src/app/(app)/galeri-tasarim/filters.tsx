@@ -11,6 +11,8 @@ import {
 import { mainHubs, specialHubs, themeFilters } from "@/lib/hub/hubs.v1";
 
 const allStyleOptions = [...mainHubs, ...specialHubs];
+const GALERI_TASARIM_SLUG = "galeri-tasarim";
+const GALERI_TASARIM_PATH = `/${GALERI_TASARIM_SLUG}`;
 
 function themeLabel(key: string): string {
   const labels: Record<string, string> = {
@@ -37,11 +39,11 @@ export function GaleriFilters() {
     const next = new URLSearchParams(searchParams.toString());
     if (value) next.set(key, value);
     else next.delete(key);
-    router.push(`/galeri?${next.toString()}`);
+    router.push(`${GALERI_TASARIM_PATH}?${next.toString()}`);
   }
 
   function resetFilters() {
-    router.push("/galeri");
+    router.push(GALERI_TASARIM_PATH);
   }
 
   return (

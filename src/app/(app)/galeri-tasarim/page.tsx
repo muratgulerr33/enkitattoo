@@ -1,5 +1,24 @@
-import { GaleriFilters } from "./galeri-filters";
-import { getRouteContent } from "@/lib/route-content";
+import type { Metadata } from "next";
+import { GaleriFilters } from "./filters";
+import { getRouteContent, hasNoIndex } from "@/lib/route-content";
+
+const GALERI_TASARIM_SLUG = "galeri-tasarim";
+const GALERI_TASARIM_PATH = `/${GALERI_TASARIM_SLUG}`;
+const galeriContent = getRouteContent(GALERI_TASARIM_PATH);
+
+export function generateMetadata(): Metadata {
+  const metadata: Metadata = {
+    title: { absolute: galeriContent?.seoTitle ?? "Galeri | Enki Tattoo" },
+    description: galeriContent?.seoDescription ?? "Dövme tasarım galerisi.",
+    alternates: { canonical: galeriContent?.canonical ?? GALERI_TASARIM_PATH },
+  };
+
+  if (hasNoIndex(galeriContent?.indexing)) {
+    metadata.robots = { index: false, follow: true };
+  }
+
+  return metadata;
+}
 
 interface PageProps {
   searchParams: Promise<{ style?: string; theme?: string }>;
@@ -7,7 +26,7 @@ interface PageProps {
 
 export default async function GaleriPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const content = getRouteContent("/galeri");
+  const content = galeriContent;
   const hasFilters = Boolean(params.style) || Boolean(params.theme);
   const mockCount = hasFilters ? 24 : 32;
   const mockTitleBase =
@@ -25,7 +44,7 @@ export default async function GaleriPage({ searchParams }: PageProps) {
         {content?.microLine ? (
           <p className="t-small text-muted-foreground">{content.microLine}</p>
         ) : null}
-        <h1 className="typo-page-title">{content?.h1 || "Galeri"}</h1>
+        <h1 className="typo-page-title">{content?.h1 || "Galeri Tasarım"}</h1>
         <p className="t-muted mt-1">{shortDescription}</p>
         {longDescription ? <p className="t-muted mt-2">{longDescription}</p> : null}
       </header>

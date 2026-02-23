@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
-import { piercingCategories } from "@/lib/hub/hubs.v1";
+import Link from "next/link";
 import { whatsappUrl } from "@/lib/mock/enki";
-import { getRouteContent, hasNoIndex } from "@/lib/route-content";
+import { getRouteContent, hasNoIndex, listKnownPaths } from "@/lib/route-content";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 
 const PIERCING_PATH = "/piercing";
 const piercingContent = getRouteContent(PIERCING_PATH);
+const knownPiercingPaths = listKnownPaths().filter(
+  (path) => path.startsWith("/piercing/") && path !== PIERCING_PATH,
+);
 
 export function generateMetadata(): Metadata {
   if (!piercingContent) {
@@ -31,17 +34,13 @@ export function generateMetadata(): Metadata {
   return metadata;
 }
 
-const PIERCING_LABELS: Record<string, string> = {
-  kulak: "Kulak",
-  burun: "Burun",
-  kas: "Kaş",
-  dudak: "Dudak",
-  dil: "Dil",
-  gobek: "Göbek",
-  septum: "Septum",
-  industrial: "Industrial",
-  diger: "Diğer",
-};
+function formatSlugLabel(path: string): string {
+  const slug = path.split("/").pop() ?? "";
+  return slug
+    .split("-")
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(" ");
+}
 
 export default function PiercingPage() {
   const shortDescription =
@@ -78,19 +77,23 @@ export default function PiercingPage() {
           Kategoriler
         </h2>
         <div className="grid-cards">
-          {piercingCategories.map((key) => (
-            <div
-              key={key}
-              className="flex min-h-14 items-center gap-3 rounded-xl border border-border bg-surface-2 p-4 shadow-soft transition-colors hover:bg-accent/50"
-            >
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
-                <Sparkles className="size-5 text-muted-foreground" aria-hidden />
-              </div>
-              <span className="t-body text-foreground">
-                {PIERCING_LABELS[key] ?? key}
-              </span>
-            </div>
-          ))}
+          {knownPiercingPaths.map((path) => {
+            const itemContent = getRouteContent(path);
+            const label = itemContent?.h1 ?? formatSlugLabel(path);
+
+            return (
+              <Link
+                key={path}
+                href={path}
+                className="flex min-h-14 items-center gap-3 rounded-xl border border-border bg-surface-2 p-4 shadow-soft transition-colors hover:bg-accent/50"
+              >
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+                  <Sparkles className="size-5 text-muted-foreground" aria-hidden />
+                </div>
+                <span className="t-body text-foreground">{label}</span>
+              </Link>
+            );
+          })}
         </div>
       </section>
 

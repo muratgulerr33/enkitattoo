@@ -46,7 +46,7 @@ const TOP_LEVEL_ROUTES = [
   "/",
   "/kesfet",
   "/piercing",
-  "/galeri",
+  "/galeri-tasarim",
   "/artistler",
   "/iletisim",
 ] as const;
@@ -55,7 +55,7 @@ const TABS = [
   { href: "/", label: "Ana Sayfa", icon: Home },
   { href: "/kesfet", label: "Keşfet", icon: Compass },
   { href: "/piercing", label: "Piercing", icon: Sparkles },
-  { href: "/galeri", label: "Galeri", icon: Images },
+  { href: "/galeri-tasarim", label: "Galeri", icon: Images },
   { href: "/artistler", label: "Artistler", icon: Users },
 ] as const;
 

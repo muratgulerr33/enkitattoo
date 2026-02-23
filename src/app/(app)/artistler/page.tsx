@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getRouteContent, hasNoIndex } from "@/lib/route-content";
 
@@ -31,18 +32,21 @@ export function generateMetadata(): Metadata {
 const ARTISTS = [
   {
     id: "halit-yalvac",
+    slug: "halit-yalvac",
     name: "Halit Yalvaç",
     role: "Master Artist",
     description: "30 yılı aşkın deneyim",
   },
   {
     id: "placeholder-1",
+    slug: null,
     name: "Placeholder Artist",
     role: "Tattoo Artist",
     description: "Kısa açıklama placeholder",
   },
   {
     id: "placeholder-2",
+    slug: null,
     name: "Placeholder Artist",
     role: "Tattoo Artist",
     description: "Kısa açıklama placeholder",
@@ -78,13 +82,25 @@ export default function ArtistlerPage() {
               <div className="size-20 shrink-0 rounded-lg bg-muted" aria-hidden />
               <div className="flex min-w-0 flex-1 flex-col gap-3">
                 <div className="min-w-0">
-                  <h2 className="t-h4 truncate text-foreground">{artist.name}</h2>
+                  {artist.slug ? (
+                    <h2 className="t-h4 truncate text-foreground">
+                      <Link href={`/artistler/${artist.slug}`}>{artist.name}</Link>
+                    </h2>
+                  ) : (
+                    <h2 className="t-h4 truncate text-foreground">{artist.name}</h2>
+                  )}
                   <p className="t-small text-muted-foreground">{artist.role}</p>
                   <p className="t-muted mt-1">{artist.description}</p>
                 </div>
-                <Button variant="outline" size="sm" className="self-start">
-                  İncele
-                </Button>
+                {artist.slug ? (
+                  <Button asChild variant="outline" size="sm" className="self-start">
+                    <Link href={`/artistler/${artist.slug}`}>İncele</Link>
+                  </Button>
+                ) : (
+                  <Button variant="outline" size="sm" className="self-start" disabled>
+                    İncele
+                  </Button>
+                )}
               </div>
             </article>
           </li>

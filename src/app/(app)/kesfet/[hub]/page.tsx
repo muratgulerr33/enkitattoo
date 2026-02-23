@@ -97,7 +97,7 @@ export default async function HubDetailPage({ params }: PageProps) {
           </a>
         </Button>
         <Button asChild variant="outline" size="default" className="w-full sm:w-auto">
-          <Link href={`/galeri?style=${styleParam}`}>Galeri&apos;de gör</Link>
+          <Link href={`/galeri-tasarim?style=${styleParam}`}>Galeri&apos;de gör</Link>
         </Button>
       </div>
 
