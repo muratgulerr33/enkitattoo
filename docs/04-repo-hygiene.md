@@ -16,15 +16,17 @@ Rules for maintaining consistency and long-term sustainability.
 - `/kesfet` — Keşfet
 - `/kesfet/[hub]` — Hub detay
 - `/piercing` — Piercing
-- `/galeri` — Galeri
+- `/galeri-tasarim` — Galeri
 - `/artistler` — Artistler
 - `/iletisim` — İletişim
 
 Legacy redirects:
 - `/book` → `/iletisim`
 - `/explore` → `/kesfet`
-- `/gallery` → `/galeri`
 - `/profile` → `/artistler`
+
+Route contract:
+- `/galeri` 404 (pre-launch cleanup), canonical `/galeri-tasarim`
 
 ## 3) Component Placement
 - `src/components/ui/`: shadcn primitives.

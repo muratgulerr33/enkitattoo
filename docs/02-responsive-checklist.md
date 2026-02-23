@@ -25,10 +25,11 @@ Breakpoint-first setup: mobile-first, `xl = 1280px`.
 - Mobile: stacked sections and readable cards.
 - Desktop: 3-col main grid, no overflow.
 
-### Galeri (`/galeri`)
+### Galeri (`/galeri-tasarim`)
 - Mobile: two filter selects only (`Tüm stiller`, `Tüm temalar`).
 - Desktop: filters inline, grid scales to 4 columns at `xl`.
 - Card titles must remain single-line truncated.
+- Legacy route `/galeri` returns 404 (pre-launch cleanup).
 
 ### Piercing (`/piercing`)
 - Mobile: tappable category blocks.

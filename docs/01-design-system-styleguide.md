@@ -39,7 +39,7 @@
 - Link constants: `src/lib/site/links.ts`
 - Contact/social distribution: `src/app/(app)/iletisim/page.tsx`
 - Footer social row: `src/components/app/app-footer.tsx`
-- Galeri filters + cards: `src/app/(app)/galeri/galeri-filters.tsx`, `src/app/(app)/galeri/page.tsx`
+- Galeri filters + cards: `src/app/(app)/galeri-tasarim/filters.tsx`, `src/app/(app)/galeri-tasarim/page.tsx`
 - Home card truncation: `src/app/(app)/page.tsx`
 - Artistler V1 cards: `src/app/(app)/artistler/page.tsx`
 

@@ -11,6 +11,7 @@ Canonical docs entrypoint for Enki Tattoo.
 
 ## Governance
 - Repo hygiene: `./04-repo-hygiene.md`
+- URL/SEO/Sitemap SSOT contract: `./locks/url-seo-sitemap-ssot-lock.md`
 - Timeline (historical): `./90-timeline.md`
 
 ## Generated / Discovery

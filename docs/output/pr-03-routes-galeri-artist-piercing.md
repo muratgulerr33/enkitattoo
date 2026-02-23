@@ -8,7 +8,7 @@ Bu PR ile:
 - `/artistler/[slug]` route'u eklendi (şimdilik sadece `halit-yalvac`).
 - `/piercing/[hub]` dynamic route'u eklendi.
 - İlgili sayfalarda CSV tek kaynak (`src/lib/route-content.generated.ts` + `src/lib/route-content.ts`) üzerinden H1/SEO/canonical/content/robots bağlandı.
-- `/gallery -> /galeri` redirect'i kaldırıldı.
+- Legacy gallery redirect'i kaldırıldı.
 
 ## Ön Kontrol Kanıtları
 
@@ -49,7 +49,7 @@ Sonuç:
 
 ### Redirect güncellemesi
 - `next.config.ts`
-  - `/gallery -> /galeri` redirect satırı kaldırıldı.
+  - legacy gallery redirect satırı kaldırıldı.
 
 ### Artist detail route + Halit link zorunluluğu
 - Yeni dosya: `src/app/(app)/artistler/[slug]/page.tsx`

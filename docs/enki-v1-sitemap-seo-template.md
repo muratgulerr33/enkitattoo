@@ -22,7 +22,7 @@
 | /kesfet/ataturk | Atatürk Temalı Dövme |  |  | INDEX | /kesfet/ataturk | TR özel hub. |
 | /kesfet/blackwork | Blackwork Dövme |  |  | INDEX | /kesfet/blackwork |  |
 | /kesfet/custom | Kişiye Özel Dövme Tasarımı |  |  | INDEX | /kesfet/custom |  |
-| /galeri | Dövme Galerisi |  |  | INDEX | /galeri | Filtre parametreleri (örn. ?stil=...) sitemap’e girmez; noindex+canonical=/galeri. |
+| /galeri-tasarim | Dövme Tasarım Galerisi |  |  | INDEX | /galeri-tasarim | Legacy `/galeri` pre-launch 404; filtre parametreleri (örn. ?stil=...) sitemap’e girmez. |
 | /artistler | Artistler |  |  | INDEX | /artistler |  |
 | /artistler/:slug | {Artist Adı} | Dövme Sanatçısı |  |  | INDEX (şartlı) | /artistler/:slug | İçerik doluysa INDEX; boş/çok benzerse NOINDEX. |
 | /piercing | Piercing |  |  | INDEX | /piercing |  |
