@@ -1,43 +1,47 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { ImageResponse } from "next/og";
+import { headers } from "next/headers";
 
-export const socialImageSize = {
+export const runtime = "edge";
+export const dynamic = "force-dynamic";
+export const size = {
   width: 1200,
   height: 630,
 };
+export const contentType = "image/png";
+export const alt = "Enki Tattoo";
 
-export const socialImageContentType = "image/png";
-export const socialImageAlt = "Enki Tattoo";
+function arrayBufferToBase64(arrayBuffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(arrayBuffer);
+  let binary = "";
+  const chunkSize = 0x8000;
 
-const socialTitle = "Enki Tattoo";
-const socialSubtitle = "Mersin Dövme & Piercing | Enki Tattoo";
-const iconPath = path.join(process.cwd(), "public", "icon.png");
-const geistFontCandidates = [
-  path.join(process.cwd(), "public", "fonts", "Geist-Regular.woff2"),
-  path.join(process.cwd(), "public", "fonts", "Geist-Medium.woff2"),
-  path.join(process.cwd(), "public", "fonts", "Geist.woff2"),
-];
-
-async function loadFirstExistingFont(): Promise<Buffer | null> {
-  for (const candidate of geistFontCandidates) {
-    try {
-      return await readFile(candidate);
-    } catch {
-      continue;
-    }
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.subarray(i, i + chunkSize);
+    binary += String.fromCharCode(...chunk);
   }
-  return null;
+
+  return btoa(binary);
 }
 
-async function loadLogoDataUrl(): Promise<string> {
-  const iconBuffer = await readFile(iconPath);
-  return `data:image/png;base64,${iconBuffer.toString("base64")}`;
+async function getLogoDataUrl(): Promise<string> {
+  const requestHeaders = await headers();
+  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host");
+  const protocol =
+    requestHeaders.get("x-forwarded-proto") ?? (host?.includes("localhost") ? "http" : "https");
+
+  if (!host) {
+    throw new Error("Missing host header for OG image generation");
+  }
+
+  const iconArrayBuffer = await fetch(`${protocol}://${host}/icon.png`, {
+    cache: "force-cache",
+  }).then((res) => res.arrayBuffer());
+  const base64 = arrayBufferToBase64(iconArrayBuffer);
+  return `data:image/png;base64,${base64}`;
 }
 
-export async function createSocialImageResponse() {
-  const [logoDataUrl, fontData] = await Promise.all([loadLogoDataUrl(), loadFirstExistingFont()]);
-  const fontFamily = fontData ? "Geist" : "system-ui, -apple-system, Segoe UI, sans-serif";
+export async function renderSocialImage() {
+  const logoDataUrl = await getLogoDataUrl();
 
   return new ImageResponse(
     (
@@ -46,60 +50,41 @@ export async function createSocialImageResponse() {
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
           background: "#0B0B0D",
-          color: "#F5F5F5",
-          fontFamily,
-          padding: "56px 72px",
-          textAlign: "center",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
-        <img
-          src={logoDataUrl}
-          alt="Enki Tattoo"
-          width={220}
-          height={220}
-          style={{ objectFit: "contain" }}
+        <div
+          style={{
+            position: "absolute",
+            inset: "-24%",
+            background:
+              "radial-gradient(circle at 50% 46%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 24%, rgba(11,11,13,0.92) 68%, rgba(11,11,13,1) 100%)",
+          }}
         />
         <div
           style={{
-            marginTop: 30,
-            fontSize: 74,
-            lineHeight: 1,
-            fontWeight: 700,
-            letterSpacing: -1,
+            position: "absolute",
+            inset: 0,
+            boxShadow: "inset 0 0 180px rgba(0, 0, 0, 0.58)",
           }}
-        >
-          {socialTitle}
-        </div>
-        <div
+        />
+        <img
+          src={logoDataUrl}
+          alt="Enki Tattoo"
+          width={520}
+          height={520}
           style={{
-            marginTop: 18,
-            fontSize: 35,
-            lineHeight: 1.25,
-            fontWeight: 500,
-            opacity: 0.92,
+            objectFit: "contain",
+            zIndex: 1,
+            filter: "drop-shadow(0 22px 54px rgba(0,0,0,0.64))",
           }}
-        >
-          {socialSubtitle}
-        </div>
+        />
       </div>
     ),
-    {
-      ...socialImageSize,
-      // TODO: Add local Geist woff2 into public/fonts if you want exact font parity.
-      fonts: fontData
-        ? [
-            {
-              name: "Geist",
-              data: fontData,
-              style: "normal",
-              weight: 500,
-            },
-          ]
-        : undefined,
-    },
+    size,
   );
 }

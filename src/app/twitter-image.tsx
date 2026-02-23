@@ -1,15 +1,12 @@
 import {
-  createSocialImageResponse,
-  socialImageAlt,
-  socialImageContentType,
-  socialImageSize,
+  alt,
+  contentType,
+  dynamic,
+  renderSocialImage,
+  runtime,
+  size,
 } from "./social-image";
 
-export const runtime = "nodejs";
-export const alt = socialImageAlt;
-export const size = socialImageSize;
-export const contentType = socialImageContentType;
-
 export default async function TwitterImage() {
-  return createSocialImageResponse();
+  return renderSocialImage();
 }
