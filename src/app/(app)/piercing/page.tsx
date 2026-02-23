@@ -1,7 +1,35 @@
+import type { Metadata } from "next";
 import { piercingCategories } from "@/lib/hub/hubs.v1";
 import { whatsappUrl } from "@/lib/mock/enki";
+import { getRouteContent, hasNoIndex } from "@/lib/route-content";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
+
+const PIERCING_PATH = "/piercing";
+const piercingContent = getRouteContent(PIERCING_PATH);
+
+export function generateMetadata(): Metadata {
+  if (!piercingContent) {
+    return {};
+  }
+
+  const metadata: Metadata = {};
+
+  if (piercingContent.seoTitle) {
+    metadata.title = { absolute: piercingContent.seoTitle };
+  }
+  if (piercingContent.seoDescription) {
+    metadata.description = piercingContent.seoDescription;
+  }
+  if (piercingContent.canonical) {
+    metadata.alternates = { canonical: piercingContent.canonical };
+  }
+  if (hasNoIndex(piercingContent.indexing)) {
+    metadata.robots = { index: false, follow: true };
+  }
+
+  return metadata;
+}
 
 const PIERCING_LABELS: Record<string, string> = {
   kulak: "Kulak",
@@ -16,14 +44,25 @@ const PIERCING_LABELS: Record<string, string> = {
 };
 
 export default function PiercingPage() {
+  const shortDescription =
+    piercingContent?.shortDescription ||
+    piercingContent?.description ||
+    "Kulak, burun, septum ve daha fazlası. Profesyonel piercing hizmeti için bize yazın.";
+  const longDescription =
+    piercingContent?.description &&
+    piercingContent.description !== shortDescription
+      ? piercingContent.description
+      : null;
+
   return (
     <div className="app-section no-overflow-x">
       <header>
-        <h1 className="typo-page-title">Piercing</h1>
-        <p className="t-muted mt-1">
-          Kulak, burun, septum ve daha fazlası. Profesyonel piercing hizmeti
-          için bize yazın.
-        </p>
+        {piercingContent?.microLine ? (
+          <p className="t-small text-muted-foreground">{piercingContent.microLine}</p>
+        ) : null}
+        <h1 className="typo-page-title">{piercingContent?.h1 || "Piercing"}</h1>
+        <p className="t-muted mt-1">{shortDescription}</p>
+        {longDescription ? <p className="t-muted mt-2">{longDescription}</p> : null}
       </header>
 
       <section>

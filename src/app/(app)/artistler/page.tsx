@@ -1,4 +1,32 @@
+import type { Metadata } from "next";
 import { Button } from "@/components/ui/button";
+import { getRouteContent, hasNoIndex } from "@/lib/route-content";
+
+const ARTISTLER_PATH = "/artistler";
+const artistlerContent = getRouteContent(ARTISTLER_PATH);
+
+export function generateMetadata(): Metadata {
+  if (!artistlerContent) {
+    return {};
+  }
+
+  const metadata: Metadata = {};
+
+  if (artistlerContent.seoTitle) {
+    metadata.title = { absolute: artistlerContent.seoTitle };
+  }
+  if (artistlerContent.seoDescription) {
+    metadata.description = artistlerContent.seoDescription;
+  }
+  if (artistlerContent.canonical) {
+    metadata.alternates = { canonical: artistlerContent.canonical };
+  }
+  if (hasNoIndex(artistlerContent.indexing)) {
+    metadata.robots = { index: false, follow: true };
+  }
+
+  return metadata;
+}
 
 const ARTISTS = [
   {
@@ -22,11 +50,25 @@ const ARTISTS = [
 ] as const;
 
 export default function ArtistlerPage() {
+  const shortDescription =
+    artistlerContent?.shortDescription ||
+    artistlerContent?.description ||
+    "Stüdyomuzdaki sanatçılar.";
+  const longDescription =
+    artistlerContent?.description &&
+    artistlerContent.description !== shortDescription
+      ? artistlerContent.description
+      : null;
+
   return (
     <div className="app-section no-overflow-x">
       <header>
-        <h1 className="typo-page-title">Artistler</h1>
-        <p className="t-muted mt-1">Stüdyomuzdaki sanatçılar.</p>
+        {artistlerContent?.microLine ? (
+          <p className="t-small text-muted-foreground">{artistlerContent.microLine}</p>
+        ) : null}
+        <h1 className="typo-page-title">{artistlerContent?.h1 || "Artistler"}</h1>
+        <p className="t-muted mt-1">{shortDescription}</p>
+        {longDescription ? <p className="t-muted mt-2">{longDescription}</p> : null}
       </header>
 
       <ul className="flex min-w-0 flex-col gap-4" role="list">

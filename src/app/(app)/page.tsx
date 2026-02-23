@@ -10,13 +10,22 @@ import {
   studioName,
   whatsappUrl,
 } from "@/lib/mock/enki";
+import { getRouteContent } from "@/lib/route-content";
 import { ChevronRight, Images, MapPin, MessageCircle, Phone, Sparkles } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomePage() {
+  const content = getRouteContent("/");
+  const homeHeading = content?.h1 || "Ana sayfa";
+  const heroMicroLine = content?.microLine || "Stilini seç, örnekleri gör, hızlı randevu al.";
+  const heroShortDescription =
+    content?.shortDescription && content.shortDescription !== heroMicroLine
+      ? content.shortDescription
+      : null;
+
   return (
     <div className="app-section no-overflow-x">
-      <h1 className="sr-only typo-page-title">Ana sayfa</h1>
+      <h1 className="sr-only typo-page-title">{homeHeading}</h1>
 
       {/* 1) Hero block */}
       <section
@@ -26,9 +35,10 @@ export default function HomePage() {
         <h2 id="hero-title" className="t-h3 text-foreground">
           {studioName}
         </h2>
-        <p className="t-muted mt-1">
-          Stilini seç, örnekleri gör, hızlı randevu al.
-        </p>
+        <p className="t-muted mt-1">{heroMicroLine}</p>
+        {heroShortDescription ? (
+          <p className="t-small mt-2 text-muted-foreground">{heroShortDescription}</p>
+        ) : null}
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button asChild size="lg" className="w-full gap-2 sm:w-auto">
             <a

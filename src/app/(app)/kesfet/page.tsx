@@ -1,20 +1,51 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { mainHubs, specialHubs } from "@/lib/hub/hubs.v1";
+import { getRouteContent, hasNoIndex, listKnownPaths } from "@/lib/route-content";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Sparkles } from "lucide-react";
 
+const KESFET_PATH = "/kesfet";
+const kesfetContent = getRouteContent(KESFET_PATH);
+const knownKesfetPaths = new Set(
+  listKnownPaths().filter((path) => path.startsWith("/kesfet/")),
+);
+
+export function generateMetadata(): Metadata {
+  if (!kesfetContent) {
+    return {};
+  }
+
+  const metadata: Metadata = {};
+
+  if (kesfetContent.seoTitle) {
+    metadata.title = { absolute: kesfetContent.seoTitle };
+  }
+  if (kesfetContent.seoDescription) {
+    metadata.description = kesfetContent.seoDescription;
+  }
+  if (kesfetContent.canonical) {
+    metadata.alternates = { canonical: kesfetContent.canonical };
+  }
+  if (hasNoIndex(kesfetContent.indexing)) {
+    metadata.robots = { index: false, follow: true };
+  }
+
+  return metadata;
+}
+
 function HubCard({
   titleTR,
-  slug,
+  href,
   descriptionTR,
 }: {
   titleTR: string;
-  slug: string;
+  href: string;
   descriptionTR: string;
 }) {
   return (
     <Link
-      href={`/kesfet/${slug}`}
+      href={href}
       className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-surface-2 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
       <div className="card-media bg-muted/60 bg-gradient-to-br from-surface-1 to-surface-2" />
@@ -31,13 +62,32 @@ function HubCard({
 }
 
 export default function KesfetPage() {
+  const heading = kesfetContent?.h1 || "Keşfet";
+  const shortDescription =
+    kesfetContent?.shortDescription ||
+    kesfetContent?.description ||
+    "Stilini seç, örnekleri gör, hızlı randevu al.";
+  const longDescription =
+    kesfetContent?.description && kesfetContent.description !== shortDescription
+      ? kesfetContent.description
+      : null;
+
+  const mainHubCards = mainHubs
+    .map((hub) => ({ ...hub, href: `/kesfet/${hub.slug}` }))
+    .filter((hub) => knownKesfetPaths.has(hub.href));
+  const specialHubCards = specialHubs
+    .map((hub) => ({ ...hub, href: `/kesfet/${hub.slug}` }))
+    .filter((hub) => knownKesfetPaths.has(hub.href));
+
   return (
     <div className="app-section no-overflow-x">
       <header>
-        <h1 className="typo-page-title">Keşfet</h1>
-        <p className="t-muted mt-1">
-          Stilini seç, örnekleri gör, hızlı randevu al.
-        </p>
+        {kesfetContent?.microLine ? (
+          <p className="t-small text-muted-foreground">{kesfetContent.microLine}</p>
+        ) : null}
+        <h1 className="typo-page-title">{heading}</h1>
+        <p className="t-muted mt-1">{shortDescription}</p>
+        {longDescription ? <p className="t-muted mt-2">{longDescription}</p> : null}
       </header>
 
       <section aria-labelledby="hub-main" className="space-y-4">
@@ -45,11 +95,11 @@ export default function KesfetPage() {
           Stil kategorileri
         </h2>
         <div className="grid-cards">
-          {mainHubs.map((hub) => (
+          {mainHubCards.map((hub) => (
             <HubCard
               key={hub.id}
               titleTR={hub.titleTR}
-              slug={hub.slug}
+              href={hub.href}
               descriptionTR={hub.descriptionTR}
             />
           ))}
@@ -61,11 +111,11 @@ export default function KesfetPage() {
           Özel
         </h2>
         <div className="grid-cards">
-          {specialHubs.map((hub) => (
+          {specialHubCards.map((hub) => (
             <div key={hub.id} className="min-w-0">
               <HubCard
                 titleTR={hub.titleTR}
-                slug={hub.slug}
+                href={hub.href}
                 descriptionTR={hub.descriptionTR}
               />
             </div>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   Card,
   CardContent,
@@ -30,7 +31,34 @@ import {
   WHATSAPP_URL,
   YOUTUBE_URL,
 } from "@/lib/site/links";
+import { getRouteContent, hasNoIndex } from "@/lib/route-content";
 import { MapPin } from "lucide-react";
+
+const ILETISIM_PATH = "/iletisim";
+const iletisimContent = getRouteContent(ILETISIM_PATH);
+
+export function generateMetadata(): Metadata {
+  if (!iletisimContent) {
+    return {};
+  }
+
+  const metadata: Metadata = {};
+
+  if (iletisimContent.seoTitle) {
+    metadata.title = { absolute: iletisimContent.seoTitle };
+  }
+  if (iletisimContent.seoDescription) {
+    metadata.description = iletisimContent.seoDescription;
+  }
+  if (iletisimContent.canonical) {
+    metadata.alternates = { canonical: iletisimContent.canonical };
+  }
+  if (hasNoIndex(iletisimContent.indexing)) {
+    metadata.robots = { index: false, follow: true };
+  }
+
+  return metadata;
+}
 
 type SocialContactLink = {
   label: string;
@@ -74,12 +102,26 @@ const SOCIAL_CONTACT_LINKS: SocialContactLink[] = [
 ];
 
 export default function IletisimPage() {
+  const shortDescription =
+    iletisimContent?.shortDescription ||
+    iletisimContent?.description ||
+    "Bize ulaşın, randevu alın.";
+  const longDescription =
+    iletisimContent?.description &&
+    iletisimContent.description !== shortDescription
+      ? iletisimContent.description
+      : null;
+
   return (
     <div className="app-section no-overflow-x xl:grid xl:grid-cols-[1fr_360px] xl:gap-8 xl:items-start">
       <div className="space-y-6">
         <header>
-          <h1 className="typo-page-title">İletişim</h1>
-          <p className="t-muted mt-1">Bize ulaşın, randevu alın.</p>
+          {iletisimContent?.microLine ? (
+            <p className="t-small text-muted-foreground">{iletisimContent.microLine}</p>
+          ) : null}
+          <h1 className="typo-page-title">{iletisimContent?.h1 || "İletişim"}</h1>
+          <p className="t-muted mt-1">{shortDescription}</p>
+          {longDescription ? <p className="t-muted mt-2">{longDescription}</p> : null}
         </header>
 
         <Button asChild size="lg" className="w-full sm:w-auto">

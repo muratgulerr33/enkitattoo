@@ -1,12 +1,58 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getHubBySlug, isValidHubSlug } from "@/lib/hub/hubs.v1";
+import {
+  getHubBySlug,
+  isValidHubSlug,
+  mainHubs,
+  specialHubs,
+} from "@/lib/hub/hubs.v1";
 import { whatsappUrl } from "@/lib/mock/enki";
+import { getRouteContent, hasNoIndex } from "@/lib/route-content";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface PageProps {
   params: Promise<{ hub: string }>;
+}
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+  return [...mainHubs, ...specialHubs].map((hub) => ({ hub: hub.slug }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { hub: slug } = await params;
+  const hub = getHubBySlug(slug);
+
+  if (!hub) {
+    return {
+      title: { absolute: "Keşfet | Enki Tattoo" },
+      description: "Enki Tattoo keşfet kategorileri.",
+      alternates: { canonical: "/kesfet" },
+    };
+  }
+
+  const routePath = `/kesfet/${hub.slug}`;
+  const content = getRouteContent(routePath);
+  const computedTitle = content?.seoTitle || `${hub.titleTR} | Enki Tattoo`;
+  const computedDescription = content?.seoDescription || hub.descriptionTR;
+  const canonical = content?.canonical || routePath;
+
+  const metadata: Metadata = {
+    title: { absolute: computedTitle },
+    description: computedDescription,
+    alternates: {
+      canonical,
+    },
+  };
+
+  if (hasNoIndex(content?.indexing)) {
+    metadata.robots = { index: false, follow: true };
+  }
+
+  return metadata;
 }
 
 export default async function HubDetailPage({ params }: PageProps) {
@@ -15,13 +61,22 @@ export default async function HubDetailPage({ params }: PageProps) {
   const hub = getHubBySlug(slug);
   if (!hub) notFound();
 
+  const routePath = `/kesfet/${hub.slug}`;
+  const content = getRouteContent(routePath);
   const styleParam = encodeURIComponent(hub.slug);
+  const shortDescription = content?.shortDescription || hub.descriptionTR;
+  const longDescription =
+    content?.description && content.description !== shortDescription
+      ? content.description
+      : null;
 
   return (
     <div className="app-section no-overflow-x">
       <header>
-        <h1 className="typo-page-title">{hub.titleTR}</h1>
-        <p className="t-muted mt-1">{hub.descriptionTR}</p>
+        {content?.microLine ? <p className="t-small text-muted-foreground">{content.microLine}</p> : null}
+        <h1 className="typo-page-title">{content?.h1 || hub.titleTR}</h1>
+        <p className="t-muted mt-1">{shortDescription}</p>
+        {longDescription ? <p className="t-muted mt-2">{longDescription}</p> : null}
       </header>
 
       <div className="flex flex-wrap gap-2">

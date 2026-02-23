@@ -1,4 +1,5 @@
 import { GaleriFilters } from "./galeri-filters";
+import { getRouteContent } from "@/lib/route-content";
 
 interface PageProps {
   searchParams: Promise<{ style?: string; theme?: string }>;
@@ -6,16 +7,27 @@ interface PageProps {
 
 export default async function GaleriPage({ searchParams }: PageProps) {
   const params = await searchParams;
+  const content = getRouteContent("/galeri");
   const hasFilters = Boolean(params.style) || Boolean(params.theme);
   const mockCount = hasFilters ? 24 : 32;
   const mockTitleBase =
     "Blackwork Detaylı Kol Kompozisyonu Uzun Başlık Örneği";
+  const shortDescription =
+    content?.shortDescription || content?.description || "Örnek işler ve stiller.";
+  const longDescription =
+    content?.description && content.description !== shortDescription
+      ? content.description
+      : null;
 
   return (
     <div className="app-section no-overflow-x">
       <header>
-        <h1 className="typo-page-title">Galeri</h1>
-        <p className="t-muted mt-1">Örnek işler ve stiller.</p>
+        {content?.microLine ? (
+          <p className="t-small text-muted-foreground">{content.microLine}</p>
+        ) : null}
+        <h1 className="typo-page-title">{content?.h1 || "Galeri"}</h1>
+        <p className="t-muted mt-1">{shortDescription}</p>
+        {longDescription ? <p className="t-muted mt-2">{longDescription}</p> : null}
       </header>
 
       <GaleriFilters />
