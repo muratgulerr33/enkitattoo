@@ -10,15 +10,6 @@ import {
 } from "@/components/ui/select";
 import { mainHubs, specialHubs, themeFilters } from "@/lib/hub/hubs.v1";
 
-const MOCK_ARTISTS = [
-  { id: "ali", name: "Ali" },
-  { id: "ayse", name: "Ayşe" },
-  { id: "mehmet", name: "Mehmet" },
-  { id: "zeynep", name: "Zeynep" },
-  { id: "can", name: "Can" },
-  { id: "deniz", name: "Deniz" },
-];
-
 const allStyleOptions = [...mainHubs, ...specialHubs];
 
 function themeLabel(key: string): string {
@@ -40,7 +31,6 @@ export function GaleriFilters() {
   const searchParams = useSearchParams();
 
   const style = searchParams.get("style") ?? "";
-  const artist = searchParams.get("artist") ?? "";
   const theme = searchParams.get("theme") ?? "";
 
   function setParam(key: string, value: string) {
@@ -55,9 +45,9 @@ export function GaleriFilters() {
   }
 
   return (
-    <div className="flex flex-col gap-3 border-b border-border pb-4 md:flex-row md:flex-wrap md:items-center">
+    <div className="no-overflow-x flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:flex-wrap sm:items-center">
       <Select value={style || "all"} onValueChange={(v) => setParam("style", v === "all" ? "" : v)}>
-        <SelectTrigger className="w-full border-border bg-surface-1 md:w-[180px]">
+        <SelectTrigger className="w-full border-border bg-surface-1 sm:w-[220px]">
           <SelectValue placeholder="Stil" />
         </SelectTrigger>
         <SelectContent>
@@ -69,21 +59,8 @@ export function GaleriFilters() {
           ))}
         </SelectContent>
       </Select>
-      <Select value={artist || "all"} onValueChange={(v) => setParam("artist", v === "all" ? "" : v)}>
-        <SelectTrigger className="w-full border-border bg-surface-1 md:w-[160px]">
-          <SelectValue placeholder="Artist" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">Tüm artistler</SelectItem>
-          {MOCK_ARTISTS.map((a) => (
-            <SelectItem key={a.id} value={a.id}>
-              {a.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
       <Select value={theme || "all"} onValueChange={(v) => setParam("theme", v === "all" ? "" : v)}>
-        <SelectTrigger className="w-full border-border bg-surface-1 md:w-[180px]">
+        <SelectTrigger className="w-full border-border bg-surface-1 sm:w-[220px]">
           <SelectValue placeholder="Tema" />
         </SelectTrigger>
         <SelectContent>
@@ -95,7 +72,7 @@ export function GaleriFilters() {
           ))}
         </SelectContent>
       </Select>
-      {(style || artist || theme) && (
+      {(style || theme) && (
         <button
           type="button"
           onClick={resetFilters}

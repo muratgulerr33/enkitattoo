@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { IconPhoneCall, IconWhatsApp } from "@/components/icons/nandd";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,9 +14,9 @@ import { mainHubs } from "@/lib/hub/hubs.v1";
 import {
   addressLine,
   hoursNote,
-  whatsappUrl,
 } from "@/lib/mock/enki";
-import { Clock, MapPin, MessageCircle, Phone, Sparkles } from "lucide-react";
+import { WHATSAPP_URL } from "@/lib/site/links";
+import { Clock, MapPin, Sparkles } from "lucide-react";
 
 /**
  * Right rail for desktop (xl+). Quick actions + popular hubs.
@@ -41,7 +42,7 @@ export function RightRail() {
           <CardContent className="space-y-3">
             <Button asChild size="default" className="h-11 w-full">
               <a
-                href={whatsappUrl}
+                href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2"
@@ -70,18 +71,18 @@ export function RightRail() {
         <CardContent className="flex flex-col gap-3">
           <Button asChild size="default" className="h-11 w-full justify-start gap-3">
             <a
-              href={whatsappUrl}
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center"
             >
-              <MessageCircle className="size-5 shrink-0" aria-hidden />
+              <IconWhatsApp size={20} />
               WhatsApp
             </a>
           </Button>
           <Button asChild variant="outline" size="default" className="h-11 w-full justify-start gap-3">
             <Link href="/iletisim" className="inline-flex items-center">
-              <Phone className="size-5 shrink-0" aria-hidden />
+              <IconPhoneCall size={20} />
               İletişim
             </Link>
           </Button>

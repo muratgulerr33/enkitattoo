@@ -5,8 +5,8 @@
 
 export const TAP = 44;
 export const ICON = 20;
-/** Combined height for mobile header: top bar + tab bar (match actual layout). */
-export const HEADER_H = 104;
+/** Combined height for compact mobile/tablet header row. */
+export const HEADER_H = 56;
 
 /** Tailwind-friendly class for icon button: 44px touch target. */
 export const iconBtn = "h-11 w-11";

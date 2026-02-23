@@ -43,6 +43,15 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -53,34 +62,37 @@
 :root {
   color-scheme: light;
   --radius: 0.625rem;
+  --app-mobile-topbar-h: 56px;
+  --app-mobile-tabbar-h: 56px;
+  --app-mobile-header-h: calc(var(--app-mobile-topbar-h) + var(--app-mobile-tabbar-h));
 
-  /* Paper light theme deviations (official neutral otherwise) */
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.145 0 0);
+  /* Default base palette: Zinc (premium neutral look for the studio brand). */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.141 0.005 285.823);
 
-  --card: oklch(0.99 0 0);
-  --card-foreground: var(--foreground);
-  --popover: oklch(0.99 0 0);
-  --popover-foreground: var(--foreground);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.141 0.005 285.823);
 
-  --primary: oklch(0.205 0 0);
+  --primary: oklch(0.21 0.006 285.885);
   --primary-foreground: oklch(0.985 0 0);
 
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
 
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
 
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.21 0.006 285.885);
 
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
 
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.705 0.015 286.067);
 
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -89,17 +101,17 @@
   --chart-5: oklch(0.769 0.188 70.08);
 
   --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.141 0.005 285.823);
+  --sidebar-primary: oklch(0.21 0.006 285.885);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-accent: oklch(0.967 0.001 286.375);
+  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
+  --sidebar-border: oklch(0.92 0.004 286.32);
+  --sidebar-ring: oklch(0.705 0.015 286.067);
 
-  /* Custom tokens */
-  --surface-1: oklch(0.975 0 0);
-  --surface-2: oklch(0.99 0 0);
+  /* Compatibility tokens used by existing pages/components. */
+  --surface-1: oklch(0.975 0.001 286.2);
+  --surface-2: oklch(0.99 0.001 286.2);
   --overlay: oklch(0 0 0 / 40%);
   --overlay-strong: oklch(0 0 0 / 50%);
 }
@@ -107,24 +119,24 @@
 .dark {
   color-scheme: dark;
 
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.141 0.005 285.823);
   --foreground: oklch(0.985 0 0);
 
-  --card: oklch(0.205 0 0);
-  --card-foreground: var(--foreground);
-  --popover: oklch(0.269 0 0);
-  --popover-foreground: var(--foreground);
+  --card: oklch(0.21 0.006 285.885);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.21 0.006 285.885);
+  --popover-foreground: oklch(0.985 0 0);
 
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.92 0.004 286.32);
+  --primary-foreground: oklch(0.21 0.006 285.885);
 
-  --secondary: oklch(0.269 0 0);
+  --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
 
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
+  --muted: oklch(0.274 0.006 286.033);
+  --muted-foreground: oklch(0.705 0.015 286.067);
 
-  --accent: oklch(0.371 0 0);
+  --accent: oklch(0.274 0.006 286.033);
   --accent-foreground: oklch(0.985 0 0);
 
   --destructive: oklch(0.704 0.191 22.216);
@@ -132,7 +144,7 @@
 
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.552 0.016 285.938);
 
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.171 62.48);
@@ -140,80 +152,300 @@
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
 
-  --sidebar: oklch(0.205 0 0);
+  --sidebar: oklch(0.21 0.006 285.885);
   --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.488 0.243 264.376);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent: oklch(0.274 0.006 286.033);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.439 0 0);
 
-  /* Custom tokens */
-  --surface-1: oklch(0.205 0 0);
-  --surface-2: oklch(0.269 0 0);
+  /* Compatibility tokens used by existing pages/components. */
+  --surface-1: oklch(0.21 0.006 285.885);
+  --surface-2: oklch(0.24 0.006 286.033);
   --overlay: oklch(0 0 0 / 55%);
   --overlay-strong: oklch(0 0 0 / 65%);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
+
+  html {
+    @apply antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+  }
+
   body {
     @apply bg-background text-foreground antialiased font-sans;
   }
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-sans;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 }
 
 @layer utilities {
-  /* Display & headings — tracking-tight, consistent hierarchy */
-  .t-display {
-    @apply text-3xl md:text-4xl tracking-tight font-semibold leading-tight text-foreground;
-  }
+  /* Canonical typography rhythm (shadcn-like, 2026 native docs feel):
+     - H1: 36/40 mobile, 48/52.8 desktop, tracking -0.025em -> -0.05em
+     - H2: 30/34.4 mobile, 36/41.4 desktop, tracking -0.04em
+     - Body: 16/28 (leading-7 equivalent)
+     Legacy `t-*` classes are aliases of `typo-*` to avoid divergence. */
+  .typo-page-title,
+  .typo-h1,
+  .t-display,
   .t-h1 {
-    @apply text-2xl font-semibold tracking-tight leading-tight text-foreground;
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    letter-spacing: -0.025em;
+    font-weight: 800;
+    color: var(--foreground);
+    text-wrap: balance;
   }
+
+  .typo-h2,
   .t-h2 {
-    @apply text-xl font-semibold tracking-tight leading-tight text-foreground;
+    font-size: 1.875rem;
+    line-height: 2.15rem;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+    color: var(--foreground);
+    text-wrap: balance;
   }
+
+  .typo-h3,
   .t-h3 {
-    @apply text-lg font-medium tracking-tight leading-snug text-foreground;
+    font-size: 1.5rem;
+    line-height: 1.875rem;
+    letter-spacing: -0.02em;
+    font-weight: 650;
+    color: var(--foreground);
+    text-wrap: balance;
   }
+
+  .typo-h4,
   .t-h4 {
-    @apply text-base font-medium tracking-tight leading-snug text-foreground;
+    font-size: 1.25rem;
+    line-height: 1.65rem;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    color: var(--foreground);
   }
-  .t-h5 {
-    @apply text-sm font-medium tracking-tight leading-snug text-foreground;
-  }
-  .t-h6 {
-    @apply text-sm font-medium tracking-tight leading-snug text-muted-foreground;
-  }
-  /* Body & lead — relaxed line height */
+
+  .typo-lead,
   .t-lead {
-    @apply text-lg leading-7 text-foreground;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    color: var(--muted-foreground);
   }
+
+  .typo-p,
   .t-body {
-    @apply text-base leading-7 text-foreground;
+    font-size: 1rem;
+    line-height: 1.75rem;
+    color: var(--foreground);
   }
+
+  .typo-muted,
   .t-muted {
-    @apply text-sm text-muted-foreground leading-6;
+    font-size: 1rem;
+    line-height: 1.75rem;
+    color: var(--muted-foreground);
   }
-  .t-small {
-    @apply text-sm text-foreground leading-6;
+
+  .typo-small,
+  .t-small,
+  .t-label,
+  .t-h5 {
+    font-size: 0.875rem;
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--foreground);
   }
-  .t-caption {
-    @apply text-xs text-muted-foreground leading-5;
+
+  .typo-caption,
+  .t-caption,
+  .t-h6 {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    color: var(--muted-foreground);
   }
-  .t-label {
-    @apply text-sm font-medium leading-none text-foreground;
+
+  .typo-link {
+    font-size: 1rem;
+    line-height: 1.75rem;
+    color: var(--foreground);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    font-weight: 500;
   }
+
+  /* Styleguide-only hero treatment: premium underline without global H1 side effects. */
+  .typo-hero-title {
+    text-decoration-line: underline;
+    text-decoration-thickness: 0.12em;
+    text-underline-offset: 0.22em;
+    text-decoration-color: color-mix(in oklch, var(--foreground) 88%, transparent);
+    text-decoration-skip-ink: auto;
+  }
+
+  .typo-code,
   .t-code {
-    @apply font-mono text-sm text-foreground;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    font-weight: 600;
+    color: var(--foreground);
+    background-color: var(--muted);
+    border-radius: calc(var(--radius) - 4px);
+    padding: 0.15rem 0.35rem;
   }
+
+  .typo-list {
+    margin: 1rem 0 1rem 1.5rem;
+    list-style: disc;
+  }
+
+  .typo-list > li + li {
+    margin-top: 0.5rem;
+  }
+
+  .typo-blockquote {
+    margin-top: 1rem;
+    border-left: 2px solid var(--border);
+    padding-left: 1.5rem;
+    font-style: italic;
+    color: var(--muted-foreground);
+  }
+
+  .typo-table {
+    width: 100%;
+    caption-side: bottom;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    line-height: 1.45;
+  }
+
+  .typo-table thead tr,
+  .typo-table tbody tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .typo-table th {
+    height: 2.5rem;
+    padding: 0.5rem;
+    text-align: left;
+    vertical-align: middle;
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .typo-table td {
+    padding: 0.5rem;
+    vertical-align: middle;
+  }
+
+  @media (min-width: 64rem) {
+    .typo-page-title,
+    .typo-h1,
+    .t-display,
+    .t-h1 {
+      font-size: 3rem;
+      line-height: 3.3rem;
+      letter-spacing: -0.05em;
+    }
+
+    .typo-h2,
+    .t-h2 {
+      font-size: 2.25rem;
+      line-height: 2.5875rem;
+      letter-spacing: -0.04em;
+    }
+
+    .typo-lead,
+    .t-lead {
+      font-size: 1.25rem;
+      line-height: 1.75;
+    }
+  }
+
+  /* Mobile-first layout system for consistent responsive behavior. */
+  .app-container {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .app-section {
+    @apply py-8 space-y-6 sm:space-y-8 md:py-10 lg:py-12;
+  }
+
+  .app-mobile-header-offset {
+    padding-top: calc(env(safe-area-inset-top) + var(--app-mobile-header-h));
+  }
+
+  .app-safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+  }
+
+  .grid-cards {
+    @apply grid min-w-0 grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 md:gap-5 xl:grid-cols-4 xl:gap-6;
+  }
+
+  .grid-cards-compact {
+    @apply grid min-w-0 grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4 xl:grid-cols-4 xl:gap-5;
+  }
+
+  .card-media {
+    @apply aspect-[5/4] min-h-28 w-full;
+  }
+
+  .no-overflow-x {
+    min-width: 0;
+    overflow-x: clip;
+  }
+
+  .no-overflow-x > * {
+    min-width: 0;
+  }
+
   .font-numbers {
     @apply tabular-nums;
+  }
+
+  @media (max-width: 22.5rem) {
+    .grid-cards,
+    .grid-cards-compact {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    .card-media {
+      aspect-ratio: 4 / 3;
+      min-height: 9rem;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .app-mobile-header-offset {
+      padding-top: 0;
+    }
+
+    .app-safe-bottom {
+      padding-bottom: 0;
+    }
   }
 }

@@ -18,9 +18,9 @@ export default async function HubDetailPage({ params }: PageProps) {
   const styleParam = encodeURIComponent(hub.slug);
 
   return (
-    <div className="space-y-6">
+    <div className="app-section no-overflow-x">
       <header>
-        <h1 className="t-h2 text-foreground">{hub.titleTR}</h1>
+        <h1 className="typo-page-title">{hub.titleTR}</h1>
         <p className="t-muted mt-1">{hub.descriptionTR}</p>
       </header>
 
@@ -35,23 +35,23 @@ export default async function HubDetailPage({ params }: PageProps) {
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        <Button asChild variant="default" size="default">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <Button asChild variant="default" size="default" className="w-full sm:w-auto">
           <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
             Randevu al
           </a>
         </Button>
-        <Button asChild variant="outline" size="default">
+        <Button asChild variant="outline" size="default" className="w-full sm:w-auto">
           <Link href={`/galeri?style=${styleParam}`}>Galeri&apos;de gör</Link>
         </Button>
       </div>
 
       <section aria-label="Örnek galeri">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+        <div className="grid-cards">
           {Array.from({ length: 12 }).map((_, i) => (
             <Skeleton
               key={i}
-              className="aspect-square w-full rounded-xl border border-border bg-muted"
+              className="card-media rounded-xl border border-border bg-muted"
             />
           ))}
         </div>

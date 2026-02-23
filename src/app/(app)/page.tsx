@@ -15,12 +15,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HomePage() {
   return (
-    <div className="space-y-6 md:space-y-8">
-      <h1 className="sr-only t-h2">Ana sayfa</h1>
+    <div className="app-section no-overflow-x">
+      <h1 className="sr-only typo-page-title">Ana sayfa</h1>
 
       {/* 1) Hero block */}
       <section
-        className="rounded-xl border border-border bg-surface-2 p-5 shadow-soft md:p-6"
+        className="rounded-xl border border-border bg-surface-2 px-4 py-5 shadow-soft sm:px-6 sm:py-6 lg:px-8"
         aria-labelledby="hero-title"
       >
         <h2 id="hero-title" className="t-h3 text-foreground">
@@ -29,8 +29,8 @@ export default function HomePage() {
         <p className="t-muted mt-1">
           Stilini seç, örnekleri gör, hızlı randevu al.
         </p>
-        <div className="mt-4 flex flex-wrap gap-3">
-          <Button asChild size="lg" className="gap-2">
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Button asChild size="lg" className="w-full gap-2 sm:w-auto">
             <a
               href={whatsappUrl}
               target="_blank"
@@ -41,7 +41,7 @@ export default function HomePage() {
               WhatsApp ile randevu al
             </a>
           </Button>
-          <Button asChild variant="outline" size="lg">
+          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto">
             <Link href="/kesfet" className="gap-2">
               Keşfet&apos;e git
               <ChevronRight className="size-5" aria-hidden />
@@ -50,21 +50,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 2) Quick Hub grid — 2 cols mobile, 3 cols desktop */}
+      {/* 2) Quick Hub grid — canonical cards pattern */}
       <section aria-labelledby="hub-grid-title">
         <h2 id="hub-grid-title" className="sr-only">
           Stil kategorileri
         </h2>
-        <div className="grid grid-cols-2 gap-3 md:gap-4 xl:grid-cols-3">
+        <div className="grid-cards">
           {mainHubs.map((hub) => (
             <Link
               key={hub.id}
               href={`/kesfet/${hub.slug}`}
-              className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface-2 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-surface-2 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="aspect-[4/3] w-full bg-muted/50 bg-gradient-to-br from-surface-1 to-surface-2" />
-              <div className="flex flex-1 flex-col gap-0.5 p-3 md:p-4">
-                <span className="t-small font-medium text-foreground">
+              <div className="card-media bg-muted/50 bg-gradient-to-br from-surface-1 to-surface-2" />
+              <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
+                <span className="t-small truncate font-medium text-foreground">
                   {hub.titleTR}
                 </span>
                 <p className="t-caption line-clamp-1 text-muted-foreground">
@@ -77,22 +77,24 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 3) Özel row — horizontal scroll mobile, 3-card row desktop */}
+      {/* 3) Özel row — canonical cards pattern */}
       <section aria-labelledby="ozel-title">
         <h2 id="ozel-title" className="t-h5 text-foreground mb-3">
           Özel
         </h2>
-        <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none xl:grid xl:grid-cols-3 xl:overflow-visible xl:pb-0 xl:snap-none">
+        <div className="grid-cards">
           {specialHubs.map((hub) => (
             <Link
               key={hub.id}
               href={`/kesfet/${hub.slug}`}
-              className="flex min-w-[120px] flex-col shrink-0 overflow-hidden rounded-xl border border-border bg-surface-2 p-3 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 snap-start xl:min-w-0"
+              className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-surface-2 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             >
-              <div className="aspect-square w-full rounded-lg bg-muted/50 bg-gradient-to-br from-surface-1 to-muted" />
-              <span className="t-small mt-2 font-medium text-foreground">
-                {hub.titleTR}
-              </span>
+              <div className="card-media bg-muted/50 bg-gradient-to-br from-surface-1 to-muted" />
+              <div className="flex flex-1 items-center p-3 sm:p-4">
+                <span className="t-small truncate font-medium text-foreground">
+                  {hub.titleTR}
+                </span>
+              </div>
             </Link>
           ))}
         </div>
@@ -105,7 +107,7 @@ export default function HomePage() {
         </h2>
         <Link
           href="/piercing"
-          className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface-2 p-5 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:flex-row md:items-center md:justify-between md:gap-4 md:p-6"
+          className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface-2 px-4 py-5 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-6 lg:px-8"
         >
           <div className="flex items-center gap-4">
             <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-muted">
@@ -118,7 +120,7 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-          <Button variant="default" size="lg" className="mt-4 shrink-0 md:mt-0">
+          <Button variant="default" size="lg" className="mt-4 w-full shrink-0 sm:mt-0 sm:w-auto">
             Piercing
           </Button>
         </Link>
@@ -138,11 +140,11 @@ export default function HomePage() {
             </Link>
           </Button>
         </div>
-        <div className="grid grid-cols-4 gap-2 pt-2">
+        <div className="grid-cards-compact pt-2">
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton
               key={i}
-              className="aspect-square w-full rounded-xl border border-border bg-muted"
+              className="card-media rounded-xl border border-border bg-muted"
             />
           ))}
         </div>

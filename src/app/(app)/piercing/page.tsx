@@ -17,9 +17,9 @@ const PIERCING_LABELS: Record<string, string> = {
 
 export default function PiercingPage() {
   return (
-    <div className="space-y-8">
+    <div className="app-section no-overflow-x">
       <header>
-        <h1 className="t-h2 text-foreground">Piercing</h1>
+        <h1 className="typo-page-title">Piercing</h1>
         <p className="t-muted mt-1">
           Kulak, burun, septum ve daha fazlası. Profesyonel piercing hizmeti
           için bize yazın.
@@ -38,7 +38,7 @@ export default function PiercingPage() {
         <h2 id="piercing-categories" className="t-h4 text-foreground mb-3">
           Kategoriler
         </h2>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid-cards">
           {piercingCategories.map((key) => (
             <div
               key={key}

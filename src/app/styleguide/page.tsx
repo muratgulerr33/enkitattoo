@@ -1,11 +1,8 @@
 "use client";
 
-import { FeedSkeleton } from "@/components/legacy/social-mock/feed-skeleton";
-import { HomeComposer } from "@/components/legacy/social-mock/home-composer";
-import { PostCard } from "@/components/legacy/social-mock/post-card";
-import { StoriesRow } from "@/components/legacy/social-mock/stories-row";
-import { TokenGrid } from "@/components/styleguide/token-grid";
-import { ThemeSwitch } from "@/components/theme/theme-switch";
+import { useMemo, useState, useSyncExternalStore } from "react";
+import { useTheme } from "next-themes";
+import { ModeToggle } from "@/components/mode-toggle";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,340 +13,422 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { feedItems } from "@/lib/mock/feed";
-import { Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
-const SURFACE_SAMPLES = [
-  { label: "background", class: "bg-background" },
-  { label: "surface-1", class: "bg-surface-1" },
-  { label: "surface-2", class: "bg-surface-2" },
-  { label: "card", class: "bg-card" },
-  { label: "muted", class: "bg-muted" },
+const PALETTE_PREVIEW = [
+  { token: "background", swatchClass: "bg-background", sampleClass: "text-foreground" },
+  { token: "foreground", swatchClass: "bg-foreground", sampleClass: "text-background" },
+  { token: "muted", swatchClass: "bg-muted", sampleClass: "text-muted-foreground" },
+  { token: "border", swatchClass: "border border-border bg-background", sampleClass: "text-foreground" },
+  { token: "ring", swatchClass: "ring-2 ring-ring bg-background", sampleClass: "text-foreground" },
 ] as const;
 
-const TYPE_RAMP = [
-  { label: "Display", class: "t-display", sample: "Display" },
-  { label: "H1", class: "t-h1", sample: "Heading 1" },
-  { label: "H2", class: "t-h2", sample: "Heading 2" },
-  { label: "H3", class: "t-h3", sample: "Heading 3" },
-  { label: "H4", class: "t-h4", sample: "Heading 4" },
-  { label: "H5", class: "t-h5", sample: "Heading 5" },
-  { label: "H6", class: "t-h6", sample: "Heading 6" },
-  { label: "Lead", class: "t-lead", sample: "Lead paragraph" },
-  { label: "Body", class: "t-body", sample: "Body text" },
-  { label: "Small", class: "t-small", sample: "Small text" },
-  { label: "Caption", class: "t-caption", sample: "Caption" },
+const SPACING_SCALE = [4, 8, 12, 16, 24, 32] as const;
+
+const CONTAINER_WIDTHS = [
+  { label: "Compact", value: "max-w-3xl" },
+  { label: "Content", value: "max-w-5xl" },
+  { label: "Docs / DS", value: "max-w-6xl" },
 ] as const;
+
+function ThemeValue({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border border-border bg-muted/50 px-3 py-2">
+      <p className="typo-muted">{label}</p>
+      <p className="typo-small mt-1">{value}</p>
+    </div>
+  );
+}
 
 export default function StyleguidePage() {
+  const { theme, resolvedTheme, systemTheme } = useTheme();
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const currentMode = useMemo(() => {
+    if (!mounted) {
+      return "Loading...";
+    }
+
+    if (theme === "system") {
+      return `System (${resolvedTheme === "dark" ? "Dark" : "Light"})`;
+    }
+
+    return theme === "dark" ? "Dark" : "Light";
+  }, [mounted, theme, resolvedTheme]);
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-5xl space-y-10 px-4 py-10 md:px-6">
-        <header className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="t-display">Styleguide</h1>
-            <p className="t-muted mt-1">Enki Tattoo • Neutral System</p>
+      <div className="app-container app-section no-overflow-x space-y-12 md:space-y-14">
+        <header className="space-y-8 border-b border-border/60 pb-10">
+          <div className="flex justify-end">
+            <ModeToggle variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" />
           </div>
-          <ThemeSwitch />
+          <div className="mx-auto max-w-4xl space-y-4 text-center">
+            <h1 className="typo-page-title typo-hero-title">Design System Style Guide</h1>
+            <p className="mx-auto max-w-3xl text-lg leading-7 text-muted-foreground">
+              shadcn/ui v4 odakli token, tipografi, component yogunlugu ve tema davranisi referansi.
+            </p>
+          </div>
         </header>
 
-        <Tabs defaultValue="tokens" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="tokens">Tokens</TabsTrigger>
-            <TabsTrigger value="typography">Typography</TabsTrigger>
-            <TabsTrigger value="foundations">Foundations</TabsTrigger>
-            <TabsTrigger value="components">Components</TabsTrigger>
-            <TabsTrigger value="removed">Removed (examples)</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="tokens" className="space-y-10 pt-6">
-            <section>
-              <h2 className="t-h2 mb-4">Surface preview</h2>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
-                {SURFACE_SAMPLES.map(({ label, class: c }) => (
-                  <div
-                    key={label}
-                    className={`rounded-lg border border-border p-4 ${c}`}
-                  >
-                    <span className="t-caption block">{label}</span>
-                    <span className="t-small mt-1 block opacity-80">
-                      Sample text
-                    </span>
+        <section id="foundations" className="space-y-8">
+          <h2 className="typo-h2">Foundations</h2>
+          <div className="grid-cards">
+            {PALETTE_PREVIEW.map((item) => (
+              <Card key={item.token} className="overflow-hidden">
+                <CardHeader className="py-3">
+                  <CardTitle className="text-sm font-medium">{item.token}</CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className={`rounded-md p-4 ${item.swatchClass}`}>
+                    <span className={`text-sm ${item.sampleClass}`}>Sample</span>
                   </div>
-                ))}
-              </div>
-            </section>
-            <Separator />
-            <section>
-              <h2 className="t-h2 mb-4">Color Tokens</h2>
-              <TokenGrid />
-            </section>
-            <section>
-              <h2 className="t-h2 mb-4">Overlay (alpha)</h2>
-              <div className="relative h-32 overflow-hidden rounded-lg bg-surface-2">
-                <div className="absolute inset-0 bg-overlay" />
-                <div className="relative flex h-full items-center justify-center">
-                  <span className="t-body text-card">Content over overlay</span>
-                </div>
-              </div>
-            </section>
-          </TabsContent>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-          <TabsContent value="typography" className="space-y-10 pt-6">
-            <section>
-              <h2 className="t-h2 mb-4">Type Ramp</h2>
-              <div className="space-y-4">
-                {TYPE_RAMP.map(({ label, class: c, sample }) => (
-                  <div
-                    key={label}
-                    className="flex flex-wrap items-baseline justify-between gap-4 border-b border-border pb-4 last:border-0"
-                  >
-                    <span className="t-muted shrink-0">{label}</span>
-                    <span className={`flex-1 ${c}`}>{sample}</span>
-                    <code className="t-code rounded bg-muted px-2 py-1 text-muted-foreground">
-                      {c}
-                    </code>
-                  </div>
-                ))}
-              </div>
-            </section>
-            <section>
-              <h2 className="t-h2 mb-2">Weights (same text)</h2>
-              <p className="t-muted mb-3">font-normal, medium, semibold, bold</p>
-              <div className="space-y-2">
-                <p className="t-body font-normal">The quick brown fox.</p>
-                <p className="t-body font-medium">The quick brown fox.</p>
-                <p className="t-body font-semibold">The quick brown fox.</p>
-                <p className="t-body font-bold">The quick brown fox.</p>
-              </div>
-            </section>
-            <Separator />
-            <section>
-              <h2 className="t-h2 mb-4">Paragraph rhythm</h2>
-              <div className="space-y-4">
-                <p className="t-body">
-                  This is body text with <strong>emphasis</strong> and a{" "}
-                  <Button variant="link" asChild className="h-auto p-0">
-                    <a href="#typography">link</a>
-                  </Button>{" "}
-                  inline. Use t-body for readable paragraphs and consistent
-                  vertical rhythm.
-                </p>
-                <p className="t-body">
-                  A second paragraph keeps the same line height and spacing so
-                  blocks feel balanced.
-                </p>
-                <p className="t-muted">
-                  Muted paragraph for secondary or helper content below.
-                </p>
-              </div>
-            </section>
-            <section>
-              <h2 className="t-h2 mb-4">Inline elements</h2>
-              <div className="flex flex-wrap items-center gap-4">
-                <Button variant="link" asChild>
-                  <a href="#inline">Link (Button variant=link)</a>
-                </Button>
-                <code className="t-code rounded bg-muted px-2 py-1">
-                  t-code chip
-                </code>
-                <Badge variant="secondary">Badge inline</Badge>
-              </div>
-            </section>
-          </TabsContent>
-
-          <TabsContent value="foundations" className="space-y-10 pt-6">
-            <section>
-              <h2 className="t-h2 mb-4">Spacing scale</h2>
-              <div className="flex flex-wrap gap-4">
-                <div className="rounded-lg border border-border bg-muted p-2">
-                  <span className="t-caption">p-2</span>
-                </div>
-                <div className="rounded-lg border border-border bg-muted p-3">
-                  <span className="t-caption">p-3</span>
-                </div>
-                <div className="rounded-lg border border-border bg-muted p-4">
-                  <span className="t-caption">p-4</span>
-                </div>
-                <div className="rounded-lg border border-border bg-muted p-6">
-                  <span className="t-caption">p-6</span>
-                </div>
-              </div>
-            </section>
-            <section>
-              <h2 className="t-h2 mb-4">Radius</h2>
-              <div className="flex flex-wrap gap-4">
-                <div className="h-16 w-24 rounded-md border border-border bg-muted" />
-                <div className="h-16 w-24 rounded-lg border border-border bg-muted" />
-                <div className="h-16 w-24 rounded-xl border border-border bg-muted" />
-              </div>
-              <p className="t-caption mt-2">
-                --radius (base), rounded-md, rounded-lg, rounded-xl
+          <Card>
+            <CardHeader>
+              <CardTitle>Typography</CardTitle>
+              <CardDescription>Yeni sayfalar icin `typo-*` utility seti.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <p className="typo-h1 border-none pb-0 text-foreground">Heading H1</p>
+              <h2 className="typo-h2 mt-0">Heading H2</h2>
+              <h3 className="typo-h3">Heading H3</h3>
+              <h4 className="typo-h4">Heading H4</h4>
+              <p className="typo-lead">Lead metin, section girisleri icin kullanilir.</p>
+              <p className="typo-p">
+                Bu bir paragraf ornegidir. Link davranisi icin{" "}
+                <a href="#theme" className="typo-link">
+                  typo-link
+                </a>{" "}
+                utility kullanilir, inline code icin <code className="typo-code">typo-code</code> tercih edilir.
               </p>
-            </section>
-            <section>
-              <h2 className="t-h2 mb-4">Shadows</h2>
-              <div className="flex flex-wrap gap-6">
-                <div className="h-20 w-32 rounded-lg border border-border bg-card shadow-soft p-3">
-                  <span className="t-caption">shadow-soft</span>
-                </div>
-                <div className="h-20 w-32 rounded-lg border border-border bg-popover shadow-popover p-3">
-                  <span className="t-caption">shadow-popover</span>
-                </div>
-              </div>
-            </section>
-          </TabsContent>
-
-          <TabsContent value="components" className="space-y-10 pt-6">
-            <section>
-              <h2 className="t-h2 mb-4">Buttons</h2>
-              <div className="space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="default">Default</Button>
-                  <Button variant="secondary">Secondary</Button>
-                  <Button variant="outline">Outline</Button>
-                  <Button variant="ghost">Ghost</Button>
-                  <Button variant="link">Link</Button>
-                  <Button variant="destructive">Destructive</Button>
-                </div>
-                <p className="t-muted">Disabled:</p>
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="default" disabled>
-                    Default
-                  </Button>
-                  <Button variant="secondary" disabled>
-                    Secondary
-                  </Button>
-                  <Button variant="outline" disabled>
-                    Outline
-                  </Button>
-                  <Button variant="ghost" disabled>
-                    Ghost
-                  </Button>
-                  <Button variant="link" disabled>
-                    Link
-                  </Button>
-                  <Button variant="destructive" disabled>
-                    Destructive
-                  </Button>
-                </div>
-                <p className="t-muted">Icon button:</p>
-                <Button size="icon" variant="outline">
-                  <Sparkles className="size-4" />
-                </Button>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="t-h2 mb-4">Inputs</h2>
-              <div className="grid max-w-sm gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="sg-input">Label + Input</Label>
-                  <Input id="sg-input" placeholder="Placeholder" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sg-textarea">Label + Textarea</Label>
-                  <Textarea id="sg-textarea" placeholder="Textarea placeholder" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sg-focus">Focus ring test</Label>
-                  <Input id="sg-focus" placeholder="Focus to see ring" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="sg-invalid">Invalid state (aria-invalid)</Label>
-                  <Input
-                    id="sg-invalid"
-                    placeholder="Invalid example"
-                    aria-invalid
-                  />
-                </div>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="t-h2 mb-4">Cards</h2>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Basic card</CardTitle>
-                    <CardDescription>Description for the card.</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="t-muted">Muted paragraph inside card.</p>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Card with badges</CardTitle>
-                    <CardDescription>Badge variants below.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex flex-wrap gap-2">
-                    <Badge variant="default">Default</Badge>
-                    <Badge variant="secondary">Secondary</Badge>
-                    <Badge variant="outline">Outline</Badge>
-                    <Badge variant="destructive">Destructive</Badge>
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Card with actions</CardTitle>
-                    <CardDescription>Footer with buttons.</CardDescription>
-                  </CardHeader>
-                  <CardFooter className="flex gap-2">
-                    <Button variant="outline" size="sm">
-                      Cancel
-                    </Button>
-                    <Button size="sm">Save</Button>
-                  </CardFooter>
-                </Card>
-              </div>
-            </section>
-
-            <section>
-              <h2 className="t-h2 mb-4">Toast / Sonner</h2>
-              <Button
-                variant="secondary"
-                onClick={() => toast.success("Styleguide toast triggered.")}
-              >
-                Trigger toast
-              </Button>
-            </section>
-          </TabsContent>
-
-          <TabsContent value="removed" className="space-y-10 pt-6">
-            <p className="t-muted">
-              These components were removed from the Home page (V1 Hub architecture). Shown here as examples only.
-            </p>
-            <section>
-              <h2 className="t-h2 mb-4">StoriesRow</h2>
-              <StoriesRow />
-            </section>
-            <section>
-              <h2 className="t-h2 mb-4">HomeComposer</h2>
-              <HomeComposer />
-            </section>
-            <section>
-              <h2 className="t-h2 mb-4">PostCard / Feed</h2>
-              <ul className="list-none space-y-6 p-0 m-0">
-                {feedItems.slice(0, 2).map((item) => (
-                  <li key={item.id}>
-                    <PostCard item={item} />
-                  </li>
-                ))}
+              <blockquote className="typo-blockquote">
+                Tutarli tipografi ritmi, component yogunlugu ve okunabilirligi ayni anda artirir.
+              </blockquote>
+              <ul className="typo-list">
+                <li>Basliklar: tracking-tight, net hiyerarsi</li>
+                <li>Paragraf: 7-line-height ritmi</li>
+                <li>Ikincil metin: muted foreground</li>
               </ul>
-            </section>
-            <section>
-              <h2 className="t-h2 mb-4">FeedSkeleton</h2>
-              <FeedSkeleton />
-            </section>
-          </TabsContent>
-        </Tabs>
+              <table className="typo-table">
+                <thead>
+                  <tr>
+                    <th>Element</th>
+                    <th>Class</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>H1</td>
+                    <td><code className="typo-code">typo-h1</code></td>
+                  </tr>
+                  <tr>
+                    <td>Paragraph</td>
+                    <td><code className="typo-code">typo-p</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Spacing Scale</CardTitle>
+                <CardDescription>4 / 8 / 12 / 16 / 24 / 32 ritmi.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {SPACING_SCALE.map((space) => (
+                  <div key={space} className="flex items-center gap-3">
+                    <div className="w-14 text-sm text-muted-foreground">{space}px</div>
+                    <div className="h-3 rounded-sm bg-primary/70" style={{ width: `${space * 4}px` }} />
+                  </div>
+                ))}
+                <div className="pt-2">
+                  <p className="typo-muted">Container genislik onerileri</p>
+                  <ul className="mt-2 space-y-1 text-sm text-foreground">
+                    {CONTAINER_WIDTHS.map((item) => (
+                      <li key={item.value} className="flex items-center justify-between rounded-md border border-border px-3 py-2">
+                        <span>{item.label}</span>
+                        <code className="typo-code">{item.value}</code>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Radius + Shadow</CardTitle>
+                <CardDescription>Button/Input/Card seviyelerinde ortak dil.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="rounded-sm border border-border bg-muted p-3 text-xs">rounded-sm</div>
+                  <div className="rounded-md border border-border bg-muted p-3 text-xs">rounded-md</div>
+                  <div className="rounded-lg border border-border bg-muted p-3 text-xs">rounded-lg</div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-lg border border-border bg-card p-4 shadow-soft text-sm">shadow-soft</div>
+                  <div className="rounded-lg border border-border bg-popover p-4 shadow-popover text-sm">shadow-popover</div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        <section id="components" className="space-y-8">
+          <h2 className="typo-h2">Components</h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Buttons</CardTitle>
+              <CardDescription>Variant ve size kombinasyonlari.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-5">
+              <div className="flex flex-wrap gap-2">
+                <Button>Default</Button>
+                <Button variant="secondary">Secondary</Button>
+                <Button variant="outline">Outline</Button>
+                <Button variant="ghost">Ghost</Button>
+                <Button variant="link">Link</Button>
+                <Button variant="destructive">Destructive</Button>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <Button size="xs" variant="outline">XS</Button>
+                <Button size="sm" variant="outline">SM</Button>
+                <Button size="default" variant="outline">Default</Button>
+                <Button size="lg" variant="outline">LG</Button>
+                <Button size="icon" variant="outline" aria-label="Icon">*</Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Inputs</CardTitle>
+                <CardDescription>Hover/focus/disabled/error davranislari.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="sg-default-input">Default</Label>
+                  <Input id="sg-default-input" placeholder="Type here" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sg-focus-input">Focus ring test</Label>
+                  <Input id="sg-focus-input" placeholder="Focus me" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sg-disabled-input">Disabled</Label>
+                  <Input id="sg-disabled-input" placeholder="Disabled" disabled />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sg-error-input">Error</Label>
+                  <Input id="sg-error-input" placeholder="aria-invalid=true" aria-invalid />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="sg-textarea">Textarea</Label>
+                  <Textarea id="sg-textarea" placeholder="Long form input" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Cards, Badges, Tabs</CardTitle>
+                <CardDescription>Icerik bloklari ve durum etiketleri.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  <Badge>Default</Badge>
+                  <Badge variant="secondary">Secondary</Badge>
+                  <Badge variant="outline">Outline</Badge>
+                  <Badge variant="destructive">Destructive</Badge>
+                </div>
+                <Tabs defaultValue="tokens" className="w-full">
+                  <TabsList>
+                    <TabsTrigger value="tokens">Tokens</TabsTrigger>
+                    <TabsTrigger value="content">Content</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="tokens" className="mt-3 rounded-md border border-border p-3 text-sm">
+                    Semantic tokenlar dokumantasyona baglidir.
+                  </TabsContent>
+                  <TabsContent value="content" className="mt-3 rounded-md border border-border p-3 text-sm">
+                    Component yogunlugu compact tutulur.
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+              <CardFooter className="justify-end gap-2">
+                <Button variant="outline" size="sm">Cancel</Button>
+                <Button size="sm">Save</Button>
+              </CardFooter>
+            </Card>
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Table</CardTitle>
+                <CardDescription>shadcn table primitive.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Token</TableHead>
+                      <TableHead>Usage</TableHead>
+                      <TableHead className="text-right">Status</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>background</TableCell>
+                      <TableCell>Page canvas</TableCell>
+                      <TableCell className="text-right">Active</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>muted</TableCell>
+                      <TableCell>Secondary blocks</TableCell>
+                      <TableCell className="text-right">Active</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>ring</TableCell>
+                      <TableCell>Focus visibility</TableCell>
+                      <TableCell className="text-right">Required</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Dialog + Toast</CardTitle>
+                <CardDescription>Overlay ve feedback componentleri.</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2">
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">Open dialog</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Dialog title</DialogTitle>
+                      <DialogDescription>
+                        Focus trap ve close behavior Radix altyapisiyla calisir.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                      <Button onClick={() => setDialogOpen(false)}>Confirm</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                <Button
+                  variant="secondary"
+                  onClick={() => toast.success("Toast demo tetiklendi.")}
+                >
+                  Trigger toast
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        <section id="accessibility" className="space-y-8">
+          <h2 className="typo-h2">Accessibility</h2>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Focus Ring Visibility</CardTitle>
+                <CardDescription>Her iki temada ring belirgin olmalidir.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button variant="outline">Tab ile focus test</Button>
+                <Input placeholder="Input focus test" />
+                <p className="typo-muted">focus-visible ring token: <code className="typo-code">ring-ring/50</code></p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Contrast + Motion</CardTitle>
+                <CardDescription>Muted metin ve reduced motion notu.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-foreground">
+                  Primary content: yuksek kontrastli foreground kullanilir.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Secondary content: muted-foreground ile okunabilirlik korunur.
+                </p>
+                <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                  <li>Animasyonlar kisa ve islevsel tutulur.</li>
+                  <li><code className="typo-code">prefers-reduced-motion</code> aktifse gereksiz hareketten kacinin.</li>
+                  <li>Fokus, sadece renk degil ring ile de belirtilir.</li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        <section id="theme" className="space-y-8">
+          <h2 className="typo-h2">Theme</h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Theme State</CardTitle>
+              <CardDescription>System + override davranisi.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap gap-2">
+                <ThemeValue label="theme" value={mounted ? String(theme) : "loading"} />
+                <ThemeValue label="resolvedTheme" value={mounted ? String(resolvedTheme) : "loading"} />
+                <ThemeValue label="systemTheme" value={mounted ? String(systemTheme) : "loading"} />
+                <ThemeValue label="active mode" value={currentMode} />
+              </div>
+              <div className="flex items-center gap-3">
+                <ModeToggle withLabel size="sm" />
+                <p className="typo-muted">Secim localStorage uzerinde kalici olarak saklanir.</p>
+              </div>
+              <ul className="list-disc space-y-1 pl-5 text-sm text-muted-foreground">
+                <li>Varsayilan davranis: <code className="typo-code">system</code>.</li>
+                <li>Kullanici Light veya Dark secerek OS temasini override edebilir.</li>
+                <li>Override secimi yenileme sonrasinda da korunur.</li>
+                <li>Tekrar System secilirse uygulama OS temasi ile senkron calisir.</li>
+              </ul>
+            </CardContent>
+          </Card>
+        </section>
       </div>
     </div>
   );

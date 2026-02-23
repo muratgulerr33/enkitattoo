@@ -15,10 +15,10 @@ function HubCard({
   return (
     <Link
       href={`/kesfet/${slug}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-surface-2 p-4 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-surface-2 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
     >
-      <div className="aspect-[4/3] w-full flex-shrink-0 bg-muted/60 bg-gradient-to-br from-surface-1 to-surface-2 rounded-lg" />
-      <div className="flex flex-1 flex-col gap-1 pt-3">
+      <div className="card-media bg-muted/60 bg-gradient-to-br from-surface-1 to-surface-2" />
+      <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
         <h2 className="t-h4 text-foreground">{titleTR}</h2>
         <p className="t-muted line-clamp-1">{descriptionTR}</p>
         <span className="t-small mt-2 inline-flex items-center gap-1 text-primary">
@@ -32,9 +32,9 @@ function HubCard({
 
 export default function KesfetPage() {
   return (
-    <div className="space-y-6 md:space-y-8">
+    <div className="app-section no-overflow-x">
       <header>
-        <h1 className="t-h2 text-foreground">Keşfet</h1>
+        <h1 className="typo-page-title">Keşfet</h1>
         <p className="t-muted mt-1">
           Stilini seç, örnekleri gör, hızlı randevu al.
         </p>
@@ -44,7 +44,7 @@ export default function KesfetPage() {
         <h2 id="hub-main" className="sr-only">
           Stil kategorileri
         </h2>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid-cards">
           {mainHubs.map((hub) => (
             <HubCard
               key={hub.id}
@@ -60,9 +60,9 @@ export default function KesfetPage() {
         <h2 id="hub-special" className="t-h4 text-foreground mb-3">
           Özel
         </h2>
-        <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none xl:grid xl:grid-cols-3 xl:overflow-visible xl:pb-0 xl:snap-none">
+        <div className="grid-cards">
           {specialHubs.map((hub) => (
-            <div key={hub.id} className="min-w-[280px] shrink-0 snap-start xl:min-w-0">
+            <div key={hub.id} className="min-w-0">
               <HubCard
                 titleTR={hub.titleTR}
                 slug={hub.slug}
@@ -79,7 +79,7 @@ export default function KesfetPage() {
         </h2>
         <Link
           href="/piercing"
-          className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface-2 p-6 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:flex-row md:items-center md:justify-between md:gap-4"
+          className="flex flex-col overflow-hidden rounded-xl border border-border bg-surface-2 px-4 py-5 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4 sm:px-6 sm:py-6 lg:px-8"
         >
           <div className="flex items-center gap-4">
             <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-muted">
@@ -93,7 +93,7 @@ export default function KesfetPage() {
               </p>
             </div>
           </div>
-          <Button variant="default" size="lg" className="mt-4 shrink-0 md:mt-0">
+          <Button variant="default" size="lg" className="mt-4 w-full shrink-0 sm:mt-0 sm:w-auto">
             Piercing için yaz
           </Button>
         </Link>
