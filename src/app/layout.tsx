@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { SITE_URL } from "@/lib/site/base-url";
 import "./globals.css";
 
 const siteTitle = "Mersin Dövme & Piercing | Enki Tattoo";
@@ -13,7 +14,7 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://enkitattoo.com.tr"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: siteTitle,
     template: "%s | Enki Tattoo",
