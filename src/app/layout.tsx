@@ -7,6 +7,7 @@ import "./globals.css";
 
 const siteTitle = "Mersin Dövme & Piercing | Enki Tattoo";
 const siteDescription = "Mersin Dövme & Piercing | Enki Tattoo";
+const ogImageUrl = "//og.png?v=1";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
     siteName: "Enki Tattoo",
     images: [
       {
-        url: "/opengraph-image",
+        url: ogImageUrl,
         width: 1200,
         height: 630,
         alt: "Enki Tattoo",
@@ -53,7 +54,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: ["/twitter-image"],
+    images: [ogImageUrl],
   },
 };
 
