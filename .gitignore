@@ -67,3 +67,4 @@ docs/output/*
 
 # --- local PR outputs (do not commit) ---
 docs/output/
+public/_backup_*.webp

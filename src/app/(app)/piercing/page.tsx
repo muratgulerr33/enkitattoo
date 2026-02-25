@@ -52,7 +52,7 @@ export default function PiercingPage() {
   const detailsDescription = piercingContent?.description || shortDescription;
 
   return (
-    <div className="app-section no-overflow-x">
+    <div className="app-section no-overflow-x pb-[calc(env(safe-area-inset-bottom)+96px)] sm:pb-0">
       <BreadcrumbListJsonLd path="/piercing" />
 
       <header className="space-y-4">
