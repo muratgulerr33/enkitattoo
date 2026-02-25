@@ -56,5 +56,9 @@ const FEATURED_PIERCING_BASE: Omit<FeaturedPiercingItem, "coverSrc">[] = [
 
 export const FEATURED_PIERCING: FeaturedPiercingItem[] = FEATURED_PIERCING_BASE.map((item) => ({
   ...item,
-  coverSrc: getPiercingCoverSrc(item.id) ?? getPiercingCoverSrc(item.title) ?? getPiercingCoverSrc(item.href),
+  coverSrc:
+    getPiercingCoverSrc(item.id) ??
+    getPiercingCoverSrc(item.title) ??
+    getPiercingCoverSrc(item.href) ??
+    "/piercing-hero/cover.webp",
 }));
