@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
 import { getRouteContent, hasNoIndex, listKnownPaths } from "@/lib/route-content";
 
 interface PageProps {
@@ -64,6 +65,8 @@ export default async function PiercingHubPage({ params }: PageProps) {
 
   return (
     <div className="app-section no-overflow-x">
+      <BreadcrumbListJsonLd path={path} />
+
       <header>
         {content.microLine ? <p className="t-small text-muted-foreground">{content.microLine}</p> : null}
         <h1 className="typo-page-title">{content.h1 || "Piercing"}</h1>

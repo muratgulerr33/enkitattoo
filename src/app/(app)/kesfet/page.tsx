@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
 import { mainHubs, specialHubs } from "@/lib/hub/hubs.v1";
+import { HubCard } from "@/components/hub/hub-card";
 import { getRouteContent, hasNoIndex, listKnownPaths } from "@/lib/route-content";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 const KESFET_PATH = "/kesfet";
 const kesfetContent = getRouteContent(KESFET_PATH);
@@ -34,33 +36,6 @@ export function generateMetadata(): Metadata {
   return metadata;
 }
 
-function HubCard({
-  titleTR,
-  href,
-  descriptionTR,
-}: {
-  titleTR: string;
-  href: string;
-  descriptionTR: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-surface-2 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-    >
-      <div className="card-media bg-muted/60 bg-gradient-to-br from-surface-1 to-surface-2" />
-      <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
-        <h2 className="t-h4 text-foreground">{titleTR}</h2>
-        <p className="t-muted line-clamp-1">{descriptionTR}</p>
-        <span className="t-small mt-2 inline-flex items-center gap-1 text-primary">
-          Tümünü gör
-          <ChevronRight className="size-4" aria-hidden />
-        </span>
-      </div>
-    </Link>
-  );
-}
-
 export default function KesfetPage() {
   const heading = kesfetContent?.h1 || "Keşfet";
   const shortDescription =
@@ -81,6 +56,8 @@ export default function KesfetPage() {
 
   return (
     <div className="app-section no-overflow-x">
+      <BreadcrumbListJsonLd path="/kesfet" />
+
       <header>
         {kesfetContent?.microLine ? (
           <p className="t-small text-muted-foreground">{kesfetContent.microLine}</p>
@@ -96,12 +73,14 @@ export default function KesfetPage() {
         </h2>
         <div className="grid-cards">
           {mainHubCards.map((hub) => (
-            <HubCard
-              key={hub.id}
-              titleTR={hub.titleTR}
-              href={hub.href}
-              descriptionTR={hub.descriptionTR}
-            />
+            <div key={hub.id} className="min-w-0">
+              <HubCard
+                titleTR={hub.titleTR}
+                slug={hub.slug}
+                href={hub.href}
+                descriptionTR={hub.descriptionTR}
+              />
+            </div>
           ))}
         </div>
       </section>
@@ -115,6 +94,7 @@ export default function KesfetPage() {
             <div key={hub.id} className="min-w-0">
               <HubCard
                 titleTR={hub.titleTR}
+                slug={hub.slug}
                 href={hub.href}
                 descriptionTR={hub.descriptionTR}
               />

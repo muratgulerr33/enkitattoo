@@ -64,3 +64,6 @@ docs/output/*
 !docs/output/pr-02-csv-route-content-registry.md
 !docs/output/pr-03-routes-galeri-artist-piercing.md
 !docs/output/pr-04-sitemap-robots.md
+
+# --- local PR outputs (do not commit) ---
+docs/output/

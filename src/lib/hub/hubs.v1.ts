@@ -161,7 +161,7 @@ export const piercingCategories: string[] = [
   "gobek",
   "septum",
   "industrial",
-  "diger",
+  "kisiye-ozel",
 ];
 
 const allHubSlugs = new Set([

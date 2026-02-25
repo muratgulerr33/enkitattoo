@@ -1,16 +1,11 @@
-"use client";
-
 import Link from "next/link";
+import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
 import { Button } from "@/components/ui/button";
 import { mainHubs, specialHubs } from "@/lib/hub/hubs.v1";
-import {
-  addressLine,
-  phoneDisplay,
-  phoneE164,
-  studioName,
-  whatsappUrl,
-} from "@/lib/mock/enki";
+import { HubCard } from "@/components/hub/hub-card";
 import { getRouteContent } from "@/lib/route-content";
+import { PHONE_TEL_URL, WHATSAPP_URL } from "@/lib/site/links";
+import { SITE_INFO } from "@/lib/site-info";
 import { ChevronRight, Images, MapPin, MessageCircle, Phone, Sparkles } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -25,6 +20,7 @@ export default function HomePage() {
 
   return (
     <div className="app-section no-overflow-x">
+      <BreadcrumbListJsonLd path="/" />
       <h1 className="sr-only typo-page-title">{homeHeading}</h1>
 
       {/* 1) Hero block */}
@@ -33,7 +29,7 @@ export default function HomePage() {
         aria-labelledby="hero-title"
       >
         <h2 id="hero-title" className="t-h3 text-foreground">
-          {studioName}
+          {SITE_INFO.name}
         </h2>
         <p className="t-muted mt-1">{heroMicroLine}</p>
         {heroShortDescription ? (
@@ -42,7 +38,7 @@ export default function HomePage() {
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           <Button asChild size="lg" className="w-full gap-2 sm:w-auto">
             <a
-              href={whatsappUrl}
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center"
@@ -67,22 +63,14 @@ export default function HomePage() {
         </h2>
         <div className="grid-cards">
           {mainHubs.map((hub) => (
-            <Link
-              key={hub.id}
-              href={`/kesfet/${hub.slug}`}
-              className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-surface-2 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <div className="card-media bg-muted/50 bg-gradient-to-br from-surface-1 to-surface-2" />
-              <div className="flex flex-1 flex-col gap-1 p-3 sm:p-4">
-                <span className="t-small truncate font-medium text-foreground">
-                  {hub.titleTR}
-                </span>
-                <p className="t-caption line-clamp-1 text-muted-foreground">
-                  {hub.descriptionTR}
-                </p>
-                <ChevronRight className="mt-1 size-4 shrink-0 text-muted-foreground group-hover:text-foreground" aria-hidden />
-              </div>
-            </Link>
+            <div key={hub.id} className="min-w-0">
+              <HubCard
+                titleTR={hub.titleTR}
+                slug={hub.slug}
+                href={`/kesfet/${hub.slug}`}
+                descriptionTR={hub.descriptionTR}
+              />
+            </div>
           ))}
         </div>
       </section>
@@ -94,18 +82,14 @@ export default function HomePage() {
         </h2>
         <div className="grid-cards">
           {specialHubs.map((hub) => (
-            <Link
-              key={hub.id}
-              href={`/kesfet/${hub.slug}`}
-              className="group flex h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border bg-surface-2 shadow-soft transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-            >
-              <div className="card-media bg-muted/50 bg-gradient-to-br from-surface-1 to-muted" />
-              <div className="flex flex-1 items-center p-3 sm:p-4">
-                <span className="t-small truncate font-medium text-foreground">
-                  {hub.titleTR}
-                </span>
-              </div>
-            </Link>
+            <div key={hub.id} className="min-w-0">
+              <HubCard
+                titleTR={hub.titleTR}
+                slug={hub.slug}
+                href={`/kesfet/${hub.slug}`}
+                descriptionTR={hub.descriptionTR}
+              />
+            </div>
           ))}
         </div>
       </section>
@@ -170,15 +154,15 @@ export default function HomePage() {
         </h2>
         <div className="flex flex-col gap-2 text-muted-foreground">
           <a
-            href={`tel:${phoneE164}`}
+            href={PHONE_TEL_URL}
             className="t-small inline-flex items-center gap-2 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:rounded"
           >
             <Phone className="size-4 shrink-0" aria-hidden />
-            {phoneDisplay}
+            {SITE_INFO.phoneDisplay}
           </a>
           <span className="t-small inline-flex items-center gap-2">
             <MapPin className="size-4 shrink-0" aria-hidden />
-            {addressLine}
+            {SITE_INFO.addressText}
           </span>
         </div>
         <Button asChild variant="outline" size="default" className="mt-4 w-full sm:w-auto">

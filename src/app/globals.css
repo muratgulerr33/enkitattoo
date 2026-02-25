@@ -63,7 +63,7 @@
   color-scheme: light;
   --radius: 0.625rem;
   --app-mobile-topbar-h: 56px;
-  --app-mobile-tabbar-h: 56px;
+  --app-mobile-tabbar-h: 52px;
   --app-mobile-header-h: calc(var(--app-mobile-topbar-h) + var(--app-mobile-tabbar-h));
 
   /* Default base palette: Zinc (premium neutral look for the studio brand). */
@@ -410,6 +410,14 @@
 
   .card-media {
     @apply aspect-[5/4] min-h-28 w-full;
+  }
+
+  .card-media-hub {
+    @apply aspect-[4/5] min-h-28 w-full;
+  }
+
+  .card-media-gallery {
+    @apply aspect-[3/4] min-h-28 w-full;
   }
 
   .no-overflow-x {

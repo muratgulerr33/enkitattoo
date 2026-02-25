@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
 import {
   getHubBySlug,
   isValidHubSlug,
@@ -72,6 +73,8 @@ export default async function HubDetailPage({ params }: PageProps) {
 
   return (
     <div className="app-section no-overflow-x">
+      <BreadcrumbListJsonLd path={routePath} />
+
       <header>
         {content?.microLine ? <p className="t-small text-muted-foreground">{content.microLine}</p> : null}
         <h1 className="typo-page-title">{content?.h1 || hub.titleTR}</h1>

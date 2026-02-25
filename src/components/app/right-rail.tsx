@@ -12,9 +12,8 @@ import {
 } from "@/components/ui/card";
 import { mainHubs } from "@/lib/hub/hubs.v1";
 import {
-  addressLine,
-  hoursNote,
-} from "@/lib/mock/enki";
+  SITE_INFO,
+} from "@/lib/site-info";
 import { WHATSAPP_URL } from "@/lib/site/links";
 import { Clock, MapPin, Sparkles } from "lucide-react";
 
@@ -88,11 +87,11 @@ export function RightRail() {
           </Button>
           <div className="t-small flex items-center gap-3 text-muted-foreground">
             <Clock className="size-5 shrink-0" aria-hidden />
-            <span>{hoursNote}</span>
+            <span>{SITE_INFO.openingHoursText}</span>
           </div>
           <div className="t-small flex items-start gap-3 text-muted-foreground">
             <MapPin className="size-5 shrink-0 mt-0.5" aria-hidden />
-            <span>{addressLine}</span>
+            <span>{SITE_INFO.addressText}</span>
           </div>
         </CardContent>
       </Card>

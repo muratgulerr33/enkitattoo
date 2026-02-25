@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
 import { Button } from "@/components/ui/button";
 import { getRouteContent, hasNoIndex } from "@/lib/route-content";
 
@@ -66,6 +67,8 @@ export default function ArtistlerPage() {
 
   return (
     <div className="app-section no-overflow-x">
+      <BreadcrumbListJsonLd path="/artistler" />
+
       <header>
         {artistlerContent?.microLine ? (
           <p className="t-small text-muted-foreground">{artistlerContent.microLine}</p>

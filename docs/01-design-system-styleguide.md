@@ -23,6 +23,11 @@
   - Size rule: `20 / 22 / 24`; icon-only controls min `44x44`.
   - Safe-area required for header/drawer/fab.
   - Bottom icon bar is explicitly out of scope; icons are distributed to relevant UI points.
+- Piercing category icon lock:
+  - Use Lucide primitives only from `src/lib/piercing/piercing-icons.ts` (no Figma/SVG branch).
+  - Card icon size is fixed `h-5 w-5` (20px).
+  - Icons are decorative and must stay `aria-hidden="true"`.
+  - Color stays single-tone `text-muted-foreground` for consistency.
 
 ## 1) References (Docs)
 - Ops: `./00-prod-vps-deploy.md`
@@ -181,6 +186,14 @@
 - Compact card grid: `grid-cards-compact` (same column progression, tighter gaps).
 - Use `no-overflow-x` on page wrappers and flexible shells to prevent accidental horizontal overflow.
 - Under `1280px`, avoid 4-column squeeze; 4 columns start at `xl` only.
+
+## Cards / Media ratios
+- Hub card media: `card-media-hub` (`4/5`).
+- Gallery card media: `card-media-gallery` (`3/4`).
+- Legacy media utility: `card-media` (`5/4`) remains for backward compatibility until remaining usage is retired.
+- Export recommendation:
+  - Hub covers: `1080x1350` WebP (`sRGB`).
+  - Gallery photos: `900x1200` WebP (`sRGB`).
 
 ## App Shell Header Rules (Locked)
 - Breakpoint contract:

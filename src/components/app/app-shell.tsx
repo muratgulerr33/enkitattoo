@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { AppHeader } from "@/components/app/app-header";
 import { AppFooter } from "@/components/app/app-footer";
-import { ChatBubble } from "@/components/app/chat-bubble";
 import { MobileHeader } from "@/components/app/mobile-header";
 import { RightRail } from "@/components/app/right-rail";
 
@@ -31,7 +30,6 @@ export function AppShell({
         </main>
         <AppFooter />
       </div>
-      <ChatBubble />
     </>
   );
 }

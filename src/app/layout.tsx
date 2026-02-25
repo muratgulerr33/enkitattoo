@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
+import { GA4 } from "@/components/analytics/ga4";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_URL } from "@/lib/site/base-url";
@@ -79,6 +80,7 @@ export default function RootLayout({
         >
           {children}
           <Toaster />
+          <GA4 />
         </ThemeProvider>
       </body>
     </html>
