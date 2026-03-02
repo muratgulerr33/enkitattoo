@@ -3,6 +3,17 @@ import {NextRequest, NextResponse} from 'next/server';
 import {locales, routing} from './i18n/routing';
 
 const handleI18nRouting = createMiddleware(routing);
+const DEFAULT_LOCALE = routing.defaultLocale;
+
+function withRscNoStoreHeaders(response: NextResponse, shouldApply: boolean): NextResponse {
+  if (!shouldApply) {
+    return response;
+  }
+
+  response.headers.set('Cache-Control', 'private, no-store, no-cache, max-age=0, must-revalidate');
+  response.headers.set('Pragma', 'no-cache');
+  return response;
+}
 
 function isRscLikeRequest(request: NextRequest): boolean {
   if (request.nextUrl.searchParams.has('_rsc')) {
@@ -40,27 +51,45 @@ function isRscLikeRequest(request: NextRequest): boolean {
 }
 
 export default function middleware(request: NextRequest) {
-  if (isRscLikeRequest(request)) {
-    const response = NextResponse.next();
-    response.headers.set('Cache-Control', 'private, no-store, no-cache, max-age=0, must-revalidate');
-    response.headers.set('pragma', 'no-cache');
-    return response;
+  const shouldApplyNoStore = isRscLikeRequest(request);
+  const pathname = request.nextUrl.pathname;
+
+  if (pathname === '/') {
+    const rewriteUrl = request.nextUrl.clone();
+    rewriteUrl.pathname = `/${DEFAULT_LOCALE}`;
+    return withRscNoStoreHeaders(NextResponse.rewrite(rewriteUrl), shouldApplyNoStore);
   }
 
-  const pathname = request.nextUrl.pathname;
+  if (pathname === `/${DEFAULT_LOCALE}` || pathname.startsWith(`/${DEFAULT_LOCALE}/`)) {
+    const canonicalUrl = request.nextUrl.clone();
+    canonicalUrl.pathname =
+      pathname === `/${DEFAULT_LOCALE}` ? '/' : pathname.replace(`/${DEFAULT_LOCALE}`, '');
+    return withRscNoStoreHeaders(NextResponse.redirect(canonicalUrl, 308), shouldApplyNoStore);
+  }
+
   const firstSegment = pathname.split('/').filter(Boolean)[0];
 
   if (firstSegment && /^[a-zA-Z]{2}$/.test(firstSegment)) {
     const normalizedSegment = firstSegment.toLowerCase();
 
     if (!locales.includes(normalizedSegment as (typeof locales)[number])) {
-      return new NextResponse(null, {status: 404});
+      return withRscNoStoreHeaders(new NextResponse(null, {status: 404}), shouldApplyNoStore);
     }
   }
 
-  return handleI18nRouting(request);
+  return withRscNoStoreHeaders(handleI18nRouting(request), shouldApplyNoStore);
 }
 
+/**
+ * Local smoke commands:
+ * npm run build
+ * PORT=3010 npx next start -p 3010 > /tmp/enki-start.log 2>&1 & echo $! > /tmp/enki.pid
+ * curl -sS -I "http://127.0.0.1:3010/" | egrep -i "HTTP/|location|cache-control"
+ * curl -sS -I "http://127.0.0.1:3010/tr" | egrep -i "HTTP/|location|cache-control"
+ * curl -sS -I "http://127.0.0.1:3010/en" | egrep -i "HTTP/|location|cache-control"
+ * curl -sS -I "http://127.0.0.1:3010/xx" | head -n 5
+ * kill $(cat /tmp/enki.pid)
+ */
 export const config = {
   matcher: '/((?!api|_next|opengraph-image|twitter-image|.*\\..*).*)'
 };
