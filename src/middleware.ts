@@ -3,7 +3,6 @@ import {NextRequest, NextResponse} from 'next/server';
 import {locales, routing} from './i18n/routing';
 
 const handleI18nRouting = createMiddleware(routing);
-const DEFAULT_LOCALE = routing.defaultLocale;
 
 function withRscNoStoreHeaders(response: NextResponse, shouldApply: boolean): NextResponse {
   if (!shouldApply) {
@@ -54,19 +53,6 @@ export default function middleware(request: NextRequest) {
   const shouldApplyNoStore = isRscLikeRequest(request);
   const pathname = request.nextUrl.pathname;
 
-  if (pathname === '/') {
-    const rewriteUrl = request.nextUrl.clone();
-    rewriteUrl.pathname = `/${DEFAULT_LOCALE}`;
-    return withRscNoStoreHeaders(NextResponse.rewrite(rewriteUrl), shouldApplyNoStore);
-  }
-
-  if (pathname === `/${DEFAULT_LOCALE}` || pathname.startsWith(`/${DEFAULT_LOCALE}/`)) {
-    const canonicalUrl = request.nextUrl.clone();
-    canonicalUrl.pathname =
-      pathname === `/${DEFAULT_LOCALE}` ? '/' : pathname.replace(`/${DEFAULT_LOCALE}`, '');
-    return withRscNoStoreHeaders(NextResponse.redirect(canonicalUrl, 308), shouldApplyNoStore);
-  }
-
   const firstSegment = pathname.split('/').filter(Boolean)[0];
 
   if (firstSegment && /^[a-zA-Z]{2}$/.test(firstSegment)) {
@@ -88,6 +74,8 @@ export default function middleware(request: NextRequest) {
  * curl -sS -I "http://127.0.0.1:3010/tr" | egrep -i "HTTP/|location|cache-control"
  * curl -sS -I "http://127.0.0.1:3010/en" | egrep -i "HTTP/|location|cache-control"
  * curl -sS -I "http://127.0.0.1:3010/xx" | head -n 5
+ * curl -sS -I -H "RSC: 1" "http://127.0.0.1:3010/" | egrep -i "HTTP/|content-type|cache-control"
+ * curl -sS -I "http://127.0.0.1:3010/?_rsc=1" | egrep -i "HTTP/|content-type|cache-control"
  * kill $(cat /tmp/enki.pid)
  */
 export const config = {
