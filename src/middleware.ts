@@ -54,6 +54,21 @@ function stripDefaultLocalePrefix(pathname: string): string {
   return stripped === '' ? '/' : stripped;
 }
 
+function isLocalInternalHost(hostname: string): boolean {
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+}
+
+function forceInternalRewriteHttp(
+  response: NextResponse,
+  request: NextRequest,
+  targetPathAndQuery: string
+): void {
+  const {host, hostname} = request.nextUrl;
+  if (!isLocalInternalHost(hostname)) return;
+
+  response.headers.set('x-middleware-rewrite', `http://${host}${targetPathAndQuery}`);
+}
+
 export default function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
@@ -95,13 +110,15 @@ export default function middleware(request: NextRequest) {
 
   const rewriteUrl = request.nextUrl.clone();
   rewriteUrl.protocol = 'http:';
-  rewriteUrl.pathname = pathname === '/' ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${pathname}`;
+  const targetPath = pathname === '/' ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${pathname}`;
+  rewriteUrl.pathname = targetPath;
 
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(INTERNAL_REWRITE_HEADER, '1');
   requestHeaders.set('x-forwarded-proto', 'http');
 
   const response = NextResponse.rewrite(rewriteUrl, {request: {headers: requestHeaders}});
+  forceInternalRewriteHttp(response, request, `${targetPath}${rewriteUrl.search}`);
   if (process.env.NODE_ENV !== 'production') {
     response.headers.set('x-enki-mw-debug', 'default-locale-rewrite');
   }
