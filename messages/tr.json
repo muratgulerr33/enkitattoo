@@ -6,7 +6,10 @@
     "back": "Geri",
     "clearSearch": "Aramayı temizle",
     "cta": {
-      "whatsappWrite": "WhatsApp'tan yaz"
+      "whatsappWrite": "WhatsApp'tan yaz",
+      "bookAppointment": "Randevu al",
+      "askPrice": "Fiyat sor",
+      "aftercare": "Bakım"
     },
     "directions": "Yol tarifi",
     "hideDetails": "Detayları gizle",
@@ -225,6 +228,12 @@
       "openGalleryImageAria": "{title} görselini galeride aç",
       "findOnMap": "Haritada bul"
     },
+    "legacySocialMock": {
+      "homeComposer": {
+        "placeholder": "Bugün ne yapmak istersin? Dövme mi piercing mi?",
+        "quickShareAria": "Hızlı paylaşım"
+      }
+    },
     "kesfet": {
       "heading": "Keşfet",
       "heroAlt": "Keşfet hero kapak görseli",
@@ -232,7 +241,69 @@
       "browseVisuals": "Görseller",
       "askOnWhatsapp": "WhatsApp",
       "piercingDescription": "Kulak, burun, septum ve daha fazlası · Profesyonel piercing hizmeti.",
-      "popularStyles": "Popüler stiller"
+      "popularStyles": "Popüler stiller",
+      "hubs": {
+        "minimal-fine-line-dovme": {
+          "heading": "Minimal & Fine Line Dövme",
+          "shortDescription": "İnce çizgi ve sade kompozisyon odaklı minimal dövme stilleri.",
+          "longDescription": "Yerleşim, çizgi kalınlığı ve boşluk dengesini birlikte değerlendirerek zarif ve zamansız bir minimal fine line tasarım planlıyoruz.",
+          "coverAlt": "Minimal fine line dövme kapak görseli"
+        },
+        "yazi-isim-dovmesi": {
+          "heading": "Yazı & İsim Dövmesi",
+          "shortDescription": "Lettering, isim ve tarih odaklı yazı dövmesi seçenekleri.",
+          "longDescription": "Font karakteri, harf aralığı ve bölge yerleşimini birlikte belirleyerek okunabilir ve estetik bir yazı dövmesi kurguluyoruz.",
+          "coverAlt": "Yazı ve isim dövmesi kapak görseli"
+        },
+        "realistik-dovme": {
+          "heading": "Realistik Dövme",
+          "shortDescription": "Derinlik, ışık-gölge ve detay odaklı realistik dövme çalışmaları.",
+          "longDescription": "Referans görsellerinizle ton geçişleri ve detay seviyesini netleştirip güçlü kontrastlı, dengeli bir realistik kompozisyon hazırlıyoruz.",
+          "coverAlt": "Realistik dövme kapak görseli"
+        },
+        "portre-dovme": {
+          "heading": "Portre Dövme",
+          "shortDescription": "Yüz ve ifade detaylarını öne çıkaran portre dövme yaklaşımı.",
+          "longDescription": "Referans kalitesi, ölçü ve yerleşim planını birlikte belirleyerek karakteri doğru aktaran kontrollü bir portre dövme çalışması sunuyoruz.",
+          "coverAlt": "Portre dövme kapak görseli"
+        },
+        "traditional-dovme": {
+          "heading": "Traditional Dövme",
+          "shortDescription": "Kalın hatlar ve klasik ikonlarla traditional dövme stili.",
+          "longDescription": "Renk kullanımı, çizgi gücü ve kompozisyon ritmini birlikte planlayarak güçlü karakter taşıyan traditional bir görünüm oluşturuyoruz.",
+          "coverAlt": "Traditional dövme kapak görseli"
+        },
+        "dovme-kapatma": {
+          "heading": "Dövme Kapatma (Cover-Up)",
+          "shortDescription": "Mevcut dövmeyi dönüştürmeye odaklı cover-up çözümleri.",
+          "longDescription": "Eski dövmenin yoğunluğunu analiz edip yeni tasarımın kontrast ve yerleşimini buna göre planlayarak temiz bir cover-up sonucu hedefliyoruz.",
+          "coverAlt": "Dövme kapatma kapak görseli"
+        },
+        "ataturk-temali-dovme": {
+          "heading": "Atatürk Temalı Dövme",
+          "shortDescription": "Portre, imza ve simgesel unsurlarla Atatürk temalı dövme tasarımları.",
+          "longDescription": "Temanın anlamını ve görsel yoğunluğunu birlikte netleştirip saygılı, güçlü ve dengeli bir Atatürk temalı kompozisyon hazırlıyoruz.",
+          "coverAlt": "Atatürk temalı dövme kapak görseli"
+        },
+        "blackwork-dovme": {
+          "heading": "Blackwork Dövme",
+          "shortDescription": "Siyah bloklar, net kontrast ve grafik çizgilerle blackwork stili.",
+          "longDescription": "Dolu-boş alan dengesi, form akışı ve yoğunluk kararlarını birlikte belirleyerek güçlü bir blackwork görsel dili kuruyoruz.",
+          "coverAlt": "Blackwork dövme kapak görseli"
+        },
+        "kisiye-ozel-dovme-tasarimi": {
+          "heading": "Kişiye Özel Dövme Tasarımı",
+          "shortDescription": "Fikrinize göre sıfırdan planlanan kişiye özel dövme tasarımı.",
+          "longDescription": "Referanslarınızı ve hikayenizi birlikte değerlendirip stil, ölçü ve yerleşimi netleştirerek size özgü bir dövme tasarımı oluşturuyoruz.",
+          "coverAlt": "Kişiye özel dövme tasarımı kapak görseli"
+        },
+        "dovme-egitimi": {
+          "heading": "Dövme Eğitimi",
+          "shortDescription": "Temelden ileriye, stüdyo içinde uygulamalı dövme eğitimi içeriği.",
+          "longDescription": "Hijyen, ekipman ve uygulama adımlarını planlı bir akışla ele alarak seviyenize uygun eğitim yol haritası sunuyoruz.",
+          "coverAlt": "Dövme eğitimi kapak görseli"
+        }
+      }
     },
     "kesfetHub": {
       "relatedTitle": "Benzer stiller",
@@ -288,7 +359,63 @@
       "categoriesTitle": "Kategoriler",
       "detailsTitle": "Detaylar",
       "showDetails": "Detayları göster",
-      "hideDetails": "Detayları gizle"
+      "hideDetails": "Detayları gizle",
+      "hubs": {
+        "kulak": {
+          "heading": "Kulak Piercing",
+          "shortDescription": "Lob ve kıkırdak bölgeleri için sade veya taşlı kulak piercing seçenekleri.",
+          "longDescription": "Kulak anatominize uygun yerleşim, takı formu ve kombin seçeneklerini birlikte planlayarak dengeli ve temiz bir görünüm hedefliyoruz.",
+          "coverAlt": "Kulak piercing kapak görseli"
+        },
+        "burun": {
+          "heading": "Burun Piercing",
+          "shortDescription": "Nostril ve benzeri bölgeler için halka ya da stud burun piercing stilleri.",
+          "longDescription": "Minimal veya daha belirgin bir görünüm için takı tipi, ölçü ve yerleşimi birlikte netleştirip stilinize uygun sonucu hedefliyoruz.",
+          "coverAlt": "Burun piercing kapak görseli"
+        },
+        "kas": {
+          "heading": "Kaş Piercing",
+          "shortDescription": "Kaş hattına uyumlu, net çizgili ve dengeli kaş piercing alternatifleri.",
+          "longDescription": "Kaş formunuza uygun açı, takı boyu ve görünüm yoğunluğunu değerlendirerek sade ya da iddialı bir stil planı oluşturuyoruz.",
+          "coverAlt": "Kaş piercing kapak görseli"
+        },
+        "dudak": {
+          "heading": "Dudak Piercing",
+          "shortDescription": "Dudak bölgesi için labret ve halka odaklı piercing seçenekleri.",
+          "longDescription": "Yüz oranınıza uygun yerleşim ve takı formunu seçerek tekli kullanım veya kombinlerde dengeli bir dudak piercing görünümü sağlıyoruz.",
+          "coverAlt": "Dudak piercing kapak görseli"
+        },
+        "dil": {
+          "heading": "Dil Piercing",
+          "shortDescription": "Minimal barbell veya parlak detaylarla dil piercing seçenekleri.",
+          "longDescription": "Konfor ve görünüm dengesini koruyan takı seçimiyle, stilinize uygun ve kontrollü bir dil piercing planı sunuyoruz.",
+          "coverAlt": "Dil piercing kapak görseli"
+        },
+        "gobek": {
+          "heading": "Göbek Piercing",
+          "shortDescription": "Sade ya da taşlı tasarımlarla göbek piercing stilleri.",
+          "longDescription": "Takı tipi, uzunluk ve görsel yoğunluk seçeneklerini değerlendirerek göbek bölgesinde temiz ve estetik bir sonuç hedefliyoruz.",
+          "coverAlt": "Göbek piercing kapak görseli"
+        },
+        "septum": {
+          "heading": "Septum Piercing",
+          "shortDescription": "Halka ve clicker seçenekleriyle septum piercing görünümü.",
+          "longDescription": "Yüz hattınıza uygun çap ve takı formunu belirleyip, minimalden daha dikkat çekici stile kadar doğru septum görünümünü planlıyoruz.",
+          "coverAlt": "Septum piercing kapak görseli"
+        },
+        "industrial": {
+          "heading": "Industrial Piercing",
+          "shortDescription": "Kulakta tek bar odaklı, güçlü çizgi etkisi veren industrial piercing.",
+          "longDescription": "Kulak anatomisine uygun iki nokta yerleşimi ve takı boyu planlamasıyla, net çizgili ve dengeli bir industrial görünüm oluşturuyoruz.",
+          "coverAlt": "Industrial piercing kapak görseli"
+        },
+        "kisiye-ozel": {
+          "heading": "Kişiye Özel Piercing",
+          "shortDescription": "Tarzınıza göre planlanan kişiye özel piercing kombinleri.",
+          "longDescription": "Takı formu, yerleşim ve genel stil tercihlerinizi birlikte netleştirerek size özel, bütünlüklü bir piercing kurgusu hazırlıyoruz.",
+          "coverAlt": "Kişiye özel piercing kapak görseli"
+        }
+      }
     },
     "piercingHub": {
       "defaultShortDescription": "Piercing detayı",
@@ -370,7 +497,9 @@
         "hygiene": "Hijyen ve çalışma alanı hazırlığı",
         "stencil": "Stencil yerleşimi, çizgi kontrolü ve temel gölgelendirme",
         "equipment": "Ekipman seçimi ve süreç planlama adımları"
-      }
+      },
+      "shortDescription": "Mersin'de dövme eğitimi için stüdyo içi, uygulamalı ve yapılandırılmış program.",
+      "longDescription": "Hijyen, stencil, çizgi kontrolü ve ekipman planlamasını adım adım ele alan eğitim akışını inceleyin; seviyenize uygun bir başlangıç planı oluşturalım."
     },
     "sss": {
       "heading": "SSS / Bilgi Bankası",

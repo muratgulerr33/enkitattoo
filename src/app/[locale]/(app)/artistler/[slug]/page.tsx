@@ -6,6 +6,8 @@ import { getTranslations } from "next-intl/server";
 import { PhoneCta, WhatsAppCta } from "@/components/app/cta-actions";
 import { InnerPageHero } from "@/components/app/inner-page-hero";
 import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
+import { locales } from "@/i18n/routing";
+import { applyCoverOgImage } from "@/lib/seo/og-image";
 import { getRouteContent, hasNoIndex } from "@/lib/route-content";
 import { PHONE_TEL_URL, WHATSAPP_URL } from "@/lib/site/links";
 
@@ -33,22 +35,29 @@ const ARTIST_INFO = {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return ARTIST_SLUGS.map((slug) => ({ slug }));
+  return locales.flatMap((locale) => ARTIST_SLUGS.map((slug) => ({ locale, slug })));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const routePath = `/artistler/${slug}`;
   const content = getRouteContent(routePath);
+  const metadataTitle = content?.seoTitle ?? "Artistler | Enki Tattoo";
+  const sharedCoverSrc = "/artistler/cover.webp";
+  const hasSharedCover = fs.existsSync(pathModule.join(process.cwd(), "public", "artistler", "cover.webp"));
 
   const metadata: Metadata = {
-    title: { absolute: content?.seoTitle ?? "Artistler | Enki Tattoo" },
+    title: { absolute: metadataTitle },
     description: content?.seoDescription ?? "Enki Tattoo artist profili.",
     alternates: { canonical: content?.canonical ?? routePath },
   };
 
   if (hasNoIndex(content?.indexing)) {
     metadata.robots = { index: false, follow: true };
+  }
+
+  if (hasSharedCover) {
+    applyCoverOgImage(metadata, sharedCoverSrc, metadataTitle);
   }
 
   return metadata;

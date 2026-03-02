@@ -8,6 +8,7 @@ import { WhatsAppCta } from "@/components/app/cta-actions";
 import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
 import { FaqTeaser } from "@/components/sss/faq-teaser";
 import { getRouteContent, hasNoIndex, listKnownPaths } from "@/lib/route-content";
+import { applyCoverOgImage } from "@/lib/seo/og-image";
 import { FeaturedPiercingCarousel } from "@/components/piercing/featured-piercing-carousel";
 import { PiercingCategoryGrid } from "@/components/piercing/piercing-category-grid";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -26,10 +27,11 @@ export function generateMetadata(): Metadata {
     return {};
   }
 
+  const metadataTitle = piercingContent.seoTitle;
   const metadata: Metadata = {};
 
-  if (piercingContent.seoTitle) {
-    metadata.title = { absolute: piercingContent.seoTitle };
+  if (metadataTitle) {
+    metadata.title = { absolute: metadataTitle };
   }
   if (piercingContent.seoDescription) {
     metadata.description = piercingContent.seoDescription;
@@ -39,6 +41,9 @@ export function generateMetadata(): Metadata {
   }
   if (hasNoIndex(piercingContent.indexing)) {
     metadata.robots = { index: false, follow: true };
+  }
+  if (hasHeroCover) {
+    applyCoverOgImage(metadata, PIERCING_HERO_COVER_PATH, metadataTitle ?? "Enki Tattoo");
   }
 
   return metadata;

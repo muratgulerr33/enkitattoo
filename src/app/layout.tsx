@@ -8,7 +8,7 @@ import "./globals.css";
 
 const siteTitle = "Mersin Dövme & Piercing | Enki Tattoo";
 const siteDescription = "Mersin Dövme & Piercing | Enki Tattoo";
-const ogImageUrl = "//og.png?v=1";
+const ogImageUrl = "/og.png";
 
 const geist = Geist({
   subsets: ["latin"],

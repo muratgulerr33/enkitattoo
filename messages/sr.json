@@ -6,7 +6,10 @@
     "back": "Nazad",
     "clearSearch": "Obriši pretragu",
     "cta": {
-      "whatsappWrite": "Piši na WhatsApp"
+      "whatsappWrite": "Piši na WhatsApp",
+      "bookAppointment": "Zakaži termin",
+      "askPrice": "Pitaj za cenu",
+      "aftercare": "Nega posle"
     },
     "directions": "Uputstva",
     "hideDetails": "Sakrij detalje",
@@ -225,6 +228,12 @@
       "openGalleryImageAria": "Otvori sliku {title} u galeriji",
       "findOnMap": "Pronađi na mapi"
     },
+    "legacySocialMock": {
+      "homeComposer": {
+        "placeholder": "Šta želiš da uradiš danas? Tetovaža ili pirsing?",
+        "quickShareAria": "Brzo deljenje"
+      }
+    },
     "kesfet": {
       "heading": "Istraži",
       "heroAlt": "hero naslovna slika stranice Istraži",
@@ -232,7 +241,69 @@
       "browseVisuals": "Vizuali",
       "askOnWhatsapp": "WhatsApp",
       "piercingDescription": "Uho, nos, septum i više · profesionalna usluga Pirsing.",
-      "popularStyles": "Popularni stilovi"
+      "popularStyles": "Popularni stilovi",
+      "hubs": {
+        "minimal-fine-line-dovme": {
+          "heading": "Minimal & Fine Line Tetovaža",
+          "shortDescription": "Minimal stilovi Tetovaža zasnovani na tankim linijama i čistoj kompoziciji.",
+          "longDescription": "Definišemo debljinu linije, razmake i poziciju kako bismo dobili elegantan i dugotrajan fine line rezultat.",
+          "coverAlt": "Naslovna slika za minimal fine line tetovažu"
+        },
+        "yazi-isim-dovmesi": {
+          "heading": "Natpis & Ime Tetovaža",
+          "shortDescription": "Lettering Tetovaža opcije fokusirane na ime, datum i tipografiju.",
+          "longDescription": "Definišemo karakter fonta, razmak i pozicioniranje na telu za čitljivu i estetsku lettering kompoziciju.",
+          "coverAlt": "Naslovna slika za tetovažu natpisa i imena"
+        },
+        "realistik-dovme": {
+          "heading": "Realistična Tetovaža",
+          "shortDescription": "Realistična Tetovaža sa dubinom, svetlo-senka balansom i detaljem.",
+          "longDescription": "Uz tvoje reference podešavamo tonske prelaze i nivo detalja za snažan i uravnotežen realistični stil.",
+          "coverAlt": "Naslovna slika za realističnu tetovažu"
+        },
+        "portre-dovme": {
+          "heading": "Portret Tetovaža",
+          "shortDescription": "Pristup portret Tetovaža fokusiran na izraz i detalje lica.",
+          "longDescription": "Definišemo kvalitet reference, meru i poziciju kako bismo isporučili kontrolisanu portretnu kompoziciju sa jasnim karakterom.",
+          "coverAlt": "Naslovna slika za portret tetovažu"
+        },
+        "traditional-dovme": {
+          "heading": "Traditional Tetovaža",
+          "shortDescription": "Traditional Tetovaža stil sa jakim linijama i klasičnim ikonama.",
+          "longDescription": "Planiramo upotrebu boje, snagu linije i ritam kompozicije za prepoznatljiv i snažan traditional izgled.",
+          "coverAlt": "Naslovna slika za traditional tetovažu"
+        },
+        "dovme-kapatma": {
+          "heading": "Cover-Up Tetovaža",
+          "shortDescription": "Cover-up rešenja za transformaciju postojećih tetovaža.",
+          "longDescription": "Prvo analiziramo gustinu postojećeg rada, zatim planiramo kontrast i poziciju novog dizajna za čistiji rezultat.",
+          "coverAlt": "Naslovna slika za cover-up tetovažu"
+        },
+        "ataturk-temali-dovme": {
+          "heading": "Tetovaža sa Ataturk Temom",
+          "shortDescription": "Tetovaža sa Ataturk temom kroz portret, potpis i simboličke elemente.",
+          "longDescription": "Usklađujemo značenje i vizuelni intenzitet kako bismo dobili respektabilnu, uravnoteženu i snažnu Ataturk kompoziciju.",
+          "coverAlt": "Naslovna slika za tetovažu sa Ataturk temom"
+        },
+        "blackwork-dovme": {
+          "heading": "Blackwork Tetovaža",
+          "shortDescription": "Blackwork Tetovaža stil sa jakim kontrastom i grafičkim crnim formama.",
+          "longDescription": "Definišemo odnos punog i praznog, tok i gustinu kako bismo izgradili čistu i snažnu blackwork vizuelnu logiku.",
+          "coverAlt": "Naslovna slika za blackwork tetovažu"
+        },
+        "kisiye-ozel-dovme-tasarimi": {
+          "heading": "Personalizovani Dizajn Tetovaže",
+          "shortDescription": "Proces personalizovanog dizajna Tetovaža zasnovan na tvojoj ideji i referencama.",
+          "longDescription": "Pretvaramo tvoje reference i priču u prilagođen koncept kroz usklađivanje stila, mere i pozicioniranja.",
+          "coverAlt": "Naslovna slika za personalizovani dizajn tetovaže"
+        },
+        "dovme-egitimi": {
+          "heading": "Obuka Tetovaža",
+          "shortDescription": "Praktičan sadržaj Obuka Tetovaža od osnova do naprednih tema.",
+          "longDescription": "Obrađujemo higijenu, opremu i tok primene kroz strukturisan pristup za plan obuke prema tvom nivou.",
+          "coverAlt": "Naslovna slika za obuku tetovaža"
+        }
+      }
     },
     "kesfetHub": {
       "relatedTitle": "Slični stilovi",
@@ -288,7 +359,63 @@
       "categoriesTitle": "Kategorije",
       "detailsTitle": "Detalji",
       "showDetails": "Prikaži detalje",
-      "hideDetails": "Sakrij detalje"
+      "hideDetails": "Sakrij detalje",
+      "hubs": {
+        "kulak": {
+          "heading": "Pirsing Uha",
+          "shortDescription": "Čiste i stilizovane opcije pirsinga uha za resicu i hrskavicu.",
+          "longDescription": "Planiramo pozicioniranje, formu nakita i kombinacije prema anatomiji uha za uravnotežen i uredan rezultat.",
+          "coverAlt": "Naslovna slika za pirsing uha"
+        },
+        "burun": {
+          "heading": "Pirsing Nosa",
+          "shortDescription": "Ring i stud opcije pirsinga nosa za različite stilove.",
+          "longDescription": "Usklađujemo tip nakita, veličinu i poziciju sa tvojim stilom, od minimalnog do izraženijeg izgleda.",
+          "coverAlt": "Naslovna slika za pirsing nosa"
+        },
+        "kas": {
+          "heading": "Pirsing Obrve",
+          "shortDescription": "Uravnotežene opcije pirsinga obrve koje prate prirodnu liniju obrve.",
+          "longDescription": "Procenjujemo ugao, dužinu nakita i vizuelni intenzitet za čist ili naglašen stil obrve.",
+          "coverAlt": "Naslovna slika za pirsing obrve"
+        },
+        "dudak": {
+          "heading": "Pirsing Usne",
+          "shortDescription": "Labret i ring opcije pirsinga usne za različite stilske profile.",
+          "longDescription": "Usklađujemo poziciju i formu nakita sa proporcijama lica za uravnotežen izgled u solo ili kombinovanom stilu.",
+          "coverAlt": "Naslovna slika za pirsing usne"
+        },
+        "dil": {
+          "heading": "Pirsing Jezika",
+          "shortDescription": "Opcije pirsinga jezika sa minimal barbell ili sjajnijim detaljima.",
+          "longDescription": "Čuvamo balans komfora i izgleda uz izbor nakita koji odgovara tvom stilu i svakodnevnoj upotrebi.",
+          "coverAlt": "Naslovna slika za pirsing jezika"
+        },
+        "gobek": {
+          "heading": "Pirsing Pupka",
+          "shortDescription": "Stilovi pirsinga pupka od čistog minimalnog izgleda do varijanti sa kamenčićima.",
+          "longDescription": "Biramo tip nakita, dužinu i vizuelnu gustinu zajedno kako bismo dobili estetski i uredan rezultat na pupku.",
+          "coverAlt": "Naslovna slika za pirsing pupka"
+        },
+        "septum": {
+          "heading": "Septum Pirsing",
+          "shortDescription": "Septum pirsing izgled sa ring i clicker opcijama.",
+          "longDescription": "Definišemo prečnik i formu nakita prema liniji lica, od minimalnog izraza do upečatljivijeg stila.",
+          "coverAlt": "Naslovna slika za septum pirsing"
+        },
+        "industrial": {
+          "heading": "Industrial Pirsing",
+          "shortDescription": "Industrial pirsing sa snažnim efektom jedne linije na uhu.",
+          "longDescription": "Planiramo dvotačkastu poziciju i dužinu nakita prema anatomiji za stabilnu i čistu industrial liniju.",
+          "coverAlt": "Naslovna slika za industrial pirsing"
+        },
+        "kisiye-ozel": {
+          "heading": "Personalizovani Pirsing",
+          "shortDescription": "Personalizovane kombinacije pirsinga prilagođene tvom stilu.",
+          "longDescription": "Zajedno definišemo formu nakita, poziciju i ukupnu estetiku kako bismo izgradili koherentan personalizovani koncept.",
+          "coverAlt": "Naslovna slika za personalizovani pirsing"
+        }
+      }
     },
     "piercingHub": {
       "defaultShortDescription": "Detalj pirsinga",
@@ -370,7 +497,9 @@
         "hygiene": "Higijena i priprema radnog prostora",
         "stencil": "Postavljanje stencil-a, kontrola linije i osnovno senčenje",
         "equipment": "Izbor opreme i koraci planiranja procesa"
-      }
+      },
+      "shortDescription": "Strukturisana obuka Tetovaža u studiju sa praktičnim pristupom u Mersinu.",
+      "longDescription": "Pregledaj korak-po-korak tok za higijenu, stencil, kontrolu linije i planiranje opreme, pa definiši početni plan prema svom nivou."
     },
     "sss": {
       "heading": "Najčešća pitanja / Baza znanja",

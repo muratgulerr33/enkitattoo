@@ -10,6 +10,7 @@ import { mainHubs, specialHubs } from "@/lib/hub/hubs.v1";
 import { HubCard } from "@/components/hub/hub-card";
 import { HubChipRail } from "@/components/hub/featured-hub-rail";
 import { getRouteContent, hasNoIndex, listKnownPaths } from "@/lib/route-content";
+import { applyCoverOgImage } from "@/lib/seo/og-image";
 import { IconRouteCta, WhatsAppCta } from "@/components/app/cta-actions";
 import { Images, Sparkles } from "lucide-react";
 
@@ -28,10 +29,11 @@ export function generateMetadata(): Metadata {
     return {};
   }
 
+  const metadataTitle = kesfetContent.seoTitle;
   const metadata: Metadata = {};
 
-  if (kesfetContent.seoTitle) {
-    metadata.title = { absolute: kesfetContent.seoTitle };
+  if (metadataTitle) {
+    metadata.title = { absolute: metadataTitle };
   }
   if (kesfetContent.seoDescription) {
     metadata.description = kesfetContent.seoDescription;
@@ -41,6 +43,9 @@ export function generateMetadata(): Metadata {
   }
   if (hasNoIndex(kesfetContent.indexing)) {
     metadata.robots = { index: false, follow: true };
+  }
+  if (hasKesfetHeroCover) {
+    applyCoverOgImage(metadata, KESFET_HERO_COVER_PATH, metadataTitle ?? "Enki Tattoo");
   }
 
   return metadata;

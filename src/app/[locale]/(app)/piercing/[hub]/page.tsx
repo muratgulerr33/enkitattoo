@@ -8,11 +8,13 @@ import { IconRouteCta, PhoneCta, WhatsAppCta } from "@/components/app/cta-action
 import { InnerPageHero } from "@/components/app/inner-page-hero";
 import { PiercingCategoryGrid } from "@/components/piercing/piercing-category-grid";
 import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
+import { locales } from "@/i18n/routing";
+import { applyCoverOgImage } from "@/lib/seo/og-image";
 import { getRouteContent, hasNoIndex, listKnownPaths } from "@/lib/route-content";
 import { PHONE_TEL_URL, WHATSAPP_URL } from "@/lib/site/links";
 
 interface PageProps {
-  params: Promise<{ hub: string }>;
+  params: Promise<{ locale: string; hub: string }>;
 }
 
 function resolvePublicCover(publicRelPath: string): string | null {
@@ -48,22 +50,31 @@ const PIERCING_GALLERY_ITEM_BY_SLUG: Record<string, string> = {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return slugs.map((hub) => ({ hub }));
+  return locales.flatMap((locale) => slugs.map((hub) => ({ locale, hub })));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { hub: slug } = await params;
-  const path = `/piercing/${slug}`;
-  const content = getRouteContent(path);
+  const routePath = `/piercing/${slug}`;
+  const content = getRouteContent(routePath);
+  const metadataTitle = content?.seoTitle ?? "Piercing | Enki Tattoo";
+  const coverSrc = `/piercing-hub/${slug}/cover.webp`;
+  const hasHubCover = fs.existsSync(
+    path.join(process.cwd(), "public", "piercing-hub", slug, "cover.webp"),
+  );
 
   const metadata: Metadata = {
-    title: { absolute: content?.seoTitle ?? "Piercing | Enki Tattoo" },
+    title: { absolute: metadataTitle },
     description: content?.seoDescription ?? "Piercing detail.",
-    alternates: { canonical: content?.canonical ?? path },
+    alternates: { canonical: content?.canonical ?? routePath },
   };
 
   if (hasNoIndex(content?.indexing)) {
     metadata.robots = { index: false, follow: true };
+  }
+
+  if (hasHubCover) {
+    applyCoverOgImage(metadata, coverSrc, metadataTitle);
   }
 
   return metadata;
@@ -71,7 +82,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function PiercingHubPage({ params }: PageProps) {
   const t = await getTranslations();
-  const { hub: slug } = await params;
+  const { locale, hub: slug } = await params;
+  const isTrLocale = locale === "tr";
 
   if (!knownPiercingSlugs.has(slug)) {
     notFound();
@@ -84,9 +96,19 @@ export default async function PiercingHubPage({ params }: PageProps) {
     notFound();
   }
 
-  const shortDescription = content.shortDescription || content.description || t("pages.piercingHub.defaultShortDescription");
-  const longDescription =
-    content.description && content.description !== shortDescription ? content.description : null;
+  const translatedHeading = t(`pages.piercing.hubs.${slug}.heading`);
+  const translatedShortDescription = t(`pages.piercing.hubs.${slug}.shortDescription`);
+  const translatedLongDescription = t(`pages.piercing.hubs.${slug}.longDescription`);
+  const translatedCoverAlt = t(`pages.piercing.hubs.${slug}.coverAlt`);
+  const heading = isTrLocale ? content.h1 || t("common.nav.piercing") : translatedHeading;
+  const shortDescription = isTrLocale
+    ? content.shortDescription || content.description || t("pages.piercingHub.defaultShortDescription")
+    : translatedShortDescription;
+  const longDescription = isTrLocale
+    ? content.description && content.description !== shortDescription
+      ? content.description
+      : null
+    : translatedLongDescription;
   const coverSrc = resolvePublicCover(`piercing-hub/${slug}/cover.webp`);
   const autoItemId = PIERCING_GALLERY_ITEM_BY_SLUG[slug];
   const galleryHref = autoItemId
@@ -98,9 +120,9 @@ export default async function PiercingHubPage({ params }: PageProps) {
       <BreadcrumbListJsonLd path={path} />
       <InnerPageHero
         coverSrc={coverSrc}
-        coverAlt={t("pages.hub.coverAlt", { title: content.h1 || t("common.nav.piercing") })}
-        microLine={content.microLine}
-        heading={content.h1 || t("common.nav.piercing")}
+        coverAlt={isTrLocale ? t("pages.hub.coverAlt", { title: heading }) : translatedCoverAlt}
+        microLine={isTrLocale ? content.microLine : undefined}
+        heading={heading}
         shortDescription={shortDescription}
         longDescription={longDescription}
         primaryCta={

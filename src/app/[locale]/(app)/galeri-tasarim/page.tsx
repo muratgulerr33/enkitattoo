@@ -9,11 +9,13 @@ import { GalleryGrid } from "./gallery-grid";
 import { InnerPageHero } from "@/components/app/inner-page-hero";
 import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
 import { getVisibleGalleryItemsByHub, normalizeGalleryHubValue } from "@/lib/gallery/manifest.v1";
+import { applyCoverOgImage } from "@/lib/seo/og-image";
 import { PHONE_TEL_URL, WHATSAPP_URL } from "@/lib/site/links";
 import { getRouteContent, hasNoIndex } from "@/lib/route-content";
 
 const GALERI_TASARIM_SLUG = "galeri-tasarim";
 const GALERI_TASARIM_PATH = `/${GALERI_TASARIM_SLUG}`;
+const GALERI_TASARIM_COVER_PUBLIC_REL = "galeri-tasarim/cover.webp";
 const galeriContent = getRouteContent(GALERI_TASARIM_PATH);
 
 function resolvePublicCover(publicRelPath: string): string | null {
@@ -22,14 +24,18 @@ function resolvePublicCover(publicRelPath: string): string | null {
 }
 
 export function generateMetadata(): Metadata {
+  const metadataTitle = galeriContent?.seoTitle ?? "Galeri | Enki Tattoo";
   const metadata: Metadata = {
-    title: { absolute: galeriContent?.seoTitle ?? "Galeri | Enki Tattoo" },
+    title: { absolute: metadataTitle },
     description: galeriContent?.seoDescription ?? "Tattoo design gallery.",
     alternates: { canonical: galeriContent?.canonical ?? GALERI_TASARIM_PATH },
   };
 
   if (hasNoIndex(galeriContent?.indexing)) {
     metadata.robots = { index: false, follow: true };
+  }
+  if (fs.existsSync(path.join(process.cwd(), "public", GALERI_TASARIM_COVER_PUBLIC_REL))) {
+    applyCoverOgImage(metadata, `/${GALERI_TASARIM_COVER_PUBLIC_REL}`, metadataTitle);
   }
 
   return metadata;
@@ -57,7 +63,7 @@ export default async function GaleriPage({ searchParams }: PageProps) {
   const emptyStateMessage = activeHub
     ? t("pages.gallery.emptyForCategory")
     : t("pages.gallery.emptyAll");
-  const coverSrc = resolvePublicCover("galeri-tasarim/cover.webp");
+  const coverSrc = resolvePublicCover(GALERI_TASARIM_COVER_PUBLIC_REL);
 
   return (
     <div className="app-section no-overflow-x">

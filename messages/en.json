@@ -6,7 +6,10 @@
     "back": "Back",
     "clearSearch": "Clear search",
     "cta": {
-      "whatsappWrite": "Write on WhatsApp"
+      "whatsappWrite": "Write on WhatsApp",
+      "bookAppointment": "Book appointment",
+      "askPrice": "Ask price",
+      "aftercare": "Aftercare"
     },
     "directions": "Directions",
     "hideDetails": "Hide details",
@@ -225,6 +228,12 @@
       "openGalleryImageAria": "Open {title} image in gallery",
       "findOnMap": "Find on map"
     },
+    "legacySocialMock": {
+      "homeComposer": {
+        "placeholder": "What would you like to do today? Tattoo or piercing?",
+        "quickShareAria": "Quick share"
+      }
+    },
     "kesfet": {
       "heading": "Discover",
       "heroAlt": "Discover hero cover image",
@@ -232,7 +241,69 @@
       "browseVisuals": "Visuals",
       "askOnWhatsapp": "WhatsApp",
       "piercingDescription": "Ear, nose, septum, and more · Professional Piercing service.",
-      "popularStyles": "Popular styles"
+      "popularStyles": "Popular styles",
+      "hubs": {
+        "minimal-fine-line-dovme": {
+          "heading": "Minimal & Fine Line Tattoo",
+          "shortDescription": "Minimal Tattoo styles built on fine lines and clean composition.",
+          "longDescription": "We shape line weight, spacing, and placement with you to create a refined and timeless fine line result.",
+          "coverAlt": "Minimal fine line tattoo cover image"
+        },
+        "yazi-isim-dovmesi": {
+          "heading": "Lettering & Name Tattoo",
+          "shortDescription": "Lettering Tattoo options focused on names, dates, and typography.",
+          "longDescription": "We define font character, spacing, and body placement together for a readable and elegant lettering composition.",
+          "coverAlt": "Lettering and name tattoo cover image"
+        },
+        "realistik-dovme": {
+          "heading": "Realistic Tattoo",
+          "shortDescription": "Realistic Tattoo work with depth, light-shadow balance, and detail.",
+          "longDescription": "Using your references, we set tone transitions and detail intensity to build a strong and balanced realistic style.",
+          "coverAlt": "Realistic tattoo cover image"
+        },
+        "portre-dovme": {
+          "heading": "Portrait Tattoo",
+          "shortDescription": "Portrait Tattoo approach focused on facial expression and detail.",
+          "longDescription": "We define reference quality, scale, and placement to deliver a controlled portrait composition that keeps character clarity.",
+          "coverAlt": "Portrait tattoo cover image"
+        },
+        "traditional-dovme": {
+          "heading": "Traditional Tattoo",
+          "shortDescription": "Traditional Tattoo style with bold lines and classic iconography.",
+          "longDescription": "We plan color use, line strength, and composition rhythm together for a strong and recognizable traditional look.",
+          "coverAlt": "Traditional tattoo cover image"
+        },
+        "dovme-kapatma": {
+          "heading": "Cover-Up Tattoo",
+          "shortDescription": "Cover-Up Tattoo solutions focused on transforming existing work.",
+          "longDescription": "We analyze existing density first, then design contrast and placement for a cleaner and more coherent cover-up outcome.",
+          "coverAlt": "Cover-up tattoo cover image"
+        },
+        "ataturk-temali-dovme": {
+          "heading": "Ataturk-Themed Tattoo",
+          "shortDescription": "Ataturk-themed Tattoo designs with portrait, signature, and symbolic elements.",
+          "longDescription": "We align meaning and visual intensity together to craft a respectful, balanced, and strong Ataturk-themed composition.",
+          "coverAlt": "Ataturk-themed tattoo cover image"
+        },
+        "blackwork-dovme": {
+          "heading": "Blackwork Tattoo",
+          "shortDescription": "Blackwork Tattoo style with strong contrast and graphic black forms.",
+          "longDescription": "We shape filled-empty balance, flow, and density decisions together to build a bold and clean blackwork language.",
+          "coverAlt": "Blackwork tattoo cover image"
+        },
+        "kisiye-ozel-dovme-tasarimi": {
+          "heading": "Custom Tattoo Design",
+          "shortDescription": "Custom Tattoo Design process built from your idea and references.",
+          "longDescription": "We turn your references and story into a tailored concept by aligning style, scale, and placement with clear direction.",
+          "coverAlt": "Custom tattoo design cover image"
+        },
+        "dovme-egitimi": {
+          "heading": "Tattoo Training",
+          "shortDescription": "Hands-on Tattoo Training content from foundational to advanced topics.",
+          "longDescription": "We cover hygiene, equipment, and application flow in a structured path to define a level-appropriate training roadmap.",
+          "coverAlt": "Tattoo training cover image"
+        }
+      }
     },
     "kesfetHub": {
       "relatedTitle": "Related styles",
@@ -288,7 +359,63 @@
       "categoriesTitle": "Categories",
       "detailsTitle": "Details",
       "showDetails": "Show details",
-      "hideDetails": "Hide details"
+      "hideDetails": "Hide details",
+      "hubs": {
+        "kulak": {
+          "heading": "Ear Piercing",
+          "shortDescription": "Clean and styled Ear Piercing options for lobe and cartilage areas.",
+          "longDescription": "We plan placement, jewelry form, and combinations according to your ear anatomy to achieve a balanced and refined result.",
+          "coverAlt": "Ear piercing cover image"
+        },
+        "burun": {
+          "heading": "Nose Piercing",
+          "shortDescription": "Ring and stud-focused Nose Piercing options for nostril-style looks.",
+          "longDescription": "We align jewelry type, size, and placement with your preferred style, from minimal to more expressive looks.",
+          "coverAlt": "Nose piercing cover image"
+        },
+        "kas": {
+          "heading": "Eyebrow Piercing",
+          "shortDescription": "Balanced Eyebrow Piercing alternatives that follow your brow line.",
+          "longDescription": "We evaluate angle, jewelry length, and visual intensity together to build a clean or bold eyebrow style.",
+          "coverAlt": "Eyebrow piercing cover image"
+        },
+        "dudak": {
+          "heading": "Lip Piercing",
+          "shortDescription": "Labret and ring-led Lip Piercing options for different style profiles.",
+          "longDescription": "We match placement and jewelry form to your facial proportions for a balanced look in both solo and combined styles.",
+          "coverAlt": "Lip piercing cover image"
+        },
+        "dil": {
+          "heading": "Tongue Piercing",
+          "shortDescription": "Tongue Piercing options with minimal barbells or brighter details.",
+          "longDescription": "We focus on comfort and visual balance while selecting jewelry that fits your style and daily use.",
+          "coverAlt": "Tongue piercing cover image"
+        },
+        "gobek": {
+          "heading": "Navel Piercing",
+          "shortDescription": "Navel Piercing styles from clean minimal looks to jeweled details.",
+          "longDescription": "We choose jewelry type, length, and visual density together to deliver a neat and aesthetic navel result.",
+          "coverAlt": "Navel piercing cover image"
+        },
+        "septum": {
+          "heading": "Septum Piercing",
+          "shortDescription": "Septum Piercing looks with ring and clicker options.",
+          "longDescription": "We define diameter and jewelry form based on your facial line, from minimal styles to stronger statements.",
+          "coverAlt": "Septum piercing cover image"
+        },
+        "industrial": {
+          "heading": "Industrial Piercing",
+          "shortDescription": "Industrial Piercing with a strong single-bar line effect on the ear.",
+          "longDescription": "We plan two-point placement and jewelry length according to your anatomy for a clean and stable industrial line.",
+          "coverAlt": "Industrial piercing cover image"
+        },
+        "kisiye-ozel": {
+          "heading": "Custom Piercing",
+          "shortDescription": "Custom Piercing combinations designed around your personal style.",
+          "longDescription": "We define jewelry form, placement, and overall aesthetic together to build a cohesive custom piercing concept.",
+          "coverAlt": "Custom piercing cover image"
+        }
+      }
     },
     "piercingHub": {
       "defaultShortDescription": "Piercing detail",
@@ -370,7 +497,9 @@
         "hygiene": "Hygiene and workspace preparation",
         "stencil": "Stencil placement, line control, and basic shading",
         "equipment": "Equipment selection and process planning steps"
-      }
+      },
+      "shortDescription": "Structured in-studio Tattoo Training with practical guidance in Mersin.",
+      "longDescription": "Review a step-by-step training flow covering hygiene, stencil placement, line control, and equipment planning, then shape a level-appropriate start plan."
     },
     "sss": {
       "heading": "Question Bank / Knowledge Base",

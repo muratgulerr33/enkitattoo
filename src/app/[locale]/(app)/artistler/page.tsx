@@ -10,6 +10,7 @@ import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
 import { InnerPageHero } from "@/components/app/inner-page-hero";
 import { Button } from "@/components/ui/button";
 import { PHONE_TEL_URL, WHATSAPP_URL } from "@/lib/site/links";
+import { applyCoverOgImage } from "@/lib/seo/og-image";
 import { getRouteContent, hasNoIndex } from "@/lib/route-content";
 
 interface PageProps {
@@ -17,6 +18,7 @@ interface PageProps {
 }
 
 const ARTISTLER_PATH = "/artistler";
+const ARTISTLER_COVER_PUBLIC_REL = "artistler/cover.webp";
 const artistlerContent = getRouteContent(ARTISTLER_PATH);
 
 function resolvePublicCover(publicRelPath: string): string | null {
@@ -29,10 +31,11 @@ export function generateMetadata(): Metadata {
     return {};
   }
 
+  const metadataTitle = artistlerContent.seoTitle;
   const metadata: Metadata = {};
 
-  if (artistlerContent.seoTitle) {
-    metadata.title = { absolute: artistlerContent.seoTitle };
+  if (metadataTitle) {
+    metadata.title = { absolute: metadataTitle };
   }
   if (artistlerContent.seoDescription) {
     metadata.description = artistlerContent.seoDescription;
@@ -42,6 +45,9 @@ export function generateMetadata(): Metadata {
   }
   if (hasNoIndex(artistlerContent.indexing)) {
     metadata.robots = { index: false, follow: true };
+  }
+  if (fs.existsSync(path.join(process.cwd(), "public", ARTISTLER_COVER_PUBLIC_REL))) {
+    applyCoverOgImage(metadata, `/${ARTISTLER_COVER_PUBLIC_REL}`, metadataTitle ?? "Enki Tattoo");
   }
 
   return metadata;
@@ -77,7 +83,7 @@ export default async function ArtistlerPage({ params }: PageProps) {
     artistlerContent.description !== shortDescription
       ? artistlerContent.description
       : null;
-  const coverSrc = resolvePublicCover("artistler/cover.webp");
+  const coverSrc = resolvePublicCover(ARTISTLER_COVER_PUBLIC_REL);
   const artistsWithAvatar = ARTISTS.map((artist) => {
     const artistPath = `/artistler/${artist.slug}`;
     const artistContent = getRouteContent(artistPath);

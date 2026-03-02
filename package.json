@@ -9,6 +9,7 @@
     "gen:splash": "node scripts/generate-ios-splash-assets.mjs",
     "start": "next start -p 3002",
     "lint": "eslint",
+    "lint:changed": "sh -c 'tmp=\"$(mktemp)\"; git diff --name-only -z --diff-filter=ACMRT | node -e \"const fs=require(\\\"node:fs\\\");const input=fs.readFileSync(0,\\\"utf8\\\");const files=input.split(\\\"\\\\0\\\").filter(Boolean).filter((f)=>/\\\\.(ts|tsx|js|jsx)$/.test(f)&&!/\\\\.d\\\\.ts$/.test(f));if(files.length){process.stdout.write(files.join(\\\"\\\\0\\\")+\\\"\\\\0\\\");}\" > \"$tmp\"; if [ ! -s \"$tmp\" ]; then echo \"no changed lintable files\"; rm -f \"$tmp\"; exit 0; fi; xargs -0 npx eslint < \"$tmp\"; rc=$?; rm -f \"$tmp\"; exit $rc'",
     "check:no-palette": "bash scripts/check-no-palette.sh",
     "check:all": "npm run lint && npm run build && npm run check:no-palette",
     "ui:audit": "npm run build && PLAYWRIGHT_JSON_OUTPUT_NAME=test-results/ui-audit-report.json playwright test tests/e2e/ui-audit.spec.ts --reporter=html,json && node scripts/ui-audit-summary.mjs",

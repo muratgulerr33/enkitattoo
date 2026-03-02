@@ -6,7 +6,10 @@
     "back": "Kthehu",
     "clearSearch": "Pastro kërkimin",
     "cta": {
-      "whatsappWrite": "Shkruaj në WhatsApp"
+      "whatsappWrite": "Shkruaj në WhatsApp",
+      "bookAppointment": "Rezervo termin",
+      "askPrice": "Pyet për çmimin",
+      "aftercare": "Kujdesi pas"
     },
     "directions": "Udhëzime",
     "hideDetails": "Fshih detajet",
@@ -225,6 +228,12 @@
       "openGalleryImageAria": "Hap imazhin {title} në galeri",
       "findOnMap": "Gjeje në hartë"
     },
+    "legacySocialMock": {
+      "homeComposer": {
+        "placeholder": "Çfarë dëshiron të bësh sot? Tatuazh apo piercing?",
+        "quickShareAria": "Ndarje e shpejtë"
+      }
+    },
     "kesfet": {
       "heading": "Zbulo",
       "heroAlt": "imazh hero i kopertinës së faqes Zbulo",
@@ -232,7 +241,69 @@
       "browseVisuals": "Pamjet",
       "askOnWhatsapp": "WhatsApp",
       "piercingDescription": "Vesh, hundë, septum dhe më shumë · shërbim profesional Piercing.",
-      "popularStyles": "Stile të njohura"
+      "popularStyles": "Stile të njohura",
+      "hubs": {
+        "minimal-fine-line-dovme": {
+          "heading": "Tatuazh Minimal & Fine Line",
+          "shortDescription": "Stile Tatuazh minimal të ndërtuara mbi vija të holla dhe kompozim të pastër.",
+          "longDescription": "Përcaktojmë trashësinë e vijës, hapësirat dhe vendosjen për të krijuar një rezultat elegant dhe të qëndrueshëm fine line.",
+          "coverAlt": "Imazh kopertine për tatuazh minimal fine line"
+        },
+        "yazi-isim-dovmesi": {
+          "heading": "Tatuazh Shkrim & Emër",
+          "shortDescription": "Opsione Tatuazh lettering të fokusuara te emrat, datat dhe tipografia.",
+          "longDescription": "Përcaktojmë karakterin e fontit, distancat dhe vendosjen në trup për një kompozim lettering të lexueshëm dhe estetik.",
+          "coverAlt": "Imazh kopertine për tatuazh shkrim dhe emër"
+        },
+        "realistik-dovme": {
+          "heading": "Tatuazh Realistik",
+          "shortDescription": "Punime Tatuazh realist me thellësi, dritë-hije dhe detaj.",
+          "longDescription": "Me referencat e tua përcaktojmë kalimet e toneve dhe nivelin e detajit për një stil realist të fortë dhe të balancuar.",
+          "coverAlt": "Imazh kopertine për tatuazh realistik"
+        },
+        "portre-dovme": {
+          "heading": "Tatuazh Portret",
+          "shortDescription": "Qasje Tatuazh portret e fokusuar te shprehja dhe detajet e fytyrës.",
+          "longDescription": "Përcaktojmë cilësinë e referencës, madhësinë dhe vendosjen për një kompozim portreti të kontrolluar dhe të qartë.",
+          "coverAlt": "Imazh kopertine për tatuazh portret"
+        },
+        "traditional-dovme": {
+          "heading": "Tatuazh Traditional",
+          "shortDescription": "Stil Tatuazh traditional me vija të forta dhe ikonografi klasike.",
+          "longDescription": "Planifikojmë përdorimin e ngjyrës, forcën e vijës dhe ritmin e kompozimit për një pamje traditional të dallueshme.",
+          "coverAlt": "Imazh kopertine për tatuazh traditional"
+        },
+        "dovme-kapatma": {
+          "heading": "Tatuazh Cover-Up",
+          "shortDescription": "Zgjidhje cover-up për transformimin e tatuazheve ekzistuese.",
+          "longDescription": "Analizojmë densitetin e punës ekzistuese dhe planifikojmë kontrastin e dizajnit të ri për rezultat më të pastër.",
+          "coverAlt": "Imazh kopertine për tatuazh cover-up"
+        },
+        "ataturk-temali-dovme": {
+          "heading": "Tatuazh me Temë Ataturk",
+          "shortDescription": "Dizajne Tatuazh me temë Ataturk me portret, nënshkrim dhe elemente simbolike.",
+          "longDescription": "Harmonizojmë kuptimin dhe intensitetin vizual për një kompozim Ataturk të respektueshëm, të balancuar dhe të fortë.",
+          "coverAlt": "Imazh kopertine për tatuazh me temë Ataturk"
+        },
+        "blackwork-dovme": {
+          "heading": "Tatuazh Blackwork",
+          "shortDescription": "Stil Tatuazh blackwork me kontrast të fortë dhe forma grafike të zeza.",
+          "longDescription": "Përcaktojmë balancën mbushur-bosh, rrjedhën dhe densitetin për të ndërtuar një gjuhë blackwork të qartë.",
+          "coverAlt": "Imazh kopertine për tatuazh blackwork"
+        },
+        "kisiye-ozel-dovme-tasarimi": {
+          "heading": "Dizajn Tatuazh i Personalizuar",
+          "shortDescription": "Proces dizajni Tatuazh i personalizuar i ndërtuar nga ideja dhe referencat e tua.",
+          "longDescription": "Kthejmë referencat dhe historinë tënde në koncept të personalizuar duke harmonizuar stilin, madhësinë dhe vendosjen.",
+          "coverAlt": "Imazh kopertine për dizajn tatuazhi të personalizuar"
+        },
+        "dovme-egitimi": {
+          "heading": "Trajnim Tatuazh",
+          "shortDescription": "Përmbajtje praktike Trajnim Tatuazh nga baza deri te temat e avancuara.",
+          "longDescription": "Mbulojmë higjienën, pajisjet dhe rrjedhën e aplikimit në mënyrë të strukturuar për një plan trajnimi sipas nivelit tënd.",
+          "coverAlt": "Imazh kopertine për trajnim tatuazhi"
+        }
+      }
     },
     "kesfetHub": {
       "relatedTitle": "Stile të ngjashme",
@@ -288,7 +359,63 @@
       "categoriesTitle": "Kategoritë",
       "detailsTitle": "Detajet",
       "showDetails": "Shfaq detajet",
-      "hideDetails": "Fshih detajet"
+      "hideDetails": "Fshih detajet",
+      "hubs": {
+        "kulak": {
+          "heading": "Piercing në Vesh",
+          "shortDescription": "Opsione të pastra dhe elegante për piercing në vesh, në llapë dhe kërc.",
+          "longDescription": "Planifikojmë vendosjen, formën e bizhuterisë dhe kombinimet sipas anatomisë së veshit për një rezultat të balancuar.",
+          "coverAlt": "Imazh kopertine për piercing në vesh"
+        },
+        "burun": {
+          "heading": "Piercing në Hundë",
+          "shortDescription": "Opsione ring dhe stud për stile të ndryshme të piercing në hundë.",
+          "longDescription": "Përcaktojmë tipin e bizhuterisë, madhësinë dhe vendosjen sipas stilit tënd, nga minimal në më të theksuar.",
+          "coverAlt": "Imazh kopertine për piercing në hundë"
+        },
+        "kas": {
+          "heading": "Piercing në Vetull",
+          "shortDescription": "Alternativa të balancuara të piercing në vetull që ndjekin vijën natyrale.",
+          "longDescription": "Vlerësojmë këndin, gjatësinë e bizhuterisë dhe intensitetin vizual për një stil të pastër ose më të guximshëm.",
+          "coverAlt": "Imazh kopertine për piercing në vetull"
+        },
+        "dudak": {
+          "heading": "Piercing në Buzë",
+          "shortDescription": "Opsione labret dhe ring për profile të ndryshme stili në buzë.",
+          "longDescription": "Përshtatim vendosjen dhe formën e bizhuterisë me proporcionet e fytyrës për pamje të balancuar në përdorim solo ose kombinim.",
+          "coverAlt": "Imazh kopertine për piercing në buzë"
+        },
+        "dil": {
+          "heading": "Piercing në Gjuhë",
+          "shortDescription": "Opsione piercing në gjuhë me barbell minimal ose detaje më të ndritshme.",
+          "longDescription": "Ruajmë ekuilibrin mes komoditetit dhe pamjes duke zgjedhur bizhuteri që përputhen me stilin dhe përdorimin tënd ditor.",
+          "coverAlt": "Imazh kopertine për piercing në gjuhë"
+        },
+        "gobek": {
+          "heading": "Piercing në Kërthizë",
+          "shortDescription": "Stile piercing në kërthizë nga minimal te dizajne me gurë.",
+          "longDescription": "Zgjedhim bashkë tipin e bizhuterisë, gjatësinë dhe densitetin vizual për rezultat estetik dhe të pastër në kërthizë.",
+          "coverAlt": "Imazh kopertine për piercing në kërthizë"
+        },
+        "septum": {
+          "heading": "Piercing Septum",
+          "shortDescription": "Pamje septum me opsione ring dhe clicker.",
+          "longDescription": "Përcaktojmë diametrin dhe formën e bizhuterisë sipas linjës së fytyrës, nga minimal te stile më të theksuara.",
+          "coverAlt": "Imazh kopertine për piercing septum"
+        },
+        "industrial": {
+          "heading": "Piercing Industrial",
+          "shortDescription": "Piercing industrial me efekt të fortë me një bar të vetëm në vesh.",
+          "longDescription": "Planifikojmë vendosjen me dy pika dhe gjatësinë e bizhuterisë sipas anatomisë për një vijë industriale të qëndrueshme.",
+          "coverAlt": "Imazh kopertine për piercing industrial"
+        },
+        "kisiye-ozel": {
+          "heading": "Piercing i Personalizuar",
+          "shortDescription": "Kombinime piercing të personalizuara sipas stilit tënd.",
+          "longDescription": "Përcaktojmë së bashku formën e bizhuterisë, vendosjen dhe estetikën e përgjithshme për një koncept të plotë personal.",
+          "coverAlt": "Imazh kopertine për piercing të personalizuar"
+        }
+      }
     },
     "piercingHub": {
       "defaultShortDescription": "Detaj Piercing",
@@ -370,7 +497,9 @@
         "hygiene": "Higjiena dhe përgatitja e hapësirës së punës",
         "stencil": "Vendosja e stencilit, kontrolli i vijës dhe hijezimi bazë",
         "equipment": "Përzgjedhja e pajisjeve dhe hapat e planifikimit të procesit"
-      }
+      },
+      "shortDescription": "Trajnim Tatuazh i strukturuar në studio me qasje praktike në Mersin.",
+      "longDescription": "Shiko rrjedhën hap pas hapi për higjienën, stencilin, kontrollin e vijës dhe planifikimin e pajisjeve, pastaj përcakto planin e fillimit sipas nivelit tënd."
     },
     "sss": {
       "heading": "Pyetjet e shpeshta / Baza e njohurive",

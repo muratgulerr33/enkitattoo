@@ -3,11 +3,25 @@ import {NextRequest, NextResponse} from 'next/server';
 import {locales, routing} from './i18n/routing';
 
 const handleI18nRouting = createMiddleware(routing);
+const INTERNAL_BYPASS_EXACT_PATHS = new Set([
+  '/robots.txt',
+  '/sitemap.xml',
+  '/manifest.webmanifest'
+]);
 
 export default function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const isInternalBypassPath =
+    pathname === '/' ||
+    request.nextUrl.searchParams.has('_rsc') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/favicon') ||
+    pathname.startsWith('/opengraph-image') ||
+    pathname.startsWith('/twitter-image') ||
+    INTERNAL_BYPASS_EXACT_PATHS.has(pathname);
 
-  if (pathname === '/') {
+  if (isInternalBypassPath) {
     return NextResponse.next();
   }
 
@@ -25,5 +39,5 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/((?!api|_next|.*\\..*).*)'
+  matcher: '/((?!api|_next|opengraph-image|twitter-image|.*\\..*).*)'
 };
