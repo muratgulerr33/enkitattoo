@@ -3,6 +3,7 @@ import {NextRequest, NextResponse} from 'next/server';
 import {locales, routing} from './i18n/routing';
 
 const handleI18nRouting = createMiddleware(routing);
+
 const INTERNAL_BYPASS_EXACT_PATHS = new Set([
   '/robots.txt',
   '/sitemap.xml',
@@ -11,9 +12,11 @@ const INTERNAL_BYPASS_EXACT_PATHS = new Set([
 
 export default function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+
+  // ❗️KÖK "/" ve "_rsc" BYPASS YOK:
+  // Bunlar next-intl middleware'den geçmeli ki default locale / tr düzgün çalışsın.
+
   const isInternalBypassPath =
-    pathname === '/' ||
-    request.nextUrl.searchParams.has('_rsc') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/favicon') ||
