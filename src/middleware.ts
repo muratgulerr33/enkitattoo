@@ -1,83 +1,112 @@
-import createMiddleware from 'next-intl/middleware';
-import {NextRequest, NextResponse} from 'next/server';
-import {locales, routing} from './i18n/routing';
+import { NextRequest, NextResponse } from "next/server";
+import { locales, routing } from "./i18n/routing";
 
-const handleI18nRouting = createMiddleware(routing);
+const DEFAULT_LOCALE = routing.defaultLocale; // "tr"
+const INTERNAL_REWRITE_HEADER = "x-enki-internal-rewrite";
 
-function withRscNoStoreHeaders(response: NextResponse, shouldApply: boolean): NextResponse {
-  if (!shouldApply) {
-    return response;
-  }
+const INTERNAL_BYPASS_EXACT_PATHS = new Set([
+  "/robots.txt",
+  "/sitemap.xml",
+  "/manifest.webmanifest",
+]);
 
-  response.headers.set('Cache-Control', 'private, no-store, no-cache, max-age=0, must-revalidate');
-  response.headers.set('Pragma', 'no-cache');
-  return response;
-}
+function isBypassPath(request: NextRequest): boolean {
+  const p = request.nextUrl.pathname;
 
-function isRscLikeRequest(request: NextRequest): boolean {
-  if (request.nextUrl.searchParams.has('_rsc')) {
-    return true;
-  }
+  if (p.startsWith("/_next")) return true;
+  if (p.startsWith("/api")) return true;
+  if (p.startsWith("/favicon")) return true;
+  if (p.startsWith("/opengraph-image")) return true;
+  if (p.startsWith("/twitter-image")) return true;
 
-  const rawUrl = request.url;
-  if (/[?&]_rsc(?:=|&|$)/.test(rawUrl)) {
-    return true;
-  }
+  // kök statikler
+  if (INTERNAL_BYPASS_EXACT_PATHS.has(p)) return true;
 
-  const rscHeader = request.headers.get('RSC');
-  if (rscHeader === '1') {
-    return true;
-  }
-
-  const hasRouterStateTree = request.headers.has('Next-Router-State-Tree');
-  const hasRouterPrefetch = request.headers.has('Next-Router-Prefetch');
-  const hasRouterSegmentPrefetch = request.headers.has('Next-Router-Segment-Prefetch');
-  if (hasRouterStateTree || hasRouterPrefetch || hasRouterSegmentPrefetch) {
-    return true;
-  }
-
-  const purpose = request.headers.get('Purpose');
-  if (purpose?.toLowerCase() === 'prefetch') {
-    return true;
-  }
-
-  const secFetchDest = request.headers.get('Sec-Fetch-Dest');
-  if (secFetchDest?.toLowerCase() === 'empty') {
-    return true;
-  }
+  // uzantılı dosyalar (matcher zaten filtreliyor ama ekstra emniyet)
+  if (/\.[a-z0-9]+$/i.test(p)) return true;
 
   return false;
 }
 
+function isRscLikeRequest(request: NextRequest): boolean {
+  // query
+  if (request.nextUrl.searchParams.has("_rsc")) return true;
+  if (/[?&]_rsc(?:=|&|$)/.test(request.url)) return true;
+
+  // headers
+  const rsc = request.headers.get("RSC");
+  if (rsc === "1") return true;
+
+  const accept = request.headers.get("accept") || "";
+  if (accept.includes("text/x-component")) return true;
+
+  if (request.headers.has("Next-Router-State-Tree")) return true;
+  if (request.headers.has("Next-Router-Prefetch")) return true;
+  if (request.headers.has("Next-Router-Segment-Prefetch")) return true;
+
+  const purpose = request.headers.get("Purpose")?.toLowerCase();
+  if (purpose === "prefetch") return true;
+
+  return false;
+}
+
+function applyNoStoreForRsc(res: NextResponse, request: NextRequest): NextResponse {
+  if (!isRscLikeRequest(request)) return res;
+  res.headers.set("Cache-Control", "private, no-store, no-cache, max-age=0, must-revalidate");
+  res.headers.set("Pragma", "no-cache");
+  return res;
+}
+
 export default function middleware(request: NextRequest) {
-  const shouldApplyNoStore = isRscLikeRequest(request);
-  const pathname = request.nextUrl.pathname;
+  if (isBypassPath(request)) return NextResponse.next();
 
-  const firstSegment = pathname.split('/').filter(Boolean)[0];
+  const { pathname } = request.nextUrl;
+  const segments = pathname.split("/").filter(Boolean);
+  const first = segments[0];
 
-  if (firstSegment && /^[a-zA-Z]{2}$/.test(firstSegment)) {
-    const normalizedSegment = firstSegment.toLowerCase();
-
-    if (!locales.includes(normalizedSegment as (typeof locales)[number])) {
-      return withRscNoStoreHeaders(new NextResponse(null, {status: 404}), shouldApplyNoStore);
+  // 2 harfli ama locale olmayan şeyleri 404’le (xx gibi)
+  if (first && /^[a-zA-Z]{2}$/.test(first)) {
+    const normalized = first.toLowerCase();
+    if (!locales.includes(normalized as (typeof locales)[number])) {
+      return applyNoStoreForRsc(new NextResponse(null, { status: 404 }), request);
     }
   }
 
-  return withRscNoStoreHeaders(handleI18nRouting(request), shouldApplyNoStore);
+  const hasLocalePrefix =
+    !!first && locales.includes(first.toLowerCase() as (typeof locales)[number]);
+
+  // INTERNAL rewrite ile gelen request’i canonical redirect’e sokma
+  const isInternalRewrite = request.headers.get(INTERNAL_REWRITE_HEADER) === "1";
+  if (isInternalRewrite) {
+    return applyNoStoreForRsc(NextResponse.next(), request);
+  }
+
+  // Default locale prefiksi (/tr ...) dışarıdan gelirse canonicalize et: /tr/foo -> /foo
+  if (hasLocalePrefix && first!.toLowerCase() === DEFAULT_LOCALE) {
+    const target = request.nextUrl.clone();
+    const stripped = pathname.replace(new RegExp(`^/${DEFAULT_LOCALE}(?=/|$)`), "");
+    target.pathname = stripped === "" ? "/" : stripped;
+    return applyNoStoreForRsc(NextResponse.redirect(target, 308), request);
+  }
+
+  // /en, /sq, /sr gibi prefiksli istekleri aynen bırak
+  if (hasLocalePrefix) {
+    return applyNoStoreForRsc(NextResponse.next(), request);
+  }
+
+  // Prefixsiz istek -> içeride /tr/... olarak serve et (ama INTERNAL header set et ki loop olmasın)
+  const rewriteUrl = request.nextUrl.clone();
+  rewriteUrl.pathname = pathname === "/" ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${pathname}`;
+
+  const headers = new Headers(request.headers);
+  headers.set(INTERNAL_REWRITE_HEADER, "1");
+
+  return applyNoStoreForRsc(
+    NextResponse.rewrite(rewriteUrl, { request: { headers } }),
+    request
+  );
 }
 
-/**
- * Local smoke commands:
- * npm run build
- * PORT=3010 npx next start -p 3010 > /tmp/enki-start.log 2>&1 & echo $! > /tmp/enki.pid
- * curl -sS -I "http://127.0.0.1:3010/" | egrep -i "HTTP/|location|cache-control"
- * curl -sS -I "http://127.0.0.1:3010/tr" | egrep -i "HTTP/|location|cache-control"
- * curl -sS -I "http://127.0.0.1:3010/en" | egrep -i "HTTP/|location|cache-control"
- * curl -sS -I "http://127.0.0.1:3010/xx" | head -n 5
- * curl -sS -I -H "RSC: 1" "http://127.0.0.1:3010/" | egrep -i "HTTP/|content-type|cache-control"
- * curl -sS -I "http://127.0.0.1:3010/?_rsc=1" | egrep -i "HTTP/|content-type|cache-control"
- * kill $(cat /tmp/enki.pid)
- */
 export const config = {
-  matcher: '/((?!api|_next|opengraph-image|twitter-image|.*\\..*).*)'
+  matcher: "/((?!api|_next|opengraph-image|twitter-image|.*\\..*).*)",
 };
