@@ -1,40 +1,37 @@
-import createMiddleware from 'next-intl/middleware';
-import {NextRequest, NextResponse} from 'next/server';
-import {locales, routing} from './i18n/routing';
+import createMiddleware from "next-intl/middleware";
+import { NextRequest, NextResponse } from "next/server";
+import { locales, routing } from "./i18n/routing";
 
 const handleI18nRouting = createMiddleware(routing);
 
-const INTERNAL_BYPASS_EXACT_PATHS = new Set([
-  '/robots.txt',
-  '/sitemap.xml',
-  '/manifest.webmanifest'
-]);
+function isInternalProxyHost(host: string | null) {
+  if (!host) return false;
+  const h = host.toLowerCase();
+  return h.startsWith("localhost") || h.startsWith("127.0.0.1");
+}
 
 export default function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // ❗️KÖK "/" ve "_rsc" BYPASS YOK:
-  // Bunlar next-intl middleware'den geçmeli ki default locale / tr düzgün çalışsın.
+  // ✅ NEXT 16 "Proxy (Middleware)" loop fix:
+  // If Next internally proxies to the rewritten locale path using localhost/127.0.0.1,
+  // we MUST bypass next-intl on already-locale-prefixed paths to prevent:
+  // /kesfet/... -> rewrite /tr/kesfet/... -> (internal) /tr/... -> redirect /... -> loop
+  const host = request.headers.get("host");
+  const firstSegment = pathname.split("/").filter(Boolean)[0];
 
-  const isInternalBypassPath =
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/favicon') ||
-    pathname.startsWith('/opengraph-image') ||
-    pathname.startsWith('/twitter-image') ||
-    INTERNAL_BYPASS_EXACT_PATHS.has(pathname);
-
-  if (isInternalBypassPath) {
-    return NextResponse.next();
+  if (isInternalProxyHost(host) && firstSegment) {
+    const normalized = firstSegment.toLowerCase();
+    if (locales.includes(normalized as (typeof locales)[number])) {
+      return NextResponse.next();
+    }
   }
 
-  const firstSegment = pathname.split('/').filter(Boolean)[0];
-
+  // Unknown 2-letter locale guard: /xx -> 404
   if (firstSegment && /^[a-zA-Z]{2}$/.test(firstSegment)) {
     const normalizedSegment = firstSegment.toLowerCase();
-
     if (!locales.includes(normalizedSegment as (typeof locales)[number])) {
-      return new NextResponse(null, {status: 404});
+      return new NextResponse(null, { status: 404 });
     }
   }
 
@@ -42,5 +39,5 @@ export default function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: '/((?!api|_next|opengraph-image|twitter-image|.*\\..*).*)'
+  matcher: "/((?!api|_next|.*\\..*).*)",
 };
