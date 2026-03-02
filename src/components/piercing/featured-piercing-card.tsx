@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import type { FeaturedPiercingItem } from "@/lib/piercing/featured-piercing";
 import { cn } from "@/lib/utils";
 
@@ -12,8 +13,11 @@ type FeaturedPiercingCardProps = {
 };
 
 export function FeaturedPiercingCard({ item, className }: FeaturedPiercingCardProps) {
+  const t = useTranslations();
   const [imageFailed, setImageFailed] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const title = t(item.titleKey);
+  const subtitle = t(item.subtitleKey);
   const src = item.coverSrc ?? "/piercing-hero/cover.webp";
   const showImage = Boolean(src) && !imageFailed;
 
@@ -24,7 +28,7 @@ export function FeaturedPiercingCard({ item, className }: FeaturedPiercingCardPr
         "block min-h-11 overflow-hidden rounded-2xl border border-border bg-card/40 shadow-sm transition-all hover:bg-accent/40 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         className,
       )}
-      aria-label={`${item.title} - ${item.subtitle}`}
+      aria-label={t("piercing.featured.cardAria", { title, subtitle })}
     >
       <div className="relative w-full aspect-[16/9] overflow-hidden rounded-t-2xl bg-muted/30 ring-1 ring-border/60 dark:bg-muted/20">
         <div
@@ -46,14 +50,14 @@ export function FeaturedPiercingCard({ item, className }: FeaturedPiercingCardPr
             fill
             priority={false}
             src={src}
-            alt={item.imageAlt || item.title}
+            alt={item.imageAltKey ? t(item.imageAltKey) : title}
             sizes="(max-width: 640px) 85vw, (max-width: 1024px) 46vw, 400px"
             loading="lazy"
             className={cn(
               "object-cover object-center transition-opacity duration-300 ease-out",
               imageLoaded ? "opacity-100" : "opacity-0",
             )}
-            onLoadingComplete={() => setImageLoaded(true)}
+            onLoad={() => setImageLoaded(true)}
             onError={() => {
               setImageFailed(true);
               setImageLoaded(false);
@@ -69,15 +73,15 @@ export function FeaturedPiercingCard({ item, className }: FeaturedPiercingCardPr
 
       <div className="min-w-0 space-y-1 p-4">
         <p className="text-[11px] font-medium tracking-normal text-foreground/60 dark:text-foreground/70">
-          Piercing
+          {t("common.nav.piercing")}
         </p>
-        <p className="min-w-0 line-clamp-1 font-medium text-foreground">{item.title}</p>
+        <p className="min-w-0 line-clamp-1 font-medium text-foreground">{title}</p>
         <p className="min-w-0 line-clamp-1 text-sm text-foreground/70 dark:text-foreground/75">
-          {item.subtitle}
+          {subtitle}
         </p>
         <div className="pt-2 text-right">
           <span className="inline-flex min-h-11 items-center rounded-full border border-border bg-background/70 px-3 py-1 text-xs font-medium text-foreground transition-[transform,color,background-color] hover:bg-background/90 active:scale-[0.99]">
-            İncele
+            {t("common.inspect")}
           </span>
         </div>
       </div>

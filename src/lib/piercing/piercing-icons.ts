@@ -5,6 +5,7 @@ import {
   Dot,
   Link2,
   Minus,
+  Speech,
   User,
   icons,
 } from "lucide-react";
@@ -18,6 +19,7 @@ export const PIERCING_ICONS: Record<string, LucideIcon> = {
   "/piercing/burun": Dot,
   "/piercing/kas": Minus,
   "/piercing/dudak": Circle,
+  "/piercing/dil": Speech,
   "/piercing/gobek": CircleDot,
   "/piercing/septum": SeptumIcon,
   "/piercing/industrial": Link2,

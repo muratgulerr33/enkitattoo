@@ -42,6 +42,7 @@ CSV runtime’da parse edilmez; build/dev sırasında TS registry’ye dönüşt
 - `/piercing`
 - `/artistler`
 - `/iletisim`
+- `/sss`
 
 > Sistem route’ları: `/_not-found`, `/manifest.webmanifest`, `/opengraph-image`, `/twitter-image` vb. (SEO içerik sayfası değildir)
 
@@ -159,6 +160,11 @@ CSV kolonları (örnek):
 - Halit Yalvaç kartı + “İncele” butonu kesin olarak:  
   `/artistler/halit-yalvac`
 
+### 5.4 Bilgi Bankası internal link stratejisi
+- Tek kaynak route: `/sss`
+- Home / Keşfet / Piercing / İletişim teaser/CTA linkleri `/sss` veya `/sss?cat=...` kullanabilir.
+- `?cat` paramı sitemap/canonical üretimine dahil edilmez; sadece istemci tarafı kategori filtresidir.
+
 ---
 
 ## 6) Title Çift Yazılma (Template Çakışması) LOCK
@@ -180,6 +186,7 @@ Kural:
 - Kurallar:
   - `NOINDEX` olan route sitemap’e girmez
   - URL: `canonical || path` seçilir → `SITE_URL` ile absolute yapılır
+  - Query param’lı URL’ler sitemap’e girmez (ör. `/sss?cat=tattoo|piercing|studio`)
 - Priority:
   - `/` => `1.0`
   - depth >= 2 (detail) => `0.6`

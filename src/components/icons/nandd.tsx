@@ -109,6 +109,28 @@ export function IconInstagram(props: NanddIconProps) {
   );
 }
 
+export function IconPinterest({ size = 20, className, title }: NanddIconProps) {
+  const labelled = Boolean(title);
+
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={cn("shrink-0", className)}
+      role={labelled ? "img" : undefined}
+      aria-label={labelled ? title : undefined}
+      aria-hidden={labelled ? undefined : true}
+      focusable="false"
+    >
+      {labelled ? <title>{title}</title> : null}
+      <path d="M12 2.25c-5.384 0-9.75 4.366-9.75 9.75 0 4.13 2.571 7.659 6.202 9.079-.086-.771-.163-1.955.034-2.797.178-.759 1.144-4.836 1.144-4.836s-.291-.583-.291-1.443c0-1.353.785-2.363 1.763-2.363.831 0 1.232.624 1.232 1.373 0 .837-.533 2.088-.807 3.248-.23.971.486 1.763 1.443 1.763 1.732 0 3.063-1.826 3.063-4.461 0-2.332-1.676-3.961-4.068-3.961-2.771 0-4.398 2.079-4.398 4.227 0 .838.323 1.737.728 2.226.08.097.091.182.067.281-.074.311-.239.972-.271 1.108-.043.182-.141.222-.325.134-1.213-.564-1.971-2.335-1.971-3.761 0-3.061 2.224-5.872 6.414-5.872 3.367 0 5.985 2.399 5.985 5.607 0 3.344-2.107 6.036-5.033 6.036-.983 0-1.907-.511-2.222-1.114l-.604 2.302c-.218.84-.808 1.892-1.205 2.533.907.28 1.868.433 2.866.433 5.384 0 9.75-4.366 9.75-9.75 0-5.384-4.366-9.75-9.75-9.75z" />
+    </svg>
+  );
+}
+
 export function IconPhoneCall(props: NanddIconProps) {
   return (
     <IconBase {...props}>
@@ -145,37 +167,6 @@ export function IconPhoneFilled({
         clipRule="evenodd"
         d="M2.25 6.75C2.25 5.507 3.257 4.5 4.5 4.5h2.25c.621 0 1.169.405 1.35 1l.85 2.833a1.5 1.5 0 0 1-.446 1.57l-1.2 1.05a14.64 14.64 0 0 0 6.546 6.546l1.05-1.2a1.5 1.5 0 0 1 1.57-.446l2.833.85c.595.181 1 .729 1 1.35V19.5c0 1.243-1.007 2.25-2.25 2.25h-1.5c-8.284 0-15-6.716-15-15v-1.5Z"
       />
-    </svg>
-  );
-}
-
-export function IconTelegramOutline(props: NanddIconProps) {
-  return (
-    <IconBase {...props}>
-      <path d="m22 2-7 20-4-9-9-4Z" />
-      <path d="M22 2 11 13" />
-    </IconBase>
-  );
-}
-
-export function IconTelegram({ size = 20, className, title }: NanddIconProps) {
-  const labelled = Boolean(title);
-
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className={cn("shrink-0", className)}
-      role={labelled ? "img" : undefined}
-      aria-label={labelled ? title : undefined}
-      aria-hidden={labelled ? undefined : true}
-      focusable="false"
-    >
-      {labelled ? <title>{title}</title> : null}
-      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
     </svg>
   );
 }

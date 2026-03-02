@@ -2,9 +2,10 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { IconWhatsApp } from "@/components/icons/nandd";
 import { Input } from "@/components/ui/input";
 import { whatsappUrl } from "@/lib/mock/enki";
-import { MessageCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const quickChips = [
   { label: "Randevu Al", href: "/iletisim" },
@@ -13,6 +14,8 @@ const quickChips = [
 ];
 
 export function HomeComposer() {
+  const t = useTranslations();
+
   return (
     <div className="rounded-xl border border-border bg-surface-2 p-4 shadow-sm">
       <Input
@@ -40,8 +43,8 @@ export function HomeComposer() {
         className="mt-3 w-full sm:w-auto"
       >
         <a href={whatsappUrl} className="gap-2">
-          <MessageCircle className="size-4" aria-hidden />
-          WhatsApp
+          <IconWhatsApp className="size-4" aria-hidden />
+          {t("common.social.whatsapp")}
         </a>
       </Button>
     </div>

@@ -1,0 +1,546 @@
+{
+  "common": {
+    "language": "tr",
+    "active": "Aktif",
+    "allCategories": "Tüm kategoriler",
+    "back": "Geri",
+    "clearSearch": "Aramayı temizle",
+    "cta": {
+      "whatsappWrite": "WhatsApp'tan yaz"
+    },
+    "directions": "Yol tarifi",
+    "hideDetails": "Detayları gizle",
+    "inspect": "İncele",
+    "languageChanged": "Dil: {language}",
+    "languages": {
+      "tr": "Türkçe",
+      "sq": "Shqip",
+      "sr": "Srpski",
+      "en": "English"
+    },
+    "nav": {
+      "home": "Ana Sayfa",
+      "discover": "Keşfet",
+      "tattoo": "Dövme",
+      "piercing": "Piercing",
+      "gallery": "Galeri",
+      "visuals": "Görseller",
+      "artists": "Artistler",
+      "contact": "İletişim",
+      "customDesign": "Kişiye Özel Tasarım",
+      "knowledgeBase": "Bilgi Bankası",
+      "questionBank": "Soru Bankası",
+      "questionBankWithKb": "Soru Bankası"
+    },
+    "noResults": "Sonuç bulunamadı",
+    "noResultsWithDot": "Sonuç bulunamadı.",
+    "openInMap": "Haritada aç",
+    "search": "Ara",
+    "searchCall": "Ara",
+    "searchResultsAria": "Arama sonuçları",
+    "selectLanguage": "Dil seç",
+    "showAll": "Tümünü göster",
+    "showMore": "Devamını gör",
+    "social": {
+      "phone": "Telefon",
+      "whatsapp": "WhatsApp",
+      "pinterest": "Pinterest",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "google": "Google"
+    },
+    "viewAll": "Tümünü gör"
+  },
+  "theme": {
+    "light": "Açık",
+    "dark": "Koyu",
+    "system": "Sistem",
+    "systemWithCurrent": "Sistem ({current})",
+    "mode": "Mod",
+    "selectMode": "Mod seç",
+    "toggleTheme": "Temayı değiştir"
+  },
+  "header": {
+    "brand": "Enki Tattoo Studio",
+    "searchAria": "Site içi arama",
+    "searchPlaceholder": "Kategori veya sayfa ara..."
+  },
+  "mobileHeader": {
+    "openMenu": "Menüyü aç",
+    "closeMenu": "Menüyü kapat",
+    "menuTitle": "Menü",
+    "menuDescription": "Ana sayfalar, öne çıkan başlıklar ve tema seçenekleri.",
+    "mainMenuAria": "Ana menü",
+    "mainTabsAria": "Ana sekmeler",
+    "accessibility": "Erişilebilirlik",
+    "searchDescription": "Site içi hızlı arama ve kategori kısayolları.",
+    "hubCategories": "Hub kategorileri"
+  },
+  "footer": {
+    "homeAria": "{site} ana sayfa",
+    "openOnGoogleMapsAria": "Google Maps üzerinde aç",
+    "social": "Sosyal",
+    "socialLinksAria": "Sosyal bağlantılar",
+    "weekdayHours": "Hafta içi 10:00–20:00",
+    "sundayHours": "Pazar 12:00–20:00",
+    "rightsReserved": "Tüm hakları saklıdır."
+  },
+  "googleReviews": {
+    "title": "Google yorumları",
+    "viewAll": "Tüm yorumları gör",
+    "writeReview": "Sen de yorum yap",
+    "readMore": "Devamını gör",
+    "openOnMaps": "Google Maps'te görüntüle",
+    "avatarAlt": "{name} profil fotoğrafı",
+    "reviewDialogTitle": "{name} yorumu",
+    "reviewDialogDescription": "Google yorumu detay görünümü",
+    "close": "Kapat",
+    "originalLanguageLabel": "Orijinal dil: {language}"
+  },
+  "hub": {
+    "coverAlt": "{title} kapak",
+    "items": {
+      "minimal_fine_line": {
+        "title": "Minimal & Fine Line",
+        "description": "İnce çizgiler ve sade tasarımlar."
+      },
+      "lettering": {
+        "title": "Yazı & İsim",
+        "description": "Lettering yazı ve tipografi dövmeleri."
+      },
+      "realism": {
+        "title": "Realistik Dövme",
+        "description": "Gerçekçi ve detaylı işler."
+      },
+      "portrait": {
+        "title": "Portre",
+        "description": "Portre ve yüz dövmeleri."
+      },
+      "traditional_old_school": {
+        "title": "Old School / Traditional",
+        "description": "Klasik ve geleneksel tarz."
+      },
+      "cover_up": {
+        "title": "Kapatma / Cover Up",
+        "description": "Eski dövmelerin örtülmesi."
+      },
+      "dovme_egitimi": {
+        "title": "Dövme Eğitimi",
+        "description": "Temelden ileriye, stüdyo içinde uygulamalı eğitim."
+      },
+      "ataturk": {
+        "title": "Atatürk",
+        "description": "Atatürk portre, imza, siluet ve milli tema."
+      },
+      "blackwork": {
+        "title": "Blackwork",
+        "description": "Siyah ağırlıklı geometrik ve bold işler."
+      },
+      "custom": {
+        "title": "Kişiye Özel Tasarım",
+        "description": "Size özel tasarım ve fikir."
+      }
+    }
+  },
+  "rightRail": {
+    "aria": "Hızlı erişim ve popüler kategoriler",
+    "piercing": {
+      "title": "Piercing randevu",
+      "cta": "Piercing için yaz",
+      "aftercareTitle": "Sonrası bakım",
+      "aftercareBody": "Piercing sonrası bakım önerileri randevu sonrası size iletilecektir. Bölgeyi temiz ve kuru tutun."
+    },
+    "quickActions": {
+      "title": "Hızlı işlemler"
+    },
+    "popular": {
+      "title": "Popüler kategoriler",
+      "exploreAll": "Tümünü keşfet"
+    }
+  },
+  "piercing": {
+    "labels": {
+      "default": "Piercing",
+      "kulak": "Kulak",
+      "burun": "Burun",
+      "kas": "Kaş",
+      "dudak": "Dudak",
+      "dil": "Dil",
+      "gobek": "Göbek",
+      "septum": "Septum",
+      "industrial": "Industrial",
+      "kisiye-ozel": "Kişiye Özel"
+    },
+    "featured": {
+      "heading": "Öne Çıkan Piercingler",
+      "subheading": "Kaydır, tarzını seç.",
+      "railAria": "Öne çıkan piercing kartları",
+      "previous": "Önceki",
+      "next": "Sonraki",
+      "cardAria": "{title} - {subtitle}",
+      "kulak": {
+        "subtitle": "Lob ve kıkırdakta modern kombinler",
+        "alt": "Kulak piercing örneği"
+      },
+      "burun": {
+        "subtitle": "Nostril halka ve stud seçenekleri",
+        "alt": "Burun piercing örneği"
+      },
+      "kas": {
+        "subtitle": "Kaş hattına uyumlu sade detaylar",
+        "alt": "Kaş piercing örneği"
+      },
+      "dudak": {
+        "subtitle": "Labret ve halka ile karakterli görünüm",
+        "alt": "Dudak piercing örneği"
+      },
+      "dil": {
+        "subtitle": "Minimal barbell ve parlak seçenekler",
+        "alt": "Dil piercing örneği"
+      },
+      "gobek": {
+        "subtitle": "Taşlı ve sade çizgide yaz stili",
+        "alt": "Göbek piercing örneği"
+      }
+    }
+  },
+  "pages": {
+    "hub": {
+      "coverAlt": "{title} kapak görseli"
+    },
+    "home": {
+      "heading": "Ana sayfa",
+      "heroAlt": "Ana sayfa hero kapak görseli",
+      "heroMicroLine": "Stilini seç, örnekleri gör, hızlı randevu al.",
+      "ctaWhatsappDesktop": "WhatsApp'tan bilgi al",
+      "ctaDesignsMobile": "Tasarımlar",
+      "ctaDesignsDesktop": "Tasarımını keşfet",
+      "featuredTitle": "Öne Çıkanlar",
+      "styleCategories": "Stil kategorileri",
+      "detailsAria": "Ana sayfa açıklama detayları",
+      "specialTitle": "Özel",
+      "piercingDescription": "Piercing ayrı dünyamız. Hızlı bilgi ve randevu.",
+      "galleryPreviewTitle": "Galeri önizleme",
+      "goToGallery": "Galeri'ye git",
+      "openGalleryImageAria": "{title} görselini galeride aç",
+      "findOnMap": "Haritada bul"
+    },
+    "kesfet": {
+      "heading": "Keşfet",
+      "heroAlt": "Keşfet hero kapak görseli",
+      "shortDescription": "Stilini seç, örnekleri gör, hızlı randevu al.",
+      "browseVisuals": "Görseller",
+      "askOnWhatsapp": "WhatsApp",
+      "piercingDescription": "Kulak, burun, septum ve daha fazlası · Profesyonel piercing hizmeti.",
+      "popularStyles": "Popüler stiller"
+    },
+    "kesfetHub": {
+      "relatedTitle": "Benzer stiller",
+      "relatedDescription": "Tarzına yakın diğer dövme kategorilerine göz at.",
+      "relatedAria": "Benzer dövme kategorileri kaydırma alanı",
+      "previous": "Önceki",
+      "next": "Sonraki",
+      "faqTeaser": {
+        "description": "Dövme öncesi hazırlık ve bakım sorularını hızlıca gözden geçir.",
+        "tattoo": {
+          "items": {
+            "0": {
+              "q": "Hızlı teklif için hangi bilgileri iletmeliyim?",
+              "a": "Referans görsel, yaklaşık ölçü ve uygulanacak bölge net bir başlangıç planı için yeterlidir."
+            },
+            "1": {
+              "q": "Bu tasarım tek seansta biter mi?",
+              "a": "Detay yoğunluğu ve yerleşime göre süre değişir; tasarımı gördükten sonra seans planı netleşir."
+            },
+            "2": {
+              "q": "Seans öncesi nasıl hazırlanmak daha doğru olur?",
+              "a": "Tok, dinlenmiş ve su içmiş gelmek uygulamanın daha konforlu ilerlemesine yardımcı olur."
+            },
+            "3": {
+              "q": "İlk günlerde özellikle nelerden kaçınmalıyım?",
+              "a": "Sürtünme, kirli temas ve bölgeyi gereksiz kurcalamak iyileşmeyi olumsuz etkileyebilir."
+            },
+            "4": {
+              "q": "Dövmeyi güneşten korumak için nasıl davranmalıyım?",
+              "a": "İlk iyileşme tamamlanana kadar doğrudan güneşi sınırlamak ve bölgeyi korumak gerekir."
+            },
+            "5": {
+              "q": "Spor rutini ne zaman güvenli şekilde başlar?",
+              "a": "Yoğun ter ve sürtünme oluşturan egzersizlere kontrollü ve kademeli dönüş önerilir."
+            },
+            "6": {
+              "q": "Eski bir dövmede en doğru yol kapatma mı açma mı?",
+              "a": "Mevcut dövmenin koyuluğu ve formuna göre önce hangi yöntemin daha verimli olduğu belirlenir."
+            },
+            "7": {
+              "q": "Rötuş gereksinimi baştan tahmin edilebilir mi?",
+              "a": "Bölge ve cilt tepkisine göre küçük rötuş ihtimali önceden planlanabilir."
+            }
+          }
+        }
+      }
+    },
+    "piercing": {
+      "heading": "Piercing",
+      "heroAlt": "Piercing hero kapak görseli",
+      "shortDescription": "Kulak, burun, septum ve daha fazlası. Profesyonel piercing hizmeti için bize yazın.",
+      "cta": "Piercing için yaz",
+      "categoriesTitle": "Kategoriler",
+      "detailsTitle": "Detaylar",
+      "showDetails": "Detayları göster",
+      "hideDetails": "Detayları gizle"
+    },
+    "piercingHub": {
+      "defaultShortDescription": "Piercing detayı",
+      "galleryCtaTitle": "Piercing örneklerini Galeri’de gör",
+      "galleryCtaDescription": "Bu kategori için görselleri filtreli şekilde aç.",
+      "openGallery": "Galeri’de aç",
+      "questionBankDescription": "Piercing süreçleri ve bakım adımları için Soru Bankası’na göz at."
+    },
+    "gallery": {
+      "heading": "Galeri Tasarım",
+      "coverAlt": "Galeri Tasarım kapak görseli",
+      "shortDescription": "Örnek işler ve stiller.",
+      "soonTitle": "Galeri yakında",
+      "soonDescription": "Bu kategoriye görseller ekleniyor.",
+      "goToGallery": "Galeri sayfasına git",
+      "resultsCount": "Filtreye göre sonuçlar: {count} öğe",
+      "emptyForCategory": "Bu kategoride yakında görseller eklenecek.",
+      "emptyAll": "Galeriye henüz hazır/yayınlanmış görsel eklenmedi.",
+      "openImageAria": "{title} görselini aç",
+      "showMoreImagesAria": "Daha fazla görsel göster",
+      "viewerTitle": "Galeri görüntüleyici",
+      "viewerDescription": "Dövme galerisi görsellerini tam ekranda kaydırarak görüntüleyin.",
+      "closeViewer": "Görüntüleyiciyi kapat",
+      "imageLoading": "Görsel hazırlanıyor",
+      "previousSlide": "Önceki slayt",
+      "nextSlide": "Sonraki slayt",
+      "filters": {
+        "category": "Kategori",
+        "reset": "Filtreleri sıfırla"
+      }
+    },
+    "contact": {
+      "heading": "İletişim",
+      "shortDescription": "Adres, çalışma saatleri ve hızlı iletişim için bize ulaşın.",
+      "addressLabel": "Adres",
+      "hoursLabel": "Çalışma saatleri",
+      "weekdayHours": "Hafta içi 10:00–20:00",
+      "sundayHours": "Pazar 12:00–20:00",
+      "phoneLabel": "Telefon",
+      "mapTitle": "{site} harita konumu"
+    },
+    "artists": {
+      "heading": "Artistler",
+      "coverAlt": "Artistler kapak görseli",
+      "shortDescription": "Stüdyomuzdaki sanatçılar.",
+      "avatarAlt": "{name} avatar görseli",
+      "roles": {
+        "halit": "Usta Dövme Sanatçısı",
+        "mertcan": "Dövme Sanatçısı"
+      },
+      "descriptions": {
+        "halit": "30 yılı aşkın deneyim",
+        "mertcan": "Kısa profil açıklaması yakında güncellenecek."
+      }
+    },
+    "artistDetail": {
+      "defaultShortDescription": "Artist profili",
+      "defaultTitle": "Artist",
+      "profiles": {
+        "halit-yalvac": {
+          "microLine": "25 yıllık deneyim: portre, realistik, cover-up ve fine line.",
+          "shortDescription": "Halit Yalvaç, Mersin'de 30 yılı aşan dövme tecrübesiyle realistik, portre, cover-up ve fine line alanlarında öne çıkar.",
+          "longDescription": "Portfolyo örneklerini inceleyerek çizgi, gölge ve kompozisyon yaklaşımını karşılaştırabilir; referanslarını paylaşıp ölçü ve yerleşimi birlikte netleştirebilirsin."
+        },
+        "mertcan-uludag": {
+          "microLine": "Öne çıkan işler, net stil yaklaşımı ve hızlı iletişim.",
+          "shortDescription": "Mertcan Uludağ'ın dövme çalışmalarını inceleyerek sana uygun tasarım dilini, ölçüyü ve yerleşimi daha hızlı belirleyebilirsin.",
+          "longDescription": "Referans görsellerini paylaşıp çizgi kalınlığı, gölgelendirme ve kompozisyon tercihlerini birlikte netleştirebilir; hızlı bilgi için WhatsApp'tan yazabilirsin."
+        }
+      }
+    },
+    "training": {
+      "heading": "Dövme Eğitimi",
+      "coverAlt": "Dövme Eğitimi kapak görseli",
+      "defaultShortDescription": "Dövme eğitimi içeriği.",
+      "scopeAria": "Eğitim kapsamı",
+      "scopeTitle": "Eğitim Kapsamı",
+      "scopeItems": {
+        "hygiene": "Hijyen ve çalışma alanı hazırlığı",
+        "stencil": "Stencil yerleşimi, çizgi kontrolü ve temel gölgelendirme",
+        "equipment": "Ekipman seçimi ve süreç planlama adımları"
+      }
+    },
+    "sss": {
+      "heading": "SSS / Bilgi Bankası",
+      "microLine": "Sık sorulan sorular",
+      "shortDescription": "Dövme ve piercing süreci için en çok sorulan sorulara tek ekrandan ulaş.",
+      "longDescription": "Dövme ve piercing süreci için en çok sorulan sorulara tek ekrandan ulaş."
+    }
+  },
+  "sss": {
+    "categories": {
+      "all": "Hepsi",
+      "tattoo": "Dövme",
+      "piercing": "Piercing",
+      "studio": "Stüdyo"
+    },
+    "placeholders": {
+      "piercingShort": "Bu başlık için en doğru yanıtı durumuna göre veriyoruz; WhatsApp'tan yaz.",
+      "piercingLong": "Bu başlık için en doğru yanıtı durumuna göre veriyoruz; WhatsApp'tan yaz; görsel atarsan hızlı değerlendiririz."
+    },
+    "teaser": {
+      "description": "Dövme ve piercing süreci için sık sorulan sorulara tek sayfadan ulaş.",
+      "viewAllQuestions": "Tüm soruları gör"
+    },
+    "ui": {
+      "searchFilterAria": "SSS arama ve filtre",
+      "searchLabel": "SSS içinde ara",
+      "searchPlaceholder": "Soru ara: fiyat, bakım, iyileşme...",
+      "quickGuideAria": "Hızlı rehber bağlantıları",
+      "quickGuideTitle": "Hızlı Rehber",
+      "fastestContactLead": "En hızlı iletişim:",
+      "fastestContactMiddle": "en hızlı kanal. Ayrıca",
+      "fastestContactAnd": "ve",
+      "fastestContactEnd": "üzerinden de yazabilirsin.",
+      "faqTitle": "Sık Sorulan Sorular",
+      "questionCount": "{count} soru",
+      "noResultsHint": "Arama ifadesini değiştir veya kategori filtresini “Hepsi” olarak dene.",
+      "openLinkAria": "{label} bağlantısını aç"
+    },
+    "quickGuide": {
+      "guide-contact": {
+        "label": "İletişim sayfası",
+        "description": "Adres, saatler ve hızlı iletişim seçenekleri."
+      },
+      "guide-maps": {
+        "label": "Haritada Aç",
+        "description": "{addressText}"
+      },
+      "guide-instagram": {
+        "label": "Instagram",
+        "description": "Güncel işler ve içerikler."
+      },
+      "guide-youtube": {
+        "label": "YouTube",
+        "description": "Video içerikler ve yayınlar."
+      },
+      "guide-whatsapp": {
+        "label": "WhatsApp",
+        "description": "En hızlı dönüş için yaz."
+      }
+    },
+    "items": {
+      "tattoo-fiyat": {
+        "q": "Dövme fiyatları nasıl belirleniyor?",
+        "aShort": "Fiyatı en çok işçilik süresi belirler; boyut tek kriter değildir.",
+        "aLong": "Fiyatı en çok işçilik süresi belirler. Boyut önemli ama tek kriter değildir: Detay yoğunluğu (ince iş daha uzun sürer), stil (fine line, realist, traditional vb.), vücut bölgesi (uygulaması zor alanlar), tasarımın özgün çizimi (custom çalışma). Net fiyat için örnek görsel + ölçü (cm) + yapılacak bölge yeterli."
+      },
+      "tattoo-sure-seans": {
+        "q": "Dövme kaç saat sürer, kaç seansta biter?",
+        "aShort": "Süre ve seans; detay ve yerleşime göre değişir. Görseli atarsan net plan çıkarırım.",
+        "aLong": "Aynı boyuttaki iki dövme bile farklı sürebilir. Minimal işler daha kısa, realist/yoğun gölgeli işler daha uzun ve bazen çok seans olur. Tasarımı görmeden net söylemek zor; ama görseli atarsan süre + seans planını çıkarırım."
+      },
+      "tattoo-once-hazirlik": {
+        "q": "Dövme yaptırmadan önce nasıl hazırlanmalıyım?",
+        "aShort": "Dinlenmiş, tok ve su içmiş gelmek en iyisidir. Rahat kıyafet seç.",
+        "aLong": "Seansa dinlenmiş, tok ve su içmiş gelmek en iyisidir. Rahat kıyafet seç; dövme yapılacak bölgeye kolay erişilsin. Kendini iyi hissetmiyorsan ertelemek daha doğru olur."
+      },
+      "tattoo-alkol": {
+        "q": "Alkol aldıktan sonra dövme olur mu?",
+        "aShort": "Alkol vücudu etkileyebilir; uygulama ve iyileşmeyi zorlaştırabilir. En güvenlisi seans öncesi alkolü tercih etmemek.",
+        "aLong": "Alkol vücudu etkileyebilir; bu da uygulamayı ve iyileşmeyi zorlaştırabilir. En güvenlisi: seans öncesi alkolü tercih etmemek."
+      },
+      "tattoo-hamile-emzirme": {
+        "q": "Hamilelikte / emzirirken dövme yaptırılır mı?",
+        "aShort": "Hassas bir konudur; çoğu kişi ertelemeyi tercih eder. En sağlıklısı doktor görüşüne göre hareket etmektir.",
+        "aLong": "Bu hassas bir konudur. Çoğu kişi bu dönemde dövmeyi ertelemeyi tercih eder. En sağlıklısı doktor görüşüne göre hareket etmektir."
+      },
+      "tattoo-bakim-48saat": {
+        "q": "Dövme sonrası ilk 24–48 saat ne yapmalıyım?",
+        "aShort": "İlk iki gün kritik: temiz tut, tahriş etme, gereğinden fazla ürün sürme.",
+        "aLong": "İlk iki gün kritik: temiz tut + tahriş etme + gereğinden fazla ürün sürme. Biz seans sonrası sana bakım adımlarını net şekilde anlatırız. En önemli kural: elleme, sürtme, kirli temas yok."
+      },
+      "tattoo-kabuk-soyulma": {
+        "q": "Dövme kabuklanır mı, soyulur mu? Normal mi?",
+        "aShort": "Çoğu dövmede kabuklanma/soyulma/kaşıntı normaldir. Kabukları koparmamak gerekir.",
+        "aLong": "Evet, çoğu dövmede kabuklanma/soyulma/kaşıntı normaldir. En büyük hata: kabukları koparmak. Bu, iz ve renk kaybı yapabilir."
+      },
+      "tattoo-iyilesme": {
+        "q": "Dövme ne kadar sürede iyileşir?",
+        "aShort": "Toparlama süresi kişiye ve bölgeye göre değişir; cildin tam oturması daha uzun sürebilir.",
+        "aLong": "İlk görüntü olarak toparlama genelde kısa sürede başlar ama cildin “tam oturması” daha uzun sürebilir. İyileşme; bölge, bakım ve cilt yapısına göre değişir. Sana seans sonrası gün gün ne beklemen gerektiğini söyleriz."
+      },
+      "tattoo-dus": {
+        "q": "Dövmeden sonra duş alınır mı?",
+        "aShort": "Genelde evet; ama çok sıcak su, uzun buhar ve sert ovalama yok.",
+        "aLong": "Genelde evet; ama çok sıcak su, uzun buhar, sert ovalama yok. Temiz ve nazik bir rutin en iyisi."
+      },
+      "tattoo-deniz-havuz-sauna": {
+        "q": "Deniz / havuz / sauna ne zaman?",
+        "aShort": "İyileşme sürecinde uzun süre suya girmek ve sauna/buhar cildi zorlayabilir; toparlanana kadar beklemek daha güvenli.",
+        "aLong": "Dövme iyileşme sürecindeyken uzun süre suya girmek ve sauna/buhar cildi zorlayabilir. En güvenlisi: dövme toparlanana kadar beklemek. Bölge ve işin durumuna göre sana net zaman aralığı veririz."
+      },
+      "tattoo-spor": {
+        "q": "Spor ne zaman yapılır?",
+        "aShort": "İlk günlerde ağır ter, sürtünme ve esneme tahriş edebilir; sonra kontrollü dönüş yapılır.",
+        "aLong": "İlk günlerde ağır ter, sürtünme ve esneme dövmeyi tahriş edebilir. Sonra kontrollü şekilde dönüş yapılır. Dövmenin yeri (kol, bacak, kaburga vs.) burada belirleyicidir."
+      },
+      "tattoo-gunes": {
+        "q": "Dövme güneşte solar mı? Nasıl korunur?",
+        "aShort": "Güneş dövmenin en büyük düşmanıdır; iyileşme döneminde özellikle korunmalıdır.",
+        "aLong": "Güneş dövmenin en büyük düşmanıdır. İyileşme döneminde özellikle korumak gerekir. Sonrasında da güneşten korunmak, dövmenin yıllarca daha canlı kalmasını sağlar."
+      },
+      "tattoo-rotus": {
+        "q": "Rötuş (touch-up) gerekir mi?",
+        "aShort": "Bazı bölgelerde veya bazı cilt tiplerinde küçük rötuşlar normaldir.",
+        "aLong": "Bazı bölgelerde veya bazı cilt tiplerinde küçük rötuşlar gerekebilir. Bu tamamen normaldir. Rötuş ihtimali; bölge, bakım ve cilt yapısına göre değişir."
+      },
+      "tattoo-coverup": {
+        "q": "Cover-up yapılır mı? Eski dövmeyi kapatabilir misiniz?",
+        "aShort": "Çoğu dövme cover-up ile toparlanabilir; eski dövmenin koyuluğu tasarımı sınırlar. Foto ile net söyleriz.",
+        "aLong": "Çoğu dövme cover-up ile toparlanabilir; ama eski dövmenin koyuluğu ve şekli tasarımı sınırlar. Fotoğrafı görmeden “kesin olur” demeyiz. Foto atarsan olur/olmaz + en iyi planı net söyleriz."
+      },
+      "tattoo-lazer-vs-coverup": {
+        "q": "Dövme sildirme (lazer) mi, cover-up mı daha mantıklı?",
+        "aShort": "Bazıları direkt cover-up olur; bazıları önce lazerle açılıp sonra cover-up daha iyi sonuç verir.",
+        "aLong": "Bazı dövmeler direkt cover-up olur, bazıları önce lazerle biraz açılıp sonra cover-up daha iyi sonuç verir. Burada hedef bazen “tamamen silmek” değil, “kapatılabilir hale getirmek” olur. Foto ile en doğru yolu seçeriz."
+      },
+      "piercing-igne-tabanca-sterilizasyon": {
+        "q": "Piercing’i nerede yaptırmalıyım? İğne mi tabanca mı, sterilizasyon (otoklav) var mı?"
+      },
+      "piercing-fiyat": {
+        "q": "Piercing fiyatı neye göre değişir?"
+      },
+      "piercing-ilk-taki-materyali": {
+        "q": "İlk takı materyali ne olmalı? Titanyum/çelik/altın farkı ne?"
+      },
+      "piercing-iyilesme-suresi": {
+        "q": "Hangi piercing kaç sürede iyileşir?"
+      },
+      "piercing-bakim-24-48": {
+        "q": "Piercing sonrası ilk 24–48 saat bakım nasıl? Ne ile temizleyeceğim?"
+      },
+      "piercing-taki-degisim-downsizing": {
+        "q": "Piercing takısını ne zaman değiştirebilirim? Downsizing ne zaman yapılır?"
+      },
+      "piercing-deniz-havuz-sauna-spor": {
+        "q": "Deniz–havuz–hamam/sauna ve spor ne zaman?"
+      },
+      "piercing-kulaklik-kask-baski": {
+        "q": "Üstüne yatarsam / kulaklık–kask baskı yaparsa ne olur?"
+      },
+      "studio-adres-maps": {
+        "q": "Stüdyo nerede, haritada nasıl açarım?",
+        "aShort": "Stüdyo adresi: {addressText}. Haritada açmak için hızlı rehberdeki “Haritada Aç” bağlantısını kullanabilirsin.",
+        "aLong": "Adres: {addressText}. Yol tarifi için Google Maps bağlantısı: {googleMapsBusinessUrl}"
+      },
+      "studio-calisma-saatleri": {
+        "q": "Stüdyo çalışma saatleri nedir?",
+        "aShort": "{weekdayLabel}; {sundayLabel}.",
+        "aLong": "Güncel saatler: {weekdayLabel} ve {sundayLabel}. Randevu planı için WhatsApp’tan yazabilirsin: {whatsappUrl}"
+      }
+    }
+  }
+}

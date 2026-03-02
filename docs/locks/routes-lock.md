@@ -7,6 +7,7 @@ Tarih: 2026-02-24
 - `/artistler/<slug>`
 - `/piercing/<slug>`
 - `/galeri-tasarim`
+- `/sss`
 
 ## Final Slug Listesi (Yeni)
 - `minimal-fine-line-dovme`

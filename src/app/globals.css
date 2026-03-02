@@ -67,7 +67,7 @@
   --app-mobile-header-h: calc(var(--app-mobile-topbar-h) + var(--app-mobile-tabbar-h));
 
   /* Default base palette: Zinc (premium neutral look for the studio brand). */
-  --background: oklch(1 0 0);
+  --background: oklch(0.984 0.001 286.2);
   --foreground: oklch(0.141 0.005 285.823);
 
   --card: oklch(1 0 0);
@@ -110,8 +110,8 @@
   --sidebar-ring: oklch(0.705 0.015 286.067);
 
   /* Compatibility tokens used by existing pages/components. */
-  --surface-1: oklch(0.975 0.001 286.2);
-  --surface-2: oklch(0.99 0.001 286.2);
+  --surface-1: oklch(0.989 0.001 286.2);
+  --surface-2: oklch(0.994 0.001 286.2);
   --overlay: oklch(0 0 0 / 40%);
   --overlay-strong: oklch(0 0 0 / 50%);
 }

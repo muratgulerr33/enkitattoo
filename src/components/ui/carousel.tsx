@@ -182,7 +182,7 @@ const CarouselPrevious = React.forwardRef<
       )}
       disabled={!canScrollPrev}
       onClick={() => api?.scrollPrev()}
-      aria-label="Önceki slayt"
+      aria-label="Previous slide"
       {...props}
     >
       <ChevronLeft className="size-5" />
@@ -208,7 +208,7 @@ const CarouselNext = React.forwardRef<
       )}
       disabled={!canScrollNext}
       onClick={() => api?.scrollNext()}
-      aria-label="Sonraki slayt"
+      aria-label="Next slide"
       {...props}
     >
       <ChevronRight className="size-5" />

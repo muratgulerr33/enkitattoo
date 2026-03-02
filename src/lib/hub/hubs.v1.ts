@@ -5,9 +5,9 @@
 
 export interface HubItem {
   id: string;
-  titleTR: string;
+  titleKey: string;
   slug: string;
-  descriptionTR: string;
+  descriptionKey: string;
   seoTitleTR?: string;
   seoDescriptionTR?: string;
   canonicalPath?: string;
@@ -19,9 +19,9 @@ export interface HubItem {
 export const mainHubs: HubItem[] = [
   {
     id: "minimal_fine_line",
-    titleTR: "Minimal & Fine Line",
+    titleKey: "hub.items.minimal_fine_line.title",
     slug: "minimal-fine-line-dovme",
-    descriptionTR: "İnce çizgiler ve sade tasarımlar.",
+    descriptionKey: "hub.items.minimal_fine_line.description",
     seoTitleTR: "Fine Line & Minimal Dövme | Enki Tattoo",
     seoDescriptionTR:
       "Minimal tattoo, fine line, linework ve micro tarzında kol-bacak örnekleri; ince çizgi, küçük dövme ve sade tasarımlar. Hemen ulaş.Anında tasarla.",
@@ -32,9 +32,9 @@ export const mainHubs: HubItem[] = [
   },
   {
     id: "lettering",
-    titleTR: "Lettering",
+    titleKey: "hub.items.lettering.title",
     slug: "yazi-isim-dovmesi",
-    descriptionTR: "Yazı ve tipografi dövmeleri.",
+    descriptionKey: "hub.items.lettering.description",
     seoTitleTR: "Lettering (Yazı/İsim) Dövme | Enki Tattoo",
     seoDescriptionTR:
       "İsim, tarih, harf, el yazısı ve çift yazısı lettering dövme tasarım fikirleri. Kol/bilek için ideal. WhatsApp’tan yaz, fiyat al.",
@@ -45,9 +45,9 @@ export const mainHubs: HubItem[] = [
   },
   {
     id: "realism",
-    titleTR: "Realism",
+    titleKey: "hub.items.realism.title",
     slug: "realistik-dovme",
-    descriptionTR: "Gerçekçi ve detaylı işler.",
+    descriptionKey: "hub.items.realism.description",
     seoTitleTR: "Realistik Dövme | Enki Tattoo",
     seoDescriptionTR:
       "Realistik dövme: fotoğraf gibi detay, ışık-gölge. Kol, bacak, sırt ve göğüs tasarım uygulamaları. WhatsApp’tan yaz, fiyat öğren.",
@@ -58,9 +58,9 @@ export const mainHubs: HubItem[] = [
   },
   {
     id: "portrait",
-    titleTR: "Portre",
+    titleKey: "hub.items.portrait.title",
     slug: "portre-dovme",
-    descriptionTR: "Portre ve yüz dövmeleri.",
+    descriptionKey: "hub.items.portrait.description",
     seoTitleTR: "Portre Dövme (Kadın/Erkek) | Enki Tattoo",
     seoDescriptionTR:
       "Portre dövme: kadın/erkek/çocuk ve hayvan portreleri. Kol, bacak, sırt, göğüs için tasarım. WhatsApp’tan yaz, fiyat öğren.",
@@ -71,9 +71,9 @@ export const mainHubs: HubItem[] = [
   },
   {
     id: "traditional_old_school",
-    titleTR: "Traditional / Old School",
+    titleKey: "hub.items.traditional_old_school.title",
     slug: "traditional-dovme",
-    descriptionTR: "Klasik ve geleneksel tarz.",
+    descriptionKey: "hub.items.traditional_old_school.description",
     seoTitleTR: "Old School & Traditional Dövme | Enki Tattoo",
     seoDescriptionTR:
       "Old school/traditional: kalın çizgi, canlı renk, klasik ikonlar. Kol, bacak, sırt için. Fiyat al. Tasarıma başla!",
@@ -84,9 +84,9 @@ export const mainHubs: HubItem[] = [
   },
   {
     id: "cover_up",
-    titleTR: "Cover Up",
+    titleKey: "hub.items.cover_up.title",
     slug: "dovme-kapatma",
-    descriptionTR: "Eski dövmelerin örtülmesi.",
+    descriptionKey: "hub.items.cover_up.description",
     seoTitleTR: "Cover-Up (Kapatma) / Dövme Sildirme | Enki Tattoo",
     seoDescriptionTR:
       "Cover-up: yeni tasarım ile eski dövmeyi kapatma,düzeltme veya dövme sildirme. Hemen teklif al.",
@@ -100,9 +100,9 @@ export const mainHubs: HubItem[] = [
 export const specialHubs: HubItem[] = [
   {
     id: "ataturk",
-    titleTR: "Atatürk",
+    titleKey: "hub.items.ataturk.title",
     slug: "ataturk-temali-dovme",
-    descriptionTR: "Atatürk portre, imza, siluet ve milli tema.",
+    descriptionKey: "hub.items.ataturk.description",
     seoTitleTR: "Atatürk Dövmesi (Portre/İmza) | Enki Tattoo",
     seoDescriptionTR:
       "Atatürk dövmesi için portre, imza ve silüet tasarım seçenekleri. Anlamını konuşalım; Hemen ara. Fiyat al!",
@@ -113,9 +113,9 @@ export const specialHubs: HubItem[] = [
   },
   {
     id: "blackwork",
-    titleTR: "Blackwork",
+    titleKey: "hub.items.blackwork.title",
     slug: "blackwork-dovme",
-    descriptionTR: "Siyah ağırlıklı geometrik ve bold işler.",
+    descriptionKey: "hub.items.blackwork.description",
     seoTitleTR: "Blackwork Dövme | Enki Tattoo",
     seoDescriptionTR:
       "Blackwork: yoğun siyah ve keskin kontrastla güçlü tasarım. Kol, bacak, sırt örnekleri. Tasarımını seç fiyat al.",
@@ -126,9 +126,9 @@ export const specialHubs: HubItem[] = [
   },
   {
     id: "custom",
-    titleTR: "Özel Tasarım",
+    titleKey: "hub.items.custom.title",
     slug: "kisiye-ozel-dovme-tasarimi",
-    descriptionTR: "Size özel tasarım ve fikir.",
+    descriptionKey: "hub.items.custom.description",
     seoTitleTR: "Kişiye Özel Dövme Tasarımı | Enki Tattoo",
     seoDescriptionTR:
       "Kişiye özel dövme tasarımı: fikrini ve referanslarını paylaş; stil, ölçü ve yerleşimi netleştirelim. Fiyat al, tasarımını keşfet.",
@@ -137,18 +137,19 @@ export const specialHubs: HubItem[] = [
     coverKey: "custom",
     icon: "Palette",
   },
-];
-
-/** Theme filters only (not hubs) for Galeri. */
-export const themeFilters: string[] = [
-  "angel",
-  "eyes",
-  "animal",
-  "supporter",
-  "couple",
-  "floral",
-  "geometric",
-  "religious_spiritual",
+  {
+    id: "dovme_egitimi",
+    titleKey: "hub.items.dovme_egitimi.title",
+    slug: "dovme-egitimi",
+    descriptionKey: "hub.items.dovme_egitimi.description",
+    seoTitleTR: "Dövme Eğitimi (Mersin) | Enki Tattoo",
+    seoDescriptionTR:
+      "Mersin’de dövme eğitimi: hijyen, ekipman, çizgi, shading ve stencil. Başlangıçtan ileri seviyeye stüdyo içinde uygulamalı öğren. WhatsApp’tan yaz.",
+    canonicalPath: "/dovme-egitimi",
+    tags: ["egitim", "dovme_egitimi"],
+    coverKey: "dovme_egitimi",
+    icon: "GraduationCap",
+  },
 ];
 
 /** Piercing categories for Piercing page. */

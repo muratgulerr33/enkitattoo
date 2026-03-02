@@ -1,21 +1,13 @@
-export const PIERCING_LABELS: Record<string, string> = {
-  "/piercing/kulak": "Kulak",
-  "/piercing/burun": "Burun",
-  "/piercing/kas": "Kaş",
-  "/piercing/dudak": "Dudak",
-  "/piercing/dil": "Dil",
-  "/piercing/gobek": "Göbek",
-  "/piercing/septum": "Septum",
-  "/piercing/industrial": "Industrial",
-  "/piercing/kisiye-ozel": "Kişiye Özel",
-};
-
-const TR_SEGMENT_OVERRIDES: Record<string, string> = {
-  kas: "Kaş",
-  gobek: "Göbek",
-  kisiye: "Kişiye",
-  ozel: "Özel",
-  diger: "Diğer",
+export const PIERCING_LABEL_KEYS: Record<string, string> = {
+  "/piercing/kulak": "piercing.labels.kulak",
+  "/piercing/burun": "piercing.labels.burun",
+  "/piercing/kas": "piercing.labels.kas",
+  "/piercing/dudak": "piercing.labels.dudak",
+  "/piercing/dil": "piercing.labels.dil",
+  "/piercing/gobek": "piercing.labels.gobek",
+  "/piercing/septum": "piercing.labels.septum",
+  "/piercing/industrial": "piercing.labels.industrial",
+  "/piercing/kisiye-ozel": "piercing.labels.kisiye-ozel",
 };
 
 function normalizeSlug(slug: string): string {
@@ -27,31 +19,12 @@ function normalizeSlug(slug: string): string {
   return trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
 }
 
-function toTitleCase(segment: string): string {
-  const lowerSegment = segment.toLocaleLowerCase("tr-TR");
-  const override = TR_SEGMENT_OVERRIDES[lowerSegment];
-  if (override) {
-    return override;
-  }
-
-  return lowerSegment.charAt(0).toLocaleUpperCase("tr-TR") + lowerSegment.slice(1);
-}
-
-export function getPiercingLabel(slug: string): string {
+export function getPiercingLabelKey(slug: string): string {
   const normalizedSlug = normalizeSlug(slug);
-  const knownLabel = PIERCING_LABELS[normalizedSlug];
-  if (knownLabel) {
-    return knownLabel;
+  const knownLabelKey = PIERCING_LABEL_KEYS[normalizedSlug];
+  if (knownLabelKey) {
+    return knownLabelKey;
   }
 
-  const lastSegment = normalizedSlug.split("/").filter(Boolean).pop();
-  if (!lastSegment) {
-    return "Piercing";
-  }
-
-  return lastSegment
-    .split("-")
-    .filter(Boolean)
-    .map(toTitleCase)
-    .join(" ");
+  return "piercing.labels.default";
 }

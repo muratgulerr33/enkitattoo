@@ -1,12 +1,12 @@
 export type PiercingCoverKey = "kulak" | "burun" | "kas" | "dudak" | "dil" | "gobek";
 
 export const PIERCING_COVER_MAP: Record<PiercingCoverKey, string> = {
-  kulak: "/kulak-cover.webp",
-  burun: "/burun-cover.webp",
-  kas: "/kas-cover.webp",
-  dudak: "/dudak-cover.webp",
-  dil: "/dil-cover.webp",
-  gobek: "/gobek-cover.webp",
+  kulak: "/piercing-hub/kulak/cover.webp",
+  burun: "/piercing-hub/burun/cover.webp",
+  kas: "/piercing-hub/kas/cover.webp",
+  dudak: "/piercing-hub/dudak/cover.webp",
+  dil: "/piercing-hub/dil/cover.webp",
+  gobek: "/piercing-hub/gobek/cover.webp",
 };
 
 const TURKISH_CHAR_MAP: Record<string, string> = {

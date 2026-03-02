@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { IconPhoneCall, IconWhatsApp } from "@/components/icons/nandd";
 import { Button } from "@/components/ui/button";
+import { ExternalLink } from "@/components/ui/external-link";
 import {
   Card,
   CardContent,
@@ -23,37 +25,36 @@ import { Clock, MapPin, Sparkles } from "lucide-react";
  * Only rendered in layout when viewport >= xl (1280px).
  */
 export function RightRail() {
+  const t = useTranslations();
   const pathname = usePathname();
   const isPiercing = pathname === "/piercing";
 
   return (
     <aside
       className="flex flex-col gap-6 pt-0"
-      aria-label="Hızlı erişim ve popüler kategoriler"
+      aria-label={t("rightRail.aria")}
     >
       {isPiercing && (
         <Card className="border-border bg-surface-2 shadow-soft">
           <CardHeader className="pb-2">
             <CardTitle className="t-h5 text-foreground">
-              Piercing randevu
+              {t("rightRail.piercing.title")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button asChild size="default" className="h-11 w-full">
-              <a
+            <Button asChild size="cta" className="w-full">
+              <ExternalLink
                 href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2"
               >
                 <Sparkles className="size-5 shrink-0" aria-hidden />
-                Piercing için yaz
-              </a>
+                {t("rightRail.piercing.cta")}
+              </ExternalLink>
             </Button>
             <div className="t-small rounded-lg border border-border bg-surface-1 p-3 text-muted-foreground">
-              <p className="font-medium text-foreground">Sonrası bakım</p>
+              <p className="font-medium text-foreground">{t("rightRail.piercing.aftercareTitle")}</p>
               <p className="mt-1">
-                Piercing sonrası bakım önerileri randevu sonrası size iletilecektir. Bölgeyi temiz ve kuru tutun.
+                {t("rightRail.piercing.aftercareBody")}
               </p>
             </div>
           </CardContent>
@@ -64,25 +65,23 @@ export function RightRail() {
       <Card className="border-border bg-surface-2 shadow-soft">
         <CardHeader className="pb-2">
           <CardTitle className="t-h5 text-foreground">
-            Hızlı işlemler
+            {t("rightRail.quickActions.title")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-3">
-          <Button asChild size="default" className="h-11 w-full justify-start gap-3">
-            <a
+          <Button asChild size="cta" className="w-full justify-start gap-3">
+            <ExternalLink
               href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center"
             >
               <IconWhatsApp size={20} />
-              WhatsApp
-            </a>
+              {t("common.social.whatsapp")}
+            </ExternalLink>
           </Button>
-          <Button asChild variant="outline" size="default" className="h-11 w-full justify-start gap-3">
+          <Button asChild variant="outline" size="cta" className="w-full justify-start gap-3">
             <Link href="/iletisim" className="inline-flex items-center">
               <IconPhoneCall size={20} />
-              İletişim
+              {t("common.nav.contact")}
             </Link>
           </Button>
           <div className="t-small flex items-center gap-3 text-muted-foreground">
@@ -100,7 +99,7 @@ export function RightRail() {
       <Card className="border-border bg-surface-2 shadow-soft">
         <CardHeader className="pb-2">
           <CardTitle className="t-h5 text-foreground">
-            Popüler kategoriler
+            {t("rightRail.popular.title")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -111,13 +110,13 @@ export function RightRail() {
                   href={`/kesfet/${hub.slug}`}
                   className="t-small block rounded-lg px-2 py-2 font-medium text-foreground transition-colors hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:rounded-lg"
                 >
-                  {hub.titleTR}
+                  {t(hub.titleKey)}
                 </Link>
               </li>
             ))}
           </ul>
           <Button asChild variant="outline" size="sm" className="mt-3 w-full">
-            <Link href="/kesfet">Tümünü keşfet</Link>
+            <Link href="/kesfet">{t("rightRail.popular.exploreAll")}</Link>
           </Button>
         </CardContent>
       </Card>

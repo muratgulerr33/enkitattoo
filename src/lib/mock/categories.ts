@@ -1,5 +1,5 @@
 /**
- * Legacy mock category tree. V1 single source of truth: hubs.v1.ts (mainHubs, specialHubs, themeFilters, piercingCategories).
+ * Legacy mock category tree. V1 single source of truth: hubs.v1.ts (mainHubs, specialHubs, piercingCategories).
  * This file is not used by app routes; kept for reference only.
  * Each node: { id, name, slug, icon, children? }
  */

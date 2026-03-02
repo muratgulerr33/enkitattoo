@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useSyncExternalStore } from "react";
+import { NextIntlClientProvider } from "next-intl";
 import { useTheme } from "next-themes";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +36,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import trMessages from "../../../messages/tr.json";
 
 const PALETTE_PREVIEW = [
   { token: "background", swatchClass: "bg-background", sampleClass: "text-foreground" },
@@ -83,8 +85,9 @@ export default function StyleguidePage() {
   }, [mounted, theme, resolvedTheme]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="app-container app-section no-overflow-x space-y-12 md:space-y-14">
+    <NextIntlClientProvider locale="tr" messages={trMessages} timeZone="Europe/Istanbul">
+      <div className="min-h-screen bg-background">
+        <div className="app-container app-section no-overflow-x space-y-12 md:space-y-14">
         <header className="space-y-8 border-b border-border/60 pb-10">
           <div className="flex justify-end">
             <ModeToggle variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground" />
@@ -429,7 +432,8 @@ export default function StyleguidePage() {
             </CardContent>
           </Card>
         </section>
+        </div>
       </div>
-    </div>
+    </NextIntlClientProvider>
   );
 }

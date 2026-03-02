@@ -1,0 +1,546 @@
+{
+  "common": {
+    "language": "en",
+    "active": "Active",
+    "allCategories": "All categories",
+    "back": "Back",
+    "clearSearch": "Clear search",
+    "cta": {
+      "whatsappWrite": "Write on WhatsApp"
+    },
+    "directions": "Directions",
+    "hideDetails": "Hide details",
+    "inspect": "Inspect",
+    "languageChanged": "Language: {language}",
+    "languages": {
+      "tr": "Türkçe",
+      "sq": "Shqip",
+      "sr": "Srpski",
+      "en": "English"
+    },
+    "nav": {
+      "home": "Home",
+      "discover": "Discover",
+      "tattoo": "Tattoo",
+      "piercing": "Piercing",
+      "gallery": "Gallery",
+      "visuals": "Visuals",
+      "artists": "Artists",
+      "contact": "Contact",
+      "customDesign": "Custom Design",
+      "knowledgeBase": "Knowledge Base",
+      "questionBank": "Question Bank",
+      "questionBankWithKb": "Question Bank"
+    },
+    "noResults": "No results found",
+    "noResultsWithDot": "No results found.",
+    "openInMap": "Open on map",
+    "search": "Search",
+    "searchCall": "Search",
+    "searchResultsAria": "Search results",
+    "selectLanguage": "Select language",
+    "showAll": "Show all",
+    "showMore": "Show more",
+    "social": {
+      "phone": "Phone",
+      "whatsapp": "WhatsApp",
+      "pinterest": "Pinterest",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "google": "Google"
+    },
+    "viewAll": "View all"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "systemWithCurrent": "System ({current})",
+    "mode": "Mode",
+    "selectMode": "Select mode",
+    "toggleTheme": "Toggle theme"
+  },
+  "header": {
+    "brand": "Enki Tattoo Studio",
+    "searchAria": "Site search",
+    "searchPlaceholder": "Search category or page..."
+  },
+  "mobileHeader": {
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menuTitle": "Menu",
+    "menuDescription": "Main pages, featured topics, and theme options.",
+    "mainMenuAria": "Main menu",
+    "mainTabsAria": "Main tabs",
+    "accessibility": "Accessibility",
+    "searchDescription": "Quick site search and category shortcuts.",
+    "hubCategories": "Hub categories"
+  },
+  "footer": {
+    "homeAria": "{site} home page",
+    "openOnGoogleMapsAria": "Open on Google Maps",
+    "social": "Social",
+    "socialLinksAria": "Social links",
+    "weekdayHours": "Weekdays 10:00-20:00",
+    "sundayHours": "Sunday 12:00-20:00",
+    "rightsReserved": "All rights reserved."
+  },
+  "googleReviews": {
+    "title": "Google reviews",
+    "viewAll": "View all reviews",
+    "writeReview": "Write a review",
+    "readMore": "Read more",
+    "openOnMaps": "View on Google Maps",
+    "avatarAlt": "{name} profile photo",
+    "reviewDialogTitle": "{name} review",
+    "reviewDialogDescription": "Google review detail view",
+    "close": "Close",
+    "originalLanguageLabel": "Original language: {language}"
+  },
+  "hub": {
+    "coverAlt": "{title} cover",
+    "items": {
+      "minimal_fine_line": {
+        "title": "Minimal & Fine Line",
+        "description": "Fine lines and clean designs."
+      },
+      "lettering": {
+        "title": "Lettering & Name",
+        "description": "Lettering and typography tattoos."
+      },
+      "realism": {
+        "title": "Realistic Tattoo",
+        "description": "Realistic and detailed work."
+      },
+      "portrait": {
+        "title": "Portrait",
+        "description": "Portrait and face tattoos."
+      },
+      "traditional_old_school": {
+        "title": "Old School / Traditional",
+        "description": "Classic and traditional style."
+      },
+      "cover_up": {
+        "title": "Cover Up",
+        "description": "Covering old tattoos."
+      },
+      "dovme_egitimi": {
+        "title": "Tattoo Training",
+        "description": "From basics to advanced, hands-on studio training."
+      },
+      "ataturk": {
+        "title": "Ataturk",
+        "description": "Ataturk portraits, signatures, silhouettes, and national themes."
+      },
+      "blackwork": {
+        "title": "Blackwork",
+        "description": "Bold and geometric black-heavy work."
+      },
+      "custom": {
+        "title": "Custom Design",
+        "description": "Personalized design and ideas."
+      }
+    }
+  },
+  "rightRail": {
+    "aria": "Quick access and popular categories",
+    "piercing": {
+      "title": "Piercing appointment",
+      "cta": "Write for Piercing",
+      "aftercareTitle": "Aftercare",
+      "aftercareBody": "Aftercare recommendations for Piercing will be shared with you after your appointment. Keep the area clean and dry."
+    },
+    "quickActions": {
+      "title": "Quick actions"
+    },
+    "popular": {
+      "title": "Popular categories",
+      "exploreAll": "Explore all"
+    }
+  },
+  "piercing": {
+    "labels": {
+      "default": "Piercing",
+      "kulak": "Ear",
+      "burun": "Nose",
+      "kas": "Eyebrow",
+      "dudak": "Lip",
+      "dil": "Tongue",
+      "gobek": "Navel",
+      "septum": "Septum",
+      "industrial": "Industrial",
+      "kisiye-ozel": "Custom"
+    },
+    "featured": {
+      "heading": "Featured Piercings",
+      "subheading": "Swipe and pick your style.",
+      "railAria": "Featured piercing cards",
+      "previous": "Previous",
+      "next": "Next",
+      "cardAria": "{title} - {subtitle}",
+      "kulak": {
+        "subtitle": "Modern combinations on lobe and cartilage",
+        "alt": "Ear piercing example"
+      },
+      "burun": {
+        "subtitle": "Nostril ring and stud options",
+        "alt": "Nose piercing example"
+      },
+      "kas": {
+        "subtitle": "Clean details matching the brow line",
+        "alt": "Eyebrow piercing example"
+      },
+      "dudak": {
+        "subtitle": "Labret and ring for a bold look",
+        "alt": "Lip piercing example"
+      },
+      "dil": {
+        "subtitle": "Minimal barbells and bright options",
+        "alt": "Tongue piercing example"
+      },
+      "gobek": {
+        "subtitle": "Summer style with jeweled or clean lines",
+        "alt": "Navel piercing example"
+      }
+    }
+  },
+  "pages": {
+    "hub": {
+      "coverAlt": "{title} cover image"
+    },
+    "home": {
+      "heading": "Home",
+      "heroAlt": "Home hero cover image",
+      "heroMicroLine": "Pick your style, see examples, book fast.",
+      "ctaWhatsappDesktop": "Get info on WhatsApp",
+      "ctaDesignsMobile": "Designs",
+      "ctaDesignsDesktop": "Discover your design",
+      "featuredTitle": "Featured",
+      "styleCategories": "Style categories",
+      "detailsAria": "Home page description details",
+      "specialTitle": "Special",
+      "piercingDescription": "Piercing is our separate world. Quick info and appointment.",
+      "galleryPreviewTitle": "Gallery preview",
+      "goToGallery": "Go to Gallery",
+      "openGalleryImageAria": "Open {title} image in gallery",
+      "findOnMap": "Find on map"
+    },
+    "kesfet": {
+      "heading": "Discover",
+      "heroAlt": "Discover hero cover image",
+      "shortDescription": "Pick your style, see examples, book fast.",
+      "browseVisuals": "Visuals",
+      "askOnWhatsapp": "WhatsApp",
+      "piercingDescription": "Ear, nose, septum, and more · Professional Piercing service.",
+      "popularStyles": "Popular styles"
+    },
+    "kesfetHub": {
+      "relatedTitle": "Related styles",
+      "relatedDescription": "Explore other tattoo categories that match your taste.",
+      "relatedAria": "Related tattoo categories slider",
+      "previous": "Previous",
+      "next": "Next",
+      "faqTeaser": {
+        "description": "Quickly review common questions about prep and aftercare.",
+        "tattoo": {
+          "items": {
+            "0": {
+              "q": "What should I share for a quick quote?",
+              "a": "A reference image, rough size, and target area are enough to shape an initial plan."
+            },
+            "1": {
+              "q": "Can this design finish in one session?",
+              "a": "Session count depends on detail density and placement; we confirm after reviewing the design."
+            },
+            "2": {
+              "q": "How should I prepare before the appointment?",
+              "a": "Arriving rested, hydrated, and having eaten helps the session stay comfortable."
+            },
+            "3": {
+              "q": "What should I avoid in the first days?",
+              "a": "Friction, dirty contact, and over-touching the area can slow healing."
+            },
+            "4": {
+              "q": "How do I protect the tattoo from sun?",
+              "a": "During early healing, limit direct sun and keep the area protected."
+            },
+            "5": {
+              "q": "When can I safely return to workouts?",
+              "a": "Reintroduce high-sweat and high-friction training gradually."
+            },
+            "6": {
+              "q": "For an old tattoo, cover-up or lightening first?",
+              "a": "We choose the path based on darkness, shape, and your final design goal."
+            },
+            "7": {
+              "q": "Can touch-up needs be anticipated early?",
+              "a": "Small touch-ups can be planned in advance based on skin response and placement."
+            }
+          }
+        }
+      }
+    },
+    "piercing": {
+      "heading": "Piercing",
+      "heroAlt": "Piercing hero cover image",
+      "shortDescription": "Ear, nose, septum, and more. Write to us for professional Piercing service.",
+      "cta": "Write for Piercing",
+      "categoriesTitle": "Categories",
+      "detailsTitle": "Details",
+      "showDetails": "Show details",
+      "hideDetails": "Hide details"
+    },
+    "piercingHub": {
+      "defaultShortDescription": "Piercing detail",
+      "galleryCtaTitle": "See Piercing examples in Gallery",
+      "galleryCtaDescription": "Open visuals for this category with filters.",
+      "openGallery": "Open in Gallery",
+      "questionBankDescription": "Review the Question Bank for Piercing process and aftercare."
+    },
+    "gallery": {
+      "heading": "Gallery Design",
+      "coverAlt": "Gallery Design cover image",
+      "shortDescription": "Sample works and styles.",
+      "soonTitle": "Gallery coming soon",
+      "soonDescription": "Images are being added to this category.",
+      "goToGallery": "Go to Gallery page",
+      "resultsCount": "Results by filter: {count} items",
+      "emptyForCategory": "Images for this category will be added soon.",
+      "emptyAll": "No ready/published image has been added to the gallery yet.",
+      "openImageAria": "Open {title} image",
+      "showMoreImagesAria": "Show more images",
+      "viewerTitle": "Gallery viewer",
+      "viewerDescription": "View Tattoo gallery images in full screen by swiping.",
+      "closeViewer": "Close viewer",
+      "imageLoading": "Preparing image",
+      "previousSlide": "Previous slide",
+      "nextSlide": "Next slide",
+      "filters": {
+        "category": "Category",
+        "reset": "Reset filters"
+      }
+    },
+    "contact": {
+      "heading": "Contact",
+      "shortDescription": "Reach us for Address, opening hours, and quick contact.",
+      "addressLabel": "Address",
+      "hoursLabel": "Opening hours",
+      "weekdayHours": "Weekdays 10:00-20:00",
+      "sundayHours": "Sunday 12:00-20:00",
+      "phoneLabel": "Phone",
+      "mapTitle": "{site} map location"
+    },
+    "artists": {
+      "heading": "Artists",
+      "coverAlt": "Artists cover image",
+      "shortDescription": "Artists in our studio.",
+      "avatarAlt": "{name} avatar image",
+      "roles": {
+        "halit": "Master Tattoo Artist",
+        "mertcan": "Tattoo Artist"
+      },
+      "descriptions": {
+        "halit": "Over 30 years of experience",
+        "mertcan": "Short profile description will be updated soon."
+      }
+    },
+    "artistDetail": {
+      "defaultShortDescription": "Artist profile",
+      "defaultTitle": "Artist",
+      "profiles": {
+        "halit-yalvac": {
+          "microLine": "25+ years of experience in portrait, realism, cover-up, and fine line.",
+          "shortDescription": "Halit Yalvac stands out in Mersin with 30+ years of tattoo experience across realism, portrait, cover-up, and fine line.",
+          "longDescription": "You can review portfolio examples to compare linework, shading, and composition, then share references to finalize size and placement together."
+        },
+        "mertcan-uludag": {
+          "microLine": "Featured work, clear style direction, and fast communication.",
+          "shortDescription": "By exploring Mertcan Uludag's tattoo work, you can quickly shape the style, size, and placement that fit your idea.",
+          "longDescription": "Share your references to align on line thickness, shading, and composition, and reach out on WhatsApp for a fast response."
+        }
+      }
+    },
+    "training": {
+      "heading": "Tattoo Training",
+      "coverAlt": "Tattoo Training cover image",
+      "defaultShortDescription": "Tattoo training content.",
+      "scopeAria": "Training scope",
+      "scopeTitle": "Training Scope",
+      "scopeItems": {
+        "hygiene": "Hygiene and workspace preparation",
+        "stencil": "Stencil placement, line control, and basic shading",
+        "equipment": "Equipment selection and process planning steps"
+      }
+    },
+    "sss": {
+      "heading": "Question Bank / Knowledge Base",
+      "microLine": "Frequently asked questions",
+      "shortDescription": "Find the most asked questions about Tattoo and Piercing on one screen.",
+      "longDescription": "Find the most asked questions about Tattoo and Piercing on one screen."
+    }
+  },
+  "sss": {
+    "categories": {
+      "all": "All",
+      "tattoo": "Tattoo",
+      "piercing": "Piercing",
+      "studio": "Studio"
+    },
+    "placeholders": {
+      "piercingShort": "For this topic, we give the most accurate answer based on your case; write on WhatsApp.",
+      "piercingLong": "For this topic, we give the most accurate answer based on your case; write on WhatsApp; if you send a photo, we can review quickly."
+    },
+    "teaser": {
+      "description": "Access frequently asked questions about the Tattoo and Piercing process from a single page.",
+      "viewAllQuestions": "View all questions"
+    },
+    "ui": {
+      "searchFilterAria": "Question bank search and filter",
+      "searchLabel": "Search in question bank",
+      "searchPlaceholder": "Search question: pricing, aftercare, healing...",
+      "quickGuideAria": "Quick guide links",
+      "quickGuideTitle": "Quick Guide",
+      "fastestContactLead": "Fastest contact:",
+      "fastestContactMiddle": "the fastest channel. Also",
+      "fastestContactAnd": "and",
+      "fastestContactEnd": "you can also write via.",
+      "faqTitle": "Frequently Asked Questions",
+      "questionCount": "{count} questions",
+      "noResultsHint": "Change your search term or try the category filter as \"All\".",
+      "openLinkAria": "Open {label} link"
+    },
+    "quickGuide": {
+      "guide-contact": {
+        "label": "Contact page",
+        "description": "Address, hours, and quick contact options."
+      },
+      "guide-maps": {
+        "label": "Open on Map",
+        "description": "{addressText}"
+      },
+      "guide-instagram": {
+        "label": "Instagram",
+        "description": "Latest works and content."
+      },
+      "guide-youtube": {
+        "label": "YouTube",
+        "description": "Video content and broadcasts."
+      },
+      "guide-whatsapp": {
+        "label": "WhatsApp",
+        "description": "Write for the fastest response."
+      }
+    },
+    "items": {
+      "tattoo-fiyat": {
+        "q": "How are Tattoo prices determined?",
+        "aShort": "The biggest factor is labor time; size is not the only criterion.",
+        "aLong": "The biggest factor is labor time. Size matters but it is not the only criterion: detail density (fine work takes longer), style (fine line, realism, traditional, etc.), body area (harder placement), and original custom drawing. For a clear quote, a reference image + size (cm) + target area is enough."
+      },
+      "tattoo-sure-seans": {
+        "q": "How many hours does a Tattoo take, and how many sessions?",
+        "aShort": "Time and sessions depend on detail and placement. Send the image and I can make a clear plan.",
+        "aLong": "Even two tattoos in the same size can take different time. Minimal work is shorter, while realistic/heavy shading takes longer and may require multiple sessions. It is hard to give an exact answer without seeing the design, but if you send the image, I can map time + session plan."
+      },
+      "tattoo-once-hazirlik": {
+        "q": "How should I prepare before getting a Tattoo?",
+        "aShort": "It is best to come rested, fed, and hydrated. Wear comfortable clothes.",
+        "aLong": "It is best to come to the session rested, fed, and hydrated. Choose comfortable clothing so the Tattoo area is easy to access. If you do not feel well, postponing is the better option."
+      },
+      "tattoo-alkol": {
+        "q": "Can I get a Tattoo after drinking alcohol?",
+        "aShort": "Alcohol can affect the body and may make application and healing harder. Safest is to avoid alcohol before the session.",
+        "aLong": "Alcohol can affect the body, which may make both application and healing harder. The safest option is to avoid alcohol before the session."
+      },
+      "tattoo-hamile-emzirme": {
+        "q": "Can I get a Tattoo during pregnancy / breastfeeding?",
+        "aShort": "It is a sensitive topic; most people prefer to postpone. The healthiest choice is to follow medical advice.",
+        "aLong": "This is a sensitive topic. Most people prefer to postpone Tattoo during this period. The healthiest approach is to follow your doctor's advice."
+      },
+      "tattoo-bakim-48saat": {
+        "q": "What should I do in the first 24-48 hours after a Tattoo?",
+        "aShort": "The first two days are critical: keep it clean, avoid irritation, do not overuse products.",
+        "aLong": "The first two days are critical: keep it clean + avoid irritation + do not overuse products. After the session, we explain your aftercare steps clearly. Most important rule: no touching, no rubbing, no dirty contact."
+      },
+      "tattoo-kabuk-soyulma": {
+        "q": "Will a Tattoo scab or peel? Is it normal?",
+        "aShort": "Scabbing/peeling/itching is normal for most tattoos. Do not pick the scabs.",
+        "aLong": "Yes, scabbing/peeling/itching is normal for most tattoos. The biggest mistake is picking the scabs. This can cause scarring and color loss."
+      },
+      "tattoo-iyilesme": {
+        "q": "How long does a Tattoo take to heal?",
+        "aShort": "Recovery time depends on the person and area; full skin settling can take longer.",
+        "aLong": "The first visible recovery usually starts quickly, but full skin settling can take longer. Healing depends on area, aftercare, and skin type. After your session, we tell you what to expect day by day."
+      },
+      "tattoo-dus": {
+        "q": "Can I shower after a Tattoo?",
+        "aShort": "Usually yes, but no very hot water, long steam, or hard scrubbing.",
+        "aLong": "Usually yes, but avoid very hot water, long steam, and hard scrubbing. A clean and gentle routine is best."
+      },
+      "tattoo-deniz-havuz-sauna": {
+        "q": "When can I go to sea / pool / sauna?",
+        "aShort": "During healing, long water exposure and sauna/steam can stress the skin; waiting until recovery is safer.",
+        "aLong": "While Tattoo is healing, long water exposure and sauna/steam can stress the skin. The safest option is to wait until recovery. Based on your area and work, we give a clear time range."
+      },
+      "tattoo-spor": {
+        "q": "When can I do sports?",
+        "aShort": "In the first days, heavy sweat, friction, and stretching may irritate it; then return gradually.",
+        "aLong": "In the first days, heavy sweat, friction, and stretching can irritate the Tattoo. Then you can return gradually. Tattoo location (arm, leg, ribs, etc.) is the key factor here."
+      },
+      "tattoo-gunes": {
+        "q": "Does a Tattoo fade in the sun? How to protect it?",
+        "aShort": "Sun is the biggest enemy of a Tattoo; protect it especially during healing.",
+        "aLong": "Sun is the biggest enemy of Tattoo. It must be protected especially during healing. After that, sun protection helps your Tattoo stay vivid for years."
+      },
+      "tattoo-rotus": {
+        "q": "Is a touch-up needed?",
+        "aShort": "Small touch-ups are normal in some areas or skin types.",
+        "aLong": "Small touch-ups may be needed in some areas or skin types. This is completely normal. The touch-up need depends on area, aftercare, and skin type."
+      },
+      "tattoo-coverup": {
+        "q": "Do you do cover-up? Can you cover an old Tattoo?",
+        "aShort": "Most tattoos can be improved with cover-up; darkness of the old Tattoo limits design options. We can confirm with photo.",
+        "aLong": "Most tattoos can be improved with cover-up, but the darkness and shape of the old Tattoo limits design options. We do not say \"definitely yes\" without seeing a photo. Send a photo and we will clearly tell what works and the best plan."
+      },
+      "tattoo-lazer-vs-coverup": {
+        "q": "Tattoo removal (laser) or cover-up: which is better?",
+        "aShort": "Some are suitable for direct cover-up; some get better results with laser lightening first and then cover-up.",
+        "aLong": "Some tattoos are suitable for direct cover-up; some get better results after slight laser lightening and then cover-up. Sometimes the goal is not \"fully remove\" but \"make it coverable\". We choose the best path with your photo."
+      },
+      "piercing-igne-tabanca-sterilizasyon": {
+        "q": "Where should I get Piercing done? Needle or gun, and is there sterilization (autoclave)?"
+      },
+      "piercing-fiyat": {
+        "q": "What affects Piercing price?"
+      },
+      "piercing-ilk-taki-materyali": {
+        "q": "What should the first jewelry material be? What is the difference between titanium/steel/gold?"
+      },
+      "piercing-iyilesme-suresi": {
+        "q": "How long does each Piercing take to heal?"
+      },
+      "piercing-bakim-24-48": {
+        "q": "How is aftercare in the first 24-48 hours after Piercing? What should I clean with?"
+      },
+      "piercing-taki-degisim-downsizing": {
+        "q": "When can I change Piercing jewelry? When is downsizing done?"
+      },
+      "piercing-deniz-havuz-sauna-spor": {
+        "q": "When for sea-pool-hammam/sauna and sports?"
+      },
+      "piercing-kulaklik-kask-baski": {
+        "q": "What happens if I sleep on it / if headphones-helmet put pressure on it?"
+      },
+      "studio-adres-maps": {
+        "q": "Where is the studio, and how do I open it on map?",
+        "aShort": "Studio Address: {addressText}. To open it on map, use the \"Open on Map\" link in the quick guide.",
+        "aLong": "Address: {addressText}. Google Maps link for Directions: {googleMapsBusinessUrl}"
+      },
+      "studio-calisma-saatleri": {
+        "q": "What are the studio opening hours?",
+        "aShort": "{weekdayLabel}; {sundayLabel}.",
+        "aLong": "Current hours: {weekdayLabel} and {sundayLabel}. For appointment planning, write on WhatsApp: {whatsappUrl}"
+      }
+    }
+  }
+}

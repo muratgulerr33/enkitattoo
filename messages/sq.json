@@ -1,0 +1,546 @@
+{
+  "common": {
+    "language": "sq",
+    "active": "Aktive",
+    "allCategories": "Të gjitha kategoritë",
+    "back": "Kthehu",
+    "clearSearch": "Pastro kërkimin",
+    "cta": {
+      "whatsappWrite": "Shkruaj në WhatsApp"
+    },
+    "directions": "Udhëzime",
+    "hideDetails": "Fshih detajet",
+    "inspect": "Shiko",
+    "languageChanged": "Gjuha: {language}",
+    "languages": {
+      "tr": "Türkçe",
+      "sq": "Shqip",
+      "sr": "Srpski",
+      "en": "English"
+    },
+    "nav": {
+      "home": "Ballina",
+      "discover": "Zbulo",
+      "tattoo": "Tatuazh",
+      "piercing": "Piercing",
+      "gallery": "Galeri",
+      "visuals": "Pamje",
+      "artists": "Artistët",
+      "contact": "Kontakt",
+      "customDesign": "Dizajn i personalizuar",
+      "knowledgeBase": "Baza e njohurive",
+      "questionBank": "Banka e Pyetjeve",
+      "questionBankWithKb": "Banka e Pyetjeve"
+    },
+    "noResults": "Nuk u gjet asnjë rezultat",
+    "noResultsWithDot": "Nuk u gjet asnjë rezultat.",
+    "openInMap": "Hap në hartë",
+    "search": "Kërko",
+    "searchCall": "Kërko",
+    "searchResultsAria": "Rezultatet e kërkimit",
+    "selectLanguage": "Zgjidh gjuhën",
+    "showAll": "Shfaq të gjitha",
+    "showMore": "Shfaq më shumë",
+    "social": {
+      "phone": "Telefon",
+      "whatsapp": "WhatsApp",
+      "pinterest": "Pinterest",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "google": "Google"
+    },
+    "viewAll": "Shiko të gjitha"
+  },
+  "theme": {
+    "light": "E çelët",
+    "dark": "E errët",
+    "system": "Sistemi",
+    "systemWithCurrent": "Sistemi ({current})",
+    "mode": "Mënyra",
+    "selectMode": "Zgjidh mënyrën",
+    "toggleTheme": "Ndrysho temën"
+  },
+  "header": {
+    "brand": "Enki Tattoo Studio",
+    "searchAria": "Kërkim në faqe",
+    "searchPlaceholder": "Kërko kategori ose faqe..."
+  },
+  "mobileHeader": {
+    "openMenu": "Hap menynë",
+    "closeMenu": "Mbyll menynë",
+    "menuTitle": "Meny",
+    "menuDescription": "Faqet kryesore, temat kryesore dhe opsionet e temës.",
+    "mainMenuAria": "Menyja kryesore",
+    "mainTabsAria": "Skedat kryesore",
+    "accessibility": "Qasshmëria",
+    "searchDescription": "Kërkim i shpejtë në faqe dhe shkurtore kategorish.",
+    "hubCategories": "Kategoritë hub"
+  },
+  "footer": {
+    "homeAria": "faqja kryesore e {site}",
+    "openOnGoogleMapsAria": "Hap në Google Maps",
+    "social": "Sociale",
+    "socialLinksAria": "Lidhje sociale",
+    "weekdayHours": "Ditët e javës 10:00-20:00",
+    "sundayHours": "E diel 12:00-20:00",
+    "rightsReserved": "Të gjitha të drejtat e rezervuara."
+  },
+  "googleReviews": {
+    "title": "Vlerësimet në Google",
+    "viewAll": "Shiko të gjitha vlerësimet",
+    "writeReview": "Shkruaj një vlerësim",
+    "readMore": "Shiko më shumë",
+    "openOnMaps": "Shiko në Google Maps",
+    "avatarAlt": "Foto profili e {name}",
+    "reviewDialogTitle": "Vlerësimi i {name}",
+    "reviewDialogDescription": "Pamja e detajuar e vlerësimit në Google",
+    "close": "Mbyll",
+    "originalLanguageLabel": "Gjuha origjinale: {language}"
+  },
+  "hub": {
+    "coverAlt": "kopertina e {title}",
+    "items": {
+      "minimal_fine_line": {
+        "title": "Minimal & Fine Line",
+        "description": "Vija të holla dhe dizajne të pastra."
+      },
+      "lettering": {
+        "title": "Shkrim & Emër",
+        "description": "Tatuazh me shkrim dhe tipografi."
+      },
+      "realism": {
+        "title": "Tatuazh realist",
+        "description": "Punime realiste dhe të detajuara."
+      },
+      "portrait": {
+        "title": "Portret",
+        "description": "Tatuazhe portreti dhe fytyre."
+      },
+      "traditional_old_school": {
+        "title": "Old School / Traditional",
+        "description": "Stil klasik dhe tradicional."
+      },
+      "cover_up": {
+        "title": "Cover Up",
+        "description": "Mbulim i tatuazheve të vjetra."
+      },
+      "dovme_egitimi": {
+        "title": "Trajnim Tatuazh",
+        "description": "Nga bazat në avancim, trajnim praktik në studio."
+      },
+      "ataturk": {
+        "title": "Ataturk",
+        "description": "Portrete, nënshkrime, silueta dhe tema kombëtare të Ataturkut."
+      },
+      "blackwork": {
+        "title": "Blackwork",
+        "description": "Punime të forta gjeometrike me dominim të së zezës."
+      },
+      "custom": {
+        "title": "Dizajn i personalizuar",
+        "description": "Dizajn dhe ide vetëm për ty."
+      }
+    }
+  },
+  "rightRail": {
+    "aria": "Qasje e shpejtë dhe kategori të njohura",
+    "piercing": {
+      "title": "Termin Piercing",
+      "cta": "Shkruaj për Piercing",
+      "aftercareTitle": "Kujdes pas",
+      "aftercareBody": "Rekomandimet e kujdesit pas Piercing do t'ju jepen pas terminit. Mbaje zonën të pastër dhe të thatë."
+    },
+    "quickActions": {
+      "title": "Veprime të shpejta"
+    },
+    "popular": {
+      "title": "Kategori të njohura",
+      "exploreAll": "Zbulo të gjitha"
+    }
+  },
+  "piercing": {
+    "labels": {
+      "default": "Piercing",
+      "kulak": "Veshi",
+      "burun": "Hunda",
+      "kas": "Vetulla",
+      "dudak": "Buza",
+      "dil": "Gjuha",
+      "gobek": "Kërthiza",
+      "septum": "Septum",
+      "industrial": "Industrial",
+      "kisiye-ozel": "I personalizuar"
+    },
+    "featured": {
+      "heading": "Piercing të veçuara",
+      "subheading": "Rrëshqit dhe zgjidh stilin tënd.",
+      "railAria": "Kartat e Piercing të veçuar",
+      "previous": "Mëparshme",
+      "next": "Radhës",
+      "cardAria": "{title} - {subtitle}",
+      "kulak": {
+        "subtitle": "Kombinime moderne në llapë dhe kërc",
+        "alt": "Shembull Piercing në vesh"
+      },
+      "burun": {
+        "subtitle": "Opsione unaze dhe stud për nostril",
+        "alt": "Shembull Piercing në hundë"
+      },
+      "kas": {
+        "subtitle": "Detaje të pastra që përputhen me vijën e vetullës",
+        "alt": "Shembull Piercing në vetull"
+      },
+      "dudak": {
+        "subtitle": "Labret dhe unazë për pamje me karakter",
+        "alt": "Shembull Piercing në buzë"
+      },
+      "dil": {
+        "subtitle": "Barbell minimal dhe opsione me shkëlqim",
+        "alt": "Shembull Piercing në gjuhë"
+      },
+      "gobek": {
+        "subtitle": "Stil veror me gurë ose linja të pastra",
+        "alt": "Shembull Piercing në kërthizë"
+      }
+    }
+  },
+  "pages": {
+    "hub": {
+      "coverAlt": "imazhi i kopertinës për {title}"
+    },
+    "home": {
+      "heading": "Ballina",
+      "heroAlt": "imazh hero i kopertinës së ballinës",
+      "heroMicroLine": "Zgjidh stilin, shiko shembujt, cakto termin shpejt.",
+      "ctaWhatsappDesktop": "Merr info në WhatsApp",
+      "ctaDesignsMobile": "Dizajne",
+      "ctaDesignsDesktop": "Zbulo dizajnin tënd",
+      "featuredTitle": "Të veçuara",
+      "styleCategories": "Kategori stilesh",
+      "detailsAria": "detajet e përshkrimit të ballinës",
+      "specialTitle": "Speciale",
+      "piercingDescription": "Piercing është bota jonë më vete. Info dhe termin i shpejtë.",
+      "galleryPreviewTitle": "Parapamje galerie",
+      "goToGallery": "Shko te Galeria",
+      "openGalleryImageAria": "Hap imazhin {title} në galeri",
+      "findOnMap": "Gjeje në hartë"
+    },
+    "kesfet": {
+      "heading": "Zbulo",
+      "heroAlt": "imazh hero i kopertinës së faqes Zbulo",
+      "shortDescription": "Zgjidh stilin, shiko shembujt, cakto termin shpejt.",
+      "browseVisuals": "Pamjet",
+      "askOnWhatsapp": "WhatsApp",
+      "piercingDescription": "Vesh, hundë, septum dhe më shumë · shërbim profesional Piercing.",
+      "popularStyles": "Stile të njohura"
+    },
+    "kesfetHub": {
+      "relatedTitle": "Stile të ngjashme",
+      "relatedDescription": "Shiko kategori të tjera tatuazhi që i afrohen stilit tënd.",
+      "relatedAria": "rrëshqitësi i kategorive të ngjashme të tatuazhit",
+      "previous": "Mëparshme",
+      "next": "Radhës",
+      "faqTeaser": {
+        "description": "Shiko shpejt pyetjet kryesore për përgatitjen dhe kujdesin pas.",
+        "tattoo": {
+          "items": {
+            "0": {
+              "q": "Çfarë duhet të dërgoj për një ofertë të shpejtë?",
+              "a": "Një foto reference, madhësia afërsisht dhe zona e trupit mjaftojnë për planin fillestar."
+            },
+            "1": {
+              "q": "A mbaron ky dizajn në një seancë?",
+              "a": "Numri i seancave varet nga detajet dhe vendosja; e konfirmojmë pasi të shohim dizajnin."
+            },
+            "2": {
+              "q": "Si duhet të përgatitem para terminit?",
+              "a": "Të vish i pushuar, i ushqyer dhe i hidratuar e bën seancën më komode."
+            },
+            "3": {
+              "q": "Çfarë duhet të shmang ditët e para?",
+              "a": "Fërkimi, kontakti i papastër dhe prekja e tepërt e zonës mund të ngadalësojnë shërimin."
+            },
+            "4": {
+              "q": "Si ta mbroj tatuazhin nga dielli?",
+              "a": "Në fazën e parë të shërimit kufizo diellin direkt dhe mbroje zonën."
+            },
+            "5": {
+              "q": "Kur mund të kthehem në stërvitje?",
+              "a": "Kthehu gradualisht te stërvitjet me djersitje dhe fërkim të lartë."
+            },
+            "6": {
+              "q": "Për tatuazh të vjetër, mbulim apo hapje fillimisht?",
+              "a": "Rruga zgjidhet sipas errësisë, formës dhe objektivit final të dizajnit."
+            },
+            "7": {
+              "q": "A mund të parashikohet nevoja për retush herët?",
+              "a": "Retushet e vogla mund të planifikohen paraprakisht sipas reagimit të lëkurës dhe zonës."
+            }
+          }
+        }
+      }
+    },
+    "piercing": {
+      "heading": "Piercing",
+      "heroAlt": "imazh hero i kopertinës së Piercing",
+      "shortDescription": "Vesh, hundë, septum dhe më shumë. Na shkruaj për shërbim profesional Piercing.",
+      "cta": "Shkruaj për Piercing",
+      "categoriesTitle": "Kategoritë",
+      "detailsTitle": "Detajet",
+      "showDetails": "Shfaq detajet",
+      "hideDetails": "Fshih detajet"
+    },
+    "piercingHub": {
+      "defaultShortDescription": "Detaj Piercing",
+      "galleryCtaTitle": "Shiko shembuj Piercing në Galeri",
+      "galleryCtaDescription": "Hap pamjet e kësaj kategorie me filtër.",
+      "openGallery": "Hape në Galeri",
+      "questionBankDescription": "Shiko Bankën e Pyetjeve për procesin dhe kujdesin pas Piercing."
+    },
+    "gallery": {
+      "heading": "Galeri Dizajn",
+      "coverAlt": "imazhi i kopertinës së Galeri Dizajn",
+      "shortDescription": "Punime dhe stile shembull.",
+      "soonTitle": "Galeria së shpejti",
+      "soonDescription": "Po shtohen imazhe për këtë kategori.",
+      "goToGallery": "Shko te faqja e galerisë",
+      "resultsCount": "Rezultatet sipas filtrit: {count} artikuj",
+      "emptyForCategory": "Së shpejti do të shtohen imazhe në këtë kategori.",
+      "emptyAll": "Në galeri ende nuk është shtuar asnjë imazh i gatshëm/i publikuar.",
+      "openImageAria": "Hap imazhin {title}",
+      "showMoreImagesAria": "Shfaq më shumë imazhe",
+      "viewerTitle": "Shikuesi i galerisë",
+      "viewerDescription": "Shiko imazhet e galerisë së Tatuazh në ekran të plotë duke rrëshqitur.",
+      "closeViewer": "Mbyll shikuesin",
+      "imageLoading": "Imazhi po përgatitet",
+      "previousSlide": "Slajdi i mëparshëm",
+      "nextSlide": "Slajdi i radhës",
+      "filters": {
+        "category": "Kategoria",
+        "reset": "Rivendos filtrat"
+      }
+    },
+    "contact": {
+      "heading": "Kontakt",
+      "shortDescription": "Na kontakto për Adresa, orarin e punës dhe komunikim të shpejtë.",
+      "addressLabel": "Adresa",
+      "hoursLabel": "Orari i punës",
+      "weekdayHours": "Ditët e javës 10:00-20:00",
+      "sundayHours": "E diel 12:00-20:00",
+      "phoneLabel": "Telefon",
+      "mapTitle": "lokacioni në hartë i {site}"
+    },
+    "artists": {
+      "heading": "Artistët",
+      "coverAlt": "imazhi i kopertinës së Artistëve",
+      "shortDescription": "Artistët në studion tonë.",
+      "avatarAlt": "imazhi i avatarit për {name}",
+      "roles": {
+        "halit": "Artist Mjeshtër i Tatuazheve",
+        "mertcan": "Artist Tatuazhesh"
+      },
+      "descriptions": {
+        "halit": "Mbi 30 vite përvojë",
+        "mertcan": "Përshkrimi i shkurtër i profilit do të përditësohet së shpejti."
+      }
+    },
+    "artistDetail": {
+      "defaultShortDescription": "Profili i artistit",
+      "defaultTitle": "Artist",
+      "profiles": {
+        "halit-yalvac": {
+          "microLine": "Mbi 25 vite përvojë në portret, realizëm, cover-up dhe fine line.",
+          "shortDescription": "Halit Yalvac dallohet në Mersin me mbi 30 vite përvojë në tatuazh, veçanërisht në realizëm, portret, cover-up dhe fine line.",
+          "longDescription": "Mund të shohësh shembujt e portofolit për të krahasuar vijën, hijezimin dhe kompozimin, pastaj të ndash referencat për të përcaktuar madhësinë dhe vendosjen."
+        },
+        "mertcan-uludag": {
+          "microLine": "Punime të veçuara, drejtim i qartë stili dhe komunikim i shpejtë.",
+          "shortDescription": "Duke parë punimet e tatuazhit të Mertcan Uludag, mund të përcaktosh më shpejt stilin, madhësinë dhe vendosjen që të përshtaten.",
+          "longDescription": "Ndaj referencat e tua për të qartësuar trashësinë e vijës, hijezimin dhe kompozimin, dhe shkruaj në WhatsApp për përgjigje të shpejtë."
+        }
+      }
+    },
+    "training": {
+      "heading": "Trajnim Tatuazh",
+      "coverAlt": "imazhi i kopertinës së Trajnim Tatuazh",
+      "defaultShortDescription": "Përmbajtje për trajnim Tatuazh.",
+      "scopeAria": "fusha e trajnimit",
+      "scopeTitle": "Fusha e trajnimit",
+      "scopeItems": {
+        "hygiene": "Higjiena dhe përgatitja e hapësirës së punës",
+        "stencil": "Vendosja e stencilit, kontrolli i vijës dhe hijezimi bazë",
+        "equipment": "Përzgjedhja e pajisjeve dhe hapat e planifikimit të procesit"
+      }
+    },
+    "sss": {
+      "heading": "Pyetjet e shpeshta / Baza e njohurive",
+      "microLine": "Pyetjet më të shpeshta",
+      "shortDescription": "Gjej pyetjet më të shpeshta për procesin e Tatuazh dhe Piercing në një ekran.",
+      "longDescription": "Gjej pyetjet më të shpeshta për procesin e Tatuazh dhe Piercing në një ekran."
+    }
+  },
+  "sss": {
+    "categories": {
+      "all": "Të gjitha",
+      "tattoo": "Tatuazh",
+      "piercing": "Piercing",
+      "studio": "Studio"
+    },
+    "placeholders": {
+      "piercingShort": "Për këtë temë, përgjigjen më të saktë e japim sipas rastit tënd; shkruaj në WhatsApp.",
+      "piercingLong": "Për këtë temë, përgjigjen më të saktë e japim sipas rastit tënd; shkruaj në WhatsApp; nëse dërgon foto, e vlerësojmë shpejt."
+    },
+    "teaser": {
+      "description": "Qasju pyetjeve të shpeshta për procesin e Tatuazh dhe Piercing nga një faqe e vetme.",
+      "viewAllQuestions": "Shiko të gjitha pyetjet"
+    },
+    "ui": {
+      "searchFilterAria": "kërkim dhe filtër në bankën e pyetjeve",
+      "searchLabel": "Kërko në bankën e pyetjeve",
+      "searchPlaceholder": "Kërko pyetje: çmimi, kujdes pas, shërimi...",
+      "quickGuideAria": "lidhjet e udhëzuesit të shpejtë",
+      "quickGuideTitle": "Udhëzues i shpejtë",
+      "fastestContactLead": "Kontakti më i shpejtë:",
+      "fastestContactMiddle": "kanali më i shpejtë. Gjithashtu",
+      "fastestContactAnd": "dhe",
+      "fastestContactEnd": "mund të na shkruash edhe përmes.",
+      "faqTitle": "Pyetjet e shpeshta",
+      "questionCount": "{count} pyetje",
+      "noResultsHint": "Ndrysho fjalën e kërkimit ose provo filtrin e kategorisë si \"Të gjitha\".",
+      "openLinkAria": "Hap lidhjen {label}"
+    },
+    "quickGuide": {
+      "guide-contact": {
+        "label": "Faqja e kontaktit",
+        "description": "Adresa, oraret dhe opsionet e kontaktit të shpejtë."
+      },
+      "guide-maps": {
+        "label": "Hap në Hartë",
+        "description": "{addressText}"
+      },
+      "guide-instagram": {
+        "label": "Instagram",
+        "description": "Punimet dhe përmbajtjet e fundit."
+      },
+      "guide-youtube": {
+        "label": "YouTube",
+        "description": "Përmbajtje video dhe transmetime."
+      },
+      "guide-whatsapp": {
+        "label": "WhatsApp",
+        "description": "Shkruaj për përgjigjen më të shpejtë."
+      }
+    },
+    "items": {
+      "tattoo-fiyat": {
+        "q": "Si përcaktohen çmimet e Tatuazh?",
+        "aShort": "Faktori kryesor është koha e punës; madhësia nuk është kriteri i vetëm.",
+        "aLong": "Faktori kryesor është koha e punës. Madhësia ka rëndësi, por nuk është kriteri i vetëm: dendësia e detajeve (puna fine zgjat më shumë), stili (fine line, realist, traditional etj.), zona e trupit (zona më të vështira), dhe vizatimi origjinal i personalizuar. Për çmim të saktë mjafton foto shembull + masa (cm) + zona ku do të bëhet."
+      },
+      "tattoo-sure-seans": {
+        "q": "Sa orë zgjat Tatuazh dhe në sa seanca përfundon?",
+        "aShort": "Koha dhe seancat varen nga detajet dhe vendosja. Dërgo foton dhe të jap plan të qartë.",
+        "aLong": "Edhe dy tatuazhe me të njëjtën madhësi mund të zgjasin ndryshe. Punimet minimale zgjasin më pak, ndërsa realistet/me hije të dendura zgjasin më shumë dhe ndonjëherë duhen disa seanca. Pa e parë dizajnin është vështirë të thuhet saktë; por nëse dërgon foton, ta nxjerr planin e kohës + seancave."
+      },
+      "tattoo-once-hazirlik": {
+        "q": "Si duhet të përgatitem para se të bëj Tatuazh?",
+        "aShort": "Më së miri është të vish i pushuar, i ushqyer dhe i hidratuar. Zgjidh rroba të rehatshme.",
+        "aLong": "Më së miri është të vish në seancë i pushuar, i ushqyer dhe i hidratuar. Zgjidh rroba të rehatshme që zona e Tatuazh të jetë lehtë e qasshme. Nëse nuk ndihesh mirë, shtyrja është zgjidhja më e mirë."
+      },
+      "tattoo-alkol": {
+        "q": "A mund të bëj Tatuazh pasi kam konsumuar alkool?",
+        "aShort": "Alkooli mund ta ndikojë trupin dhe ta vështirësojë aplikimin e shërimin. Më e sigurt është të shmanget para seancës.",
+        "aLong": "Alkooli mund ta ndikojë trupin; kjo mund ta vështirësojë si aplikimin ashtu edhe shërimin. Opsioni më i sigurt: të mos konsumosh alkool para seancës."
+      },
+      "tattoo-hamile-emzirme": {
+        "q": "A bëhet Tatuazh gjatë shtatzënisë / gjidhënies?",
+        "aShort": "Është temë e ndjeshme; shumica preferojnë ta shtyjnë. Më e shëndetshme është të ndiqet këshilla e mjekut.",
+        "aLong": "Kjo është temë e ndjeshme. Shumica e njerëzve gjatë kësaj periudhe preferojnë ta shtyjnë Tatuazh. Qasja më e shëndetshme është të veprohet sipas këshillës së mjekut."
+      },
+      "tattoo-bakim-48saat": {
+        "q": "Çfarë duhet të bëj në 24-48 orët e para pas Tatuazh?",
+        "aShort": "Dy ditët e para janë kritike: mbaje të pastër, mos e irrito, mos përdor tepër produkte.",
+        "aLong": "Dy ditët e para janë kritike: mbaje të pastër + shmang irritimin + mos përdor tepër produkte. Pas seancës, ne t'i shpjegojmë qartë hapat e kujdesit pas. Rregulli kryesor: mos e prek, mos e fërko, pa kontakt të papastër."
+      },
+      "tattoo-kabuk-soyulma": {
+        "q": "A krijon kore, a zhvishet Tatuazh? A është normale?",
+        "aShort": "Në shumicën e rasteve kore/zhveshje/kruajtje janë normale. Koret nuk duhet të hiqen.",
+        "aLong": "Po, te shumica e tatuazheve kore/zhveshje/kruajtje janë normale. Gabimi më i madh është heqja e koreve. Kjo mund të shkaktojë shenjë dhe humbje ngjyre."
+      },
+      "tattoo-iyilesme": {
+        "q": "Sa kohë i duhet Tatuazh për t'u shëruar?",
+        "aShort": "Koha e rikuperimit ndryshon sipas personit dhe zonës; vendosja e plotë e lëkurës mund të zgjasë më shumë.",
+        "aLong": "Rikuperimi i parë vizual zakonisht nis shpejt, por stabilizimi i plotë i lëkurës mund të zgjasë më shumë. Shërimi varet nga zona, kujdesi pas dhe tipi i lëkurës. Pas seancës të tregojmë çfarë të presësh ditë pas dite."
+      },
+      "tattoo-dus": {
+        "q": "A mund të bëj dush pas Tatuazh?",
+        "aShort": "Zakonisht po; por pa ujë shumë të nxehtë, pa avull të gjatë dhe pa fërkim të fortë.",
+        "aLong": "Zakonisht po; por pa ujë shumë të nxehtë, pa avull të gjatë dhe pa fërkim të fortë. Rutina e pastër dhe e butë është më e mira."
+      },
+      "tattoo-deniz-havuz-sauna": {
+        "q": "Kur mund të shkoj në det / pishinë / sauna?",
+        "aShort": "Gjatë shërimit, qëndrimi i gjatë në ujë dhe sauna/avulli mund ta ngarkojnë lëkurën; është më e sigurt të presësh.",
+        "aLong": "Gjatë shërimit të Tatuazh, qëndrimi i gjatë në ujë dhe sauna/avulli mund ta ngarkojnë lëkurën. Më e sigurta është të presësh deri sa të rikuperohet. Sipas zonës dhe punës, të japim interval të qartë kohe."
+      },
+      "tattoo-spor": {
+        "q": "Kur mund të bëj sport?",
+        "aShort": "Në ditët e para djersa e rëndë, fërkimi dhe shtrirja mund ta irritojnë; më pas kthehesh gradualisht.",
+        "aLong": "Në ditët e para djersa e rëndë, fërkimi dhe shtrirja mund ta irritojnë Tatuazh. Pastaj bëhet kthim gradual. Vendndodhja e Tatuazh (krah, këmbë, brinjë etj.) është faktor përcaktues."
+      },
+      "tattoo-gunes": {
+        "q": "A zbehet Tatuazh në diell? Si ta mbroj?",
+        "aShort": "Dielli është armiku më i madh i Tatuazh; sidomos gjatë shërimit duhet mbrojtur.",
+        "aLong": "Dielli është armiku më i madh i Tatuazh. Sidomos gjatë periudhës së shërimit duhet mbrojtje. Edhe më pas, mbrojtja nga dielli e mban Tatuazh më të gjallë për vite."
+      },
+      "tattoo-rotus": {
+        "q": "A nevojitet retush (touch-up)?",
+        "aShort": "Në disa zona ose tipe lëkure retushe të vogla janë normale.",
+        "aLong": "Në disa zona ose tipe lëkure mund të nevojiten retushe të vogla. Kjo është krejt normale. Nevoja për retush varet nga zona, kujdesi pas dhe tipi i lëkurës."
+      },
+      "tattoo-coverup": {
+        "q": "A bëni cover-up? A mund ta mbuloni një Tatuazh të vjetër?",
+        "aShort": "Shumica e tatuazheve mund të përmirësohen me cover-up; errësira e Tatuazh të vjetër e kufizon dizajnin. E sqarojmë me foto.",
+        "aLong": "Shumica e tatuazheve mund të përmirësohen me cover-up; por errësira dhe forma e Tatuazh të vjetër e kufizon dizajnin. Pa e parë foton nuk themi \"patjetër po\". Dërgo foton dhe ta themi qartë çfarë bëhet dhe plani më i mirë."
+      },
+      "tattoo-lazer-vs-coverup": {
+        "q": "Heqje Tatuazh (lazer) apo cover-up: cila është më e mirë?",
+        "aShort": "Disa bëhen direkt cover-up; disa japin rezultat më të mirë me hapje me lazer dhe pastaj cover-up.",
+        "aLong": "Disa tatuazhe bëhen direkt cover-up, disa japin rezultat më të mirë pasi hapen pak me lazer e pastaj cover-up. Ndonjëherë synimi nuk është \"ta heqësh plotësisht\", por \"ta bësh të mbulueshëm\". Me foto zgjedhim rrugën më të saktë."
+      },
+      "piercing-igne-tabanca-sterilizasyon": {
+        "q": "Ku duhet ta bëj Piercing? Gjilpërë apo pistoletë dhe a ka sterilizim (autoklav)?"
+      },
+      "piercing-fiyat": {
+        "q": "Nga çfarë varet çmimi i Piercing?"
+      },
+      "piercing-ilk-taki-materyali": {
+        "q": "Cili duhet të jetë materiali i stolisë së parë? Cili është dallimi titan/çelik/ar?"
+      },
+      "piercing-iyilesme-suresi": {
+        "q": "Sa kohë i duhet secilit Piercing për t'u shëruar?"
+      },
+      "piercing-bakim-24-48": {
+        "q": "Si është kujdesi pas në 24-48 orët e para pas Piercing? Me çfarë ta pastroj?"
+      },
+      "piercing-taki-degisim-downsizing": {
+        "q": "Kur mund ta ndërroj stolinë e Piercing? Kur bëhet downsizing?"
+      },
+      "piercing-deniz-havuz-sauna-spor": {
+        "q": "Kur lejohet det-pishinë-hamam/sauna dhe sporti?"
+      },
+      "piercing-kulaklik-kask-baski": {
+        "q": "Çfarë ndodh nëse fle mbi të / nëse kufjet-kaska bëjnë presion?"
+      },
+      "studio-adres-maps": {
+        "q": "Ku ndodhet studioja dhe si ta hap në hartë?",
+        "aShort": "Adresa e studios: {addressText}. Për ta hapur në hartë, përdor lidhjen \"Hap në Hartë\" te udhëzuesi i shpejtë.",
+        "aLong": "Adresa: {addressText}. Lidhja e Google Maps për Udhëzime: {googleMapsBusinessUrl}"
+      },
+      "studio-calisma-saatleri": {
+        "q": "Cili është orari i punës së studios?",
+        "aShort": "{weekdayLabel}; {sundayLabel}.",
+        "aLong": "Orari aktual: {weekdayLabel} dhe {sundayLabel}. Për planifikim termini, shkruaj në WhatsApp: {whatsappUrl}"
+      }
+    }
+  }
+}

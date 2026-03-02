@@ -2,55 +2,55 @@ import { getPiercingCoverSrc } from "@/lib/piercing/piercing-cover-map";
 
 export type FeaturedPiercingItem = {
   id: string;
-  title: string;
-  subtitle: string;
+  titleKey: string;
+  subtitleKey: string;
   href: string;
   coverSrc?: string;
-  imageAlt?: string;
+  imageAltKey?: string;
 };
 
 const FEATURED_PIERCING_BASE: Omit<FeaturedPiercingItem, "coverSrc">[] = [
   {
     id: "kulak",
-    title: "Kulak",
-    subtitle: "Lob ve kıkırdakta modern kombinler",
+    titleKey: "piercing.labels.kulak",
+    subtitleKey: "piercing.featured.kulak.subtitle",
     href: "/piercing/kulak",
-    imageAlt: "Kulak piercing örneği",
+    imageAltKey: "piercing.featured.kulak.alt",
   },
   {
     id: "burun",
-    title: "Burun",
-    subtitle: "Nostril halka ve stud seçenekleri",
+    titleKey: "piercing.labels.burun",
+    subtitleKey: "piercing.featured.burun.subtitle",
     href: "/piercing/burun",
-    imageAlt: "Burun piercing örneği",
+    imageAltKey: "piercing.featured.burun.alt",
   },
   {
     id: "kas",
-    title: "Kaş",
-    subtitle: "Kaş hattına uyumlu sade detaylar",
+    titleKey: "piercing.labels.kas",
+    subtitleKey: "piercing.featured.kas.subtitle",
     href: "/piercing/kas",
-    imageAlt: "Kaş piercing örneği",
+    imageAltKey: "piercing.featured.kas.alt",
   },
   {
     id: "dudak",
-    title: "Dudak",
-    subtitle: "Labret ve halka ile karakterli görünüm",
+    titleKey: "piercing.labels.dudak",
+    subtitleKey: "piercing.featured.dudak.subtitle",
     href: "/piercing/dudak",
-    imageAlt: "Dudak piercing örneği",
+    imageAltKey: "piercing.featured.dudak.alt",
   },
   {
     id: "dil",
-    title: "Dil",
-    subtitle: "Minimal barbell ve parlak seçenekler",
+    titleKey: "piercing.labels.dil",
+    subtitleKey: "piercing.featured.dil.subtitle",
     href: "/piercing/dil",
-    imageAlt: "Dil piercing örneği",
+    imageAltKey: "piercing.featured.dil.alt",
   },
   {
     id: "gobek",
-    title: "Göbek",
-    subtitle: "Taşlı ve sade çizgide yaz stili",
+    titleKey: "piercing.labels.gobek",
+    subtitleKey: "piercing.featured.gobek.subtitle",
     href: "/piercing/gobek",
-    imageAlt: "Göbek piercing örneği",
+    imageAltKey: "piercing.featured.gobek.alt",
   },
 ];
 
@@ -58,7 +58,6 @@ export const FEATURED_PIERCING: FeaturedPiercingItem[] = FEATURED_PIERCING_BASE.
   ...item,
   coverSrc:
     getPiercingCoverSrc(item.id) ??
-    getPiercingCoverSrc(item.title) ??
     getPiercingCoverSrc(item.href) ??
     "/piercing-hero/cover.webp",
 }));

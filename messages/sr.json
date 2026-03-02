@@ -1,0 +1,546 @@
+{
+  "common": {
+    "language": "sr",
+    "active": "Aktivno",
+    "allCategories": "Sve kategorije",
+    "back": "Nazad",
+    "clearSearch": "Obriši pretragu",
+    "cta": {
+      "whatsappWrite": "Piši na WhatsApp"
+    },
+    "directions": "Uputstva",
+    "hideDetails": "Sakrij detalje",
+    "inspect": "Pogledaj",
+    "languageChanged": "Jezik: {language}",
+    "languages": {
+      "tr": "Türkçe",
+      "sq": "Shqip",
+      "sr": "Srpski",
+      "en": "English"
+    },
+    "nav": {
+      "home": "Početna",
+      "discover": "Istraži",
+      "tattoo": "Tetovaža",
+      "piercing": "Pirsing",
+      "gallery": "Galerija",
+      "visuals": "Vizuali",
+      "artists": "Artisti",
+      "contact": "Kontakt",
+      "customDesign": "Personalizovani dizajn",
+      "knowledgeBase": "Baza znanja",
+      "questionBank": "Banka pitanja",
+      "questionBankWithKb": "Banka pitanja"
+    },
+    "noResults": "Nema rezultata",
+    "noResultsWithDot": "Nema rezultata.",
+    "openInMap": "Otvori na mapi",
+    "search": "Pretraga",
+    "searchCall": "Pretraga",
+    "searchResultsAria": "Rezultati pretrage",
+    "selectLanguage": "Izaberi jezik",
+    "showAll": "Prikaži sve",
+    "showMore": "Prikaži više",
+    "social": {
+      "phone": "Telefon",
+      "whatsapp": "WhatsApp",
+      "pinterest": "Pinterest",
+      "instagram": "Instagram",
+      "youtube": "YouTube",
+      "google": "Google"
+    },
+    "viewAll": "Pogledaj sve"
+  },
+  "theme": {
+    "light": "Svetla",
+    "dark": "Tamna",
+    "system": "Sistem",
+    "systemWithCurrent": "Sistem ({current})",
+    "mode": "Režim",
+    "selectMode": "Izaberi režim",
+    "toggleTheme": "Promeni temu"
+  },
+  "header": {
+    "brand": "Enki Tattoo Studio",
+    "searchAria": "Pretraga sajta",
+    "searchPlaceholder": "Pretraži kategoriju ili stranicu..."
+  },
+  "mobileHeader": {
+    "openMenu": "Otvori meni",
+    "closeMenu": "Zatvori meni",
+    "menuTitle": "Meni",
+    "menuDescription": "Glavne stranice, istaknute teme i opcije teme.",
+    "mainMenuAria": "Glavni meni",
+    "mainTabsAria": "Glavne kartice",
+    "accessibility": "Pristupačnost",
+    "searchDescription": "Brza pretraga sajta i prečice kategorija.",
+    "hubCategories": "Hub kategorije"
+  },
+  "footer": {
+    "homeAria": "početna stranica {site}",
+    "openOnGoogleMapsAria": "Otvori na Google Maps",
+    "social": "Društvene mreže",
+    "socialLinksAria": "Društveni linkovi",
+    "weekdayHours": "Radnim danima 10:00-20:00",
+    "sundayHours": "Nedelja 12:00-20:00",
+    "rightsReserved": "Sva prava zadržana."
+  },
+  "googleReviews": {
+    "title": "Google recenzije",
+    "viewAll": "Pogledaj sve recenzije",
+    "writeReview": "Napiši recenziju",
+    "readMore": "Prikaži više",
+    "openOnMaps": "Pogledaj na Google Maps",
+    "avatarAlt": "Profilna fotografija korisnika {name}",
+    "reviewDialogTitle": "Recenzija korisnika {name}",
+    "reviewDialogDescription": "Detaljan prikaz Google recenzije",
+    "close": "Zatvori",
+    "originalLanguageLabel": "Originalni jezik: {language}"
+  },
+  "hub": {
+    "coverAlt": "{title} naslovna",
+    "items": {
+      "minimal_fine_line": {
+        "title": "Minimal & Fine Line",
+        "description": "Tanke linije i čisti dizajni."
+      },
+      "lettering": {
+        "title": "Natpis & Ime",
+        "description": "Tetovaža natpisa i tipografije."
+      },
+      "realism": {
+        "title": "Realistična tetovaža",
+        "description": "Realistični i detaljni radovi."
+      },
+      "portrait": {
+        "title": "Portret",
+        "description": "Portret i tetovaže lica."
+      },
+      "traditional_old_school": {
+        "title": "Old School / Traditional",
+        "description": "Klasičan i tradicionalan stil."
+      },
+      "cover_up": {
+        "title": "Cover Up",
+        "description": "Prekrivanje starih tetovaža."
+      },
+      "dovme_egitimi": {
+        "title": "Obuka Tetovaža",
+        "description": "Od osnova do naprednog, praktična obuka u studiju."
+      },
+      "ataturk": {
+        "title": "Ataturk",
+        "description": "Ataturk portreti, potpisi, siluete i nacionalne teme."
+      },
+      "blackwork": {
+        "title": "Blackwork",
+        "description": "Geometrijski i bold radovi sa dominantnom crnom."
+      },
+      "custom": {
+        "title": "Personalizovani dizajn",
+        "description": "Dizajn i ideja posebno za tebe."
+      }
+    }
+  },
+  "rightRail": {
+    "aria": "Brzi pristup i popularne kategorije",
+    "piercing": {
+      "title": "Termin za pirsing",
+      "cta": "Piši za Pirsing",
+      "aftercareTitle": "Nega posle",
+      "aftercareBody": "Preporuke za negu posle Pirsing biće podeljene nakon termina. Drži zonu čistom i suvom."
+    },
+    "quickActions": {
+      "title": "Brze radnje"
+    },
+    "popular": {
+      "title": "Popularne kategorije",
+      "exploreAll": "Istraži sve"
+    }
+  },
+  "piercing": {
+    "labels": {
+      "default": "Pirsing",
+      "kulak": "Uho",
+      "burun": "Nos",
+      "kas": "Obrva",
+      "dudak": "Usna",
+      "dil": "Jezik",
+      "gobek": "Pupak",
+      "septum": "Septum",
+      "industrial": "Industrial",
+      "kisiye-ozel": "Personalizovano"
+    },
+    "featured": {
+      "heading": "Istaknuti pirsinzi",
+      "subheading": "Prevuci i izaberi svoj stil.",
+      "railAria": "Kartice istaknutih pirsinga",
+      "previous": "Prethodni",
+      "next": "Sledeći",
+      "cardAria": "{title} - {subtitle}",
+      "kulak": {
+        "subtitle": "Moderne kombinacije na resici i hrskavici",
+        "alt": "Primer pirsinga uha"
+      },
+      "burun": {
+        "subtitle": "Nostril prsten i stud opcije",
+        "alt": "Primer pirsinga nosa"
+      },
+      "kas": {
+        "subtitle": "Čisti detalji uz liniju obrve",
+        "alt": "Primer pirsinga obrve"
+      },
+      "dudak": {
+        "subtitle": "Labret i prsten za upečatljiv izgled",
+        "alt": "Primer pirsinga usne"
+      },
+      "dil": {
+        "subtitle": "Minimal barbell i sjajne opcije",
+        "alt": "Primer pirsinga jezika"
+      },
+      "gobek": {
+        "subtitle": "Letnji stil sa kamenčićima ili čistim linijama",
+        "alt": "Primer pirsinga pupka"
+      }
+    }
+  },
+  "pages": {
+    "hub": {
+      "coverAlt": "naslovna slika za {title}"
+    },
+    "home": {
+      "heading": "Početna",
+      "heroAlt": "hero naslovna slika početne stranice",
+      "heroMicroLine": "Izaberi stil, pogledaj primere, zakaži termin brzo.",
+      "ctaWhatsappDesktop": "Dobij informacije na WhatsApp",
+      "ctaDesignsMobile": "Dizajni",
+      "ctaDesignsDesktop": "Istraži svoj dizajn",
+      "featuredTitle": "Istaknuto",
+      "styleCategories": "Kategorije stilova",
+      "detailsAria": "detalji opisa početne stranice",
+      "specialTitle": "Posebno",
+      "piercingDescription": "Pirsing je naš poseban svet. Brze informacije i termin.",
+      "galleryPreviewTitle": "Pregled galerije",
+      "goToGallery": "Idi u Galeriju",
+      "openGalleryImageAria": "Otvori sliku {title} u galeriji",
+      "findOnMap": "Pronađi na mapi"
+    },
+    "kesfet": {
+      "heading": "Istraži",
+      "heroAlt": "hero naslovna slika stranice Istraži",
+      "shortDescription": "Izaberi stil, pogledaj primere, zakaži termin brzo.",
+      "browseVisuals": "Vizuali",
+      "askOnWhatsapp": "WhatsApp",
+      "piercingDescription": "Uho, nos, septum i više · profesionalna usluga Pirsing.",
+      "popularStyles": "Popularni stilovi"
+    },
+    "kesfetHub": {
+      "relatedTitle": "Slični stilovi",
+      "relatedDescription": "Pogledaj druge tattoo kategorije koje su bliske tvom stilu.",
+      "relatedAria": "slider sličnih tattoo kategorija",
+      "previous": "Prethodni",
+      "next": "Sledeći",
+      "faqTeaser": {
+        "description": "Brzo proveri česta pitanja o pripremi i nezi posle tetovaže.",
+        "tattoo": {
+          "items": {
+            "0": {
+              "q": "Šta je potrebno poslati za brzu ponudu?",
+              "a": "Referentna slika, okvirna veličina i deo tela dovoljni su za početni plan."
+            },
+            "1": {
+              "q": "Da li ovaj dizajn može da se završi u jednoj seansi?",
+              "a": "Broj seansi zavisi od detalja i pozicije; potvrđujemo nakon pregleda dizajna."
+            },
+            "2": {
+              "q": "Kako je najbolje da se pripremim pre termina?",
+              "a": "Ako dođeš odmoran, sit i hidriran, seansa je obično prijatnija."
+            },
+            "3": {
+              "q": "Šta treba izbegavati prvih dana?",
+              "a": "Trenje, nečist kontakt i preterano diranje regije mogu usporiti zarastanje."
+            },
+            "4": {
+              "q": "Kako da zaštitim tetovažu od sunca?",
+              "a": "Tokom početnog zarastanja ograniči direktno sunce i drži regiju zaštićenom."
+            },
+            "5": {
+              "q": "Kada je bezbedan povratak treningu?",
+              "a": "Treninge sa jakim znojenjem i trenjem vraćaj postepeno."
+            },
+            "6": {
+              "q": "Kod stare tetovaže, cover-up ili posvetljivanje prvo?",
+              "a": "Pravi put biramo prema tamnoći, obliku i krajnjem cilju dizajna."
+            },
+            "7": {
+              "q": "Može li se rano proceniti potreba za doradom?",
+              "a": "Male dorade se mogu unapred planirati prema reakciji kože i lokaciji."
+            }
+          }
+        }
+      }
+    },
+    "piercing": {
+      "heading": "Pirsing",
+      "heroAlt": "hero naslovna slika za Pirsing",
+      "shortDescription": "Uho, nos, septum i više. Piši nam za profesionalnu uslugu Pirsing.",
+      "cta": "Piši za Pirsing",
+      "categoriesTitle": "Kategorije",
+      "detailsTitle": "Detalji",
+      "showDetails": "Prikaži detalje",
+      "hideDetails": "Sakrij detalje"
+    },
+    "piercingHub": {
+      "defaultShortDescription": "Detalj pirsinga",
+      "galleryCtaTitle": "Pogledaj primere pirsinga u galeriji",
+      "galleryCtaDescription": "Otvori filtrirane vizuale za ovu kategoriju.",
+      "openGallery": "Otvori u galeriji",
+      "questionBankDescription": "Pogledaj Banku pitanja za proces i negu pirsinga."
+    },
+    "gallery": {
+      "heading": "Dizajn galerije",
+      "coverAlt": "naslovna slika Dizajn galerije",
+      "shortDescription": "Primeri radova i stilova.",
+      "soonTitle": "Galerija uskoro",
+      "soonDescription": "Slike za ovu kategoriju se trenutno dodaju.",
+      "goToGallery": "Idi na stranicu galerije",
+      "resultsCount": "Rezultati po filteru: {count} stavki",
+      "emptyForCategory": "Slike za ovu kategoriju uskoro će biti dodate.",
+      "emptyAll": "U galeriju još nije dodata nijedna spremna/objavljena slika.",
+      "openImageAria": "Otvori sliku {title}",
+      "showMoreImagesAria": "Prikaži još slika",
+      "viewerTitle": "Pregledač galerije",
+      "viewerDescription": "Pogledaj slike galerije Tetovaža na celom ekranu prevlačenjem.",
+      "closeViewer": "Zatvori pregledač",
+      "imageLoading": "Slika se priprema",
+      "previousSlide": "Prethodni slajd",
+      "nextSlide": "Sledeći slajd",
+      "filters": {
+        "category": "Kategorija",
+        "reset": "Resetuj filtere"
+      }
+    },
+    "contact": {
+      "heading": "Kontakt",
+      "shortDescription": "Kontaktiraj nas za Adresa, radno vreme i brzu komunikaciju.",
+      "addressLabel": "Adresa",
+      "hoursLabel": "Radno vreme",
+      "weekdayHours": "Radnim danima 10:00-20:00",
+      "sundayHours": "Nedelja 12:00-20:00",
+      "phoneLabel": "Telefon",
+      "mapTitle": "lokacija mape za {site}"
+    },
+    "artists": {
+      "heading": "Artisti",
+      "coverAlt": "naslovna slika Artista",
+      "shortDescription": "Umetnici u našem studiju.",
+      "avatarAlt": "avatar slika za {name}",
+      "roles": {
+        "halit": "Majstor Tetoviranja",
+        "mertcan": "Tattoo Umetnik"
+      },
+      "descriptions": {
+        "halit": "Preko 30 godina iskustva",
+        "mertcan": "Kratak opis profila biće uskoro ažuriran."
+      }
+    },
+    "artistDetail": {
+      "defaultShortDescription": "Profil artista",
+      "defaultTitle": "Artist",
+      "profiles": {
+        "halit-yalvac": {
+          "microLine": "Više od 25 godina iskustva u portretu, realizmu, cover-up i fine line stilu.",
+          "shortDescription": "Halit Yalvac se u Mersinu izdvaja sa više od 30 godina iskustva u tetoviranju, posebno u realizmu, portretu, cover-up i fine line stilu.",
+          "longDescription": "Možeš pregledati primere iz portfolija da uporediš liniju, senčenje i kompoziciju, pa podeliti reference kako biste zajedno definisali veličinu i poziciju."
+        },
+        "mertcan-uludag": {
+          "microLine": "Izdvojeni radovi, jasan stilski pravac i brza komunikacija.",
+          "shortDescription": "Pregledom radova Mertcan Uludag-a možeš brže odabrati stil, veličinu i poziciju koji odgovaraju tvojoj ideji.",
+          "longDescription": "Pošalji reference da zajedno uskladite debljinu linije, senčenje i kompoziciju, a za brz odgovor javi se na WhatsApp."
+        }
+      }
+    },
+    "training": {
+      "heading": "Obuka Tetovaža",
+      "coverAlt": "naslovna slika Obuka Tetovaža",
+      "defaultShortDescription": "Sadržaj obuke Tetovaža.",
+      "scopeAria": "obim obuke",
+      "scopeTitle": "Obim obuke",
+      "scopeItems": {
+        "hygiene": "Higijena i priprema radnog prostora",
+        "stencil": "Postavljanje stencil-a, kontrola linije i osnovno senčenje",
+        "equipment": "Izbor opreme i koraci planiranja procesa"
+      }
+    },
+    "sss": {
+      "heading": "Najčešća pitanja / Baza znanja",
+      "microLine": "Često postavljana pitanja",
+      "shortDescription": "Pronađi najčešća pitanja o procesu Tetovaža i Pirsing na jednom ekranu.",
+      "longDescription": "Pronađi najčešća pitanja o procesu Tetovaža i Pirsing na jednom ekranu."
+    }
+  },
+  "sss": {
+    "categories": {
+      "all": "Sve",
+      "tattoo": "Tetovaža",
+      "piercing": "Pirsing",
+      "studio": "Studio"
+    },
+    "placeholders": {
+      "piercingShort": "Za ovu temu dajemo najtačniji odgovor prema tvojoj situaciji; piši na WhatsApp.",
+      "piercingLong": "Za ovu temu dajemo najtačniji odgovor prema tvojoj situaciji; piši na WhatsApp; ako pošalješ fotografiju, brzo procenjujemo."
+    },
+    "teaser": {
+      "description": "Pristupi često postavljanim pitanjima o procesu Tetovaža i Pirsing sa jedne stranice.",
+      "viewAllQuestions": "Pogledaj sva pitanja"
+    },
+    "ui": {
+      "searchFilterAria": "pretraga i filter banke pitanja",
+      "searchLabel": "Pretraži banku pitanja",
+      "searchPlaceholder": "Pretraži pitanje: cena, nega posle, zarastanje...",
+      "quickGuideAria": "linkovi brzog vodiča",
+      "quickGuideTitle": "Brzi vodič",
+      "fastestContactLead": "Najbrži kontakt:",
+      "fastestContactMiddle": "najbrži kanal. Takođe",
+      "fastestContactAnd": "i",
+      "fastestContactEnd": "možeš nam pisati i preko.",
+      "faqTitle": "Najčešća pitanja",
+      "questionCount": "{count} pitanja",
+      "noResultsHint": "Promeni izraz pretrage ili probaj filter kategorije kao \"Sve\".",
+      "openLinkAria": "Otvori link {label}"
+    },
+    "quickGuide": {
+      "guide-contact": {
+        "label": "Kontakt stranica",
+        "description": "Adresa, radno vreme i opcije brze komunikacije."
+      },
+      "guide-maps": {
+        "label": "Otvori na mapi",
+        "description": "{addressText}"
+      },
+      "guide-instagram": {
+        "label": "Instagram",
+        "description": "Aktuelni radovi i sadržaj."
+      },
+      "guide-youtube": {
+        "label": "YouTube",
+        "description": "Video sadržaj i prenosi."
+      },
+      "guide-whatsapp": {
+        "label": "WhatsApp",
+        "description": "Piši za najbrži odgovor."
+      }
+    },
+    "items": {
+      "tattoo-fiyat": {
+        "q": "Kako se određuju cene Tetovaža?",
+        "aShort": "Najviše utiče vreme rada; veličina nije jedini kriterijum.",
+        "aLong": "Najviše utiče vreme rada. Veličina je važna, ali nije jedini kriterijum: gustina detalja (fini rad traje duže), stil (fine line, realism, traditional itd.), deo tela (teže zone), i originalni personalizovani crtež. Za jasnu cenu dovoljno je primer slike + mera (cm) + deo tela."
+      },
+      "tattoo-sure-seans": {
+        "q": "Koliko sati traje Tetovaža i u koliko seansi se završava?",
+        "aShort": "Vreme i seanse zavise od detalja i pozicije. Pošalji sliku i daću jasan plan.",
+        "aLong": "Čak i dve tetovaže iste veličine mogu trajati različito. Minimalni radovi traju kraće, a realistični/jače senčeni traju duže i ponekad traže više seansi. Teško je reći tačno bez dizajna, ali ako pošalješ sliku, napraviću plan vremena + seansi."
+      },
+      "tattoo-once-hazirlik": {
+        "q": "Kako da se pripremim pre Tetovaža?",
+        "aShort": "Najbolje je da dođeš odmoran, sit i hidriran. Izaberi udobnu odeću.",
+        "aLong": "Najbolje je da na seansu dođeš odmoran, sit i hidriran. Izaberi udobnu odeću kako bi zona Tetovaža bila lako dostupna. Ako se ne osećaš dobro, odlaganje je bolja opcija."
+      },
+      "tattoo-alkol": {
+        "q": "Da li mogu Tetovaža nakon alkohola?",
+        "aShort": "Alkohol može uticati na telo i otežati aplikaciju i zarastanje. Najsigurnije je izbegavati alkohol pre seanse.",
+        "aLong": "Alkohol može uticati na telo; to može otežati i aplikaciju i zarastanje. Najsigurnija opcija: izbegavati alkohol pre seanse."
+      },
+      "tattoo-hamile-emzirme": {
+        "q": "Da li se radi Tetovaža tokom trudnoće / dojenja?",
+        "aShort": "To je osetljiva tema; većina bira da odloži. Najzdravije je pratiti savet lekara.",
+        "aLong": "Ovo je osetljiva tema. Većina ljudi u tom periodu bira da odloži Tetovaža. Najzdraviji pristup je postupanje po savetu lekara."
+      },
+      "tattoo-bakim-48saat": {
+        "q": "Šta da radim u prvih 24-48 sati posle Tetovaža?",
+        "aShort": "Prva dva dana su ključna: drži čisto, ne iritiraj, ne preteruj sa proizvodima.",
+        "aLong": "Prva dva dana su ključna: drži čisto + izbegni iritaciju + ne preteruj sa proizvodima. Posle seanse jasno objašnjavamo korake nege posle. Najvažnije pravilo: ne diraj, ne trljaj, bez prljavog kontakta."
+      },
+      "tattoo-kabuk-soyulma": {
+        "q": "Da li Tetovaža pravi krastice, ljušti se? Da li je normalno?",
+        "aShort": "Kod većine tetovaža krastice/ljuštenje/svrab su normalni. Krastice ne treba skidati.",
+        "aLong": "Da, kod većine tetovaža krastice/ljuštenje/svrab su normalni. Najveća greška je skidanje krastica. To može izazvati ožiljak i gubitak boje."
+      },
+      "tattoo-iyilesme": {
+        "q": "Koliko vremena treba da Tetovaža zaraste?",
+        "aShort": "Vreme oporavka zavisi od osobe i zone; potpuno smirivanje kože može trajati duže.",
+        "aLong": "Prvi vidljivi oporavak obično počinje brzo, ali potpuno smirivanje kože može trajati duže. Zarastanje zavisi od zone, nege posle i tipa kože. Posle seanse kažemo šta da očekuješ iz dana u dan."
+      },
+      "tattoo-dus": {
+        "q": "Da li je tuširanje dozvoljeno posle Tetovaža?",
+        "aShort": "Uglavnom da; ali bez previše vruće vode, dugog pare i jakog trljanja.",
+        "aLong": "Uglavnom da; ali bez previše vruće vode, dugog pare i jakog trljanja. Čista i nežna rutina je najbolja."
+      },
+      "tattoo-deniz-havuz-sauna": {
+        "q": "Kada more / bazen / sauna?",
+        "aShort": "Tokom zarastanja, dugo izlaganje vodi i sauna/para mogu opteretiti kožu; sigurnije je sačekati.",
+        "aLong": "Dok Tetovaža zarasta, dugo izlaganje vodi i sauna/para mogu opteretiti kožu. Najsigurnije je sačekati oporavak. Prema zoni i radu dajemo jasan vremenski okvir."
+      },
+      "tattoo-spor": {
+        "q": "Kada mogu da treniram?",
+        "aShort": "U prvim danima jak znoj, trenje i istezanje mogu iritirati; zatim povratak ide postepeno.",
+        "aLong": "U prvim danima jak znoj, trenje i istezanje mogu iritirati Tetovaža. Nakon toga povratak ide postepeno. Lokacija Tetovaža (ruka, noga, rebra itd.) je ključni faktor."
+      },
+      "tattoo-gunes": {
+        "q": "Da li Tetovaža bledi na suncu? Kako da je zaštitim?",
+        "aShort": "Sunce je najveći neprijatelj Tetovaža; posebno tokom zarastanja treba zaštita.",
+        "aLong": "Sunce je najveći neprijatelj Tetovaža. Posebno tokom perioda zarastanja potrebna je zaštita. I kasnije, zaštita od sunca čuva Tetovaža živom godinama."
+      },
+      "tattoo-rotus": {
+        "q": "Da li je potreban retuš (touch-up)?",
+        "aShort": "Na nekim zonama ili tipovima kože mali retuši su normalni.",
+        "aLong": "Na nekim zonama ili tipovima kože mogu biti potrebni mali retuši. To je potpuno normalno. Potreba za retušem zavisi od zone, nege posle i tipa kože."
+      },
+      "tattoo-coverup": {
+        "q": "Da li radite cover-up? Možete li prekriti staru Tetovaža?",
+        "aShort": "Većina tetovaža može se srediti cover-up metodom; tamnoća stare Tetovaža ograničava dizajn. Potvrđujemo sa fotografijom.",
+        "aLong": "Većina tetovaža može se srediti cover-up metodom, ali tamnoća i oblik stare Tetovaža ograničavaju dizajn. Bez fotografije ne govorimo \"sigurno može\". Pošalji fotografiju i jasno kažemo može/ne može i najbolji plan."
+      },
+      "tattoo-lazer-vs-coverup": {
+        "q": "Uklanjanje Tetovaža (laser) ili cover-up: šta je bolje?",
+        "aShort": "Neke idu direktno na cover-up; neke daju bolji rezultat nakon blagog posvetljivanja laserom pa cover-up.",
+        "aLong": "Neke tetovaže idu direktno na cover-up, a neke daju bolji rezultat kada se prvo malo posvetle laserom pa rade cover-up. Nekad cilj nije \"potpuno ukloniti\", već \"učiniti je pogodnom za prekrivanje\". Uz fotografiju biramo najbolji put."
+      },
+      "piercing-igne-tabanca-sterilizasyon": {
+        "q": "Gde treba raditi Pirsing? Igla ili pištolj, i da li postoji sterilizacija (autoklav)?"
+      },
+      "piercing-fiyat": {
+        "q": "Od čega zavisi cena Pirsing?"
+      },
+      "piercing-ilk-taki-materyali": {
+        "q": "Koji treba da bude materijal prvog nakita? Koja je razlika titanijum/čelik/zlato?"
+      },
+      "piercing-iyilesme-suresi": {
+        "q": "Koliko vremena je potrebno da svaki Pirsing zaraste?"
+      },
+      "piercing-bakim-24-48": {
+        "q": "Kako izgleda nega posle u prvih 24-48 sati nakon Pirsing? Čime da čistim?"
+      },
+      "piercing-taki-degisim-downsizing": {
+        "q": "Kada mogu da promenim nakit za Pirsing? Kada se radi downsizing?"
+      },
+      "piercing-deniz-havuz-sauna-spor": {
+        "q": "Kada su more-bazen-hamam/sauna i sport dozvoljeni?"
+      },
+      "piercing-kulaklik-kask-baski": {
+        "q": "Šta se dešava ako spavam na tome / ako slušalice-kaciga prave pritisak?"
+      },
+      "studio-adres-maps": {
+        "q": "Gde je studio i kako da ga otvorim na mapi?",
+        "aShort": "Adresa studija: {addressText}. Za otvaranje na mapi koristi link \"Otvori na mapi\" u brzom vodiču.",
+        "aLong": "Adresa: {addressText}. Google Maps link za Uputstva: {googleMapsBusinessUrl}"
+      },
+      "studio-calisma-saatleri": {
+        "q": "Koje je radno vreme studija?",
+        "aShort": "{weekdayLabel}; {sundayLabel}.",
+        "aLong": "Aktuelno radno vreme: {weekdayLabel} i {sundayLabel}. Za planiranje termina piši na WhatsApp: {whatsappUrl}"
+      }
+    }
+  }
+}

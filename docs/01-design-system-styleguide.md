@@ -174,6 +174,10 @@
   - `rounded-sm` for tiny chips.
   - `rounded-md` for inputs/buttons.
   - `rounded-lg` for cards and larger blocks.
+- Primary CTA Buttons:
+  - Primary CTA buttons must use `Button` with `size="cta"` so radius stays `rounded-xl`.
+  - In dual CTA blocks (`primary + outline`), both buttons use `size="cta"`; radius consistency is SSOT.
+  - Secondary/sm/icon buttons can keep default size behavior.
 - Shadow scale:
   - `shadow-soft`: cards and low elevation.
   - `shadow-popover`: floating layers.

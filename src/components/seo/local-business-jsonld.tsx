@@ -1,7 +1,6 @@
 import {
   GOOGLE_MAPS_BUSINESS_URL,
   INSTAGRAM_URL,
-  TELEGRAM_URL,
   YOUTUBE_URL,
 } from "@/lib/site/links";
 import { SITE_URL } from "@/lib/site/base-url";
@@ -47,7 +46,7 @@ const localBusinessJsonLd = {
           closes: SITE_INFO.openingHours.sundayClose,
         },
       ],
-      sameAs: [INSTAGRAM_URL, YOUTUBE_URL, TELEGRAM_URL, GOOGLE_MAPS_BUSINESS_URL],
+      sameAs: [INSTAGRAM_URL, YOUTUBE_URL, GOOGLE_MAPS_BUSINESS_URL].filter(Boolean),
       hasMap: GOOGLE_MAPS_BUSINESS_URL,
     },
     {
