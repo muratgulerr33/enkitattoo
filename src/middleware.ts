@@ -3,28 +3,51 @@ import {NextRequest, NextResponse} from 'next/server';
 import {locales, routing} from './i18n/routing';
 
 const handleI18nRouting = createMiddleware(routing);
-const INTERNAL_BYPASS_EXACT_PATHS = new Set([
-  '/robots.txt',
-  '/sitemap.xml',
-  '/manifest.webmanifest'
-]);
 
-export default function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-  const isInternalBypassPath =
-    pathname === '/' ||
-    request.nextUrl.searchParams.has('_rsc') ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/favicon') ||
-    pathname.startsWith('/opengraph-image') ||
-    pathname.startsWith('/twitter-image') ||
-    INTERNAL_BYPASS_EXACT_PATHS.has(pathname);
-
-  if (isInternalBypassPath) {
-    return NextResponse.next();
+function isRscLikeRequest(request: NextRequest): boolean {
+  if (request.nextUrl.searchParams.has('_rsc')) {
+    return true;
   }
 
+  const rawUrl = request.url;
+  if (/[?&]_rsc(?:=|&|$)/.test(rawUrl)) {
+    return true;
+  }
+
+  const rscHeader = request.headers.get('RSC');
+  if (rscHeader === '1') {
+    return true;
+  }
+
+  const hasRouterStateTree = request.headers.has('Next-Router-State-Tree');
+  const hasRouterPrefetch = request.headers.has('Next-Router-Prefetch');
+  const hasRouterSegmentPrefetch = request.headers.has('Next-Router-Segment-Prefetch');
+  if (hasRouterStateTree || hasRouterPrefetch || hasRouterSegmentPrefetch) {
+    return true;
+  }
+
+  const purpose = request.headers.get('Purpose');
+  if (purpose?.toLowerCase() === 'prefetch') {
+    return true;
+  }
+
+  const secFetchDest = request.headers.get('Sec-Fetch-Dest');
+  if (secFetchDest?.toLowerCase() === 'empty') {
+    return true;
+  }
+
+  return false;
+}
+
+export default function middleware(request: NextRequest) {
+  if (isRscLikeRequest(request)) {
+    const response = NextResponse.next();
+    response.headers.set('Cache-Control', 'private, no-store, no-cache, max-age=0, must-revalidate');
+    response.headers.set('pragma', 'no-cache');
+    return response;
+  }
+
+  const pathname = request.nextUrl.pathname;
   const firstSegment = pathname.split('/').filter(Boolean)[0];
 
   if (firstSegment && /^[a-zA-Z]{2}$/.test(firstSegment)) {
