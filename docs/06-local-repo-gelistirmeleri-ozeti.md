@@ -70,10 +70,6 @@ Amaç: `/piercing` açılışının premium olması (hero → featured → kateg
 - SSOT map: `src/lib/piercing/piercing-cover-map.ts`
 - Data enrich: `src/lib/piercing/featured-piercing.ts` içinde `coverSrc` alanı bağlanır.
 
-**Tawk çakışma önlemi**
-- Sayfayı sağdan daraltacak `pr-*` hack’leri **kullanılmaz**.
-- Çakışma çözümü “layout bozmadan”: sadece alt safe padding yaklaşımı (Tawk sağ-alt balon için).
-
 > İlgili dosyalar:
 - `src/app/(app)/piercing/page.tsx`
 - `src/components/piercing/featured-piercing-carousel.tsx`
@@ -90,22 +86,6 @@ Amaç: mobilde “Ara / WhatsApp / Yol tarifi” butonlarının sağa taşması 
 - Butonlar: `min-h-11 w-full min-w-0` + label `truncate`
 
 > Dosya: `src/app/(app)/iletisim/page.tsx`
-
-### 2.7 Tawk Chat Entegrasyonu (Mock Bubble kaldırıldı)
-Amaç: eski “yakında” mock chat bubble kalksın; Tawk performans dostu gelsin.
-
-**Kurallar**
-- Minimum **5 saniye gecikme** ile yüklenir.
-- `requestIdleCallback` varsa idle’da, yoksa normal.
-- Single instance guard: tekrar script basma yok.
-- Global tek mount: `(app)` layout altında 1 kere.
-
-> Dosyalar:
-- `src/components/chat/tawk-loader.tsx`
-- (app) layout mount noktası: `src/app/(app)/layout.tsx`
-- Silinen: `src/components/app/chat-bubble.tsx`
-
----
 
 ## 3) Dosya Haritası (Bu pencerede oluşan “çekirdek” dosyalar)
 
@@ -143,7 +123,6 @@ Manuel hızlı kontrol:
 - `/` ve `/kesfet`: kart başlıkları tek satır, CTA satırı hizalı
 - `/piercing`: featured carousel görüntüleri tam oturuyor, overflow yok
 - `/iletisim`: CTA’lar taşmıyor (en dar genişlikte bile)
-- Tawk: sayfa açılışında hemen network istemiyor, en erken 5sn sonra geliyor
 
 ---
 

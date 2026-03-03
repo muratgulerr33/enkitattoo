@@ -11,7 +11,6 @@ Bu pencere boyunca hedef:
 - UI’ı “native hissiyat”a yaklaştırmak (tap target + press feedback + tutarlı card/media).
 - Local SEO/NAP tutarlılığını tek kaynağa bağlamak.
 - Piercing featured carousel + cover asset pipeline’ını stabilize etmek.
-- Chat (Tawk) entegrasyonunu performans-dostu hâle getirmek.
 - Geliştirme raporlarını (docs/output) repo’dan ayrı tutmak.
 
 ---
@@ -71,8 +70,6 @@ Prod’da patlayan bir tip hatası gibi acil durumlarda:
 - Drawer / header
   - Icon hit-area 44px+
   - Press feedback hissedilir
-- Tawk
-  - İlk açılışta hemen yüklenmez (min 5sn)
 
 ---
 
@@ -122,19 +119,6 @@ Prod’da patlayan bir tip hatası gibi acil durumlarda:
 
 ---
 
-## 6) Tawk Chat “Performans Dostu” Kontratı
-
-**Loader:** `src/components/chat/tawk-loader.tsx`
-
-Kurallar:
-- Minimum **5sn gecikme**
-- `requestIdleCallback` varsa idle’da
-- Interaction (scroll/touch) sadece 5sn dolduktan sonra tetikleyebilir
-- Single instance guard (`window.Tawk_API` / `script[data-tawk]`)
-- Global tek mount: `(app)` layout
-
----
-
 ## 7) Dosya/Modül Envanteri (Bu pencere ile gelen çekirdek parçalar)
 
 ### UI
@@ -167,9 +151,7 @@ Kurallar:
 4) `npm ci` + `npm run build` PASS
 5) Kritik sayfalar smoke check:
    - `/`, `/kesfet`, `/piercing`, `/iletisim`
-6) Tawk:
-   - ilk 5 saniyede `embed.tawk.to` request yok
-7) Commit message:
+6) Commit message:
    - `feat(ui): ...` veya `fix(piercing): ...`
 
 ---
@@ -183,7 +165,6 @@ Bu pencere içinde önemli olup “unutulma ihtimali” olan her şeyi check ett
 - Piercing featured carousel copy + overflow fix ✅
 - Untracked cover asset dersleri ✅
 - Contact CTA overflow fix ✅
-- Tawk 5sn delay + single instance ✅
 - docs/output ignore stratejisi ✅
 
 Eğer ayrıca **“internal link planı”** veya **“GBP review toplama akışı”** bu pencereye dahil edilmek istenirse, V1 TODO olarak ayrı dokümana eklenmeli (bu pencerede uygulanmadı).

@@ -1,5 +1,4 @@
 import { AppShell } from "@/components/app/app-shell";
-import { TawkLoader } from "@/components/chat/tawk-loader";
 import { locales } from "@/i18n/routing";
 import { getLocaleOrderFromAcceptLanguage } from "@/lib/i18n/locale-order";
 import { NextIntlClientProvider } from "next-intl";
@@ -32,7 +31,6 @@ export default async function AppLayout({
       timeZone="Europe/Istanbul"
     >
       <AppShell initialLocaleOrder={initialLocaleOrder}>{children}</AppShell>
-      <TawkLoader />
     </NextIntlClientProvider>
   );
 }

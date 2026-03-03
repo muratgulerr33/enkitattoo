@@ -137,12 +137,6 @@
 - `FeaturedPiercingItem` içinde `coverSrc?: string` kontratı var.
 - Item’lar `coverSrc` ile zenginleşir; yoksa fallback.
 
-### 5.6 Tawk çakışma önlemi
-- Çözüm: sadece **bottom safe padding** yaklaşımı (layout genişliğini bozmadan).
-- Sağ padding ile sayfa daraltma **yapılmaz**.
-
----
-
 ## 6) İletişim Sayfası CTA Kontratı (/iletisim)
 
 **Dosya:** `src/app/(app)/iletisim/page.tsx`
@@ -154,22 +148,6 @@
 - Buton standardı:
   - `min-h-11 w-full min-w-0`
   - label: `truncate`
-
----
-
-## 7) Tawk Chat Kontratı (Mock bubble yok)
-
-**Loader:** `src/components/chat/tawk-loader.tsx`
-
-### 7.1 Performans kuralları
-- Minimum **5 saniye** sonra yükleme
-- `requestIdleCallback` varsa idle’da
-- Single instance guard:
-  - `window.Tawk_API` veya `script[data-tawk="true"]` kontrolü
-
-### 7.2 Mount noktası
-- `(app)` layout içinde tek mount (global)
-- Mock “yakında” bubble component’i projeden kaldırıldı.
 
 ---
 
@@ -188,7 +166,5 @@ Bu checklist bu penceredeki işlerin “pass/fail” kontrolüdür:
 - Global:
   - [ ] Icon butonlar 44px+, press feedback var
   - [ ] Drawer text-only, active state belirgin
-- Chat:
-  - [ ] Tawk ilk render’da yüklenmiyor (en erken 5sn sonra)
 
 ---
