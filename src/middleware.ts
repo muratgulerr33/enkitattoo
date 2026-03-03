@@ -3,6 +3,7 @@ import {locales, routing} from './i18n/routing';
 
 const DEFAULT_LOCALE = routing.defaultLocale;
 const INTERNAL_REWRITE_HEADER = 'x-enki-internal-rewrite';
+const NEXT_INTL_LOCALE_HEADER = 'x-next-intl-locale';
 
 const INTERNAL_BYPASS_EXACT_PATHS = new Set([
   '/robots.txt',
@@ -77,24 +78,27 @@ export default function middleware(request: NextRequest) {
   }
 
   const firstSegment = pathname.split('/').filter(Boolean)[0];
+  const normalizedFirst = firstSegment?.toLowerCase();
+  const hasLocalePrefix =
+    !!normalizedFirst && locales.includes(normalizedFirst as (typeof locales)[number]);
+  const detectedLocale = (hasLocalePrefix ? normalizedFirst : DEFAULT_LOCALE) as (typeof locales)[number];
 
   if (firstSegment && /^[a-zA-Z]{2}$/.test(firstSegment)) {
-    const normalized = firstSegment.toLowerCase();
-
-    if (!locales.includes(normalized as (typeof locales)[number])) {
+    if (!hasLocalePrefix) {
       return applyRscNoStoreHeaders(new NextResponse(null, {status: 404}), request);
     }
   }
 
   const isInternalRewrite = request.headers.get(INTERNAL_REWRITE_HEADER) === '1';
   if (isInternalRewrite) {
-    return applyRscNoStoreHeaders(NextResponse.next(), request);
+    const headers = new Headers(request.headers);
+    if (!headers.has(NEXT_INTL_LOCALE_HEADER)) {
+      headers.set(NEXT_INTL_LOCALE_HEADER, DEFAULT_LOCALE);
+    }
+    return applyRscNoStoreHeaders(NextResponse.next({request: {headers}}), request);
   }
 
-  const hasLocalePrefix =
-    !!firstSegment && locales.includes(firstSegment.toLowerCase() as (typeof locales)[number]);
-
-  if (hasLocalePrefix && firstSegment!.toLowerCase() === DEFAULT_LOCALE) {
+  if (hasLocalePrefix && normalizedFirst === DEFAULT_LOCALE) {
     const canonicalPath = stripDefaultLocalePrefix(pathname);
 
     const redirectUrl = request.nextUrl.clone();
@@ -105,7 +109,9 @@ export default function middleware(request: NextRequest) {
   }
 
   if (hasLocalePrefix) {
-    return applyRscNoStoreHeaders(NextResponse.next(), request);
+    const headers = new Headers(request.headers);
+    headers.set(NEXT_INTL_LOCALE_HEADER, detectedLocale);
+    return applyRscNoStoreHeaders(NextResponse.next({request: {headers}}), request);
   }
 
   const rewriteUrl = request.nextUrl.clone();
@@ -116,6 +122,7 @@ export default function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(INTERNAL_REWRITE_HEADER, '1');
   requestHeaders.set('x-forwarded-proto', 'http');
+  requestHeaders.set(NEXT_INTL_LOCALE_HEADER, DEFAULT_LOCALE);
 
   const response = NextResponse.rewrite(rewriteUrl, {request: {headers: requestHeaders}});
   forceInternalRewriteHttp(response, request, `${targetPath}${rewriteUrl.search}`);
