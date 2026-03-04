@@ -444,7 +444,19 @@
       "nextSlide": "Slajdi i radhës",
       "filters": {
         "category": "Kategoria",
-        "reset": "Rivendos filtrat"
+        "reset": "Rivendos filtrat",
+        "options": {
+          "minimal-fine-line-dovme": "Minimal & Fine Line",
+          "yazi-isim-dovmesi": "Shkrim & Emër",
+          "realistik-dovme": "Tatuazh Realist",
+          "traditional-dovme": "Old School / Traditional",
+          "dovme-kapatma": "Cover-Up",
+          "ataturk-temali-dovme": "Ataturk",
+          "blacwork-dovme": "Blackwork",
+          "kisiye-ozel-tasarim": "Dizajn i Personalizuar",
+          "portre": "Portret",
+          "piercing": "Piercing"
+        }
       }
     },
     "contact": {

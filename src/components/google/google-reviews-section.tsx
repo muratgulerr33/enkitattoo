@@ -5,18 +5,11 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { ExternalLink } from "@/components/ui/external-link";
 import { Skeleton } from "@/components/ui/skeleton";
 
-const GOOGLE_ALL_REVIEWS_URL = "https://maps.app.goo.gl/XfsNo8TymLtVkrFt5";
+const GOOGLE_REVIEWS_VERIFY_URL =
+  "https://www.google.com/search?q=enki+tattoo&rlz=1C5CHFA_enTR1140TR1140&oq=enki+&gs_lcrp=EgZjaHJvbWUqBggAEEUYOzIGCAAQRRg7MhMIARAuGK8BGMcBGIAEGJgFGJkFMgcIAhAuGIAEMgcIAxAAGIAEMgYIBBBFGDwyBggFEEUYPDIGCAYQRRg8MgYIBxBFGDzSAQgxNzQ1ajBqNKgCALACAQ&sourceid=chrome&ie=UTF-8#mpd=~10113518016041596915/customers/reviews";
 const GOOGLE_WRITE_REVIEW_URL = "https://g.page/r/CU7OmlK8UUDAEBM/review";
 const GOOGLE_LOCKUP_ASSET_SRC = "/brand/google-maps-lockup.svg";
 const GOOGLE_PIN_ASSET_SRC = "/brand/google-maps-pin.webp";
@@ -27,7 +20,6 @@ type Review = {
   rating: number;
   relativeTime: string;
   text: string;
-  originalLanguage: string;
   avatarSrc?: string | null;
 };
 
@@ -106,7 +98,6 @@ export function GoogleReviewsSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [showBrand, setShowBrand] = useState(false);
-  const [activeReview, setActiveReview] = useState<Review | null>(null);
   const reviews = useMemo<Review[]>(
     () =>
       REVIEW_META.map((reviewMeta) => ({
@@ -114,7 +105,6 @@ export function GoogleReviewsSection() {
         authorName: t(`reviews.items.${reviewMeta.id}.authorName`),
         relativeTime: t(`reviews.items.${reviewMeta.id}.relativeTime`),
         text: t(`reviews.items.${reviewMeta.id}.text`),
-        originalLanguage: t(`reviews.items.${reviewMeta.id}.originalLanguage`),
       })),
     [t],
   );
@@ -204,7 +194,7 @@ export function GoogleReviewsSection() {
 
       <div className="mt-4 grid gap-2 sm:flex sm:flex-wrap">
         <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
-          <ExternalLink href={GOOGLE_ALL_REVIEWS_URL}>
+          <ExternalLink href={GOOGLE_REVIEWS_VERIFY_URL}>
             {t("googleReviews.viewAll")}
           </ExternalLink>
         </Button>
@@ -220,21 +210,18 @@ export function GoogleReviewsSection() {
           ? reviews.map((review) => (
               <article
                 key={review.id}
-                className="relative rounded-xl border border-border bg-surface-2 p-4 shadow-soft"
+                className="relative rounded-xl border border-border/60 bg-background p-4 shadow-soft"
               >
                 <div className="flex items-start gap-3">
                   <ReviewAvatar
                     review={review}
                     avatarAlt={t("googleReviews.avatarAlt", { name: review.authorName })}
                   />
-                  <div className="min-w-0 flex-1 pb-8">
+                  <div className="min-w-0 flex-1 pb-10">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <h3 className="t-body font-medium text-foreground">{review.authorName}</h3>
                         <span className="text-xs text-muted-foreground">{review.relativeTime}</span>
-                        <p className="mt-0.5 text-[11px] text-muted-foreground/90">
-                          {t("googleReviews.originalLanguageLabel", { language: review.originalLanguage })}
-                        </p>
                       </div>
                     </div>
                     <div className="mt-1 flex items-center gap-0.5" aria-label={`${review.rating} / 5`}>
@@ -251,20 +238,20 @@ export function GoogleReviewsSection() {
                     </div>
                     <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">{review.text}</p>
                     {reviewHasMore(review.text) ? (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="mt-2 h-auto p-0 text-sm text-foreground hover:bg-transparent"
-                        onClick={() => setActiveReview(review)}
-                      >
-                        {t("googleReviews.readMore")}
+                      <Button asChild variant="outline" size="sm" className="mt-3 h-11 min-h-[44px] w-full">
+                        <ExternalLink
+                          href={GOOGLE_REVIEWS_VERIFY_URL}
+                          aria-label={t("googleReviews.openOnMaps")}
+                        >
+                          {t("googleReviews.readMore")}
+                        </ExternalLink>
                       </Button>
                     ) : null}
                   </div>
                 </div>
                 {showBrand ? (
                   <ExternalLink
-                    href={GOOGLE_ALL_REVIEWS_URL}
+                    href={GOOGLE_REVIEWS_VERIFY_URL}
                     aria-label={t("googleReviews.openOnMaps")}
                     className="absolute right-3 bottom-3 inline-flex items-center gap-1 rounded-full border border-border bg-surface-2 px-2 py-1 opacity-90 shadow-soft"
                   >
@@ -308,72 +295,6 @@ export function GoogleReviewsSection() {
             ))}
       </div>
 
-      <Dialog open={Boolean(activeReview)} onOpenChange={(open) => (!open ? setActiveReview(null) : null)}>
-        <DialogContent
-          showCloseButton={false}
-          className="data-[state=open]:animate-none data-[state=closed]:animate-none !top-auto !right-0 !bottom-0 !left-0 inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto w-full !max-w-none sm:!max-w-none !translate-x-0 !translate-y-0 data-[state=open]:!translate-y-0 data-[state=closed]:!translate-y-full !transition-[transform] data-[state=open]:duration-[392ms] data-[state=closed]:duration-[308ms] data-[state=open]:ease-out data-[state=closed]:ease-in transform-gpu [will-change:transform] motion-reduce:transform-none motion-reduce:transition-none gap-0 rounded-t-2xl rounded-b-none border border-border bg-background p-0"
-        >
-          <DialogHeader className="sr-only">
-            <DialogTitle>
-              {t("googleReviews.reviewDialogTitle", { name: activeReview?.authorName ?? "" })}
-            </DialogTitle>
-            <DialogDescription>{t("googleReviews.reviewDialogDescription")}</DialogDescription>
-          </DialogHeader>
-          {activeReview ? (
-            <>
-              <div className="flex items-start justify-between gap-3 border-b border-border p-4">
-                <div className="flex min-w-0 items-start gap-3">
-                  <ReviewAvatar
-                    review={activeReview}
-                    avatarAlt={t("googleReviews.avatarAlt", { name: activeReview.authorName })}
-                  />
-                  <div className="min-w-0">
-                    <h3 className="t-body font-medium text-foreground">{activeReview.authorName}</h3>
-                    <div className="mt-1 flex items-center gap-0.5">
-                      {Array.from({ length: 5 }).map((_, index) => {
-                        const filled = index < activeReview.rating;
-                        return (
-                          <Star
-                            key={`${activeReview.id}-detail-star-${index}`}
-                            className={`size-3.5 ${filled ? "fill-current text-yellow-400" : "text-muted-foreground/35"}`}
-                            aria-hidden="true"
-                          />
-                        );
-                      })}
-                      <span className="ml-2 text-xs text-muted-foreground">{activeReview.relativeTime}</span>
-                    </div>
-                    <p className="mt-1 text-[11px] text-muted-foreground/90">
-                      {t("googleReviews.originalLanguageLabel", { language: activeReview.originalLanguage })}
-                    </p>
-                  </div>
-                </div>
-                <DialogClose asChild>
-                  <Button variant="ghost" size="sm">
-                    {t("googleReviews.close")}
-                  </Button>
-                </DialogClose>
-              </div>
-              <div className="max-h-[56vh] overflow-y-auto p-4">
-                <p className="text-sm text-muted-foreground">{activeReview.text}</p>
-              </div>
-              <div className="border-t border-border p-4">
-                <div className="flex flex-col gap-2 sm:flex-row">
-                  <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
-                    <ExternalLink href={GOOGLE_ALL_REVIEWS_URL}>
-                      {t("googleReviews.viewAll")}
-                    </ExternalLink>
-                  </Button>
-                  <Button asChild size="sm" className="w-full sm:w-auto">
-                    <ExternalLink href={GOOGLE_WRITE_REVIEW_URL}>
-                      {t("googleReviews.writeReview")}
-                    </ExternalLink>
-                  </Button>
-                </div>
-              </div>
-            </>
-          ) : null}
-        </DialogContent>
-      </Dialog>
     </section>
   );
 }

@@ -1,0 +1,14 @@
+{
+  "checkedLocales": [
+    "en",
+    "sq",
+    "sr",
+    "tr"
+  ],
+  "suspicious": {
+    "sr": [
+      "sss.items.tattoo-coverup.aShort",
+      "sss.items.tattoo-coverup.aLong"
+    ]
+  }
+}

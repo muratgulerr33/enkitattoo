@@ -444,7 +444,19 @@
       "nextSlide": "Sonraki slayt",
       "filters": {
         "category": "Kategori",
-        "reset": "Filtreleri sıfırla"
+        "reset": "Filtreleri sıfırla",
+        "options": {
+          "minimal-fine-line-dovme": "Minimal & Fine Line",
+          "yazi-isim-dovmesi": "Yazı & İsim",
+          "realistik-dovme": "Realistik Dövme",
+          "traditional-dovme": "Old School / Traditional",
+          "dovme-kapatma": "Kapatma / Cover-Up",
+          "ataturk-temali-dovme": "Atatürk",
+          "blacwork-dovme": "Blackwork",
+          "kisiye-ozel-tasarim": "Kişiye Özel Tasarım",
+          "portre": "Portre",
+          "piercing": "Piercing"
+        }
       }
     },
     "contact": {
@@ -516,8 +528,8 @@
       "studio": "Stüdyo"
     },
     "placeholders": {
-      "piercingShort": "Bu başlık için en doğru yanıtı durumuna göre veriyoruz; WhatsApp'tan yaz.",
-      "piercingLong": "Bu başlık için en doğru yanıtı durumuna göre veriyoruz; WhatsApp'tan yaz; görsel atarsan hızlı değerlendiririz."
+      "piercingShort": "Piercing konusu kişiye ve bölgeye göre değişir; WhatsApp’tan yazarsan hızlıca yönlendirelim.",
+      "piercingLong": "Piercing konusu kişiye ve bölgeye göre değişir. Bölge, takı materyali, bakım ve iyileşme süresi için en doğru bilgiyi durumuna göre paylaşırız. WhatsApp’tan yaz; görsel paylaşırsan hızlıca değerlendirip yönlendirelim."
     },
     "teaser": {
       "description": "Dövme ve piercing süreci için sık sorulan sorulara tek sayfadan ulaş.",
@@ -563,78 +575,78 @@
     "items": {
       "tattoo-fiyat": {
         "q": "Dövme fiyatları nasıl belirleniyor?",
-        "aShort": "Fiyatı en çok işçilik süresi belirler; boyut tek kriter değildir.",
-        "aLong": "Fiyatı en çok işçilik süresi belirler. Boyut önemli ama tek kriter değildir: Detay yoğunluğu (ince iş daha uzun sürer), stil (fine line, realist, traditional vb.), vücut bölgesi (uygulaması zor alanlar), tasarımın özgün çizimi (custom çalışma). Net fiyat için örnek görsel + ölçü (cm) + yapılacak bölge yeterli."
+        "aShort": "Fiyatı en çok işçilik süresi belirler. Boyut önemlidir ama tek kriter değildir.",
+        "aLong": "Fiyatı en çok işçilik süresi belirler. Boyut önemlidir ama tek kriter değildir: detay yoğunluğu (ince iş daha uzun sürer), stil (fine line, realist, traditional vb.), vücut bölgesi (uygulaması zor alanlar) ve tasarımın özgün çizimi (custom çalışma). Net fiyat için örnek görsel + ölçü (cm) + yapılacak bölge yeterlidir."
       },
       "tattoo-sure-seans": {
         "q": "Dövme kaç saat sürer, kaç seansta biter?",
-        "aShort": "Süre ve seans; detay ve yerleşime göre değişir. Görseli atarsan net plan çıkarırım.",
-        "aLong": "Aynı boyuttaki iki dövme bile farklı sürebilir. Minimal işler daha kısa, realist/yoğun gölgeli işler daha uzun ve bazen çok seans olur. Tasarımı görmeden net söylemek zor; ama görseli atarsan süre + seans planını çıkarırım."
+        "aShort": "Aynı boyuttaki iki dövme bile farklı sürebilir; tasarım detayı belirleyicidir.",
+        "aLong": "Aynı boyuttaki iki dövme bile farklı sürebilir. Minimal işler daha kısa; realist veya yoğun gölgeli işler daha uzun sürer ve bazen birden fazla seans gerekir. Tasarımı görmeden net süre söylemek zor; görseli atarsan süre ve seans planını çıkarırız."
       },
       "tattoo-once-hazirlik": {
         "q": "Dövme yaptırmadan önce nasıl hazırlanmalıyım?",
-        "aShort": "Dinlenmiş, tok ve su içmiş gelmek en iyisidir. Rahat kıyafet seç.",
-        "aLong": "Seansa dinlenmiş, tok ve su içmiş gelmek en iyisidir. Rahat kıyafet seç; dövme yapılacak bölgeye kolay erişilsin. Kendini iyi hissetmiyorsan ertelemek daha doğru olur."
+        "aShort": "Seansa dinlenmiş, tok ve su içmiş gelmek en iyisidir. Rahat kıyafet seç.",
+        "aLong": "Seansa dinlenmiş, tok ve su içmiş gelmek en iyisidir. Rahat kıyafet seç; dövme yapılacak bölgeye kolay erişilebilsin. Kendini iyi hissetmiyorsan seansı ertelemek daha doğru olur."
       },
       "tattoo-alkol": {
         "q": "Alkol aldıktan sonra dövme olur mu?",
-        "aShort": "Alkol vücudu etkileyebilir; uygulama ve iyileşmeyi zorlaştırabilir. En güvenlisi seans öncesi alkolü tercih etmemek.",
-        "aLong": "Alkol vücudu etkileyebilir; bu da uygulamayı ve iyileşmeyi zorlaştırabilir. En güvenlisi: seans öncesi alkolü tercih etmemek."
+        "aShort": "Alkol vücudu etkileyebilir; uygulamayı ve iyileşmeyi zorlaştırabilir.",
+        "aLong": "Alkol vücudu etkileyebilir; bu da uygulamayı ve iyileşmeyi zorlaştırabilir. En güvenlisi: seans öncesi alkol tüketmemek."
       },
       "tattoo-hamile-emzirme": {
         "q": "Hamilelikte / emzirirken dövme yaptırılır mı?",
-        "aShort": "Hassas bir konudur; çoğu kişi ertelemeyi tercih eder. En sağlıklısı doktor görüşüne göre hareket etmektir.",
+        "aShort": "Bu hassas bir konudur; en sağlıklısı doktor görüşüne göre hareket etmektir.",
         "aLong": "Bu hassas bir konudur. Çoğu kişi bu dönemde dövmeyi ertelemeyi tercih eder. En sağlıklısı doktor görüşüne göre hareket etmektir."
       },
       "tattoo-bakim-48saat": {
         "q": "Dövme sonrası ilk 24–48 saat ne yapmalıyım?",
-        "aShort": "İlk iki gün kritik: temiz tut, tahriş etme, gereğinden fazla ürün sürme.",
-        "aLong": "İlk iki gün kritik: temiz tut + tahriş etme + gereğinden fazla ürün sürme. Biz seans sonrası sana bakım adımlarını net şekilde anlatırız. En önemli kural: elleme, sürtme, kirli temas yok."
+        "aShort": "İlk iki gün kritiktir: temiz tut, tahriş etme ve gereğinden fazla ürün sürme.",
+        "aLong": "İlk iki gün kritiktir: temiz tut, tahriş etme ve gereğinden fazla ürün sürme. Seans sonrası bakım adımlarını sana net şekilde anlatırız. En önemli kural: elleme, sürtme ve kirli temastan kaçın."
       },
       "tattoo-kabuk-soyulma": {
-        "q": "Dövme kabuklanır mı, soyulur mu? Normal mi?",
-        "aShort": "Çoğu dövmede kabuklanma/soyulma/kaşıntı normaldir. Kabukları koparmamak gerekir.",
-        "aLong": "Evet, çoğu dövmede kabuklanma/soyulma/kaşıntı normaldir. En büyük hata: kabukları koparmak. Bu, iz ve renk kaybı yapabilir."
+        "q": "Dövme iyileşirken soyulma ve kaşıntı olur mu? Normal mi?",
+        "aShort": "Evet; çoğu dövmede ince kuruma, soyulma ve kaşıntı normal süreçtir.",
+        "aLong": "Evet; çoğu dövmede ince kuruma, soyulma ve kaşıntı normal süreçtir. En önemli nokta nazik davranmak ve bölgeyi zorlamamaktır; böylece renk görünümü daha iyi korunur."
       },
       "tattoo-iyilesme": {
         "q": "Dövme ne kadar sürede iyileşir?",
-        "aShort": "Toparlama süresi kişiye ve bölgeye göre değişir; cildin tam oturması daha uzun sürebilir.",
-        "aLong": "İlk görüntü olarak toparlama genelde kısa sürede başlar ama cildin “tam oturması” daha uzun sürebilir. İyileşme; bölge, bakım ve cilt yapısına göre değişir. Sana seans sonrası gün gün ne beklemen gerektiğini söyleriz."
+        "aShort": "İlk görüntünün toparlaması genelde kısa sürede başlar; cildin tam oturması daha uzun sürebilir.",
+        "aLong": "İlk görüntünün toparlaması genelde kısa sürede başlar; fakat cildin “tam oturması” daha uzun sürebilir. İyileşme; bölgeye, bakıma ve cilt yapısına göre değişir. Seans sonrası gün gün ne beklemen gerektiğini anlatırız."
       },
       "tattoo-dus": {
         "q": "Dövmeden sonra duş alınır mı?",
-        "aShort": "Genelde evet; ama çok sıcak su, uzun buhar ve sert ovalama yok.",
-        "aLong": "Genelde evet; ama çok sıcak su, uzun buhar, sert ovalama yok. Temiz ve nazik bir rutin en iyisi."
+        "aShort": "Genelde evet; ancak çok sıcak su, uzun buhar ve sert ovalama yok.",
+        "aLong": "Genelde evet; ancak çok sıcak su, uzun buhar ve sert ovalama yok. Temiz ve nazik bir rutin en iyisidir."
       },
       "tattoo-deniz-havuz-sauna": {
-        "q": "Deniz / havuz / sauna ne zaman?",
-        "aShort": "İyileşme sürecinde uzun süre suya girmek ve sauna/buhar cildi zorlayabilir; toparlanana kadar beklemek daha güvenli.",
-        "aLong": "Dövme iyileşme sürecindeyken uzun süre suya girmek ve sauna/buhar cildi zorlayabilir. En güvenlisi: dövme toparlanana kadar beklemek. Bölge ve işin durumuna göre sana net zaman aralığı veririz."
+        "q": "Deniz/havuz/sauna ne zaman?",
+        "aShort": "İyileşme sürecinde uzun süre suya girmek ve sauna/buhar cildi zorlayabilir.",
+        "aLong": "İyileşme sürecinde uzun süre suya girmek ve sauna/buhar cildi zorlayabilir. En güvenlisi, dövme toparlanana kadar beklemektir. Bölgeye ve işin durumuna göre net zaman aralığını söyleriz."
       },
       "tattoo-spor": {
         "q": "Spor ne zaman yapılır?",
-        "aShort": "İlk günlerde ağır ter, sürtünme ve esneme tahriş edebilir; sonra kontrollü dönüş yapılır.",
-        "aLong": "İlk günlerde ağır ter, sürtünme ve esneme dövmeyi tahriş edebilir. Sonra kontrollü şekilde dönüş yapılır. Dövmenin yeri (kol, bacak, kaburga vs.) burada belirleyicidir."
+        "aShort": "İlk günlerde yoğun ter, sürtünme ve esneme dövmeyi tahriş edebilir.",
+        "aLong": "İlk günlerde yoğun ter, sürtünme ve esneme dövmeyi tahriş edebilir. Sonrasında kontrollü şekilde dönüş yapılır. Dövmenin yeri (kol, bacak, kaburga vb.) burada belirleyicidir."
       },
       "tattoo-gunes": {
         "q": "Dövme güneşte solar mı? Nasıl korunur?",
-        "aShort": "Güneş dövmenin en büyük düşmanıdır; iyileşme döneminde özellikle korunmalıdır.",
+        "aShort": "Güneş dövmenin en büyük düşmanıdır; iyileşme döneminde özellikle korunmak gerekir.",
         "aLong": "Güneş dövmenin en büyük düşmanıdır. İyileşme döneminde özellikle korumak gerekir. Sonrasında da güneşten korunmak, dövmenin yıllarca daha canlı kalmasını sağlar."
       },
       "tattoo-rotus": {
         "q": "Rötuş (touch-up) gerekir mi?",
-        "aShort": "Bazı bölgelerde veya bazı cilt tiplerinde küçük rötuşlar normaldir.",
-        "aLong": "Bazı bölgelerde veya bazı cilt tiplerinde küçük rötuşlar gerekebilir. Bu tamamen normaldir. Rötuş ihtimali; bölge, bakım ve cilt yapısına göre değişir."
+        "aShort": "Bazı bölgelerde veya bazı cilt tiplerinde küçük rötuşlar gerekebilir; bu tamamen normaldir.",
+        "aLong": "Bazı bölgelerde veya bazı cilt tiplerinde küçük rötuşlar gerekebilir; bu tamamen normaldir. Rötuş ihtimali bölgeye, bakıma ve cilt yapısına göre değişir."
       },
       "tattoo-coverup": {
-        "q": "Cover-up yapılır mı? Eski dövmeyi kapatabilir misiniz?",
-        "aShort": "Çoğu dövme cover-up ile toparlanabilir; eski dövmenin koyuluğu tasarımı sınırlar. Foto ile net söyleriz.",
-        "aLong": "Çoğu dövme cover-up ile toparlanabilir; ama eski dövmenin koyuluğu ve şekli tasarımı sınırlar. Fotoğrafı görmeden “kesin olur” demeyiz. Foto atarsan olur/olmaz + en iyi planı net söyleriz."
+        "q": "Kapatma (cover-up) yapılır mı? Eski dövmeyi kapatabilir misiniz?",
+        "aShort": "Çoğu dövme kapatma (cover-up) ile toparlanabilir; eski dövmenin koyuluğu ve şekli tasarımı sınırlar.",
+        "aLong": "Çoğu dövme kapatma (cover-up) ile toparlanabilir; ancak eski dövmenin koyuluğu ve şekli tasarımı sınırlar. Fotoğrafı görmeden “kesin olur” demeyiz. Görsel atarsan olur/olmaz ve en iyi planı netleştiririz."
       },
       "tattoo-lazer-vs-coverup": {
         "q": "Dövme sildirme (lazer) mi, cover-up mı daha mantıklı?",
-        "aShort": "Bazıları direkt cover-up olur; bazıları önce lazerle açılıp sonra cover-up daha iyi sonuç verir.",
-        "aLong": "Bazı dövmeler direkt cover-up olur, bazıları önce lazerle biraz açılıp sonra cover-up daha iyi sonuç verir. Burada hedef bazen “tamamen silmek” değil, “kapatılabilir hale getirmek” olur. Foto ile en doğru yolu seçeriz."
+        "aShort": "Bazı dövmeler direkt cover-up ile toparlanır; bazılarında önce lazerle biraz açıp sonra cover-up yapmak daha iyi sonuç verir.",
+        "aLong": "Bazı dövmeler direkt cover-up ile toparlanır; bazılarında ise önce lazerle biraz açıp sonra cover-up yapmak daha iyi sonuç verir. Hedef bazen “tamamen silmek” değil, “kapatılabilir hale getirmek” olur. Fotoğrafla en doğru yolu seçeriz."
       },
       "piercing-igne-tabanca-sterilizasyon": {
         "q": "Piercing’i nerede yaptırmalıyım? İğne mi tabanca mı, sterilizasyon (otoklav) var mı?"
@@ -662,13 +674,13 @@
       },
       "studio-adres-maps": {
         "q": "Stüdyo nerede, haritada nasıl açarım?",
-        "aShort": "Stüdyo adresi: {addressText}. Haritada açmak için hızlı rehberdeki “Haritada Aç” bağlantısını kullanabilirsin.",
-        "aLong": "Adres: {addressText}. Yol tarifi için Google Maps bağlantısı: {googleMapsBusinessUrl}"
+        "aShort": "Adres: {addressText}. Yol tarifi için Google Maps bağlantısı: {googleMapsBusinessUrl}",
+        "aLong": "Adres: İnönü, 1404. Sk. No:17 D:E, 33130 Yenişehir/Mersin. Yol tarifi için Google Maps bağlantısı: https://maps.app.goo.gl/jQk7m7YNVXsoHitG9"
       },
       "studio-calisma-saatleri": {
         "q": "Stüdyo çalışma saatleri nedir?",
-        "aShort": "{weekdayLabel}; {sundayLabel}.",
-        "aLong": "Güncel saatler: {weekdayLabel} ve {sundayLabel}. Randevu planı için WhatsApp’tan yazabilirsin: {whatsappUrl}"
+        "aShort": "Güncel saatler: Hafta içi 10:00–20:00 ve Pazar 12:00–20:00.",
+        "aLong": "Güncel saatler: Hafta içi 10:00–20:00 ve Pazar 12:00–20:00. Randevu planı için WhatsApp’tan yazabilirsin: https://wa.me/905537108033"
       }
     }
   }

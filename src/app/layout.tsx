@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
+import { headers } from "next/headers";
 import { GA4 } from "@/components/analytics/ga4";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { locales } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/site/base-url";
 import "./globals.css";
 
@@ -68,8 +70,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const requestHeaders = await headers();
+  const requestedLocale = requestHeaders.get("x-next-intl-locale")?.toLowerCase();
+  const htmlLang = locales.includes(requestedLocale as (typeof locales)[number])
+    ? requestedLocale
+    : "tr";
+
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang={htmlLang} suppressHydrationWarning>
       <body className={geist.variable}>
         <ThemeProvider
           attribute="class"

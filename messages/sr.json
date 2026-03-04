@@ -444,7 +444,19 @@
       "nextSlide": "Sledeći slajd",
       "filters": {
         "category": "Kategorija",
-        "reset": "Resetuj filtere"
+        "reset": "Resetuj filtere",
+        "options": {
+          "minimal-fine-line-dovme": "Minimal & Fine Line",
+          "yazi-isim-dovmesi": "Natpis & Ime",
+          "realistik-dovme": "Realistična Tetovaža",
+          "traditional-dovme": "Old School / Traditional",
+          "dovme-kapatma": "Cover-Up",
+          "ataturk-temali-dovme": "Ataturk",
+          "blacwork-dovme": "Blackwork",
+          "kisiye-ozel-tasarim": "Personalizovani Dizajn",
+          "portre": "Portret",
+          "piercing": "Pirsing"
+        }
       }
     },
     "contact": {

@@ -42,7 +42,7 @@ export function GaleriFilters() {
           <SelectItem value="all">{t("common.allCategories")}</SelectItem>
           {galleryHubFilterOptions.map((option) => (
             <SelectItem key={option.value} value={option.value}>
-              {option.label}
+              {t(`pages.gallery.filters.options.${option.value}`)}
             </SelectItem>
           ))}
         </SelectContent>

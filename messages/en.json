@@ -444,7 +444,19 @@
       "nextSlide": "Next slide",
       "filters": {
         "category": "Category",
-        "reset": "Reset filters"
+        "reset": "Reset filters",
+        "options": {
+          "minimal-fine-line-dovme": "Minimal & Fine Line",
+          "yazi-isim-dovmesi": "Lettering & Name",
+          "realistik-dovme": "Realistic Tattoo",
+          "traditional-dovme": "Old School / Traditional",
+          "dovme-kapatma": "Cover-Up",
+          "ataturk-temali-dovme": "Ataturk",
+          "blacwork-dovme": "Blackwork",
+          "kisiye-ozel-tasarim": "Custom Design",
+          "portre": "Portrait",
+          "piercing": "Piercing"
+        }
       }
     },
     "contact": {
