@@ -18,7 +18,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
     path: "/",
     h1: "Mersin\u2019de D\u00f6vme & Piercing",
     seoTitle: "Mersin D\u00f6vme & Piercing | Enki Tattoo",
-    seoDescription: "Enki Tattoo Mersin: erkek/kad\u0131n minimal tattoo, kol-bacak kaplama. Piercing ve d\u00f6vme silme. Realistik tasar\u0131m i\u00e7in WhatsApp\u2019tan yaz, fiyat al!",
+    seoDescription: "Enki Tattoo\u2019da Mersin\u2019de d\u00f6vme ve piercing se\u00e7eneklerini tek ekranda g\u00f6r; stilleri gez, \u00f6rneklere bak, sana yak\u0131\u015facak tasar\u0131m \u00e7izgisini birka\u00e7 dakikada kolayca ke\u015ffet.",
     description: "Enki Tattoo\u2019da d\u00f6vme ve piercing tasar\u0131m se\u00e7eneklerini tek \u00e7at\u0131 alt\u0131nda ke\u015ffet: minimal & fine line, lettering, realistik, cover-up ve ki\u015fiye \u00f6zel stiller. Kol, bacak, s\u0131rt ve g\u00f6\u011f\u00fcs i\u00e7in \u00f6rnekleri; kulak, burun ve septum piercing tak\u0131 stilleriyle birlikte incele. Tarz\u0131n\u0131 ke\u015ffet.",
     shortDescription: "Enki Tattoo\u2019da Mersin\u2019de d\u00f6vme ve piercing se\u00e7eneklerini tek ekranda g\u00f6r; stilleri gez, tasar\u0131mlar\u0131 incele, sana yak\u0131\u015facak tarz\u0131 kendin ke\u015ffet. Hemen fiyat al.",
     microLine: "Stilini se\u00e7, \u00f6rnekleri incele; sana yak\u0131\u015fan tasar\u0131mla tarz\u0131nla kendini ke\u015ffet.",

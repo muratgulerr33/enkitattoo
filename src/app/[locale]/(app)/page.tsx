@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import type { Metadata } from "next";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
@@ -13,7 +14,7 @@ import { mainHubs, specialHubs } from "@/lib/hub/hubs.v1";
 import { getGalleryPreviewItems } from "@/lib/gallery/manifest.v1";
 import { HubCard } from "@/components/hub/hub-card";
 import { HubChipRail } from "@/components/hub/featured-hub-rail";
-import { getRouteContent, listKnownPaths } from "@/lib/route-content";
+import { getRouteContent, hasNoIndex, listKnownPaths } from "@/lib/route-content";
 import { PHONE_TEL_URL, WHATSAPP_URL } from "@/lib/site/links";
 import { SITE_INFO } from "@/lib/site-info";
 import { ChevronDown, ChevronRight, Images, MapPin, Palette, Phone, Sparkles } from "lucide-react";
@@ -27,6 +28,30 @@ const GOOGLE_EMBED_SRC =
 const knownKesfetPaths = new Set(
   listKnownPaths().filter((pathValue) => pathValue.startsWith("/kesfet/")),
 );
+
+export function generateMetadata(): Metadata {
+  const content = getRouteContent("/");
+  if (!content) {
+    return {};
+  }
+
+  const metadata: Metadata = {};
+
+  if (content.seoTitle) {
+    metadata.title = { absolute: content.seoTitle };
+  }
+  if (content.seoDescription) {
+    metadata.description = content.seoDescription;
+  }
+  if (content.canonical) {
+    metadata.alternates = { canonical: content.canonical };
+  }
+  if (hasNoIndex(content.indexing)) {
+    metadata.robots = { index: false, follow: true };
+  }
+
+  return metadata;
+}
 
 export default async function HomePage() {
   const t = await getTranslations();
