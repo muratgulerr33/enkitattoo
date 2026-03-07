@@ -117,11 +117,11 @@ export default async function KesfetPage() {
             <div className="h-full w-full bg-gradient-to-br from-surface-1 to-surface-2" />
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-            <h1 className="line-clamp-1 text-2xl font-semibold text-white drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)]">
+          <div className="absolute inset-x-0 bottom-0 p-4 text-[color:var(--on-image-foreground)]">
+            <h1 className="line-clamp-1 text-2xl font-semibold text-[color:var(--on-image-foreground)] drop-shadow-[0_1px_6px_rgba(0,0,0,0.55)]">
               {heading}
             </h1>
-            <p className="line-clamp-2 text-sm text-white/80 drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]">
+            <p className="line-clamp-2 text-sm text-[color:var(--on-image-muted)] drop-shadow-[0_1px_4px_rgba(0,0,0,0.5)]">
               {shortDescription}
             </p>
           </div>

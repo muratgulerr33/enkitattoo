@@ -39,7 +39,6 @@ export function GalleryGrid({ items }: GalleryGridProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [openId, setOpenId] = React.useState<string | null>(null);
-  const [readyTick, setReadyTick] = React.useState(0);
   const [showLoader, setShowLoader] = React.useState(false);
   const [slowHint, setSlowHint] = React.useState(false);
   const [disableDragOnDesktop, setDisableDragOnDesktop] = React.useState(false);
@@ -50,6 +49,7 @@ export function GalleryGrid({ items }: GalleryGridProps) {
   const [mountedIndexes, setMountedIndexes] = React.useState<Set<number>>(new Set());
   const [visibleCount, setVisibleCount] = React.useState(INITIAL_COUNT);
   const [hubQueryKey, setHubQueryKey] = React.useState("");
+  const [readyIds, setReadyIds] = React.useState<Set<string>>(new Set());
   const openedWithPushRef = React.useRef(false);
   const openPerfPendingRef = React.useRef(false);
   const wasViewerOpenRef = React.useRef(false);
@@ -57,7 +57,6 @@ export function GalleryGrid({ items }: GalleryGridProps) {
   const wasOpenForScrollRef = React.useRef(false);
   const loadMoreSentinelRef = React.useRef<HTMLDivElement | null>(null);
   const preloadedSrcRef = React.useRef<Set<string>>(new Set());
-  const readyIdsRef = React.useRef<Set<string>>(new Set());
 
   const activeId = React.useMemo(() => {
     if (openId) return openId;
@@ -66,8 +65,8 @@ export function GalleryGrid({ items }: GalleryGridProps) {
 
   const isActiveReady = React.useMemo(() => {
     if (!activeId) return true;
-    return readyIdsRef.current.has(activeId);
-  }, [activeId, readyTick]);
+    return readyIds.has(activeId);
+  }, [activeId, readyIds]);
   const shouldWatchDrag = React.useCallback(
     (_api: unknown, evt: MouseEvent | TouchEvent) => {
       if (!disableDragOnDesktop) return true;
@@ -156,9 +155,13 @@ export function GalleryGrid({ items }: GalleryGridProps) {
   }, []);
 
   const markReady = React.useCallback((id: string) => {
-    if (!id || readyIdsRef.current.has(id)) return;
-    readyIdsRef.current.add(id);
-    setReadyTick((tick) => tick + 1);
+    if (!id) return;
+    setReadyIds((current) => {
+      if (current.has(id)) return current;
+      const next = new Set(current);
+      next.add(id);
+      return next;
+    });
   }, []);
   const addMountedIndexes = React.useCallback(
     (indexes: number[]) => {
@@ -405,21 +408,21 @@ export function GalleryGrid({ items }: GalleryGridProps) {
   React.useEffect(() => {
     setShowLoader(false);
     if (!open || !activeId) return;
-    if (readyIdsRef.current.has(activeId)) return;
+    if (readyIds.has(activeId)) return;
 
     const delay = slowHint ? 250 : 300;
     const timer = window.setTimeout(() => {
-      if (!readyIdsRef.current.has(activeId)) {
+      if (!readyIds.has(activeId)) {
         setShowLoader(true);
       }
     }, delay);
 
     return () => window.clearTimeout(timer);
-  }, [activeId, open, readyTick, slowHint]);
+  }, [activeId, open, readyIds, slowHint]);
 
   React.useEffect(() => {
     if (isActiveReady) setShowLoader(false);
-  }, [activeId, isActiveReady, readyTick]);
+  }, [isActiveReady]);
 
   React.useEffect(() => {
     if (typeof window === "undefined") return;

@@ -29,7 +29,6 @@ import {
 } from "@/components/icons/nandd";
 import { WhatsAppCta } from "@/components/app/cta-actions";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { IconButton } from "@/components/ui/icon-button";
 import {
   Sheet,
@@ -182,10 +181,10 @@ function MenuRow({ href, label, isActive, onClick }: MenuRowProps) {
       aria-current={isActive ? "page" : undefined}
       className={cn(
         MENU_ROW_BASE,
-        "active:bg-muted/70 dark:active:bg-white/15",
+        "active:bg-muted/70",
         isActive
-          ? "bg-muted/60 font-semibold text-foreground dark:bg-white/10"
-          : "text-foreground/80 hover:bg-muted/40 dark:hover:bg-white/5"
+          ? "bg-muted/60 font-semibold text-foreground"
+          : "text-foreground/80 hover:bg-muted/40"
       )}
     >
       <span>{label}</span>
@@ -454,7 +453,7 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                                 aria-label={t("theme.selectMode")}
                                 className={cn(
                                   MENU_ROW_BASE,
-                                  "justify-between text-foreground/80 hover:bg-muted/40 dark:hover:bg-white/5 active:bg-muted/70 dark:active:bg-white/15"
+                                  "justify-between text-foreground/80 hover:bg-muted/40 active:bg-muted/70"
                                 )}
                               >
                                 <span>{t("theme.mode")}</span>
@@ -684,10 +683,10 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                   key={href}
                   href={href}
                   className={cn(
-                    "group relative flex min-h-11 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 text-center transition-[color,transform,background-color] duration-150 active:scale-[0.97] active:bg-muted/60 dark:active:bg-white/10",
+                    "group relative flex min-h-11 flex-1 flex-col items-center justify-center gap-1 rounded-xl px-2 text-center transition-[color,transform,background-color] duration-150 active:scale-[0.97] active:bg-muted/60",
                     isActive
-                      ? "bg-muted/45 text-foreground dark:bg-white/10"
-                      : "text-foreground/65 hover:bg-muted/35 hover:text-foreground dark:text-foreground/70 dark:hover:bg-white/5"
+                      ? "bg-muted/45 text-foreground"
+                      : "text-foreground/65 hover:bg-muted/35 hover:text-foreground"
                   )}
                   aria-current={isActive ? "page" : undefined}
                 >

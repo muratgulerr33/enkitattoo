@@ -9,7 +9,6 @@ import {
   useDeferredValue,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import {
@@ -63,17 +62,27 @@ function getGuideIcon(id: string): GuideIconComponent {
   }
 }
 
+function getCategoryFromSearchParams(
+  searchParams: ReturnType<typeof useSearchParams>
+): KbCategoryFilter {
+  const categoryParam = searchParams.get("cat");
+  return categoryParam === "tattoo" || categoryParam === "piercing" || categoryParam === "studio"
+    ? categoryParam
+    : "all";
+}
+
 export function KBClient() {
   const t = useTranslations();
   const kbItems = useMemo(() => resolveKbItems(t), [t]);
   const kbCategories = useMemo(() => resolveKbCategories(t), [t]);
   const quickGuideLinks = useMemo(() => resolveQuickGuideLinks(t), [t]);
+  const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<KbCategoryFilter>("all");
+  const [activeCategory, setActiveCategory] = useState<KbCategoryFilter>(() =>
+    getCategoryFromSearchParams(searchParams)
+  );
   const [openIds, setOpenIds] = useState<string[]>([]);
   const [visibleCount, setVisibleCount] = useState(FAQ_PAGE_SIZE);
-  const searchParams = useSearchParams();
-  const didInitCategory = useRef(false);
 
   const deferredQuery = useDeferredValue(query);
 
@@ -93,19 +102,6 @@ export function KBClient() {
     [deferredQuery]
   );
 
-  useEffect(() => {
-    if (didInitCategory.current) {
-      return;
-    }
-
-    const categoryParam = searchParams.get("cat");
-    if (categoryParam === "tattoo" || categoryParam === "piercing" || categoryParam === "studio") {
-      setActiveCategory(categoryParam);
-    }
-
-    didInitCategory.current = true;
-  }, [searchParams]);
-
   const filteredItems = useMemo(() => {
     return indexedItems.filter((item) => {
       if (activeCategory !== "all" && item.category !== activeCategory) {
@@ -119,10 +115,6 @@ export function KBClient() {
       return item.searchText.includes(normalizedQuery);
     });
   }, [activeCategory, indexedItems, normalizedQuery]);
-
-  useEffect(() => {
-    setVisibleCount(FAQ_PAGE_SIZE);
-  }, [activeCategory, normalizedQuery]);
 
   const visibleItems = useMemo(
     () => filteredItems.slice(0, visibleCount),
@@ -147,6 +139,7 @@ export function KBClient() {
 
     setQuery("");
     setActiveCategory(targetItem.category);
+    setVisibleCount(FAQ_PAGE_SIZE);
     setOpenIds((prev) => (prev.includes(targetItem.id) ? prev : [...prev, targetItem.id]));
 
     window.setTimeout(() => {
@@ -189,7 +182,10 @@ export function KBClient() {
             id="kb-search"
             type="search"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setVisibleCount(FAQ_PAGE_SIZE);
+            }}
             placeholder={t("sss.ui.searchPlaceholder")}
             className="h-11 border-border bg-surface-2 pl-9 pr-12 text-sm"
           />
@@ -198,7 +194,10 @@ export function KBClient() {
               ariaLabel={t("common.clearSearch")}
               variant="ghost"
               size="md"
-              onClick={() => setQuery("")}
+              onClick={() => {
+                setQuery("");
+                setVisibleCount(FAQ_PAGE_SIZE);
+              }}
               className="absolute right-0 top-0 rounded-l-none rounded-r-md"
             >
               <X className="size-4" aria-hidden />
@@ -215,7 +214,10 @@ export function KBClient() {
                 key={category.id}
                 type="button"
                 variant={isActive ? "secondary" : "outline"}
-                onClick={() => setActiveCategory(category.id)}
+                onClick={() => {
+                  setActiveCategory(category.id);
+                  setVisibleCount(FAQ_PAGE_SIZE);
+                }}
                 className={cn(
                   "min-h-11 shrink-0 rounded-full px-4",
                   isActive

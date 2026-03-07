@@ -8,7 +8,7 @@ import json
 import sys
 from pathlib import Path
 
-INPUT_CSV = Path("docs/output/enki-v1-sitemap-seo-template.csv")
+INPUT_CSV = Path("data/route-content/enki-v1-sitemap-seo-template.csv")
 OUTPUT_TS = Path("src/lib/route-content.generated.ts")
 
 REQUIRED_COLUMNS = [

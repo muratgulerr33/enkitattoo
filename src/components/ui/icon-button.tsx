@@ -19,9 +19,9 @@ const sizeClassMap: Record<NonNullable<IconButtonProps["size"]>, string> = {
 
 const variantClassMap: Record<NonNullable<IconButtonProps["variant"]>, string> = {
   ghost:
-    "bg-transparent text-foreground/80 hover:bg-muted/45 hover:text-foreground dark:hover:bg-white/10 dark:hover:text-foreground active:bg-muted/70 dark:active:bg-white/15",
+    "bg-transparent text-foreground/80 hover:bg-muted/45 hover:text-foreground active:bg-muted/70",
   solid:
-    "bg-muted/60 text-foreground/85 shadow-sm hover:bg-muted/80 hover:text-foreground dark:bg-white/10 dark:text-foreground/85 dark:hover:bg-white/15 active:bg-muted dark:active:bg-white/20",
+    "bg-muted/60 text-foreground/85 shadow-sm hover:bg-muted/80 hover:text-foreground active:bg-muted",
 };
 
 const baseClassName =
@@ -54,7 +54,7 @@ const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
           sizeClassMap[size],
           variantClassMap[variant],
           isActive
-            ? "bg-muted/60 text-foreground after:opacity-100 dark:bg-white/12 dark:text-foreground"
+            ? "bg-muted/60 text-foreground after:opacity-100"
             : "after:opacity-0",
           className
         )}

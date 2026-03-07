@@ -203,7 +203,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
   },
   "/piercing/kulak": {
     path: "/piercing/kulak",
-    h1: "Mersin\u2019de Kulak Piercing",
+    h1: "Mersin Kulak Piercing",
     seoTitle: "Mersin Kulak Piercing | Enki Tattoo",
     seoDescription: "Mersin'de Kulak piercing: lob ve k\u0131k\u0131rdak (helix, tragus, conch, daith, rook) se\u00e7enekleri; tak\u0131 se\u00e7imi ve tasar\u0131m uyumu. Hemen ara. Fiyatlar\u0131 incele.",
     description: "Kulak piercing sayfas\u0131nda tek bir detaydan \u00e7oklu kombinlere kadar farkl\u0131 g\u00f6r\u00fcn\u00fcm fikirleri ke\u015ffet. Lob ve k\u0131k\u0131rdak b\u00f6lgelerinde (helix, tragus, conch, daith, rook) halka/clicker daha sade bir tasar\u0131m \u00e7izgisi verir; ta\u015fl\u0131 stud ve bar se\u00e7enekleri daha parlak ya da daha belirgin bir etki katar. Steril st\u00fcdyo ortam\u0131nda \u00e7al\u0131\u015f\u0131l\u0131r. Tarz\u0131n\u0131 ke\u015ffet.",
@@ -214,7 +214,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
   },
   "/piercing/burun": {
     path: "/piercing/burun",
-    h1: "Mersin\u2019de Burun Piercing",
+    h1: "Mersin Burun Piercing",
     seoTitle: "Mersin Burun Piercing | Enki Tattoo",
     seoDescription: "Mersin'de Burun piercing (nostril): halka, ta\u015f/stud ve do\u011fru yerle\u015fim; bak\u0131m ve tak\u0131 tasar\u0131m uyumu. Bilgi al, ileti\u015fime ge\u00e7.",
     description: "Burun piercing g\u00f6r\u00fcn\u00fcm\u00fcn\u00fc tak\u0131 tipine g\u00f6re inceler: ince halka/clicker daha sade bir \u00e7izgi verir, ta\u015fl\u0131 stud daha dikkat \u00e7eken bir tasar\u0131m havas\u0131 katar. Tekli kullan\u0131m ya da kulak piercing kombinleriyle uyumlu se\u00e7enekleri g\u00f6r\u00fcp kendi tarz\u0131n\u0131 se\u00e7mek kolayla\u015f\u0131r. Steril st\u00fcdyo ortam\u0131nda \u00e7al\u0131\u015f\u0131l\u0131r. Tarz\u0131n\u0131 ke\u015ffet.",
@@ -225,7 +225,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
   },
   "/piercing/kas": {
     path: "/piercing/kas",
-    h1: "Mersin\u2019de Ka\u015f Piercing",
+    h1: "Mersin Ka\u015f Piercing",
     seoTitle: "Mersin Ka\u015f Piercing | Enki Tattoo",
     seoDescription: "Mersin'de Ka\u015f piercing: do\u011fru yerle\u015fim, anatomik uygunluk ve tak\u0131 se\u00e7imi; tasar\u0131m uyumu ve bak\u0131m. Bilgi al, ileti\u015fime ge\u00e7.",
     description: "Ka\u015f piercing sayfas\u0131nda sade bar\u2019dan ta\u015fl\u0131 detaylara uzanan stilleri g\u00f6r\u00fcrs\u00fcn; g\u00f6r\u00fcn\u00fcm, se\u00e7ti\u011fin detayla birlikte de\u011fi\u015fir. Tek ba\u015f\u0131na daha temiz bir tasar\u0131m vurgusu yakalayabilir ya da burun/kulak piercing ile kombin kurup daha belirgin bir stil elde edebilirsin. Steril st\u00fcdyo ortam\u0131nda \u00e7al\u0131\u015f\u0131l\u0131r. \u0130leti\u015fime ge\u00e7.",
@@ -236,7 +236,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
   },
   "/piercing/dudak": {
     path: "/piercing/dudak",
-    h1: "Mersin\u2019de Dudak Piercing",
+    h1: "Mersin Dudak Piercing",
     seoTitle: "Mersin Dudak Piercing | Enki Tattoo",
     seoDescription: "Mersin dudak piercing: labret vb.; tak\u0131 boyu ve tasar\u0131m uyumu, a\u011f\u0131z bak\u0131m\u0131. Hemen ara, fiyat al.",
     description: "Dudak piercing i\u00e7in labret gibi stilleri ke\u015ffet; top, ta\u015fl\u0131 detay ve halka se\u00e7enekleriyle minimal ya da daha iddial\u0131 tasar\u0131m havas\u0131n\u0131 kar\u015f\u0131la\u015ft\u0131r.",
@@ -247,7 +247,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
   },
   "/piercing/dil": {
     path: "/piercing/dil",
-    h1: "Mersin\u2019de Dil Piercing",
+    h1: "Mersin Dil Piercing",
     seoTitle: "Mersin Dil Piercing | Enki Tattoo",
     seoDescription: "Mersin'de dil piercing: minimal barbell, ta\u015fl\u0131 top ve renkli se\u00e7eneklerle stilini ke\u015ffet. Tak\u0131 tasar\u0131m uyumunu se\u00e7; Fiyat al.",
     description: "Dil piercing sayfas\u0131nda farkl\u0131 tak\u0131 se\u00e7eneklerini g\u00f6r\u00fcn\u00fcm odakl\u0131 incelersin: minimal barbell daha sade durur, ta\u015fl\u0131 top daha par\u0131lt\u0131l\u0131 bir tasar\u0131m havas\u0131 katar. Renk ve detay farklar\u0131n\u0131 g\u00f6r\u00fcp kendi tarz\u0131na uygun se\u00e7imi yapmak kolayla\u015f\u0131r. Steril st\u00fcdyo ortam\u0131nda \u00e7al\u0131\u015f\u0131l\u0131r. Bilgi al.",
@@ -258,7 +258,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
   },
   "/piercing/gobek": {
     path: "/piercing/gobek",
-    h1: "Mersin\u2019de G\u00f6bek Piercing",
+    h1: "Mersin G\u00f6bek Piercing",
     seoTitle: "Mersin G\u00f6bek Piercing | Enki Tattoo",
     seoDescription: "Mersin'de g\u00f6bek piercing: ta\u015fl\u0131 bar, minimal top veya parlak detaylarla yaz stiline uygun tasar\u0131m. Tarz\u0131n\u0131 ke\u015ffet, fiyat al.",
     description: "G\u00f6bek piercing\u2019te i\u015fi g\u00fczelle\u015ftiren \u015fey tak\u0131n\u0131n detay\u0131: ta\u015fl\u0131 bar daha \u0131\u015f\u0131lt\u0131l\u0131 bir tasar\u0131m verir, sade top daha temiz durur. Yaz kombinleriyle uyum yakalamak i\u00e7in \u00f6rneklere bak\u0131p \u201cminimal mi parlak m\u0131?\u201d diye h\u0131zl\u0131ca karar verirsin. Steril st\u00fcdyo ortam\u0131nda \u00e7al\u0131\u015f\u0131l\u0131r. Tarz\u0131n\u0131 ke\u015ffet.",
@@ -269,7 +269,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
   },
   "/piercing/septum": {
     path: "/piercing/septum",
-    h1: "Mersin\u2019de Septum Piercing",
+    h1: "Mersin Septum Piercing",
     seoTitle: "Mersin\u2019de Septum Piercing | Enki Tattoo",
     seoDescription: "Septum piercing: halka/clicker, ta\u015fl\u0131 veya sade se\u00e7enekler; do\u011fru yerle\u015fim ve tasar\u0131m uyumu. Fiyat al, ileti\u015fime ge\u00e7.",
     description: "Septum\u2019da ince halka daha minimal bir tasar\u0131m verir, clicker daha belirgin durur; ta\u015fl\u0131 detaylar ise i\u015fi parlat\u0131r. Tek ba\u015f\u0131na da g\u00fczel durur, burun ve kulak piercing ile kombin yap\u0131nca daha farkl\u0131 bir hava yakalars\u0131n. Steril st\u00fcdyo ortam\u0131nda \u00e7al\u0131\u015f\u0131l\u0131r. WhatsApp\u2019tan yaz.",
@@ -280,7 +280,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
   },
   "/piercing/industrial": {
     path: "/piercing/industrial",
-    h1: "Mersin\u2019de Industrial Piercing",
+    h1: "Mersin Industrial Piercing",
     seoTitle: "Mersin\u2019de Industrial Piercing | Enki Tattoo",
     seoDescription: "Industrial piercing: iki delik\u2013tek bar; kulak anatomisine uygunluk ve tak\u0131 tasar\u0131m uyumu. Fiyat al, hemen ara.",
     description: "Industrial, kulakta \u201ctek \u00e7izgi\u201d gibi duran o iddial\u0131 tasar\u0131m etkisiyle hemen fark edilir. Sade bar daha temiz g\u00f6r\u00fcn\u00fcr; parlak/top detaylar\u0131 daha dikkat \u00e7eker. Kulak kombinine g\u00fc\u00e7l\u00fc bir \u00e7izgi katmak isteyenler i\u00e7in \u00e7ok iyi bir se\u00e7imdir. Steril st\u00fcdyo ortam\u0131nda \u00e7al\u0131\u015f\u0131l\u0131r. Bilgi al.",
@@ -291,7 +291,7 @@ export const ROUTE_CONTENT: Record<string, RouteContent> = {
   },
   "/piercing/kisiye-ozel": {
     path: "/piercing/kisiye-ozel",
-    h1: "Mersin\u2019de Ki\u015fiye \u00d6zel Piercing",
+    h1: "Mersin Ki\u015fiye \u00d6zel Piercing",
     seoTitle: "Mersin Ki\u015fiye \u00d6zel Piercing | Enki Tattoo",
     seoDescription: "Ki\u015fiye \u00f6zel piercing: anatomiye g\u00f6re yerle\u015fim ve tak\u0131 se\u00e7imi; minimal veya ta\u015fl\u0131 tasar\u0131m uyumu. Bilgi al, teklif al.",
     description: "Ki\u015fiye \u00f6zel piercing\u2019te olay senin tarz\u0131n: sade bir halka ile temiz bir tasar\u0131m yakalars\u0131n, ta\u015fl\u0131 detayla daha parlak bir hava \u00e7\u0131kar. Tek par\u00e7a m\u0131 istiyorsun, yoksa kulakta kombin mi? \u00d6rnekleri g\u00f6r\u00fcp kendine g\u00f6re bir g\u00f6r\u00fcn\u00fcm kurmak daha kolay olur. Steril st\u00fcdyo ortam\u0131nda \u00e7al\u0131\u015f\u0131l\u0131r. En iyi tasar\u0131m\u0131 ke\u015ffet.",

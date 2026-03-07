@@ -1,60 +1,52 @@
 # Enki Tattoo Web
 
-Next.js tabanlı Enki Tattoo kurumsal / keşif sitesi. SEO ve dönüşüm odaklı, premium UX.
+Enki Tattoo'nun Next.js tabanli kurumsal ve kesif sitesi.
 
-## Quick start
+## Hızlı Başlangıç
 
 ```bash
-# Install
 npm install
-
-# Run dev
 npm run dev
-# → http://localhost:3000
+# -> http://localhost:3002
 
-# Build
 npm run build
-
-# Check (lint + build + no-palette guardrail)
 npm run check:all
 ```
 
-## Tech stack
+## Kısa Özet
 
-- **Framework:** Next.js 16 (App Router), React 19, TypeScript
-- **UI:** Tailwind v4, shadcn/ui (new-york, cssVariables, neutral), next-themes
-- **Font:** Geist only
-- **Styling:** Semantic tokens only (no raw palette classes); see [docs/01-Design rules.md](docs/01-Design%20rules.md)
+- Framework: Next.js 16 App Router, React 19, TypeScript
+- I18n: `next-intl` (`tr`, `sq`, `sr`, `en`)
+- UI: Tailwind v4, Radix tabanlı componentler, `next-themes`
+- Analytics: `NEXT_PUBLIC_GA_ID` varsa GA4 aktif
 
-## IA (canonical routes)
+Bağlam almak için önce `docs/README.md`, sonra `docs/SSOT.md` okunur. Çalışma sırası için `docs/WORKFLOW.md` kullanılır.
 
-| Route        | Açıklama   |
-|-------------|------------|
-| `/`         | Ana sayfa  |
-| `/kesfet`   | Keşfet (hub listesi) |
-| `/kesfet/[hub]` | Hub detay |
-| `/piercing` | Piercing  |
-| `/galeri`   | Galeri    |
-| `/artistler`| Artistler |
-| `/iletisim` | İletişim  |
+## Public Route Seti
 
-Eski route'lar yönlendirilir: `/book` → `/iletisim`, `/explore` → `/kesfet`, `/gallery` → `/galeri`, `/profile` → `/artistler`.
+- `/`
+- `/kesfet`
+- `/kesfet/[hub]`
+- `/piercing`
+- `/piercing/[hub]`
+- `/galeri-tasarim`
+- `/dovme-egitimi`
+- `/artistler`
+- `/artistler/[slug]`
+- `/iletisim`
+- `/sss`
 
-## Docs
+Aktif redirect'ler: `/book` -> `/iletisim`, `/explore` -> `/kesfet`, `/profile` -> `/artistler` (`next.config.ts`).
 
-- [01-Design rules.md](docs/01-Design%20rules.md) — Tasarım kuralları, semantic token
-- [02-responsive-checklist.md](docs/02-responsive-checklist.md) — Responsive kurallar
-- [03-timeline.md](docs/03-timeline.md) — Zaman tüneli
-- [04-repo-hygiene.md](docs/04-repo-hygiene.md) — Repo kuralları, klasör yapısı
-- [00-masterpack.md](docs/00-masterpack.md) — Proje özeti (masterpack)
+## Dahili Yüzeyler
 
-## Scripts
+- `/styleguide`: dahili kontrol yüzeyi; canonical public route setinin parçası değildir.
+- Metadata route'ları: `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest`
 
-| Script | Açıklama |
-|--------|----------|
-| `npm run dev` | Geliştirme sunucusu |
-| `npm run build` | Production build |
-| `npm run start` | Production sunucu |
-| `npm run lint` | ESLint |
-| `npm run check:no-palette` | `src/` içinde palette sınıfları (bg-/text-/border- gray,zinc vb.) aranır; bulunursa hata |
-| `npm run check:all` | lint + build + check:no-palette |
+## Dokümantasyon
+
+- [docs/README.md](docs/README.md): docs haritası ve okuma sırası
+- [docs/SSOT.md](docs/SSOT.md): routes, i18n, SEO, source-of-truth
+- [docs/UI-SYSTEM.md](docs/UI-SYSTEM.md): UI kontratları
+- [docs/WORKFLOW.md](docs/WORKFLOW.md): çalışma biçimi ve kalite kapıları
+- [docs/OPS.md](docs/OPS.md): repo-side runtime ve deploy hazırlığı

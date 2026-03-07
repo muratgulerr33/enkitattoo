@@ -1,0 +1,1998 @@
+{
+  "en": [
+    {
+      "path": [
+        "common",
+        "languages",
+        "tr"
+      ],
+      "value": "Turkish"
+    },
+    {
+      "path": [
+        "common",
+        "languages",
+        "sq"
+      ],
+      "value": "Albanian"
+    },
+    {
+      "path": [
+        "common",
+        "languages",
+        "sr"
+      ],
+      "value": "Serbian"
+    },
+    {
+      "path": [
+        "common",
+        "cta",
+        "whatsappWrite"
+      ],
+      "value": "Message on WhatsApp"
+    },
+    {
+      "path": [
+        "rightRail",
+        "piercing",
+        "title"
+      ],
+      "value": "Piercing Appointment"
+    },
+    {
+      "path": [
+        "rightRail",
+        "piercing",
+        "cta"
+      ],
+      "value": "Message for Piercing"
+    },
+    {
+      "path": [
+        "pages",
+        "piercing",
+        "cta"
+      ],
+      "value": "Message for Piercing"
+    },
+    {
+      "path": [
+        "pages",
+        "piercing",
+        "shortDescription"
+      ],
+      "value": "Ear, nose, septum, and more. Message us for professional Piercing."
+    },
+    {
+      "path": [
+        "pages",
+        "home",
+        "heroMicroLine"
+      ],
+      "value": "Pick your style, see examples, book an Appointment fast."
+    },
+    {
+      "path": [
+        "pages",
+        "kesfet",
+        "shortDescription"
+      ],
+      "value": "Pick your style, see examples, book an Appointment fast."
+    },
+    {
+      "path": [
+        "pages",
+        "home",
+        "piercingDescription"
+      ],
+      "value": "Piercing is our separate world. Quick info and Appointment."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "studio-calisma-saatleri",
+        "aLong"
+      ],
+      "value": "Current hours: {weekdayLabel} and {sundayLabel}. For Appointment planning, message on WhatsApp: {whatsappUrl}"
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "shortDescription"
+      ],
+      "value": "Reach us for address, opening hours, and quick contact."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "ataturk",
+        "description"
+      ],
+      "value": "Atatürk portraits, signatures, silhouettes, and national themes."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "ataturk",
+        "title"
+      ],
+      "value": "Atatürk"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "blackwork",
+        "description"
+      ],
+      "value": "Bold, geometric blackwork."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "lettering",
+        "title"
+      ],
+      "value": "Lettering & Names"
+    },
+    {
+      "path": [
+        "pages",
+        "artists",
+        "shortDescription"
+      ],
+      "value": "Meet our artists."
+    },
+    {
+      "path": [
+        "pages",
+        "kesfet",
+        "piercingDescription"
+      ],
+      "value": "Ear, nose, septum, and more · Professional Piercing."
+    },
+    {
+      "path": [
+        "rightRail",
+        "piercing",
+        "aftercareBody"
+      ],
+      "value": "Aftercare recommendations for Piercing will be shared with you after your Appointment. Keep the area clean and dry."
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "faqTitle"
+      ],
+      "value": "FAQ"
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "fastestContactEnd"
+      ],
+      "value": "as well."
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "fastestContactMiddle"
+      ],
+      "value": "is the fastest channel. You can also message via"
+    },
+    {
+      "path": [
+        "footer",
+        "weekdayHours"
+      ],
+      "value": "Weekdays 10:00–20:00"
+    },
+    {
+      "path": [
+        "footer",
+        "sundayHours"
+      ],
+      "value": "Sunday 12:00–20:00"
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "weekdayHours"
+      ],
+      "value": "Weekdays 10:00–20:00"
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "sundayHours"
+      ],
+      "value": "Sunday 12:00–20:00"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-bakim-24-48",
+        "q"
+      ],
+      "value": "How is aftercare in the first 24–48 hours after Piercing? What should I clean with?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-bakim-48saat",
+        "q"
+      ],
+      "value": "What should I do in the first 24–48 hours after Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-deniz-havuz-sauna-spor",
+        "q"
+      ],
+      "value": "When can I swim (sea/pool), use a hammam/sauna, and do sports?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-kulaklik-kask-baski",
+        "q"
+      ],
+      "value": "What happens if I sleep on it / if headphones–helmet put pressure on it?"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "lettering",
+        "description"
+      ],
+      "value": "Lettering and typography Tattoo work."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "portrait",
+        "description"
+      ],
+      "value": "Portrait and face Tattoo work."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "cover_up",
+        "description"
+      ],
+      "value": "Covering old Tattoo work."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-bakim-24-48",
+        "aLong"
+      ],
+      "value": "In the first 24–48 hours, follow the aftercare we share after your Appointment. Keep the area clean and dry, avoid pressure, and do not remove the jewelry."
+    }
+  ],
+  "sq": [
+    {
+      "path": [
+        "common",
+        "languages",
+        "tr"
+      ],
+      "value": "Turqisht"
+    },
+    {
+      "path": [
+        "common",
+        "languages",
+        "en"
+      ],
+      "value": "Anglisht"
+    },
+    {
+      "path": [
+        "common",
+        "languages",
+        "sr"
+      ],
+      "value": "Serbisht"
+    },
+    {
+      "path": [
+        "common",
+        "nav",
+        "tattoo"
+      ],
+      "value": "Tattoo"
+    },
+    {
+      "path": [
+        "common",
+        "nav",
+        "contact"
+      ],
+      "value": "Contact"
+    },
+    {
+      "path": [
+        "common",
+        "nav",
+        "knowledgeBase"
+      ],
+      "value": "Knowledge Base"
+    },
+    {
+      "path": [
+        "common",
+        "nav",
+        "questionBankWithKb"
+      ],
+      "value": "FAQ / Knowledge Base"
+    },
+    {
+      "path": [
+        "pages",
+        "sss",
+        "heading"
+      ],
+      "value": "FAQ / Knowledge Base"
+    },
+    {
+      "path": [
+        "pages",
+        "artists",
+        "roles",
+        "halit"
+      ],
+      "value": "Master Tattoo Artist"
+    },
+    {
+      "path": [
+        "pages",
+        "artists",
+        "roles",
+        "mertcan"
+      ],
+      "value": "Tattoo Artist"
+    },
+    {
+      "path": [
+        "pages",
+        "home",
+        "heroMicroLine"
+      ],
+      "value": "Zgjidh stilin, shiko shembujt, cakto Appointment shpejt."
+    },
+    {
+      "path": [
+        "pages",
+        "kesfet",
+        "shortDescription"
+      ],
+      "value": "Zgjidh stilin, shiko shembujt, cakto Appointment shpejt."
+    },
+    {
+      "path": [
+        "pages",
+        "home",
+        "piercingDescription"
+      ],
+      "value": "Piercing është bota jonë më vete. Info dhe Appointment."
+    },
+    {
+      "path": [
+        "rightRail",
+        "piercing",
+        "title"
+      ],
+      "value": "Piercing Appointment"
+    },
+    {
+      "path": [
+        "rightRail",
+        "piercing",
+        "aftercareBody"
+      ],
+      "value": "Rekomandimet e kujdesit pas Piercing do t'ju jepen pas Appointment. Mbaje zonën të pastër dhe të thatë."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "studio-calisma-saatleri",
+        "aLong"
+      ],
+      "value": "Orari aktual: {weekdayLabel} dhe {sundayLabel}. Për planifikim Appointment, shkruaj në WhatsApp: {whatsappUrl}"
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "heading"
+      ],
+      "value": "Contact"
+    },
+    {
+      "path": [
+        "sss",
+        "categories",
+        "tattoo"
+      ],
+      "value": "Tattoo"
+    },
+    {
+      "path": [
+        "pages",
+        "sss",
+        "shortDescription"
+      ],
+      "value": "Gjej pyetjet më të shpeshta për procesin e Tattoo dhe Piercing në një ekran."
+    },
+    {
+      "path": [
+        "pages",
+        "sss",
+        "longDescription"
+      ],
+      "value": "Gjej pyetjet më të shpeshta për procesin e Tattoo dhe Piercing në një ekran."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "realism",
+        "title"
+      ],
+      "value": "Realistic Tattoo"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "dovme_egitimi",
+        "title"
+      ],
+      "value": "Tattoo Training"
+    },
+    {
+      "path": [
+        "pages",
+        "training",
+        "heading"
+      ],
+      "value": "Tattoo Training"
+    },
+    {
+      "path": [
+        "pages",
+        "training",
+        "defaultShortDescription"
+      ],
+      "value": "Përmbajtje për Tattoo Training."
+    },
+    {
+      "path": [
+        "pages",
+        "training",
+        "coverAlt"
+      ],
+      "value": "imazhi i kopertinës së Tattoo Training"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "ataturk",
+        "description"
+      ],
+      "value": "Atatürk portrete, nënshkrime, silueta dhe tema kombëtare."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "ataturk",
+        "title"
+      ],
+      "value": "Atatürk"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "lettering",
+        "description"
+      ],
+      "value": "Tattoo me shkrim dhe tipografi."
+    },
+    {
+      "path": [
+        "pages",
+        "gallery",
+        "viewerDescription"
+      ],
+      "value": "Shiko imazhet e galerisë së Tattoo në ekran të plotë duke rrëshqitur."
+    },
+    {
+      "path": [
+        "sss",
+        "teaser",
+        "description"
+      ],
+      "value": "Qasju pyetjeve të shpeshta për procesin e Tattoo dhe Piercing nga një faqe e vetme."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "cover_up",
+        "description"
+      ],
+      "value": "Mbulim i Tattoo-ve të vjetra."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "portrait",
+        "description"
+      ],
+      "value": "Portret dhe fytyrë Tattoo."
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "shortDescription"
+      ],
+      "value": "Contact: adresë, orar dhe komunikim i shpejtë."
+    },
+    {
+      "path": [
+        "sss",
+        "quickGuide",
+        "guide-contact",
+        "description"
+      ],
+      "value": "Adresa, oraret dhe opsionet e Contact."
+    },
+    {
+      "path": [
+        "sss",
+        "quickGuide",
+        "guide-contact",
+        "label"
+      ],
+      "value": "Faqja Contact"
+    },
+    {
+      "path": [
+        "sss",
+        "quickGuide",
+        "guide-telegram",
+        "description"
+      ],
+      "value": "Mund të na shkruash edhe në Telegram."
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "faqTitle"
+      ],
+      "value": "FAQ"
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "fastestContactEnd"
+      ],
+      "value": "po ashtu."
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "fastestContactLead"
+      ],
+      "value": "Contact më i shpejtë:"
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "fastestContactMiddle"
+      ],
+      "value": "është kanali më i shpejtë. Mund të na shkruash edhe në"
+    },
+    {
+      "path": [
+        "footer",
+        "weekdayHours"
+      ],
+      "value": "Ditët e javës 10:00–20:00"
+    },
+    {
+      "path": [
+        "footer",
+        "sundayHours"
+      ],
+      "value": "E diel 12:00–20:00"
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "weekdayHours"
+      ],
+      "value": "Ditët e javës 10:00–20:00"
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "sundayHours"
+      ],
+      "value": "E diel 12:00–20:00"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-bakim-24-48",
+        "q"
+      ],
+      "value": "Si është kujdesi pas në 24–48 orët e para pas Piercing? Me çfarë ta pastroj?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-bakim-48saat",
+        "q"
+      ],
+      "value": "Çfarë duhet të bëj në 24-48 orët e para pas Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-deniz-havuz-sauna-spor",
+        "q"
+      ],
+      "value": "Kur lejohet det–pishinë–hamam/sauna dhe sporti?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-kulaklik-kask-baski",
+        "q"
+      ],
+      "value": "Çfarë ndodh nëse fle mbi të / nëse kufjet–kaska bëjnë presion?"
+    },
+    {
+      "path": [
+        "pages",
+        "kesfet",
+        "piercingDescription"
+      ],
+      "value": "Vesh, hundë, septum dhe më shumë · Piercing profesional."
+    },
+    {
+      "path": [
+        "mobileHeader",
+        "menuTitle"
+      ],
+      "value": "Menyja"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "blackwork",
+        "description"
+      ],
+      "value": "Punime të forta gjeometrike me dominim të së zezës."
+    },
+    {
+      "path": [
+        "pages",
+        "piercing",
+        "shortDescription"
+      ],
+      "value": "Vesh, hundë, septum dhe më shumë. Na shkruaj për Piercing profesional."
+    },
+    {
+      "path": [
+        "pages",
+        "artists",
+        "descriptions",
+        "mertcan"
+      ],
+      "value": "Përshkrimi i shkurtër i profilit do të përditësohet së shpejti."
+    },
+    {
+      "path": [
+        "pages",
+        "artists",
+        "descriptions",
+        "halit"
+      ],
+      "value": "Mbi 30 vite përvojë"
+    },
+    {
+      "path": [
+        "pages",
+        "gallery",
+        "heading"
+      ],
+      "value": "Dizajni i Galerisë"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-alkol",
+        "aLong"
+      ],
+      "value": "Në përgjithësi është më mirë ta shmangësh alkoolin para/menjëherë pas Tattoo. Alkooli mund të hollojë gjakun, të rrisë gjakderdhjen dhe të vështirësojë shërimin."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-alkol",
+        "q"
+      ],
+      "value": "A mund të bëj Tattoo pasi kam konsumuar alkool?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-coverup",
+        "aLong"
+      ],
+      "value": "Cover-up është mbulimi i një Tattoo të vjetër me një dizajn të ri. Rezultati varet nga ngjyra/dendësia e Tattoo së vjetër, madhësia dhe stili i dizajnit të ri."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-coverup",
+        "q"
+      ],
+      "value": "Çfarë është cover-up? A mund të mbulohet një Tattoo i vjetër?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-deniz-havuz-sauna",
+        "aLong"
+      ],
+      "value": "Gjatë shërimit të Tattoo, qëndrimi i gjatë në ujë dhe sauna/avulli mund ta ngarkojnë lëkurën. Më e sigurta është të presësh deri sa të rikuperohet."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-dus",
+        "q"
+      ],
+      "value": "A mund të bëj dush pas Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-fiyat",
+        "aLong"
+      ],
+      "value": "Çmimi lidhet kryesisht me kohën e punës. Madhësia ka rëndësi, por jo vetëm: detajet (fine work zgjat më shumë), stili (fine line, realist, traditional etj.) dhe zona e trupit."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-fiyat",
+        "q"
+      ],
+      "value": "Si përcaktohen çmimet e Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-gunes",
+        "aLong"
+      ],
+      "value": "Dielli është armiku më i madh i Tattoo. Sidomos gjatë periudhës së shërimit duhet mbrojtje."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-gunes",
+        "aShort"
+      ],
+      "value": "Dielli është armiku më i madh i Tattoo; sidomos gjatë shërimit duhet mbrojtur."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-gunes",
+        "q"
+      ],
+      "value": "A zbehet Tattoo në diell? Si ta mbroj?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-hamile-emzirme",
+        "aLong"
+      ],
+      "value": "Kjo është temë e ndjeshme. Shumica e njerëzve gjatë kësaj periudhe preferojnë ta shtyjnë Tattoo. Qasja më e shëndetshme është të veprohet sipas këshillës së mjekut."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-hamile-emzirme",
+        "q"
+      ],
+      "value": "A bëhet Tattoo gjatë shtatzënisë / gjidhënies?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-iyilesme",
+        "q"
+      ],
+      "value": "Sa kohë i duhet Tattoo për t'u shëruar?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-kabuk-soyulma",
+        "aLong"
+      ],
+      "value": "Po, te shumica e Tattoo kore/zhveshje/kruajtje janë normale. Gabimi më i madh është heqja e koreve. Kjo mund të shkaktojë shenjë dhe humbje ngjyre."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-kabuk-soyulma",
+        "q"
+      ],
+      "value": "A krijon kore, a zhvishet Tattoo? A është normale?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-lazer-vs-coverup",
+        "aLong"
+      ],
+      "value": "Disa Tattoo shkojnë direkt në cover-up, ndërsa disa japin rezultat më të mirë nëse ndriçohen pak me lazer dhe pastaj bëhet cover-up. Me një foto zgjedhim rrugën më të mirë."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-once-hazirlik",
+        "aLong"
+      ],
+      "value": "Më së miri është të vish në seancë i pushuar, i ushqyer dhe i hidratuar. Zgjidh rroba të rehatshme që zona e Tattoo të jetë lehtë e qasshme. Nëse nuk ndihesh mirë, shtyrja është zgjidhja më e mirë."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-once-hazirlik",
+        "q"
+      ],
+      "value": "Si duhet të përgatitem para se të bëj Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-rotus",
+        "q"
+      ],
+      "value": "A bëhet touch-up (retush) për Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-spor",
+        "aLong"
+      ],
+      "value": "Në ditët e para djersa e rëndë, fërkimi dhe shtrirja mund ta irritojnë Tattoo. Pastaj bëhet kthim gradual. Vendndodhja e Tattoo (krah, këmbë, brinjë etj.) është faktor përcaktues."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-sure-seans",
+        "aLong"
+      ],
+      "value": "Edhe dy Tattoo me të njëjtën madhësi mund të zgjasin ndryshe. Punimet minimale zgjasin më pak, ndërsa realistet/me hije të dendura zgjasin më shumë dhe ndonjëherë duhen disa seanca."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-sure-seans",
+        "q"
+      ],
+      "value": "Sa orë zgjat Tattoo dhe në sa seanca përfundon?"
+    }
+  ],
+  "sr": [
+    {
+      "path": [
+        "common",
+        "languages",
+        "tr"
+      ],
+      "value": "Turski"
+    },
+    {
+      "path": [
+        "common",
+        "languages",
+        "en"
+      ],
+      "value": "Engleski"
+    },
+    {
+      "path": [
+        "common",
+        "languages",
+        "sq"
+      ],
+      "value": "Albanski"
+    },
+    {
+      "path": [
+        "common",
+        "languages",
+        "sr"
+      ],
+      "value": "Srpski"
+    },
+    {
+      "path": [
+        "common",
+        "nav",
+        "tattoo"
+      ],
+      "value": "Tattoo"
+    },
+    {
+      "path": [
+        "common",
+        "nav",
+        "piercing"
+      ],
+      "value": "Piercing"
+    },
+    {
+      "path": [
+        "common",
+        "nav",
+        "contact"
+      ],
+      "value": "Contact"
+    },
+    {
+      "path": [
+        "common",
+        "nav",
+        "knowledgeBase"
+      ],
+      "value": "Knowledge Base"
+    },
+    {
+      "path": [
+        "common",
+        "nav",
+        "questionBankWithKb"
+      ],
+      "value": "FAQ / Knowledge Base"
+    },
+    {
+      "path": [
+        "pages",
+        "sss",
+        "heading"
+      ],
+      "value": "FAQ / Knowledge Base"
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "heading"
+      ],
+      "value": "Contact"
+    },
+    {
+      "path": [
+        "pages",
+        "home",
+        "heroMicroLine"
+      ],
+      "value": "Izaberi stil, pogledaj primere, zakaži Appointment brzo."
+    },
+    {
+      "path": [
+        "pages",
+        "kesfet",
+        "shortDescription"
+      ],
+      "value": "Izaberi stil, pogledaj primere, zakaži Appointment brzo."
+    },
+    {
+      "path": [
+        "pages",
+        "home",
+        "piercingDescription"
+      ],
+      "value": "Piercing je naš poseban svet. Brze informacije i Appointment."
+    },
+    {
+      "path": [
+        "pages",
+        "kesfet",
+        "piercingDescription"
+      ],
+      "value": "Uho, nos, septum i više · profesionalna usluga Piercing."
+    },
+    {
+      "path": [
+        "rightRail",
+        "piercing",
+        "title"
+      ],
+      "value": "Piercing Appointment"
+    },
+    {
+      "path": [
+        "rightRail",
+        "piercing",
+        "cta"
+      ],
+      "value": "Piši za Piercing"
+    },
+    {
+      "path": [
+        "rightRail",
+        "piercing",
+        "aftercareBody"
+      ],
+      "value": "Preporuke za negu posle Piercing biće podeljene nakon Appointment. Drži zonu čistom i suvom."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "studio-calisma-saatleri",
+        "aLong"
+      ],
+      "value": "Aktuelno radno vreme: {weekdayLabel} i {sundayLabel}. Za planiranje Appointment piši na WhatsApp: {whatsappUrl}"
+    },
+    {
+      "path": [
+        "pages",
+        "piercing",
+        "heading"
+      ],
+      "value": "Piercing"
+    },
+    {
+      "path": [
+        "pages",
+        "piercing",
+        "heroAlt"
+      ],
+      "value": "hero naslovna slika za Piercing"
+    },
+    {
+      "path": [
+        "pages",
+        "piercing",
+        "cta"
+      ],
+      "value": "Piši za Piercing"
+    },
+    {
+      "path": [
+        "pages",
+        "piercing",
+        "shortDescription"
+      ],
+      "value": "Uho, nos, septum i više. Piši nam za profesionalnu uslugu Piercing."
+    },
+    {
+      "path": [
+        "sss",
+        "categories",
+        "tattoo"
+      ],
+      "value": "Tattoo"
+    },
+    {
+      "path": [
+        "sss",
+        "categories",
+        "piercing"
+      ],
+      "value": "Piercing"
+    },
+    {
+      "path": [
+        "pages",
+        "sss",
+        "shortDescription"
+      ],
+      "value": "Pronađi najčešća pitanja o procesu Tattoo i Piercing na jednom ekranu."
+    },
+    {
+      "path": [
+        "pages",
+        "sss",
+        "longDescription"
+      ],
+      "value": "Pronađi najčešća pitanja o procesu Tattoo i Piercing na jednom ekranu."
+    },
+    {
+      "path": [
+        "sss",
+        "teaser",
+        "description"
+      ],
+      "value": "Pristupi često postavljanim pitanjima o procesu Tattoo i Piercing sa jedne stranice."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "realism",
+        "title"
+      ],
+      "value": "Realizam"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "dovme_egitimi",
+        "title"
+      ],
+      "value": "Tattoo Training"
+    },
+    {
+      "path": [
+        "pages",
+        "training",
+        "heading"
+      ],
+      "value": "Tattoo Training"
+    },
+    {
+      "path": [
+        "pages",
+        "training",
+        "defaultShortDescription"
+      ],
+      "value": "Sadržaj za Tattoo Training."
+    },
+    {
+      "path": [
+        "pages",
+        "training",
+        "coverAlt"
+      ],
+      "value": "naslovna slika Tattoo Training"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-igne-tabanca-sterilizasyon",
+        "q"
+      ],
+      "value": "Gde treba raditi Piercing? Igla ili pištolj, i da li postoji sterilizacija (autoklav)?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-fiyat",
+        "q"
+      ],
+      "value": "Od čega zavisi cena Piercing?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-iyilesme-suresi",
+        "q"
+      ],
+      "value": "Koliko vremena je potrebno da svaki Piercing zaraste?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-bakim-24-48",
+        "q"
+      ],
+      "value": "Kako izgleda nega posle u prvih 24-48 sati nakon Piercing? Čime da čistim?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-taki-degisim-downsizing",
+        "q"
+      ],
+      "value": "Kada mogu da promenim nakit za Piercing? Kada se radi downsizing?"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "ataturk",
+        "description"
+      ],
+      "value": "Atatürk portreti, potpisi, siluete i nacionalne teme."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "ataturk",
+        "title"
+      ],
+      "value": "Atatürk"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "blackwork",
+        "description"
+      ],
+      "value": "Geometrijski, snažni radovi u crnoj."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "cover_up",
+        "description"
+      ],
+      "value": "Prekrivanje starih Tattoo."
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "lettering",
+        "description"
+      ],
+      "value": "Tattoo natpisi i tipografija."
+    },
+    {
+      "path": [
+        "pages",
+        "artists",
+        "roles",
+        "halit"
+      ],
+      "value": "Master Tattoo Artist"
+    },
+    {
+      "path": [
+        "pages",
+        "artists",
+        "roles",
+        "mertcan"
+      ],
+      "value": "Tattoo Artist"
+    },
+    {
+      "path": [
+        "pages",
+        "artists",
+        "shortDescription"
+      ],
+      "value": "Artisti u našem studiju."
+    },
+    {
+      "path": [
+        "pages",
+        "gallery",
+        "viewerDescription"
+      ],
+      "value": "Pogledaj slike Tattoo galerije na celom ekranu prevlačenjem."
+    },
+    {
+      "path": [
+        "pages",
+        "piercingHub",
+        "defaultShortDescription"
+      ],
+      "value": "Piercing detalji"
+    },
+    {
+      "path": [
+        "piercing",
+        "featured",
+        "burun",
+        "alt"
+      ],
+      "value": "Primer Piercing za nos"
+    },
+    {
+      "path": [
+        "piercing",
+        "featured",
+        "dil",
+        "alt"
+      ],
+      "value": "Primer Piercing za jezik"
+    },
+    {
+      "path": [
+        "piercing",
+        "featured",
+        "dudak",
+        "alt"
+      ],
+      "value": "Primer Piercing za usnu"
+    },
+    {
+      "path": [
+        "piercing",
+        "featured",
+        "gobek",
+        "alt"
+      ],
+      "value": "Primer Piercing za pupak"
+    },
+    {
+      "path": [
+        "piercing",
+        "featured",
+        "heading"
+      ],
+      "value": "Istaknuti Piercing"
+    },
+    {
+      "path": [
+        "piercing",
+        "featured",
+        "kas",
+        "alt"
+      ],
+      "value": "Primer Piercing za obrvu"
+    },
+    {
+      "path": [
+        "piercing",
+        "featured",
+        "kulak",
+        "alt"
+      ],
+      "value": "Primer Piercing za uho"
+    },
+    {
+      "path": [
+        "piercing",
+        "featured",
+        "railAria"
+      ],
+      "value": "Kartice istaknutih Piercing"
+    },
+    {
+      "path": [
+        "piercing",
+        "labels",
+        "default"
+      ],
+      "value": "Piercing"
+    },
+    {
+      "path": [
+        "hub",
+        "items",
+        "portrait",
+        "description"
+      ],
+      "value": "Portret Tattoo."
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "shortDescription"
+      ],
+      "value": "Contact: adresa, radno vreme i brza komunikacija."
+    },
+    {
+      "path": [
+        "sss",
+        "quickGuide",
+        "guide-contact",
+        "label"
+      ],
+      "value": "Contact stranica"
+    },
+    {
+      "path": [
+        "sss",
+        "quickGuide",
+        "guide-telegram",
+        "description"
+      ],
+      "value": "Možeš nam pisati i na Telegramu."
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "faqTitle"
+      ],
+      "value": "FAQ"
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "fastestContactEnd"
+      ],
+      "value": "takođe."
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "fastestContactLead"
+      ],
+      "value": "Najbrži Contact:"
+    },
+    {
+      "path": [
+        "sss",
+        "ui",
+        "fastestContactMiddle"
+      ],
+      "value": "je najbrži kanal. Možeš nam pisati i na"
+    },
+    {
+      "path": [
+        "footer",
+        "weekdayHours"
+      ],
+      "value": "Radnim danima 10:00–20:00"
+    },
+    {
+      "path": [
+        "footer",
+        "sundayHours"
+      ],
+      "value": "Nedelja 12:00–20:00"
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "weekdayHours"
+      ],
+      "value": "Radnim danima 10:00–20:00"
+    },
+    {
+      "path": [
+        "pages",
+        "contact",
+        "sundayHours"
+      ],
+      "value": "Nedelja 12:00–20:00"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-bakim-48saat",
+        "q"
+      ],
+      "value": "Šta treba da radim u prvih 24-48 sati posle Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-deniz-havuz-sauna-spor",
+        "q"
+      ],
+      "value": "Kada su more–bazen–hamam/sauna i sport dozvoljeni?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-kulaklik-kask-baski",
+        "q"
+      ],
+      "value": "Šta se dešava ako spavam na tome / ako slušalice–kaciga prave pritisak?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "piercing-ilk-taki-materyali",
+        "q"
+      ],
+      "value": "Koji materijal je najbolji za prvi nakit kod Piercing?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-alkol",
+        "aLong"
+      ],
+      "value": "Najbolje je da izbegavaš alkohol pre/odmah posle Tattoo. Alkohol može da razredi krv, poveća krvarenje i oteža zarastanje."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-alkol",
+        "q"
+      ],
+      "value": "Da li mogu da pijem alkohol pre/odmah posle Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-bakim-48saat",
+        "aLong"
+      ],
+      "value": "U prvih 24-48 sati, prati uputstva za negu koja dajemo posle seanse. Drži zonu čistom, ne češi, izbegavaj vrelu vodu i trenje."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-coverup",
+        "aLong"
+      ],
+      "value": "Cover-up je prekrivanje starog Tattoo novim dizajnom. Rezultat zavisi od boje/gustine starog Tattoo, veličine i stila novog dizajna."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-coverup",
+        "q"
+      ],
+      "value": "Šta je cover-up? Da li može da se prekrije stari Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-deniz-havuz-sauna",
+        "aLong"
+      ],
+      "value": "Posle Tattoo, izbegavaj more, bazen i saunu dok se površina kože potpuno ne zatvori. Ova okruženja povećavaju rizik od infekcije i mogu pokvariti zarastanje."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-deniz-havuz-sauna",
+        "q"
+      ],
+      "value": "Kada mogu u more/bazen/saunu posle Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-dus",
+        "aLong"
+      ],
+      "value": "Tuširanje je moguće, ali izbegavaj previše vruću vodu, dugo stajanje pod vodom i direktno trljanje preko Tattoo."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-dus",
+        "q"
+      ],
+      "value": "Da li mogu da se tuširam posle Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-fiyat",
+        "aLong"
+      ],
+      "value": "Glavni faktor je vreme rada. Veličina je važna, ali nije jedini kriterijum: gustina detalja, stil (fine line, realizam, traditional itd.) i zona tela."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-fiyat",
+        "q"
+      ],
+      "value": "Kako se određuju cene Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-gunes",
+        "aLong"
+      ],
+      "value": "Sunce i UV zraci mogu da izblede Tattoo i iritiraju kožu tokom zarastanja. Tokom zarastanja izbegavaj direktno sunce; posle toga koristi visoku zaštitu."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-gunes",
+        "q"
+      ],
+      "value": "Da li sunce utiče na Tattoo? Šta treba da radim?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-hamile-emzirme",
+        "aLong"
+      ],
+      "value": "Uopšteno se ne preporučuje Tattoo tokom trudnoće ili dojenja, zbog mogućih rizika i promena u telu. Ako si u tom periodu, obično je bezbednije da odložiš seansu."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-hamile-emzirme",
+        "q"
+      ],
+      "value": "Da li se radi Tattoo tokom trudnoće / dojenja?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-iyilesme",
+        "aLong"
+      ],
+      "value": "Prvi vizuelni oporavak često kreće brzo, ali potpuna stabilizacija kože može trajati duže. Zarastanje zavisi od zone, nege posle i tipa kože."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-iyilesme",
+        "q"
+      ],
+      "value": "Koliko vremena treba da Tattoo zaraste?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-kabuk-soyulma",
+        "aLong"
+      ],
+      "value": "Da, stvaranje krastice i blago ljuštenje je normalno tokom zarastanja. Nemoj da češeš i ne skidaj krasticu rukom; to može da ošteti Tattoo."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-kabuk-soyulma",
+        "q"
+      ],
+      "value": "Da li se stvara krastica, da li se ljušti Tattoo? Da li je to normalno?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-lazer-vs-coverup",
+        "aLong"
+      ],
+      "value": "Neki Tattoo radovi idu direktno na cover-up, a neki daju bolji rezultat kada se prvo malo posvetle laserom pa rade cover-up."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-lazer-vs-coverup",
+        "q"
+      ],
+      "value": "Uklanjanje Tattoo (laser) ili cover-up: šta je bolje?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-once-hazirlik",
+        "aLong"
+      ],
+      "value": "Najbolje je da na seansu dođeš odmoran, sit i hidriran. Izaberi udobnu odeću kako bi zona Tattoo bila lako dostupna."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-once-hazirlik",
+        "q"
+      ],
+      "value": "Kako da se pripremim pre Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-rotus",
+        "aLong"
+      ],
+      "value": "Kod nekih radova, touch-up može biti potreban posle zarastanja. Vreme i potreba zavise od nege posle, kože i dizajna."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-rotus",
+        "q"
+      ],
+      "value": "Da li se radi touch-up (retuš) za Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-spor",
+        "aLong"
+      ],
+      "value": "U prvim danima izbegavaj intenzivan sport koji mnogo znoji ili trlja zonu Tattoo. Znoj i trenje mogu iritirati kožu i usporiti zarastanje."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-spor",
+        "q"
+      ],
+      "value": "Kada mogu da treniram posle Tattoo?"
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-sure-seans",
+        "aLong"
+      ],
+      "value": "Čak i dva Tattoo iste veličine mogu trajati različito. Minimalni radovi traju kraće, a realistični/jače senčeni traju duže i ponekad traže više seansi."
+    },
+    {
+      "path": [
+        "sss",
+        "items",
+        "tattoo-sure-seans",
+        "q"
+      ],
+      "value": "Koliko sati traje Tattoo i u koliko seansi se završava?"
+    }
+  ],
+  "notes_parts": [
+    {
+      "top_10_fixes": [
+        "Localized language names per locale (EN/SQ/SR) instead of TR-only labels.",
+        "Enforced glossary terms in key UI surfaces: Tattoo, Piercing, Appointment, Contact, FAQ / Knowledge Base.",
+        "Standardized Piercing CTA in EN to natural UI microcopy (“Message for Piercing”).",
+        "Aligned Home + Kesfet micro-line to include Appointment consistently across locales.",
+        "Fixed SR ‘Pirsing’ → ‘Piercing’ on nav/page/right-rail and key FAQs.",
+        "Converted SQ nav + artists roles to glossary-safe English role labels.",
+        "Normalized Knowledge Base labels in nav and page headings to ‘FAQ / Knowledge Base’.",
+        "Improved EN Contact shortDescription grammar (address/opening hours).",
+        "Kept placeholders intact in hours strings: {weekdayLabel}, {sundayLabel}, {whatsappUrl}.",
+        "Harmonized Training label in SQ/SR to ‘Tattoo Training’ for hub/page consistency."
+      ],
+      "terminology_decisions": [
+        "Glossary LOCK applied: Tattoo / Piercing / Appointment / Contact kept as-is (not translated) in primary UI labels.",
+        "FAQ / Knowledge Base kept exactly (nav + page heading) to match existing EN term and stay UI-short.",
+        "SR kept in Latin script; category style title localized only where shorter and still clear (Realizam).",
+        "WhatsApp CTA standardized in EN as ‘Message on WhatsApp’ for clearer intent."
+      ]
+    },
+    {
+      "top_10_fixes": [
+        "Localized language names per locale (EN/SQ/SR) instead of TR-only labels.",
+        "Enforced glossary terms in key UI surfaces: Tattoo, Piercing, Appointment, Contact, FAQ / Knowledge Base.",
+        "Standardized Piercing CTA in EN to natural UI microcopy (“Message for Piercing”).",
+        "Aligned Home + Kesfet micro-line to include Appointment consistently across locales.",
+        "Fixed SR ‘Pirsing’ → ‘Piercing’ on nav/page/right-rail and key FAQs.",
+        "Converted SQ nav + artists roles to glossary-safe English role labels.",
+        "Normalized Knowledge Base labels in nav and page headings to ‘FAQ / Knowledge Base’.",
+        "Improved EN Contact shortDescription grammar (address/opening hours).",
+        "Kept placeholders intact in hours strings: {weekdayLabel}, {sundayLabel}, {whatsappUrl}.",
+        "Harmonized Training label in SQ/SR to ‘Tattoo Training’ for hub/page consistency."
+      ],
+      "terminology_decisions": [
+        "Glossary LOCK applied: Tattoo / Piercing / Appointment / Contact kept as-is (not translated) in primary UI labels.",
+        "FAQ / Knowledge Base kept exactly (nav + page heading) to match existing EN term and stay UI-short.",
+        "SR kept in Latin script; category style title localized only where shorter and still clear (Realizam).",
+        "WhatsApp CTA standardized in EN as ‘Message on WhatsApp’ for clearer intent."
+      ]
+    },
+    {
+      "top_10_fixes": [
+        "EN: tightened Artists microcopy for a more natural, UI-short tone.",
+        "EN: enforced glossary token ‘Appointment’ in Home + Keşfet hero micro-line.",
+        "EN: improved Piercing CTAs (‘Message for Piercing’) and removed redundant ‘service’ wording.",
+        "EN Hub: fixed Atatürk spelling + streamlined Blackwork description; ‘Lettering & Names’ pluralized.",
+        "SQ: enforced glossary tokens (Tattoo, Contact, FAQ / Knowledge Base, Appointment) in key UI surfaces.",
+        "SQ: normalized Training + Hub titles to ‘Tattoo Training’ / ‘Realistic Tattoo’; updated Lettering description to use ‘Tattoo’.",
+        "SQ: updated Studio hours helper text to use ‘Appointment’ while preserving placeholders.",
+        "SR: enforced glossary tokens (Tattoo, Piercing, Contact, FAQ / Knowledge Base, Appointment) across key UI labels.",
+        "SR: fixed widespread ‘Pirsing’ → ‘Piercing’ in Piercing UI (page, rail, featured, and SSS questions) while keeping Latin script.",
+        "SR Hub: corrected Atatürk spelling + aligned category/training wording with glossary (‘Tattoo Training’, ‘Realistic Tattoo’)."
+      ],
+      "terminology_decisions": [
+        "Glossary LOCK applied in UI-facing strings: Tattoo, Piercing, Appointment, Contact, FAQ / Knowledge Base kept as-is (not translated).",
+        "Kept ‘Atatürk’ with diacritics across EN/SQ/SR for consistency with TR source.",
+        "CTAs standardized to short, action-first wording (EN: ‘Message for Piercing’, SR: ‘Piši za Piercing’).",
+        "No key structure changes; only value edits. Placeholders preserved exactly ({...}).",
+        "4.parça için hazırım"
+      ]
+    },
+    {
+      "top_10_fixes": [
+        "EN language switcher: localized language names (Turkish/Albanian/Serbian) instead of native labels.",
+        "EN SSS: fixed fragmented ‘fastest contact’ sentence so it reads naturally when concatenated.",
+        "EN SSS: aligned FAQ title to glossary (‘FAQ / Knowledge Base’).",
+        "SQ: localized language names (Anglisht/Turqisht/Shqip/Serbisht).",
+        "SQ: enforced glossary terms in core UI (Contact, Tattoo, Appointment, FAQ / Knowledge Base) across nav + key pages.",
+        "SQ: normalized Hub/Training titles to ‘Tattoo Training’ and replaced Tatuazh→Tattoo in key surfaces.",
+        "SQ: fixed SSS ‘fastest contact’ fragments so they work with inserted platforms (WhatsApp/Instagram).",
+        "SR: localized language names (Engleski/Turski/Albanski/Srpski).",
+        "SR: enforced glossary terms across core UI (Contact, Tattoo, Piercing, Appointment, FAQ / Knowledge Base) including artists roles and Piercing featured card alts.",
+        "SR: removed ‘Pirsing/Tetovaža/termin’ drift on Discover + Piercing + SSS surfaces while keeping SR in Latin."
+      ],
+      "terminology_decisions": [
+        "Glossary LOCK applied in UI strings: Tattoo / Piercing / Appointment / Contact / FAQ / Knowledge Base kept exactly.",
+        "SR remained strictly Latin (no Cyrillic).",
+        "For concatenated SSS strings (fastestContactLead/Middle/End), text was rewritten to avoid awkward spacing/punctuation while keeping the same join pattern.",
+        "Albanian/Serbian declensions were avoided to keep fixed terms stable and searchable (e.g., ‘Tattoo’, ‘Piercing’ used as-is).",
+        "6. parça için hazırım"
+      ]
+    },
+    {
+      "top_10_fixes": [
+        "Standardized time ranges to en-dash (–) in Footer + Contact hours for typographic consistency.",
+        "Standardized 24–48 range to en-dash (–) in key SSS questions (Tattoo + Piercing).",
+        "Improved EN Piercing ‘sea/pool/hammam/sauna + sports’ question to be natural and clear.",
+        "Aligned SQ/SR ‘sea–pool–hammam/sauna’ and ‘headphones–helmet’ separators to match the TR dash style.",
+        "Kept all original meaning while avoiding longer UI strings in headings/questions.",
+        "Preserved punctuation patterns like “/” where already used, only normalizing hyphen vs en-dash.",
+        "No placeholders were added/removed; all strings remain safe for existing rendering."
+      ],
+      "terminology_decisions": [
+        "Used en-dash (–) for ranges and chained items to match TR typography (hours + 24–48 + sea–pool–hammam).",
+        "Kept glossary terms stable in questions (Tattoo, Piercing) while only improving readability.",
+        "SR remains Latin-only; no Cyrillic introduced.",
+        "7.parça için hazırım"
+      ]
+    },
+    {
+      "top_10_fixes": [
+        "Keşfet shortDescription: enforced fixed term ‘Appointment’ (EN/SQ/SR) and removed ‘termin’ drift.",
+        "Keşfet Piercing teaser: removed extra ‘service’ in EN; fixed SR ‘Pirsing’ → ‘Piercing’; kept UI short.",
+        "Hub Atatürk: normalized spelling with diacritics (Atatürk) across EN/SQ/SR.",
+        "Hub category copy: replaced ‘tattoos/tatuazh/tetovaža’ with fixed term ‘Tattoo’ where used.",
+        "Training: standardized page + hub title to ‘Tattoo Training’ (SQ/SR) and updated related alt/description.",
+        "Artists roles: standardized SQ/SR role labels to ‘Master Tattoo Artist’ / ‘Tattoo Artist’ for consistency and brevity.",
+        "Gallery viewerDescription: removed ‘Tatuazh/Tetovaža’ drift to ‘Tattoo’ (SQ/SR).",
+        "Footer + Contact hours: standardized time range punctuation to en-dash (–) across EN/SQ/SR.",
+        "Hub Blackwork description: shortened and cleaned to a UI-safe line (EN).",
+        "Hub Lettering title: corrected plural for clarity (EN)."
+      ],
+      "terminology_decisions": [
+        "Fixed terms kept exactly: Tattoo, Piercing, Appointment, Contact, FAQ / Knowledge Base.",
+        "Serbian kept strictly Latin; no Cyrillic introduced.",
+        "Atatürk kept with diacritics across all locales for name consistency.",
+        "9. parça için hazıırm"
+      ]
+    },
+    {
+      "top_10_fixes": [
+        "EN: enforced fixed term ‘Appointment’ in Home/Keşfet hero microcopy and Piercing blocks.",
+        "EN: standardized Piercing CTA to ‘Message for Piercing’ and removed redundant ‘service’.",
+        "EN: normalized SSS title to ‘FAQ’ and fixed fastest-contact sentence fragments for correct concatenation.",
+        "SQ: replaced all ‘Tatuazh*’ with fixed term ‘Tattoo’ across nav, hub, pages, and SSS content.",
+        "SQ: replaced ‘termin*’ with fixed term ‘Appointment’ (Keşfet, right-rail, SSS).",
+        "SQ: standardized core labels to glossary: Contact, Knowledge Base, FAQ / Knowledge Base.",
+        "SQ: fixed mobile menu title ‘Meny’ → ‘Menyja’ and corrected Atatürk spelling.",
+        "SR: replaced all ‘Tetova*’ with fixed term ‘Tattoo’ and all ‘Pirsing*’ with ‘Piercing’ across UI + SSS.",
+        "SR: replaced ‘termin*’ with fixed term ‘Appointment’ and standardized core labels to Contact / Knowledge Base / FAQ / Knowledge Base.",
+        "All: normalized hour ranges to use en-dash (–) to match TR typography."
+      ],
+      "terminology_decisions": [
+        "Glossary LOCK applied: Enki Tattoo / Mersin / Tattoo / Piercing / Appointment / Contact / FAQ / Knowledge Base kept as fixed terms (not translated).",
+        "SR is Latin-only: no Cyrillic introduced.",
+        "Placeholders preserved exactly (e.g., {site}, {label}, {count}, {weekdayLabel}, {sundayLabel}, {whatsappUrl}).",
+        "Atatürk kept with diacritics in all locales.",
+        "UI brevity prioritized: headings/CTAs shortened where possible without losing meaning.",
+        "hazırım talimatlarını bekliyorum"
+      ]
+    },
+    {
+      "top_10_fixes": [
+        "Header + tab bar: SQ/SR nav label’ları glossary’e kilitlendi (Tattoo, Piercing, Contact, Knowledge Base, FAQ / Knowledge Base).",
+        "Mobil menü: SQ menu başlığı düzeltildi (Meny → Menyja) ve kritik label’lar glossary ile hizalandı.",
+        "Right-rail drawer: EN/SQ/SR Piercing bloğu hizalandı (Piercing Appointment + tutarlı CTA + aftercare içinde Appointment).",
+        "Home + Keşfet hero microcopy: EN/SQ/SR genelinde Appointment terimi sabitlendi; termin drift temizlendi.",
+        "Keşfet Piercing teaser: SR ‘Pirsing’ drift temizlendi; EN’de gereksiz “service” kaldırılarak metin kısaltıldı.",
+        "H1 başlıklar: SQ/SR Contact/FAQ/Training başlıkları glossary’e çekildi (Contact, FAQ / Knowledge Base, Tattoo Training).",
+        "Footer + Contact saatleri: EN/SQ/SR genelinde saat aralığı en-dash ile standardize edildi (10:00–20:00).",
+        "FAQ UI (drawer/label): fastest-contact cümle parçaları doğru birleşecek şekilde düzeltildi; faqTitle ‘FAQ’ olarak kısaltıldı.",
+        "Hub kategorileri: SQ/SR tarafında Tatuazh/Tetovaža → Tattoo dönüşümü yapıldı; kritik stil başlıkları normalize edildi (Realistic Tattoo / Realizam).",
+        "FAQ içerik tutarlılığı: SQ/SR SSS soru/cevaplarında Tatuazh/Tetovaža + termin + Pirsing drift’leri glossary’e göre temizlendi."
+      ],
+      "terminology_decisions": [
+        "Glossary LOCK: Enki Tattoo, Mersin, Tattoo, Piercing, Appointment, Contact, FAQ / Knowledge Base terimleri sabit tutuldu.",
+        "SR yalnızca Latin (Kiril yok).",
+        "SQ’de çekim eklerinden kaçınıldı; gerektiğinde terimi görünür tutan minimal hyphenation kullanıldı (örn. Tattoo-ve).",
+        "Dil seçicide adlar TR kaynağıyla uyumlu şekilde endonym olarak bırakıldı (Türkçe / English / Shqip / Srpski).",
+        "UI-dışı uzun FAQ paragraflarında sadece terminoloji tutarlılığı için dokunuldu; nav/heading/button/drawer metinlerinde ise kısalık önceliklendirildi."
+      ]
+    }
+  ]
+}

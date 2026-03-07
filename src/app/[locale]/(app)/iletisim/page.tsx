@@ -118,7 +118,7 @@ export default async function IletisimPage() {
             </ExternalLink>
             <ExternalLink
               href={SITE_INFO.googleMapsUrl}
-              className={`${contactActionClass} border border-border bg-background hover:bg-muted/45 dark:hover:bg-white/10`}
+              className={`${contactActionClass} border border-border bg-background hover:bg-muted/45`}
             >
               <Navigation className="size-4 shrink-0" aria-hidden />
               <span className="min-w-0 truncate">{t("common.directions")}</span>
@@ -139,7 +139,7 @@ export default async function IletisimPage() {
           </div>
           <ExternalLink
             href={SITE_INFO.googleMapsUrl}
-            className={`${contactActionClass} mt-3 w-full border border-border bg-background hover:bg-muted/45 dark:hover:bg-white/10`}
+            className={`${contactActionClass} mt-3 w-full border border-border bg-background hover:bg-muted/45`}
           >
             <span className="min-w-0 truncate">{t("common.openInMap")}</span>
           </ExternalLink>
