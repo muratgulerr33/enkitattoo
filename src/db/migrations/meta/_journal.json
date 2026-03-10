@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1773150109892,
+      "tag": "0000_init_ops_foundation",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1773151044100,
+      "tag": "0001_add_ops_password_auth",
+      "breakpoints": true
+    }
+  ]
+}

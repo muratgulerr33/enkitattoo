@@ -392,9 +392,9 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
       >
         <div
           data-mobile-safe-top
-          className="pt-[env(safe-area-inset-top)]"
+          className="safe-pt"
         >
-          <div className="app-container flex h-[var(--app-mobile-topbar-h)] min-h-[56px] items-center gap-2 pl-[max(env(safe-area-inset-left),12px)] pr-[max(env(safe-area-inset-right),12px)]">
+          <div className="app-container safe-pl-edge-12 safe-pr-edge-12 flex h-[var(--app-mobile-topbar-h)] min-h-[56px] items-center gap-2">
             <div className="flex min-w-0 flex-1 items-center gap-2">
               <div className="flex min-w-11 shrink-0 items-center justify-center pl-1.5">
                 {showHamburger ? (
@@ -412,7 +412,7 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                     <SheetContent
                       side="left"
                       showCloseButton={false}
-                      className="flex flex-col border-border bg-background pb-[env(safe-area-inset-bottom)]"
+                      className="safe-pb flex flex-col border-border bg-background"
                     >
                       <SheetHeader className="sr-only p-0">
                         <SheetTitle>{t("mobileHeader.menuTitle")}</SheetTitle>
@@ -583,7 +583,7 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                       event.preventDefault();
                       focusSearchInput();
                     }}
-                    className="flex transform-gpu flex-col gap-4 border-border bg-background px-4 pt-4 pb-[calc(env(safe-area-inset-bottom)+16px)] [will-change:transform] !transition-[transform,opacity] motion-reduce:animate-none motion-reduce:transition-none data-[state=open]:duration-[240ms] data-[state=closed]:duration-[180ms]"
+                    className="safe-pb-16 flex transform-gpu flex-col gap-4 border-border bg-background px-4 pt-4 [will-change:transform] !transition-[transform,opacity] motion-reduce:animate-none motion-reduce:transition-none data-[state=open]:duration-[240ms] data-[state=closed]:duration-[180ms]"
                   >
                     <SheetHeader>
                       <SheetTitle className="sr-only">{t("common.search")}</SheetTitle>

@@ -33,12 +33,15 @@ Duruma göre:
 
 - UI regression için `npm run ui:audit`, `npm run ui:audit:tr`
 - Route-content değiştiyse `python3 scripts/generate-route-content.py`
+- DB schema değiştiyse `npm run db:generate`
 - Mesaj seti değiştiyse `node scripts/i18n/check-messages.mjs`
 
 Not:
 
 - `check:all` generator'ı otomatik çalıştırmaz.
 - `node scripts/i18n/check-messages.mjs` şu an npm script değildir; doğrudan çağrılır.
+- Bu makinede izole preview gerekiyorsa `3012` / `3013` tercih edilir; `3004` kullanılmaz.
+- İzole preview için `NEXT_DIST_DIR=.next-...` kullanılabilir; bu tür machine-local TypeScript include satırları repo gerçeği kabul edilmez ve commit'e alınmaz.
 
 ## 4) Doküman Asıl Ev Kuralı
 
@@ -198,6 +201,44 @@ Kural:
 - Docs etkisi:
   - UI kontratı değiştiyse `docs/UI-SYSTEM.md`
 
+### DB schema / migration değişikliği
+
+- Önce bak:
+  - `drizzle.config.ts`
+  - `src/db/schema/*`
+  - `src/db/index.ts`
+- Adımlar:
+  - schema dosyalarını güncelle
+  - gerekiyorsa env beklentisini netleştir
+  - `npm run db:generate` ile migration üret
+- Komutlar:
+  - `npm run db:generate`
+  - `npm run build`
+- Kontrol:
+  - migration SQL beklenen tablo/FK/index farkını üretiyor mu
+  - public route/i18n zincirine istemsiz bağ yok mu
+- Docs etkisi:
+  - teknik contract değiştiyse `docs/SSOT.md`, repo-side akış değiştiyse `docs/OPS.md` ve/veya `docs/WORKFLOW.md`
+
+### Ops auth / guard değişikliği
+
+- Önce bak:
+  - `src/lib/ops/auth/*`
+  - `src/app/ops/**`
+  - `.env.example`
+- Adımlar:
+  - session, role resolve ve redirect zincirini birlikte güncelle
+  - gerekiyorsa bootstrap env/script beklentisini netleştir
+- Komutlar:
+  - `npm run lint`
+  - `npm run build`
+- Kontrol:
+  - `/ops` session yoksa `/ops/giris`
+  - staff/user cookie ile doğru home path
+  - yetkisiz role ile güvenli redirect
+- Docs etkisi:
+  - çoğu durumda `docs/SSOT.md`, repo-side runbook değişirse `docs/OPS.md`
+
 ### Docs-only değişiklik
 
 - Önce bak:
@@ -221,6 +262,8 @@ Kural:
 |---|---|---|---|---|
 | Route / metadata | `python3 scripts/generate-route-content.py`, `npm run build` | `npm run lint` | sitemap, robots, canonical | çoğu durumda `SSOT` |
 | UI kontratı | `npm run check:no-palette`, `npm run build` | `npm run ui:audit` | mobile/tablet/desktop, locale taşması | gerekirse `UI-SYSTEM` |
+| DB schema / migration | `npm run db:generate`, `npm run build` | `npm run lint` | migration SQL, env beklentisi, import zinciri | çoğu durumda `SSOT`, bazen `OPS`/`WORKFLOW` |
+| Ops auth / guard | `npm run lint`, `npm run build` | `npm run check:all` | `/ops` redirect, staff/user guard, bootstrap/login akışı | çoğu durumda `SSOT`, bazen `OPS`/`WORKFLOW` |
 | I18n key/content | `node scripts/i18n/check-messages.mjs`, `npm run build` | `npm run lint` | prefixsiz + prefixli locale | süreç değişirse `WORKFLOW`, contract değişirse `SSOT` |
 | NAP / links | `npm run build` | `npm run lint` | footer, contact, JSON-LD | çoğu durumda `SSOT`, bazen `UI-SYSTEM` |
 | Docs-only | zorunlu yok | yok | rol ayrımı, tekrar, `UNKNOWN` | ilgili docs dosyası |

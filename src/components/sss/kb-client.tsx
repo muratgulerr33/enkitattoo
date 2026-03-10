@@ -168,7 +168,7 @@ export function KBClient() {
   }, []);
 
   return (
-    <div className="space-y-5 pb-[calc(24px+env(safe-area-inset-bottom))]">
+    <div className="safe-pb-24 space-y-5">
       <section className="space-y-3" aria-label={t("sss.ui.searchFilterAria")}>
         <div className="relative min-w-0">
           <label htmlFor="kb-search" className="sr-only">

@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
+const distDir = process.env.NEXT_DIST_DIR?.trim();
+
 const nextConfig: NextConfig = {
+  ...(distDir ? { distDir } : {}),
   async redirects() {
     return [
       { source: "/book", destination: "/iletisim", permanent: true },

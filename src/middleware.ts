@@ -6,12 +6,14 @@ const INTERNAL_REWRITE_HEADER = 'x-enki-internal-rewrite';
 const NEXT_INTL_LOCALE_HEADER = 'x-next-intl-locale';
 
 const INTERNAL_BYPASS_EXACT_PATHS = new Set([
+  '/ops',
   '/robots.txt',
   '/sitemap.xml',
   '/manifest.webmanifest'
 ]);
 
 function isBypassPath(pathname: string): boolean {
+  if (pathname === '/ops' || pathname.startsWith('/ops/')) return true;
   if (pathname.startsWith('/_next')) return true;
   if (pathname.startsWith('/api')) return true;
   if (pathname.startsWith('/favicon')) return true;

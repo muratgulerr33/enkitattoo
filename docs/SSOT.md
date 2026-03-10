@@ -6,6 +6,8 @@ Bu dosya repo içindeki teknik gerçeklerin ana evidir. Route, i18n, SEO, source
 
 - Framework: Next.js 16 App Router, React 19, TypeScript (`package.json`)
 - I18n: `next-intl` (`src/i18n/routing.ts`, `src/i18n/request.ts`)
+- DB foundation: PostgreSQL + Drizzle ORM (`src/db/*`, `drizzle.config.ts`, `package.json`)
+- Ops auth: ops-local email/password + signed cookie session (`src/lib/ops/auth/*`, `src/app/ops/giris/actions.ts`)
 - Theme: `next-themes`, `storageKey="enki-theme"` (`src/app/layout.tsx`)
 - Site base URL: `https://enkitattoo.com.tr` (`src/lib/site/base-url.ts`)
 - Route-content generator: `scripts/generate-route-content.py`
@@ -22,6 +24,8 @@ Bu dosya repo içindeki teknik gerçeklerin ana evidir. Route, i18n, SEO, source
 | I18n load/merge zinciri | `src/i18n/request.ts` | `NextIntlClientProvider`, tüm `useTranslations` / `getTranslations` tüketicileri | build, locale smoke check, namespace kontrolü | namespace eklenip merge zinciri güncellenmezse runtime kırılır |
 | UI message kaynağı | `messages/*.json` | page/component copy | i18n kalite kontrolü, locale taşma kontrolü | TR eklenip diğer locale'ler unutulursa drift oluşur |
 | Review content namespace | `src/content/enki/reviews.*.json` | `reviews.*` namespace tüketen UI | `src/i18n/request.ts` kontrolü, reviews UI smoke check | content namespace mesaj dosyası sanılırsa yanlış yerde aranır |
+| Ops DB schema | `src/db/schema/*.ts` | `src/db/index.ts`, `src/db/migrations/*`, `drizzle.config.ts` | migration generate, DB client ve env kontrolü | schema ile migration drift ederse DB foundation bozulur |
+| Ops auth/session contract | `src/lib/ops/auth/*.ts` | `src/app/ops/**`, `scripts/db/bootstrap-ops-user.mjs`, `.env.example` | login, session, role redirect ve guard kontrolü | cookie/env/role contract drift ederse ops erişimi bozulur |
 | Business/NAP kaynağı | `src/lib/site-info.ts` | footer, contact, JSON-LD, home map | footer/contact/JSON-LD kontrolü | ikinci NAP kaynağı açılırsa business drift oluşur |
 | Site-level link sabitleri | `src/lib/site/links.ts` | CTA'lar, footer quick links, maps/social linkleri | footer/contact/home CTA kontrolü | component içine link gömmek drift üretir |
 | Dokümantasyon süreç evi | `docs/WORKFLOW.md` | aktif docs ve görev akışları | docs güncelleme | teknik gerçeği workflow dosyasında sabitlemek rol karışıklığı üretir |
@@ -47,8 +51,10 @@ Canonical public set sayfa dosyaları ve `src/lib/route-content.generated.ts` ü
 ### Internal veya SEO-dışı yüzeyler
 
 - `/styleguide`: dahili kontrol yüzeyi (`src/app/styleguide/page.tsx`)
+- `/ops`: TR-only operations namespace; locale subtree dışında yaşar ve public `next-intl` zincirine girmez (`src/app/ops/layout.tsx`, `src/middleware.ts`)
+- `/ops/giris`: ops-local login yüzeyi; session varsa role bazlı home path'e redirect eder (`src/app/ops/giris/page.tsx`)
 - Metadata route'ları: `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest` (`src/app/robots.ts`, `src/app/sitemap.ts`, `src/app/manifest.ts`)
-- Middleware bypass yüzeyleri: `/_next`, `/api`, favicon, OG/Twitter image route'ları ve uzantılı dosyalar (`src/middleware.ts`)
+- Middleware bypass yüzeyleri: `/ops`, `/_next`, `/api`, favicon, OG/Twitter image route'ları ve uzantılı dosyalar (`src/middleware.ts`)
 
 ### Aktif redirect'ler
 
@@ -109,6 +115,31 @@ Piercing sahipliği notu:
 | `src/middleware.ts` | locale URL davranışı | request edge katmanı | merge yok | `/tr` canonicalizasyonu, prefixsiz `tr` rewrite | yanlış kural canonical URL ve 404 davranışını bozar |
 | `src/app/[locale]/(app)/layout.tsx` | request locale + provider | app shell sarımı | `NextIntlClientProvider` | tüm client/server translation tüketimi | provider setup bozulursa tüm app translation zinciri etkilenir |
 
+Ops notu:
+
+- `/ops` namespace'i bu i18n contract'inin dışındadır.
+- `src/app/ops/**` altında `@/i18n/navigation`, `useTranslations`, `getTranslations`, `NextIntlClientProvider`, `messages/*` ve `route-content` kullanılmamalıdır.
+- Ops tarafında plain `next/link` ve plain `next/navigation` yaklaşımı kullanılır.
+- `/ops` isteği middleware içinde bypass edildiği için varsayılan locale rewrite zincirine girmez (`src/middleware.ts`).
+- Ops auth session cookie ve role lookup tamamen ops-local tutulur; public auth/i18n contract'ine bağlanmaz (`src/lib/ops/auth/*`).
+
+## 6.1) Ops Route ve Auth Contract
+
+- Ops route omurgası:
+  - `/ops`
+  - `/ops/giris`
+  - `/ops/staff/*`
+  - `/ops/user/*`
+- `/ops` dashboard değildir; session yoksa `/ops/giris`, staff rolü varsa `/ops/staff/kasa`, yalnız `user` rolü varsa `/ops/user/randevular` yönlenir (`src/app/ops/page.tsx`, `src/lib/ops/auth/roles.ts`).
+- Auth modeli ops-local email/password'tur (`src/app/ops/giris/actions.ts`, `src/lib/ops/auth/password.ts`).
+- Session signed cookie ile tutulur (`src/lib/ops/auth/session.ts`).
+- Role resolution DB tabanlıdır; `admin` veya `artist` varsa staff alanı, yalnız `user` varsa user alanı açılır (`src/lib/ops/auth/roles.ts`, `src/lib/ops/auth/users.ts`).
+- Foundation tabloları:
+  - `users`
+  - `user_profiles`
+  - `user_roles`
+  - `audit_logs`
+
 ## 7) SEO, NAP ve Yapısal Veri Akışı
 
 - Tek base URL kaynağı `SITE_URL`dır (`src/lib/site/base-url.ts`).
@@ -120,6 +151,9 @@ Piercing sahipliği notu:
 - `robots.txt` tek sitemap referansını `SITE_URL` üzerinden verir (`src/app/robots.ts`).
 - NAP ve contact/business linkleri `SITE_INFO` ve `src/lib/site/links.ts` üzerinden dağılır.
 - `LocalBusinessJsonLd` bu verilerden `TattooParlor` + `WebSite` graph'ı üretir (`src/components/seo/local-business-jsonld.tsx`).
+- `/ops` route'ları `route-content` ve sitemap hattına dahil değildir; metadata'sı `src/app/ops/layout.tsx` içinde ayrı tutulur.
+- Ops DB foundation `src/db/schema/*.ts` + `src/db/migrations/*` + `drizzle.config.ts` ile tutulur; public SEO hattından ayrıdır.
+- Ops auth env yüzeyi `DATABASE_URL` + `OPS_SESSION_SECRET` + bootstrap env'leri ile sınırlıdır (`.env.example`, `scripts/db/bootstrap-ops-user.mjs`).
 
 ## 8) Quick Impact Map
 
@@ -127,6 +161,8 @@ Piercing sahipliği notu:
 - Slug değişirse: slug owner -> route-content -> link tüketen UI -> smoke check
 - Locale veya key değişirse: `messages/*` veya `src/content/**` -> `src/i18n/request.ts` -> build + locale smoke check
 - NAP/link değişirse: `site-info` / `site/links` -> footer/contact/home/JSON-LD
+- DB schema değişirse: `src/db/schema/*` -> `npm run db:generate` -> `src/db/migrations/*` -> migrate akışı
+- Ops auth değişirse: `src/lib/ops/auth/*` -> `/ops/giris` -> `/ops`, `/ops/staff/*`, `/ops/user/*` guard ve redirect smoke check
 
 ## 9) Known Intentional Inconsistencies
 
@@ -145,6 +181,8 @@ Piercing sahipliği notu:
 | Reviews/content drift olur | `reviews.*` tüketen UI eksik içerik veya runtime hata verir | `src/content/enki/reviews.*.json`, `src/i18n/request.ts` |
 | NAP drift olur | footer, contact ve JSON-LD farklı business bilgisi taşır | `src/lib/site-info.ts`, `src/lib/site/links.ts`, contact/footer/JSON-LD |
 | Canonical set bozulur | yanlış route indexlenir veya sitemap dışına düşer | route-content CSV, generator, sitemap |
+| DB schema drift olur | migration ile schema ayrışır; foundation kurulumu tutarsızlaşır | `src/db/schema/*`, `src/db/migrations/*`, `drizzle.config.ts` |
+| Ops auth env veya role drift olur | login çalışmaz veya kullanıcı yanlış alana yönlenir | `.env.example`, `src/lib/ops/auth/*`, `src/app/ops/**` |
 
 ## 11) Anti-patternler
 

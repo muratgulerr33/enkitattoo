@@ -17,6 +17,9 @@ npm run check:all
 
 - Framework: Next.js 16 App Router, React 19, TypeScript
 - I18n: `next-intl` (`tr`, `sq`, `sr`, `en`)
+- DB foundation: PostgreSQL + Drizzle ORM (`src/db/*`, `drizzle.config.ts`)
+- Ops auth: ops-local email/password + signed session cookie (`src/lib/ops/auth/*`)
+- Local DB standardi: Docker PostgreSQL + Drizzle migration akisi
 - UI: Tailwind v4, Radix tabanlı componentler, `next-themes`
 - Analytics: `NEXT_PUBLIC_GA_ID` varsa GA4 aktif
 
@@ -41,7 +44,15 @@ Aktif redirect'ler: `/book` -> `/iletisim`, `/explore` -> `/kesfet`, `/profile` 
 ## Dahili Yüzeyler
 
 - `/styleguide`: dahili kontrol yüzeyi; canonical public route setinin parçası değildir.
+- `/ops`: TR-only operations namespace; public locale subtree ve i18n zincirinden ayrıdır.
 - Metadata route'ları: `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest`
+
+## Ops Route Omurgasi
+
+- `/ops`
+- `/ops/giris`
+- `/ops/staff/*`
+- `/ops/user/*`
 
 ## Dokümantasyon
 

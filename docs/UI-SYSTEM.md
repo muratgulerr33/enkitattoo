@@ -2,6 +2,11 @@
 
 Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut component, shell ve utility düzenini koruyan kuralları yazar.
 
+Not:
+
+- Bu doküman public web shell'i anlatır.
+- `/ops` altında açılan TR-only operations shell'i ayrı bir yüzeydir; public `AppShell` kontratına dahil değildir.
+
 ## 1) UI Ownership Matrix
 
 | Alan | Canonical component/file | Supporting file | Dikkat edilecek kontrat |

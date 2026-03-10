@@ -72,6 +72,8 @@ export async function renderSocialImage() {
             boxShadow: "inset 0 0 180px rgba(0, 0, 0, 0.58)",
           }}
         />
+        {/* next/og ImageResponse renders a plain img element. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={logoDataUrl}
           alt="Enki Tattoo"

@@ -572,7 +572,7 @@ export function GalleryGrid({ items }: GalleryGridProps) {
               {t("pages.gallery.viewerDescription")}
             </DialogDescription>
 
-            <div className="flex h-[100dvh] min-h-0 flex-col bg-background text-foreground pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
+            <div className="safe-pt safe-pb flex h-[100dvh] min-h-0 flex-col bg-background text-foreground">
               <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-border/60 bg-background/90 px-4 py-3 backdrop-blur-sm supports-[backdrop-filter]:bg-background/85">
                 <span className="tabular-nums inline-flex w-[9ch] items-center justify-center rounded-md bg-muted px-3 py-1 text-center text-xs font-medium text-foreground">
                   {selectedIndex + 1} / {viewerItems.length}

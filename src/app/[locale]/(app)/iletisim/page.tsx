@@ -52,7 +52,7 @@ export default async function IletisimPage() {
       : null;
 
   return (
-    <div className="app-section no-overflow-x pb-[calc(env(safe-area-inset-bottom)+96px)] sm:pb-0">
+    <div className="app-section no-overflow-x safe-pb-96 sm:pb-0">
       <BreadcrumbListJsonLd path="/iletisim" />
       <LocalBusinessJsonLd />
 
