@@ -1,0 +1,404 @@
+import { and, desc, eq, isNull } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
+import { getDb } from "@/db";
+import {
+  cashEntries,
+  type CashEntryType,
+  userProfiles,
+  users,
+  type UserRole,
+} from "@/db/schema";
+
+export const CASHBOOK_DATE_LOCK_MESSAGE =
+  "Artist yalniz bugun icin kasa kaydi acabilir.";
+
+export type CashEntryRecord = {
+  id: number;
+  entryDate: string;
+  entryType: CashEntryType;
+  amountCents: number;
+  note: string | null;
+  createdByUserId: number;
+  createdByName: string;
+  updatedByUserId: number | null;
+  updatedByName: string | null;
+  deletedAt: Date | null;
+  deletedByUserId: number | null;
+  deletedByName: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type CashEntrySummary = {
+  incomeCents: number;
+  expenseCents: number;
+  netCents: number;
+  entryCount: number;
+};
+
+export type CreateCashEntryInput = {
+  entryDate: string;
+  entryType: CashEntryType;
+  amountCents: number;
+  note: string | null;
+  actorUserId: number;
+};
+
+export type UpdateCashEntryInput = {
+  entryId: number;
+  entryDate: string;
+  entryType: CashEntryType;
+  amountCents: number;
+  note: string | null;
+  actorUserId: number;
+};
+
+export type SoftDeleteCashEntryInput = {
+  entryId: number;
+  actorUserId: number;
+};
+
+export type CashbookSnapshot = {
+  selectedDate: string;
+  todayDate: string;
+  canManageHistory: boolean;
+  entries: CashEntryRecord[];
+  selectedSummary: CashEntrySummary;
+  todaySummary: CashEntrySummary;
+};
+
+type CashEntryRow = {
+  id: number;
+  entryDate: string;
+  entryType: CashEntryType;
+  amountCents: number;
+  note: string | null;
+  createdByUserId: number;
+  createdByEmail: string | null;
+  createdByFullName: string | null;
+  createdByDisplayName: string | null;
+  updatedByUserId: number | null;
+  updatedByEmail: string | null;
+  updatedByFullName: string | null;
+  updatedByDisplayName: string | null;
+  deletedAt: Date | null;
+  deletedByUserId: number | null;
+  deletedByEmail: string | null;
+  deletedByFullName: string | null;
+  deletedByDisplayName: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+function padNumber(value: number): string {
+  return value.toString().padStart(2, "0");
+}
+
+export function getTodayCashDateValue(): string {
+  const now = new Date();
+  return `${now.getFullYear()}-${padNumber(now.getMonth() + 1)}-${padNumber(now.getDate())}`;
+}
+
+export function isValidCashDateValue(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function assertCashDateValue(value: string): string {
+  if (!isValidCashDateValue(value)) {
+    throw new Error("Tarih gecerli degil.");
+  }
+
+  return value;
+}
+
+export function isAdminCashUser(roles: UserRole[]): boolean {
+  return roles.includes("admin");
+}
+
+export function canManageCashHistory(roles: UserRole[]): boolean {
+  return isAdminCashUser(roles);
+}
+
+export function resolveCashbookDate(roles: UserRole[], requestedDate?: string | null): string {
+  const today = getTodayCashDateValue();
+
+  if (!canManageCashHistory(roles)) {
+    return today;
+  }
+
+  if (requestedDate && isValidCashDateValue(requestedDate)) {
+    return requestedDate;
+  }
+
+  return today;
+}
+
+function getDisplayName(
+  email: string | null,
+  fullName: string | null,
+  displayName: string | null,
+  fallback: string
+): string {
+  return displayName ?? fullName ?? email ?? fallback;
+}
+
+function toCashEntryRecord(row: CashEntryRow): CashEntryRecord {
+  return {
+    id: row.id,
+    entryDate: row.entryDate,
+    entryType: row.entryType,
+    amountCents: row.amountCents,
+    note: row.note,
+    createdByUserId: row.createdByUserId,
+    createdByName: getDisplayName(
+      row.createdByEmail,
+      row.createdByFullName,
+      row.createdByDisplayName,
+      "Bilinmeyen"
+    ),
+    updatedByUserId: row.updatedByUserId,
+    updatedByName: row.updatedByUserId
+      ? getDisplayName(
+          row.updatedByEmail,
+          row.updatedByFullName,
+          row.updatedByDisplayName,
+          "Bilinmeyen"
+        )
+      : null,
+    deletedAt: row.deletedAt,
+    deletedByUserId: row.deletedByUserId,
+    deletedByName: row.deletedByUserId
+      ? getDisplayName(
+          row.deletedByEmail,
+          row.deletedByFullName,
+          row.deletedByDisplayName,
+          "Bilinmeyen"
+        )
+      : null,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
+
+export function summarizeCashEntries(entries: CashEntryRecord[]): CashEntrySummary {
+  let incomeCents = 0;
+  let expenseCents = 0;
+
+  for (const entry of entries) {
+    if (entry.entryType === "income") {
+      incomeCents += entry.amountCents;
+      continue;
+    }
+
+    expenseCents += entry.amountCents;
+  }
+
+  return {
+    incomeCents,
+    expenseCents,
+    netCents: incomeCents - expenseCents,
+    entryCount: entries.length,
+  };
+}
+
+export function formatCashAmount(amountCents: number): string {
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+    minimumFractionDigits: 2,
+  }).format(amountCents / 100);
+}
+
+export function formatCashAmountInput(amountCents: number): string {
+  return (amountCents / 100).toFixed(2);
+}
+
+export function formatCashDateLong(entryDate: string): string {
+  const [year, month, day] = entryDate.split("-").map(Number);
+  return new Intl.DateTimeFormat("tr-TR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  }).format(new Date(year, month - 1, day));
+}
+
+export function formatCashTime(timestamp: Date): string {
+  return new Intl.DateTimeFormat("tr-TR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(timestamp);
+}
+
+export function parseCashAmountToCents(value: string): number {
+  const normalized = value.trim().replace(",", ".");
+
+  if (!/^\d{1,7}(\.\d{1,2})?$/.test(normalized)) {
+    throw new Error("Tutari 12.50 gibi yazin.");
+  }
+
+  const [wholePart, fractionPart = ""] = normalized.split(".");
+  const amountCents =
+    Number(wholePart) * 100 + Number(fractionPart.padEnd(2, "0").slice(0, 2));
+
+  if (!Number.isInteger(amountCents) || amountCents <= 0) {
+    throw new Error("Tutar sifirdan buyuk olmali.");
+  }
+
+  return amountCents;
+}
+
+function assertPositiveAmountCents(amountCents: number): number {
+  if (!Number.isInteger(amountCents) || amountCents <= 0) {
+    throw new Error("Tutar sifirdan buyuk olmali.");
+  }
+
+  return amountCents;
+}
+
+function assertCashEntryType(value: string): CashEntryType {
+  if (value === "income" || value === "expense") {
+    return value;
+  }
+
+  throw new Error("Islem turu gecerli degil.");
+}
+
+export function toCashEntryType(value: string): CashEntryType {
+  return assertCashEntryType(value);
+}
+
+async function listActiveCashEntriesForDate(entryDate: string): Promise<CashEntryRecord[]> {
+  const db = getDb();
+  const createdByUsers = alias(users, "cash_created_by_users");
+  const createdByProfiles = alias(userProfiles, "cash_created_by_profiles");
+  const updatedByUsers = alias(users, "cash_updated_by_users");
+  const updatedByProfiles = alias(userProfiles, "cash_updated_by_profiles");
+  const deletedByUsers = alias(users, "cash_deleted_by_users");
+  const deletedByProfiles = alias(userProfiles, "cash_deleted_by_profiles");
+
+  const rows = await db
+    .select({
+      id: cashEntries.id,
+      entryDate: cashEntries.entryDate,
+      entryType: cashEntries.entryType,
+      amountCents: cashEntries.amountCents,
+      note: cashEntries.note,
+      createdByUserId: cashEntries.createdByUserId,
+      createdByEmail: createdByUsers.email,
+      createdByFullName: createdByProfiles.fullName,
+      createdByDisplayName: createdByProfiles.displayName,
+      updatedByUserId: cashEntries.updatedByUserId,
+      updatedByEmail: updatedByUsers.email,
+      updatedByFullName: updatedByProfiles.fullName,
+      updatedByDisplayName: updatedByProfiles.displayName,
+      deletedAt: cashEntries.deletedAt,
+      deletedByUserId: cashEntries.deletedByUserId,
+      deletedByEmail: deletedByUsers.email,
+      deletedByFullName: deletedByProfiles.fullName,
+      deletedByDisplayName: deletedByProfiles.displayName,
+      createdAt: cashEntries.createdAt,
+      updatedAt: cashEntries.updatedAt,
+    })
+    .from(cashEntries)
+    .innerJoin(createdByUsers, eq(createdByUsers.id, cashEntries.createdByUserId))
+    .leftJoin(createdByProfiles, eq(createdByProfiles.userId, createdByUsers.id))
+    .leftJoin(updatedByUsers, eq(updatedByUsers.id, cashEntries.updatedByUserId))
+    .leftJoin(updatedByProfiles, eq(updatedByProfiles.userId, updatedByUsers.id))
+    .leftJoin(deletedByUsers, eq(deletedByUsers.id, cashEntries.deletedByUserId))
+    .leftJoin(deletedByProfiles, eq(deletedByProfiles.userId, deletedByUsers.id))
+    .where(and(eq(cashEntries.entryDate, entryDate), isNull(cashEntries.deletedAt)))
+    .orderBy(desc(cashEntries.createdAt), desc(cashEntries.id));
+
+  return rows.map(toCashEntryRecord);
+}
+
+async function hasActiveCashEntry(entryId: number): Promise<boolean> {
+  const db = getDb();
+  const rows = await db
+    .select({
+      id: cashEntries.id,
+    })
+    .from(cashEntries)
+    .where(and(eq(cashEntries.id, entryId), isNull(cashEntries.deletedAt)))
+    .limit(1);
+
+  return Boolean(rows[0]);
+}
+
+export async function getCashbookSnapshot(
+  roles: UserRole[],
+  requestedDate?: string | null
+): Promise<CashbookSnapshot> {
+  const selectedDate = resolveCashbookDate(roles, requestedDate);
+  const todayDate = getTodayCashDateValue();
+  const [selectedEntries, todayEntries] =
+    selectedDate === todayDate
+      ? await Promise.all([listActiveCashEntriesForDate(selectedDate), Promise.resolve(null)])
+      : await Promise.all([
+          listActiveCashEntriesForDate(selectedDate),
+          listActiveCashEntriesForDate(todayDate),
+        ]);
+
+  const todayVisibleEntries = todayEntries ?? selectedEntries;
+
+  return {
+    selectedDate,
+    todayDate,
+    canManageHistory: canManageCashHistory(roles),
+    entries: selectedEntries,
+    selectedSummary: summarizeCashEntries(selectedEntries),
+    todaySummary: summarizeCashEntries(todayVisibleEntries),
+  };
+}
+
+export async function createCashEntry(input: CreateCashEntryInput): Promise<void> {
+  const db = getDb();
+
+  await db.insert(cashEntries).values({
+    entryDate: assertCashDateValue(input.entryDate),
+    entryType: assertCashEntryType(input.entryType),
+    amountCents: assertPositiveAmountCents(input.amountCents),
+    note: input.note,
+    createdByUserId: input.actorUserId,
+  });
+}
+
+export async function updateCashEntry(input: UpdateCashEntryInput): Promise<void> {
+  const db = getDb();
+  const hasEntry = await hasActiveCashEntry(input.entryId);
+
+  if (!hasEntry) {
+    throw new Error("Kasa kaydi bulunamadi.");
+  }
+
+  await db
+    .update(cashEntries)
+    .set({
+      entryDate: assertCashDateValue(input.entryDate),
+      entryType: assertCashEntryType(input.entryType),
+      amountCents: assertPositiveAmountCents(input.amountCents),
+      note: input.note,
+      updatedByUserId: input.actorUserId,
+      updatedAt: new Date(),
+    })
+    .where(eq(cashEntries.id, input.entryId));
+}
+
+export async function softDeleteCashEntry(input: SoftDeleteCashEntryInput): Promise<void> {
+  const db = getDb();
+  const hasEntry = await hasActiveCashEntry(input.entryId);
+
+  if (!hasEntry) {
+    throw new Error("Kasa kaydi bulunamadi.");
+  }
+
+  await db
+    .update(cashEntries)
+    .set({
+      deletedAt: new Date(),
+      deletedByUserId: input.actorUserId,
+      updatedByUserId: input.actorUserId,
+      updatedAt: new Date(),
+    })
+    .where(eq(cashEntries.id, input.entryId));
+}

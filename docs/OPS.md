@@ -52,6 +52,7 @@ Bu dosya repo içinden doğrulanabilen runtime ve deploy hazırlık bilgisini tu
   - `tattoo_forms`
   - `consent_acceptances`
   - `appointments`
+  - `cash_entries`
 - Appointment MVP isletme bazlidir; `appointments.artist_id` yoktur.
 - Appointment status seti:
   - `scheduled`
@@ -65,6 +66,12 @@ Bu dosya repo içinden doğrulanabilen runtime ve deploy hazırlık bilgisini tu
 - `scheduled` durumundaki kayitlar icin ayni tarih + ayni saat conflict'i DB unique index + uygulama guard ile engellenir.
 - `/ops/staff/randevular` aylik gorunum + gun detayi + create/status update yuzeyidir.
 - `/ops/user/randevular` kullanicinin kendi randevularini gorme ve kendi adina randevu acma yuzeyidir.
+- Cashbook MVP `cash_entries` uzerinden calisir; appointments ile zorunlu FK iliskisi yoktur.
+- `cash_entries.entry_type` seti `income` / `expense` olarak tutulur.
+- Tutar `amount_cents` alaninda pozitif integer olarak saklanir.
+- Soft delete `deleted_at` + `deleted_by_user_id` ile uygulanir.
+- `/ops/staff/kasa` hizli kayit + bugun toplam + tarih filtresi + admin manage yuzeyidir.
+- Artist yalniz bugunun kasa akisini gorur ve kayit acar; gecmis edit/delete admin'e aciktir.
 - Local sanity'de çakışmasız preview için `3012` / `3013` kullanılabilir; `3004` kullanılmaz.
 
 ## 3) Pre-deploy ve Minimum Temsilî Smoke-check Matrix

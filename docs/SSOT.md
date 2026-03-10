@@ -53,6 +53,7 @@ Canonical public set sayfa dosyaları ve `src/lib/route-content.generated.ts` ü
 - `/styleguide`: dahili kontrol yüzeyi (`src/app/styleguide/page.tsx`)
 - `/ops`: TR-only operations namespace; locale subtree dışında yaşar ve public `next-intl` zincirine girmez (`src/app/ops/layout.tsx`, `src/middleware.ts`)
 - `/ops/giris`: ops-local login yüzeyi; session varsa role bazlı home path'e redirect eder (`src/app/ops/giris/page.tsx`)
+- `/ops/staff/kasa`: staff-only cashbook yuzeyi; quick-entry, gun filtresi ve admin manage aksiyonlari burada calisir (`src/app/ops/staff/kasa/page.tsx`)
 - `/ops/staff/randevular`: aylik takvim + secili gun operasyon yuzeyi; isletme bazli randevu yönetimi burada yapilir (`src/app/ops/staff/randevular/page.tsx`)
 - `/ops/user/randevular`: kullanicinin kendi randevularini gordugu ve yeni kayit actigi yuzeydir (`src/app/ops/user/randevular/page.tsx`)
 - Metadata route'ları: `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest` (`src/app/robots.ts`, `src/app/sitemap.ts`, `src/app/manifest.ts`)
@@ -145,12 +146,17 @@ Ops notu:
   - `tattoo_forms`
   - `consent_acceptances`
   - `appointments`
+  - `cash_entries`
 - User onboarding akışı `profil -> tattoo formu -> acik onay` omurgasıyla `/ops/user/*` altında çalışır (`src/app/ops/user/profil/page.tsx`, `src/app/ops/user/form/page.tsx`, `src/app/ops/user/actions.ts`).
 - `tattoo_forms` snapshot mantığıyla tutulur; son aktif snapshot user workspace yüzeylerinde okunur (`src/db/schema/onboarding.ts`, `src/lib/ops/user-workspace.ts`).
 - `consent_acceptances` checkbox ile açık kabul, sürüm ve zaman damgası kaydı tutar (`src/db/schema/onboarding.ts`, `src/lib/ops/user-workspace.ts`).
 - `appointments` isletme bazlidir; `artist_id` yoktur, slot engine yoktur ve ayni tarih + ayni saat icin ikinci aktif `scheduled` kayit acilamaz (`src/db/schema/appointments.ts`, `src/lib/ops/appointments.ts`).
 - `appointments.status` seti `scheduled`, `completed`, `cancelled`, `no_show` olarak sabittir (`src/db/schema/appointments.ts`).
 - `appointments.source` seti `customer`, `admin`, `artist` olarak sabittir (`src/db/schema/appointments.ts`).
+- `cash_entries` appointment'tan bagimsiz tutulur; zorunlu appointment FK yoktur (`src/db/schema/cashbook.ts`).
+- `cash_entries.entry_type` seti `income`, `expense` olarak sabittir; tutar `amount_cents` alaninda pozitif integer olarak saklanir (`src/db/schema/cashbook.ts`).
+- `cash_entries` soft delete ile calisir; `deleted_at` ve `deleted_by_user_id` alanlari kaydi fiziksel olarak silmeden kapatir (`src/db/schema/cashbook.ts`, `src/lib/ops/cashbook.ts`).
+- Artist yalniz bugunun kasa listesini gorur ve bugune kayit acar; gecmis edit/delete yalniz admin'e aciktir (`src/lib/ops/cashbook.ts`, `src/app/ops/kasa/actions.ts`).
 - Local Docker PostgreSQL + Drizzle dogrulamasinda preview portu olarak `3012` / `3013` tercih edilir; `3004` kullanilmaz (`docs/OPS.md`).
 
 ## 7) SEO, NAP ve Yapısal Veri Akışı

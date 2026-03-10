@@ -19,7 +19,7 @@ npm run check:all
 - I18n: `next-intl` (`tr`, `sq`, `sr`, `en`)
 - DB foundation: PostgreSQL + Drizzle ORM (`src/db/*`, `drizzle.config.ts`)
 - Ops auth: ops-local email/password + signed session cookie (`src/lib/ops/auth/*`)
-- Ops onboarding + randevu MVP: `tattoo_forms`, `consent_acceptances`, `appointments`
+- Ops onboarding + operasyon MVP: `tattoo_forms`, `consent_acceptances`, `appointments`, `cash_entries`
 - Local DB standardi: Docker PostgreSQL + Drizzle migration akisi
 - UI: Tailwind v4, Radix tabanlı componentler, `next-themes`
 - Analytics: `NEXT_PUBLIC_GA_ID` varsa GA4 aktif
@@ -65,6 +65,16 @@ Randevu notu:
 - Slot engine yoktur.
 - Ayni tarih + ayni saat icin ikinci `scheduled` kayit acilamaz.
 - Local preview icin `3004` kullanilmaz; `3012` / `3013` tercih edilir.
+
+Kasa notu:
+
+- `cash_entries` randevudan bagimsizdir; zorunlu appointment FK yoktur.
+- `cash_entry_type` seti `income` / `expense` olarak sabittir.
+- `amount_cents` pozitif integer olarak saklanir.
+- Soft delete alanlari `deleted_at` ve `deleted_by_user_id` uzerinden tutulur.
+- Kasa quick-entry mantiginda calisir.
+- Admin gecmis kaydi duzenler ve soft delete yapar.
+- Artist yalniz bugunun kasasina kayit acar; gecmis edit/delete yapmaz.
 
 ## Dokümantasyon
 
