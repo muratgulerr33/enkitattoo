@@ -1,16 +1,224 @@
-import { OpsPlaceholderPage } from "@/components/ops/ops-placeholder-page";
+import Link from "next/link";
+import { CalendarDays, Clock3, FileText, ShieldCheck, UserRound } from "lucide-react";
+import { OpsUserAppointmentCreateForm } from "@/components/ops/ops-user-appointment-create-form";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  formatAppointmentDateLong,
+  getTodayDateValue,
+  listUserAppointments,
+} from "@/lib/ops/appointments";
+import {
+  APPOINTMENT_SOURCE_LABELS,
+  APPOINTMENT_STATUS_LABELS,
+} from "@/lib/ops/appointment-copy";
+import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
+import { getUserWorkspaceOverview } from "@/lib/ops/user-workspace";
+import { cn } from "@/lib/utils";
 
-export default function OpsUserAppointmentsPage() {
+function getStatusBadgeClassName(status: keyof typeof APPOINTMENT_STATUS_LABELS): string {
+  if (status === "scheduled") {
+    return "border-emerald-500/20 bg-emerald-500/10 text-emerald-700";
+  }
+
+  if (status === "completed") {
+    return "border-sky-500/20 bg-sky-500/10 text-sky-700";
+  }
+
+  if (status === "cancelled") {
+    return "border-border bg-muted/40 text-foreground";
+  }
+
+  return "border-amber-500/20 bg-amber-500/10 text-amber-700";
+}
+
+export default async function OpsUserAppointmentsPage() {
+  const sessionUser = await requireOpsSessionArea("user");
+  const [overview, appointmentLists] = await Promise.all([
+    getUserWorkspaceOverview(sessionUser.id),
+    listUserAppointments(sessionUser.id),
+  ]);
+  const hasAppointmentPrepGap =
+    !overview.isProfileComplete ||
+    !overview.isTattooFormSubmitted ||
+    !overview.hasCurrentConsent;
+
   return (
-    <OpsPlaceholderPage
-      eyebrow="User / Randevular"
-      title="Randevularim"
-      description="User tarafinda sade shell kullaniliyor. Bu yuzey public locale subtree ve public shell'den ayridir."
-      nextStep="Gercek kullanici randevu goruntuleme ve aksiyonlari sonraki PR kapsaminda acilacak."
-      primaryHref="/ops/user/profil"
-      primaryLabel="Profile git"
-      secondaryHref="/ops/giris"
-      secondaryLabel="Ops girise don"
-    />
+    <div className="space-y-6">
+      <section className="space-y-3">
+        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
+          Hesabim / Randevular
+        </Badge>
+        <div className="space-y-2">
+          <h1 className="typo-page-title">Randevularim</h1>
+          <p className="typo-p text-muted-foreground">
+            Yeni talep acabilir, yaklasan kayitlarinizi gorebilir ve gecmisi takip edebilirsiniz.
+          </p>
+        </div>
+      </section>
+
+      {hasAppointmentPrepGap ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Hazirlik durumu</CardTitle>
+            <CardDescription>Profil, form ve onay yuzeyleri ayri akislardir.</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3 md:grid-cols-3">
+            <Link
+              href="/ops/user/profil"
+              className="rounded-2xl border border-border p-4 transition-colors hover:bg-muted/35"
+            >
+              <div className="flex items-center gap-2">
+                <UserRound className="size-4" aria-hidden />
+                <p className="text-sm font-medium text-foreground">Profil</p>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {overview.isProfileComplete ? "Hazir" : "Eksik"}
+              </p>
+            </Link>
+            <Link
+              href="/ops/user/form"
+              className="rounded-2xl border border-border p-4 transition-colors hover:bg-muted/35"
+            >
+              <div className="flex items-center gap-2">
+                <FileText className="size-4" aria-hidden />
+                <p className="text-sm font-medium text-foreground">Dovme formu</p>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {overview.isTattooFormSubmitted ? "Tamamlandi" : "Bekliyor"}
+              </p>
+            </Link>
+            <Link
+              href="/ops/user/form#onay"
+              className="rounded-2xl border border-border p-4 transition-colors hover:bg-muted/35"
+            >
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="size-4" aria-hidden />
+                <p className="text-sm font-medium text-foreground">Acik onay</p>
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {overview.hasCurrentConsent ? "Kayitli" : "Bekliyor"}
+              </p>
+            </Link>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+        <Card>
+          <CardHeader>
+            <CardTitle>Yeni randevu</CardTitle>
+            <CardDescription>
+              Tarih ve saat secin. Uygun degilse sade bir hata mesaji gorursunuz.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <OpsUserAppointmentCreateForm defaultDate={getTodayDateValue()} />
+          </CardContent>
+        </Card>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Yaklasan randevular</CardTitle>
+              <CardDescription>Sadece size ait aktif kayitlar listelenir.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {appointmentLists.upcoming.length ? (
+                appointmentLists.upcoming.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="rounded-3xl border border-border bg-card p-4"
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "rounded-full border",
+                          getStatusBadgeClassName(appointment.status)
+                        )}
+                      >
+                        {APPOINTMENT_STATUS_LABELS[appointment.status]}
+                      </Badge>
+                      <Badge variant="outline" className="rounded-full">
+                        {APPOINTMENT_SOURCE_LABELS[appointment.source]}
+                      </Badge>
+                    </div>
+                    <div className="mt-3 space-y-2">
+                      <p className="text-base font-semibold text-foreground">
+                        {formatAppointmentDateLong(appointment.appointmentDate)}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                        <span className="inline-flex items-center gap-1">
+                          <Clock3 className="size-4" aria-hidden />
+                          {appointment.appointmentTime}
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <CalendarDays className="size-4" aria-hidden />
+                          {appointment.createdByName}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="mt-3 text-sm text-foreground">
+                      {appointment.notes ?? "Ek not yok."}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
+                  Yaklasan randevunuz henuz yok.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Gecmis</CardTitle>
+              <CardDescription>Tamamlanan veya kapanan kayitlar burada kalir.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {appointmentLists.past.length ? (
+                appointmentLists.past.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    className="rounded-3xl border border-border bg-card p-4"
+                  >
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "rounded-full border",
+                          getStatusBadgeClassName(appointment.status)
+                        )}
+                      >
+                        {APPOINTMENT_STATUS_LABELS[appointment.status]}
+                      </Badge>
+                    </div>
+                    <p className="mt-3 text-sm font-medium text-foreground">
+                      {formatAppointmentDateLong(appointment.appointmentDate)} ·{" "}
+                      {appointment.appointmentTime}
+                    </p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {appointment.notes ?? "Ek not yok."}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
+                  Gecmis kayit henuz yok.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }

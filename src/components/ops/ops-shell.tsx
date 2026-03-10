@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import type { OpsSessionUser } from "@/lib/ops/auth/guards";
 import { cn } from "@/lib/utils";
 import type { OpsNavItem } from "@/lib/ops/navigation";
-import { CalendarDays, ChevronLeft, UserRound, Users, WalletCards } from "lucide-react";
+import { CalendarDays, ChevronLeft, FileText, UserRound, Users, WalletCards } from "lucide-react";
 
 type OpsShellProps = {
   areaLabel: string;
@@ -33,6 +33,10 @@ function OpsNavIcon({ href }: { href: string }) {
 
   if (href.includes("/musteriler")) {
     return <Users className={iconClassName} aria-hidden />;
+  }
+
+  if (href.includes("/form")) {
+    return <FileText className={iconClassName} aria-hidden />;
   }
 
   return <UserRound className={iconClassName} aria-hidden />;
@@ -72,6 +76,18 @@ function getDisplayName(sessionUser: OpsSessionUser): string {
   return sessionUser.displayName ?? sessionUser.fullName ?? sessionUser.email ?? "Ops kullanicisi";
 }
 
+function formatRoleLabel(role: OpsSessionUser["roles"][number]): string {
+  if (role === "admin") {
+    return "Yonetici";
+  }
+
+  if (role === "artist") {
+    return "Artist";
+  }
+
+  return "Kullanici";
+}
+
 export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShellProps) {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -86,7 +102,7 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
                 {areaLabel}
               </p>
               <p className="truncate text-sm text-muted-foreground">
-                {getDisplayName(sessionUser)} · {sessionUser.roles.join(", ")}
+                {getDisplayName(sessionUser)} · {sessionUser.roles.map(formatRoleLabel).join(", ")}
               </p>
             </div>
           </div>

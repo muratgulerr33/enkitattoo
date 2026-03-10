@@ -53,6 +53,8 @@ Canonical public set sayfa dosyaları ve `src/lib/route-content.generated.ts` ü
 - `/styleguide`: dahili kontrol yüzeyi (`src/app/styleguide/page.tsx`)
 - `/ops`: TR-only operations namespace; locale subtree dışında yaşar ve public `next-intl` zincirine girmez (`src/app/ops/layout.tsx`, `src/middleware.ts`)
 - `/ops/giris`: ops-local login yüzeyi; session varsa role bazlı home path'e redirect eder (`src/app/ops/giris/page.tsx`)
+- `/ops/staff/randevular`: aylik takvim + secili gun operasyon yuzeyi; isletme bazli randevu yönetimi burada yapilir (`src/app/ops/staff/randevular/page.tsx`)
+- `/ops/user/randevular`: kullanicinin kendi randevularini gordugu ve yeni kayit actigi yuzeydir (`src/app/ops/user/randevular/page.tsx`)
 - Metadata route'ları: `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest` (`src/app/robots.ts`, `src/app/sitemap.ts`, `src/app/manifest.ts`)
 - Middleware bypass yüzeyleri: `/ops`, `/_next`, `/api`, favicon, OG/Twitter image route'ları ve uzantılı dosyalar (`src/middleware.ts`)
 
@@ -129,6 +131,7 @@ Ops notu:
   - `/ops`
   - `/ops/giris`
   - `/ops/staff/*`
+  - `/ops/user/form`
   - `/ops/user/*`
 - `/ops` dashboard değildir; session yoksa `/ops/giris`, staff rolü varsa `/ops/staff/kasa`, yalnız `user` rolü varsa `/ops/user/randevular` yönlenir (`src/app/ops/page.tsx`, `src/lib/ops/auth/roles.ts`).
 - Auth modeli ops-local email/password'tur (`src/app/ops/giris/actions.ts`, `src/lib/ops/auth/password.ts`).
@@ -139,6 +142,16 @@ Ops notu:
   - `user_profiles`
   - `user_roles`
   - `audit_logs`
+  - `tattoo_forms`
+  - `consent_acceptances`
+  - `appointments`
+- User onboarding akışı `profil -> tattoo formu -> acik onay` omurgasıyla `/ops/user/*` altında çalışır (`src/app/ops/user/profil/page.tsx`, `src/app/ops/user/form/page.tsx`, `src/app/ops/user/actions.ts`).
+- `tattoo_forms` snapshot mantığıyla tutulur; son aktif snapshot user workspace yüzeylerinde okunur (`src/db/schema/onboarding.ts`, `src/lib/ops/user-workspace.ts`).
+- `consent_acceptances` checkbox ile açık kabul, sürüm ve zaman damgası kaydı tutar (`src/db/schema/onboarding.ts`, `src/lib/ops/user-workspace.ts`).
+- `appointments` isletme bazlidir; `artist_id` yoktur, slot engine yoktur ve ayni tarih + ayni saat icin ikinci aktif `scheduled` kayit acilamaz (`src/db/schema/appointments.ts`, `src/lib/ops/appointments.ts`).
+- `appointments.status` seti `scheduled`, `completed`, `cancelled`, `no_show` olarak sabittir (`src/db/schema/appointments.ts`).
+- `appointments.source` seti `customer`, `admin`, `artist` olarak sabittir (`src/db/schema/appointments.ts`).
+- Local Docker PostgreSQL + Drizzle dogrulamasinda preview portu olarak `3012` / `3013` tercih edilir; `3004` kullanilmaz (`docs/OPS.md`).
 
 ## 7) SEO, NAP ve Yapısal Veri Akışı
 

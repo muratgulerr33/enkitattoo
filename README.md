@@ -19,6 +19,7 @@ npm run check:all
 - I18n: `next-intl` (`tr`, `sq`, `sr`, `en`)
 - DB foundation: PostgreSQL + Drizzle ORM (`src/db/*`, `drizzle.config.ts`)
 - Ops auth: ops-local email/password + signed session cookie (`src/lib/ops/auth/*`)
+- Ops onboarding + randevu MVP: `tattoo_forms`, `consent_acceptances`, `appointments`
 - Local DB standardi: Docker PostgreSQL + Drizzle migration akisi
 - UI: Tailwind v4, Radix tabanlı componentler, `next-themes`
 - Analytics: `NEXT_PUBLIC_GA_ID` varsa GA4 aktif
@@ -52,7 +53,18 @@ Aktif redirect'ler: `/book` -> `/iletisim`, `/explore` -> `/kesfet`, `/profile` 
 - `/ops`
 - `/ops/giris`
 - `/ops/staff/*`
+- `/ops/user/form`
 - `/ops/user/*`
+
+Randevu notu:
+
+- Isletme bazli randevu modeli kullanilir.
+- `appointments.artist_id` yoktur.
+- Status seti: `scheduled`, `completed`, `cancelled`, `no_show`
+- Source seti: `customer`, `admin`, `artist`
+- Slot engine yoktur.
+- Ayni tarih + ayni saat icin ikinci `scheduled` kayit acilamaz.
+- Local preview icin `3004` kullanilmaz; `3012` / `3013` tercih edilir.
 
 ## Dokümantasyon
 

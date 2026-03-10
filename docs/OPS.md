@@ -37,6 +37,7 @@ Bu dosya repo içinden doğrulanabilen runtime ve deploy hazırlık bilgisini tu
   - `/ops`
   - `/ops/giris`
   - `/ops/staff/*`
+  - `/ops/user/form`
   - `/ops/user/*`
 - Ops panel TR-only'dir ve `next-intl/messages/*` zincirine girmez.
 - Ops tarafında plain `next/link` ve plain `next/navigation` kullanılır.
@@ -48,6 +49,22 @@ Bu dosya repo içinden doğrulanabilen runtime ve deploy hazırlık bilgisini tu
   - `user_profiles`
   - `user_roles`
   - `audit_logs`
+  - `tattoo_forms`
+  - `consent_acceptances`
+  - `appointments`
+- Appointment MVP isletme bazlidir; `appointments.artist_id` yoktur.
+- Appointment status seti:
+  - `scheduled`
+  - `completed`
+  - `cancelled`
+  - `no_show`
+- Appointment source seti:
+  - `customer`
+  - `admin`
+  - `artist`
+- `scheduled` durumundaki kayitlar icin ayni tarih + ayni saat conflict'i DB unique index + uygulama guard ile engellenir.
+- `/ops/staff/randevular` aylik gorunum + gun detayi + create/status update yuzeyidir.
+- `/ops/user/randevular` kullanicinin kendi randevularini gorme ve kendi adina randevu acma yuzeyidir.
 - Local sanity'de çakışmasız preview için `3012` / `3013` kullanılabilir; `3004` kullanılmaz.
 
 ## 3) Pre-deploy ve Minimum Temsilî Smoke-check Matrix

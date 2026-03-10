@@ -15,6 +15,20 @@
       "when": 1773151044100,
       "tag": "0001_add_ops_password_auth",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773155037807,
+      "tag": "0002_add_tattoo_forms_and_consent",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1773156616187,
+      "tag": "0003_add_appointments",
+      "breakpoints": true
     }
   ]
 }
