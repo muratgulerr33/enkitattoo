@@ -53,6 +53,7 @@ Bu dosya repo içinden doğrulanabilen runtime ve deploy hazırlık bilgisini tu
   - `consent_acceptances`
   - `appointments`
   - `cash_entries`
+  - `customer_notes`
 - Appointment MVP isletme bazlidir; `appointments.artist_id` yoktur.
 - Appointment status seti:
   - `scheduled`
@@ -66,13 +67,20 @@ Bu dosya repo içinden doğrulanabilen runtime ve deploy hazırlık bilgisini tu
 - `scheduled` durumundaki kayitlar icin ayni tarih + ayni saat conflict'i DB unique index + uygulama guard ile engellenir.
 - `/ops/staff/randevular` aylik gorunum + gun detayi + create/status update yuzeyidir.
 - `/ops/user/randevular` kullanicinin kendi randevularini gorme ve kendi adina randevu acma yuzeyidir.
+- `/ops/staff/musteriler` staff-only musteri liste ve arama yuzeyidir.
+- `/ops/staff/musteriler/[userId]` staff-only musteri detay yuzeyidir.
+- Admin ve artist musteri liste/detay yuzeylerini staff shell icinde gorebilir.
 - Cashbook MVP `cash_entries` uzerinden calisir; appointments ile zorunlu FK iliskisi yoktur.
 - `cash_entries.entry_type` seti `income` / `expense` olarak tutulur.
 - Tutar `amount_cents` alaninda pozitif integer olarak saklanir.
 - Soft delete `deleted_at` + `deleted_by_user_id` ile uygulanir.
 - `/ops/staff/kasa` hizli kayit + bugun toplam + tarih filtresi + admin manage yuzeyidir.
 - Artist yalniz bugunun kasa akisini gorur ve kayit acar; gecmis edit/delete admin'e aciktir.
-- Local sanity'de çakışmasız preview için `3012` / `3013` kullanılabilir; `3004` kullanılmaz.
+- Customer workspace yalniz `user` rolundeki hesaplari listeler; staff-only hesaplar musteri listesine dahil edilmez.
+- Musteri liste aramasi isim, telefon ve e-posta uzerinden calisir.
+- Musteri detayinda profil, form durumu, consent durumu, yaklasan/gecmis randevular ve staff-owned kisa not ayni yuzeyde toplanir.
+- `customer_notes.user_id` unique tutulur; staff-owned tek guncel note mantigi vardir ve bos note ile kayit temizlenebilir.
+- Local sanity'de `3004` kullanilmaz; cakismasiz preview portu tercih edilir.
 
 ## 3) Pre-deploy ve Minimum Temsilî Smoke-check Matrix
 

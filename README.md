@@ -19,7 +19,7 @@ npm run check:all
 - I18n: `next-intl` (`tr`, `sq`, `sr`, `en`)
 - DB foundation: PostgreSQL + Drizzle ORM (`src/db/*`, `drizzle.config.ts`)
 - Ops auth: ops-local email/password + signed session cookie (`src/lib/ops/auth/*`)
-- Ops onboarding + operasyon MVP: `tattoo_forms`, `consent_acceptances`, `appointments`, `cash_entries`
+- Ops onboarding + operasyon MVP: `tattoo_forms`, `consent_acceptances`, `appointments`, `cash_entries`, `customer_notes`
 - Local DB standardi: Docker PostgreSQL + Drizzle migration akisi
 - UI: Tailwind v4, Radix tabanlı componentler, `next-themes`
 - Analytics: `NEXT_PUBLIC_GA_ID` varsa GA4 aktif
@@ -53,6 +53,8 @@ Aktif redirect'ler: `/book` -> `/iletisim`, `/explore` -> `/kesfet`, `/profile` 
 - `/ops`
 - `/ops/giris`
 - `/ops/staff/*`
+- `/ops/staff/musteriler`
+- `/ops/staff/musteriler/[userId]`
 - `/ops/user/form`
 - `/ops/user/*`
 
@@ -75,6 +77,15 @@ Kasa notu:
 - Kasa quick-entry mantiginda calisir.
 - Admin gecmis kaydi duzenler ve soft delete yapar.
 - Artist yalniz bugunun kasasina kayit acar; gecmis edit/delete yapmaz.
+
+Musteri workspace notu:
+
+- Staff musteri yuzeyi `/ops/staff/musteriler` ve `/ops/staff/musteriler/[userId]` route'larinda calisir.
+- Admin ve artist musteri liste/detay yuzeylerini gorebilir.
+- Musteri listesi yalniz `user` rolundeki hesaplari gosterir; staff-only hesaplar listeye dahil edilmez.
+- Liste isim, telefon ve e-posta uzerinden arama yapar.
+- Detay yuzeyi profil, form durumu, consent durumu, randevu ozeti ve tek guncel staff notunu bir arada gosterir.
+- `customer_notes` staff-owned tek not mantigi kullanir; `user_id` unique kalir ve admin ile artist notu kaydedebilir veya bos birakarak temizleyebilir.
 
 ## Dokümantasyon
 

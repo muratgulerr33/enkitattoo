@@ -54,6 +54,8 @@ Canonical public set sayfa dosyaları ve `src/lib/route-content.generated.ts` ü
 - `/ops`: TR-only operations namespace; locale subtree dışında yaşar ve public `next-intl` zincirine girmez (`src/app/ops/layout.tsx`, `src/middleware.ts`)
 - `/ops/giris`: ops-local login yüzeyi; session varsa role bazlı home path'e redirect eder (`src/app/ops/giris/page.tsx`)
 - `/ops/staff/kasa`: staff-only cashbook yuzeyi; quick-entry, gun filtresi ve admin manage aksiyonlari burada calisir (`src/app/ops/staff/kasa/page.tsx`)
+- `/ops/staff/musteriler`: staff-only musteri liste ve arama yuzeyi; yalniz `user` rolundeki hesaplar listelenir (`src/app/ops/staff/musteriler/page.tsx`)
+- `/ops/staff/musteriler/[userId]`: staff-only musteri detay yuzeyi; profil, form, onay, randevu ve staff notu burada toplanir (`src/app/ops/staff/musteriler/[userId]/page.tsx`)
 - `/ops/staff/randevular`: aylik takvim + secili gun operasyon yuzeyi; isletme bazli randevu yönetimi burada yapilir (`src/app/ops/staff/randevular/page.tsx`)
 - `/ops/user/randevular`: kullanicinin kendi randevularini gordugu ve yeni kayit actigi yuzeydir (`src/app/ops/user/randevular/page.tsx`)
 - Metadata route'ları: `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest` (`src/app/robots.ts`, `src/app/sitemap.ts`, `src/app/manifest.ts`)
@@ -147,6 +149,7 @@ Ops notu:
   - `consent_acceptances`
   - `appointments`
   - `cash_entries`
+  - `customer_notes`
 - User onboarding akışı `profil -> tattoo formu -> acik onay` omurgasıyla `/ops/user/*` altında çalışır (`src/app/ops/user/profil/page.tsx`, `src/app/ops/user/form/page.tsx`, `src/app/ops/user/actions.ts`).
 - `tattoo_forms` snapshot mantığıyla tutulur; son aktif snapshot user workspace yüzeylerinde okunur (`src/db/schema/onboarding.ts`, `src/lib/ops/user-workspace.ts`).
 - `consent_acceptances` checkbox ile açık kabul, sürüm ve zaman damgası kaydı tutar (`src/db/schema/onboarding.ts`, `src/lib/ops/user-workspace.ts`).
@@ -157,7 +160,12 @@ Ops notu:
 - `cash_entries.entry_type` seti `income`, `expense` olarak sabittir; tutar `amount_cents` alaninda pozitif integer olarak saklanir (`src/db/schema/cashbook.ts`).
 - `cash_entries` soft delete ile calisir; `deleted_at` ve `deleted_by_user_id` alanlari kaydi fiziksel olarak silmeden kapatir (`src/db/schema/cashbook.ts`, `src/lib/ops/cashbook.ts`).
 - Artist yalniz bugunun kasa listesini gorur ve bugune kayit acar; gecmis edit/delete yalniz admin'e aciktir (`src/lib/ops/cashbook.ts`, `src/app/ops/kasa/actions.ts`).
-- Local Docker PostgreSQL + Drizzle dogrulamasinda preview portu olarak `3012` / `3013` tercih edilir; `3004` kullanilmaz (`docs/OPS.md`).
+- Customer workspace staff-only'dir; musteri tanimi `user` rolundeki hesaplar uzerinden yapilir, staff-only hesaplar listeye sokulmaz (`src/lib/ops/customers.ts`).
+- Admin ve artist staff shell icinde ayni musteri liste/detay yuzeylerini gorur (`src/app/ops/staff/layout.tsx`, `src/app/ops/staff/musteriler/page.tsx`).
+- Musteri liste aramasi `full_name`, `display_name`, `phone`, `email` uzerinden sade text search ile calisir (`src/lib/ops/customers.ts`).
+- Musteri detay yuzeyi profil bilgisi, aktif tattoo form snapshot'i, gecerli consent, yaklasan/gecmis randevular ve tek guncel staff notunu bir arada gosterir (`src/app/ops/staff/musteriler/[userId]/page.tsx`, `src/lib/ops/customers.ts`).
+- `customer_notes` tek guncel staff note mantigi ile tutulur; `user_id` unique constraint'i vardir, note staff tarafinda upsert edilir, bos note gonderilirse kayit temizlenir (`src/db/schema/customer-notes.ts`, `src/app/ops/musteriler/actions.ts`).
+- Local Docker PostgreSQL + Drizzle dogrulamasinda `3004` kullanilmaz; preview icin cakismasiz port tercih edilir (`docs/OPS.md`).
 
 ## 7) SEO, NAP ve Yapısal Veri Akışı
 
