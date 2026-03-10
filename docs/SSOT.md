@@ -165,6 +165,9 @@ Ops notu:
 - Musteri liste aramasi `full_name`, `display_name`, `phone`, `email` uzerinden sade text search ile calisir (`src/lib/ops/customers.ts`).
 - Musteri detay yuzeyi profil bilgisi, aktif tattoo form snapshot'i, gecerli consent, yaklasan/gecmis randevular ve tek guncel staff notunu bir arada gosterir (`src/app/ops/staff/musteriler/[userId]/page.tsx`, `src/lib/ops/customers.ts`).
 - `customer_notes` tek guncel staff note mantigi ile tutulur; `user_id` unique constraint'i vardir, note staff tarafinda upsert edilir, bos note gonderilirse kayit temizlenir (`src/db/schema/customer-notes.ts`, `src/app/ops/musteriler/actions.ts`).
+- `audit_logs` mevcut schema uzerinden kullanilir; bu asamada yeni migration acilmamistir (`src/db/schema/audit-logs.ts`, `src/db/migrations/*`).
+- Kritik ops mutasyonlari hafif `audit_logs` kaydi uretir; helper `src/lib/ops/audit.ts` uzerinden profil, tattoo form, consent, randevu, kasa ve musteri notu yuzeylerine baglanir. Ops auth login/logout kaydi best-effort tutulur (`src/lib/ops/audit.ts`, `src/app/ops/giris/actions.ts`, `src/app/ops/cikis/route.ts`).
+- Audit action seti `profile.updated`, `tattoo_form.saved`, `tattoo_form.submitted`, `consent.accepted`, `appointment.created`, `appointment.status_updated`, `cash_entry.created`, `cash_entry.updated`, `cash_entry.soft_deleted`, `customer_note.saved` ile sinirlidir; payload hafif tutulur ve parola/hash/session secret gibi hassas veri loglanmaz (`src/lib/ops/audit.ts`).
 - Local Docker PostgreSQL + Drizzle dogrulamasinda `3004` kullanilmaz; preview icin cakismasiz port tercih edilir (`docs/OPS.md`).
 
 ## 7) SEO, NAP ve Yapısal Veri Akışı

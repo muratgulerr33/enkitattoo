@@ -146,7 +146,7 @@ export async function updateAppointmentStatusAction(
   formData: FormData
 ): Promise<OpsAppointmentActionState> {
   try {
-    await requireOpsSessionArea("staff");
+    const sessionUser = await requireOpsSessionArea("staff");
     const appointmentId = toRequiredNumber(
       formData.get("appointmentId"),
       "Randevu bulunamadi."
@@ -163,6 +163,7 @@ export async function updateAppointmentStatusAction(
     await updateAppointmentStatus({
       appointmentId,
       status: rawStatus,
+      actorUserId: sessionUser.id,
     });
 
     revalidateAppointmentPaths();

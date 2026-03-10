@@ -20,6 +20,8 @@ npm run check:all
 - DB foundation: PostgreSQL + Drizzle ORM (`src/db/*`, `drizzle.config.ts`)
 - Ops auth: ops-local email/password + signed session cookie (`src/lib/ops/auth/*`)
 - Ops onboarding + operasyon MVP: `tattoo_forms`, `consent_acceptances`, `appointments`, `cash_entries`, `customer_notes`
+- Customer workspace: `/ops/staff/musteriler` liste + `/ops/staff/musteriler/[userId]` detay; staff-only ve `user` rol tabanli
+- Audit foundation: mevcut `audit_logs` schema'si uzerinde kritik ops mutasyonlari icin hafif audit kaydi
 - Local DB standardi: Docker PostgreSQL + Drizzle migration akisi
 - UI: Tailwind v4, Radix tabanlı componentler, `next-themes`
 - Analytics: `NEXT_PUBLIC_GA_ID` varsa GA4 aktif
@@ -86,6 +88,23 @@ Musteri workspace notu:
 - Liste isim, telefon ve e-posta uzerinden arama yapar.
 - Detay yuzeyi profil, form durumu, consent durumu, randevu ozeti ve tek guncel staff notunu bir arada gosterir.
 - `customer_notes` staff-owned tek not mantigi kullanir; `user_id` unique kalir ve admin ile artist notu kaydedebilir veya bos birakarak temizleyebilir.
+
+Audit notu:
+
+- `audit_logs` mevcut schema uzerinden kullanilir; bu asamada yeni migration acilmamistir.
+- Kritik audit action seti:
+  - `profile.updated`
+  - `tattoo_form.saved`
+  - `tattoo_form.submitted`
+  - `consent.accepted`
+  - `appointment.created`
+  - `appointment.status_updated`
+  - `cash_entry.created`
+  - `cash_entry.updated`
+  - `cash_entry.soft_deleted`
+  - `customer_note.saved`
+- Ops auth login/logout audit'i best-effort calisir.
+- Payload hafif tutulur; parola, hash ve session secret gibi hassas veriler loglanmaz.
 
 ## Dokümantasyon
 

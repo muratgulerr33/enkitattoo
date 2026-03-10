@@ -15,6 +15,7 @@ import {
   userRoles,
   users,
 } from "@/db/schema";
+import { writeAuditLog } from "./audit";
 import type { AppointmentRecord } from "./appointments";
 import {
   formatAppointmentDateLong,
@@ -320,43 +321,101 @@ export async function getCustomerNote(userId: number): Promise<CustomerNoteRecor
   return toCustomerNote(rows[0]);
 }
 
+async function assertCustomerExists(
+  userId: number,
+  executor: Pick<ReturnType<typeof getDb>, "select"> = getDb()
+): Promise<void> {
+  const rows = await executor
+    .select({ id: users.id })
+    .from(users)
+    .innerJoin(userRoles, and(eq(userRoles.userId, users.id), eq(userRoles.role, "user")))
+    .where(and(eq(users.id, userId), eq(users.isActive, true)))
+    .limit(1);
+
+  if (!rows[0]) {
+    throw new Error("Musteri bulunamadi.");
+  }
+}
+
 export async function saveCustomerNote(
   userId: number,
   note: string | null,
   actorUserId: number
-): Promise<CustomerNoteRecord | null> {
+): Promise<void> {
   const db = getDb();
   const now = new Date();
-  const customer = await getCustomerDetail(userId);
 
-  if (!customer) {
-    throw new Error("Musteri bulunamadi.");
-  }
+  await db.transaction(async (tx) => {
+    await assertCustomerExists(userId, tx);
 
-  if (!note) {
-    await db.delete(customerNotes).where(eq(customerNotes.userId, userId));
-    return null;
-  }
+    const currentRows = await tx
+      .select({
+        id: customerNotes.id,
+        note: customerNotes.note,
+      })
+      .from(customerNotes)
+      .where(eq(customerNotes.userId, userId))
+      .limit(1);
 
-  await db
-    .insert(customerNotes)
-    .values({
-      userId,
-      note,
-      updatedByUserId: actorUserId,
-      createdAt: now,
-      updatedAt: now,
-    })
-    .onConflictDoUpdate({
-      target: customerNotes.userId,
-      set: {
+    const current = currentRows[0] ?? null;
+
+    if (!note) {
+      await tx.delete(customerNotes).where(eq(customerNotes.userId, userId));
+
+      if (!current) {
+        return;
+      }
+
+      await writeAuditLog(
+        {
+          actorUserId,
+          action: "customer_note.saved",
+          entityType: "customer_note",
+          entityId: userId,
+          payload: {
+            cleared: true,
+            hadExistingNote: Boolean(current),
+          },
+        },
+        tx
+      );
+
+      return;
+    }
+
+    await tx
+      .insert(customerNotes)
+      .values({
+        userId,
         note,
         updatedByUserId: actorUserId,
+        createdAt: now,
         updatedAt: now,
-      },
-    });
+      })
+      .onConflictDoUpdate({
+        target: customerNotes.userId,
+        set: {
+          note,
+          updatedByUserId: actorUserId,
+          updatedAt: now,
+        },
+      });
 
-  return getCustomerNote(userId);
+    await writeAuditLog(
+      {
+        actorUserId,
+        action: "customer_note.saved",
+        entityType: "customer_note",
+        entityId: userId,
+        payload: {
+          notePresent: true,
+          noteLength: note.length,
+          replacedExistingNote: Boolean(current),
+        },
+      },
+      tx
+    );
+  });
 }
 
 export function parseCustomerUserId(value: string): number | null {

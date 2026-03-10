@@ -80,6 +80,9 @@ Bu dosya repo içinden doğrulanabilen runtime ve deploy hazırlık bilgisini tu
 - Musteri liste aramasi isim, telefon ve e-posta uzerinden calisir.
 - Musteri detayinda profil, form durumu, consent durumu, yaklasan/gecmis randevular ve staff-owned kisa not ayni yuzeyde toplanir.
 - `customer_notes.user_id` unique tutulur; staff-owned tek guncel note mantigi vardir ve bos note ile kayit temizlenebilir.
+- `audit_logs` mevcut schema uzerinde kullanilir; audit foundation icin yeni migration acilmamistir.
+- Kritik ops mutasyonlari `audit_logs` tablosuna hafif payload ile yazar; helper `src/lib/ops/audit.ts` uzerinden mutasyon transaction'larina baglanir. Login/logout kaydi auth akisina zarar vermemek icin best-effort calisir.
+- Audit action seti `profile.updated`, `tattoo_form.saved`, `tattoo_form.submitted`, `consent.accepted`, `appointment.created`, `appointment.status_updated`, `cash_entry.created`, `cash_entry.updated`, `cash_entry.soft_deleted`, `customer_note.saved` ile sinirlidir; parola/hash/session secret gibi hassas veri loglanmaz.
 - Local sanity'de `3004` kullanilmaz; cakismasiz preview portu tercih edilir.
 
 ## 3) Pre-deploy ve Minimum Temsilî Smoke-check Matrix

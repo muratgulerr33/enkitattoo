@@ -8,6 +8,7 @@ import {
   users,
   type UserRole,
 } from "@/db/schema";
+import { writeAuditLog } from "./audit";
 
 export const CASHBOOK_DATE_LOCK_MESSAGE =
   "Artist yalniz bugun icin kasa kaydi acabilir.";
@@ -89,6 +90,16 @@ type CashEntryRow = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+type CashEntryMutationRecord = {
+  id: number;
+  entryDate: string;
+  entryType: CashEntryType;
+  amountCents: number;
+  note: string | null;
+};
+
+type CashEntryLookupExecutor = Pick<ReturnType<typeof getDb>, "select">;
 
 function padNumber(value: number): string {
   return value.toString().padStart(2, "0");
@@ -312,17 +323,23 @@ async function listActiveCashEntriesForDate(entryDate: string): Promise<CashEntr
   return rows.map(toCashEntryRecord);
 }
 
-async function hasActiveCashEntry(entryId: number): Promise<boolean> {
-  const db = getDb();
-  const rows = await db
+async function getActiveCashEntry(
+  entryId: number,
+  executor: CashEntryLookupExecutor = getDb()
+): Promise<CashEntryMutationRecord | null> {
+  const rows = await executor
     .select({
       id: cashEntries.id,
+      entryDate: cashEntries.entryDate,
+      entryType: cashEntries.entryType,
+      amountCents: cashEntries.amountCents,
+      note: cashEntries.note,
     })
     .from(cashEntries)
     .where(and(eq(cashEntries.id, entryId), isNull(cashEntries.deletedAt)))
     .limit(1);
 
-  return Boolean(rows[0]);
+  return rows[0] ?? null;
 }
 
 export async function getCashbookSnapshot(
@@ -351,54 +368,165 @@ export async function getCashbookSnapshot(
   };
 }
 
-export async function createCashEntry(input: CreateCashEntryInput): Promise<void> {
+export async function createCashEntry(input: CreateCashEntryInput): Promise<CashEntryMutationRecord> {
   const db = getDb();
 
-  await db.insert(cashEntries).values({
-    entryDate: assertCashDateValue(input.entryDate),
-    entryType: assertCashEntryType(input.entryType),
-    amountCents: assertPositiveAmountCents(input.amountCents),
-    note: input.note,
-    createdByUserId: input.actorUserId,
+  return db.transaction(async (tx) => {
+    const insertedRows = await tx
+      .insert(cashEntries)
+      .values({
+        entryDate: assertCashDateValue(input.entryDate),
+        entryType: assertCashEntryType(input.entryType),
+        amountCents: assertPositiveAmountCents(input.amountCents),
+        note: input.note,
+        createdByUserId: input.actorUserId,
+      })
+      .returning({
+        id: cashEntries.id,
+        entryDate: cashEntries.entryDate,
+        entryType: cashEntries.entryType,
+        amountCents: cashEntries.amountCents,
+        note: cashEntries.note,
+      });
+
+    const inserted = insertedRows[0];
+
+    if (!inserted) {
+      throw new Error("Kasa kaydi eklenemedi.");
+    }
+
+    await writeAuditLog(
+      {
+        actorUserId: input.actorUserId,
+        action: "cash_entry.created",
+        entityType: "cash_entry",
+        entityId: inserted.id,
+        payload: {
+          entryDate: inserted.entryDate,
+          entryType: inserted.entryType,
+          amountCents: inserted.amountCents,
+          hasNote: Boolean(inserted.note),
+        },
+      },
+      tx
+    );
+
+    return inserted;
   });
 }
 
-export async function updateCashEntry(input: UpdateCashEntryInput): Promise<void> {
+export async function updateCashEntry(input: UpdateCashEntryInput): Promise<CashEntryMutationRecord> {
   const db = getDb();
-  const hasEntry = await hasActiveCashEntry(input.entryId);
 
-  if (!hasEntry) {
-    throw new Error("Kasa kaydi bulunamadi.");
-  }
+  return db.transaction(async (tx) => {
+    const current = await getActiveCashEntry(input.entryId, tx);
 
-  await db
-    .update(cashEntries)
-    .set({
-      entryDate: assertCashDateValue(input.entryDate),
-      entryType: assertCashEntryType(input.entryType),
-      amountCents: assertPositiveAmountCents(input.amountCents),
-      note: input.note,
-      updatedByUserId: input.actorUserId,
-      updatedAt: new Date(),
-    })
-    .where(eq(cashEntries.id, input.entryId));
+    if (!current) {
+      throw new Error("Kasa kaydi bulunamadi.");
+    }
+
+    const updatedRows = await tx
+      .update(cashEntries)
+      .set({
+        entryDate: assertCashDateValue(input.entryDate),
+        entryType: assertCashEntryType(input.entryType),
+        amountCents: assertPositiveAmountCents(input.amountCents),
+        note: input.note,
+        updatedByUserId: input.actorUserId,
+        updatedAt: new Date(),
+      })
+      .where(eq(cashEntries.id, input.entryId))
+      .returning({
+        id: cashEntries.id,
+        entryDate: cashEntries.entryDate,
+        entryType: cashEntries.entryType,
+        amountCents: cashEntries.amountCents,
+        note: cashEntries.note,
+      });
+
+    const updated = updatedRows[0];
+
+    if (!updated) {
+      throw new Error("Kasa kaydi guncellenemedi.");
+    }
+
+    await writeAuditLog(
+      {
+        actorUserId: input.actorUserId,
+        action: "cash_entry.updated",
+        entityType: "cash_entry",
+        entityId: updated.id,
+        payload: {
+          changedFields: [
+            current.entryDate !== updated.entryDate ? "entryDate" : null,
+            current.entryType !== updated.entryType ? "entryType" : null,
+            current.amountCents !== updated.amountCents ? "amountCents" : null,
+            current.note !== updated.note ? "note" : null,
+          ].filter((value): value is string => Boolean(value)),
+          entryDate: updated.entryDate,
+          entryType: updated.entryType,
+          amountCents: updated.amountCents,
+          hasNote: Boolean(updated.note),
+        },
+      },
+      tx
+    );
+
+    return updated;
+  });
 }
 
-export async function softDeleteCashEntry(input: SoftDeleteCashEntryInput): Promise<void> {
+export async function softDeleteCashEntry(
+  input: SoftDeleteCashEntryInput
+): Promise<CashEntryMutationRecord> {
   const db = getDb();
-  const hasEntry = await hasActiveCashEntry(input.entryId);
 
-  if (!hasEntry) {
-    throw new Error("Kasa kaydi bulunamadi.");
-  }
+  return db.transaction(async (tx) => {
+    const current = await getActiveCashEntry(input.entryId, tx);
 
-  await db
-    .update(cashEntries)
-    .set({
-      deletedAt: new Date(),
-      deletedByUserId: input.actorUserId,
-      updatedByUserId: input.actorUserId,
-      updatedAt: new Date(),
-    })
-    .where(eq(cashEntries.id, input.entryId));
+    if (!current) {
+      throw new Error("Kasa kaydi bulunamadi.");
+    }
+
+    const updatedRows = await tx
+      .update(cashEntries)
+      .set({
+        deletedAt: new Date(),
+        deletedByUserId: input.actorUserId,
+        updatedByUserId: input.actorUserId,
+        updatedAt: new Date(),
+      })
+      .where(eq(cashEntries.id, input.entryId))
+      .returning({
+        id: cashEntries.id,
+        entryDate: cashEntries.entryDate,
+        entryType: cashEntries.entryType,
+        amountCents: cashEntries.amountCents,
+        note: cashEntries.note,
+      });
+
+    const deleted = updatedRows[0];
+
+    if (!deleted) {
+      throw new Error("Kasa kaydi kaldirilamadi.");
+    }
+
+    await writeAuditLog(
+      {
+        actorUserId: input.actorUserId,
+        action: "cash_entry.soft_deleted",
+        entityType: "cash_entry",
+        entityId: deleted.id,
+        payload: {
+          entryDate: current.entryDate,
+          entryType: current.entryType,
+          amountCents: current.amountCents,
+          hasNote: Boolean(current.note),
+        },
+      },
+      tx
+    );
+
+    return deleted;
+  });
 }

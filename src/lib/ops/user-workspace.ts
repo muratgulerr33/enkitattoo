@@ -7,6 +7,7 @@ import {
   userProfiles,
   users,
 } from "@/db/schema";
+import { writeAuditLog } from "./audit";
 
 export const OPS_TATTOO_CONSENT_DOCUMENT_TYPE = "tattoo_form_consent";
 export const OPS_TATTOO_CONSENT_VERSION = "2026-03-v1";
@@ -74,6 +75,30 @@ type ConsentMetadata = {
   userAgent: string | null;
 };
 
+function getChangedFields(
+  values: Array<{
+    field: string;
+    before: string | null;
+    after: string | null;
+  }>
+): string[] {
+  return values
+    .filter((value) => value.before !== value.after)
+    .map((value) => value.field);
+}
+
+function getFilledTattooFormFields(input: SaveTattooFormInput): string[] {
+  return [
+    input.placement ? "placement" : null,
+    input.sizeNotes ? "sizeNotes" : null,
+    input.designNotes ? "designNotes" : null,
+    input.styleNotes ? "styleNotes" : null,
+    input.colorNotes ? "colorNotes" : null,
+    input.referenceNotes ? "referenceNotes" : null,
+    input.healthNotes ? "healthNotes" : null,
+  ].filter((value): value is string => Boolean(value));
+}
+
 export function isUserProfileComplete(profile: UserWorkspaceProfile): boolean {
   return Boolean(profile.fullName && profile.phone);
 }
@@ -134,6 +159,19 @@ export async function updateUserWorkspaceProfile(
   const db = getDb();
   const now = new Date();
   await db.transaction(async (tx) => {
+    const currentRows = await tx
+      .select({
+        phone: users.phone,
+        fullName: userProfiles.fullName,
+        displayName: userProfiles.displayName,
+      })
+      .from(users)
+      .leftJoin(userProfiles, eq(userProfiles.userId, users.id))
+      .where(eq(users.id, userId))
+      .limit(1);
+
+    const current = currentRows[0];
+
     await tx
       .update(users)
       .set({
@@ -159,6 +197,36 @@ export async function updateUserWorkspaceProfile(
           updatedAt: now,
         },
       });
+
+    await writeAuditLog(
+      {
+        actorUserId: userId,
+        action: "profile.updated",
+        entityType: "user_profile",
+        entityId: userId,
+        payload: {
+          changedFields: getChangedFields([
+            {
+              field: "fullName",
+              before: current?.fullName ?? null,
+              after: input.fullName,
+            },
+            {
+              field: "displayName",
+              before: current?.displayName ?? null,
+              after: input.displayName,
+            },
+            {
+              field: "phone",
+              before: current?.phone ?? null,
+              after: input.phone,
+            },
+          ]),
+          hasDisplayName: Boolean(input.displayName),
+        },
+      },
+      tx
+    );
   });
 
   return getUserWorkspaceProfile(userId);
@@ -259,6 +327,21 @@ export async function createTattooFormSnapshot(
       throw new Error("Tattoo form snapshot could not be created.");
     }
 
+    await writeAuditLog(
+      {
+        actorUserId: userId,
+        action: input.status === "submitted" ? "tattoo_form.submitted" : "tattoo_form.saved",
+        entityType: "tattoo_form",
+        entityId: inserted.id,
+        payload: {
+          snapshotVersion: inserted.snapshotVersion,
+          status: inserted.status,
+          filledFields: getFilledTattooFormFields(input),
+        },
+      },
+      tx
+    );
+
     return inserted;
   });
 }
@@ -296,60 +379,120 @@ export async function acceptCurrentConsent(
   metadata: ConsentMetadata
 ): Promise<{ record: ConsentAcceptanceRecord; created: boolean }> {
   const db = getDb();
-  const existing = await getCurrentConsentAcceptance(userId);
+  return db.transaction(async (tx) => {
+    const existingRows = await tx
+      .select({
+        id: consentAcceptances.id,
+        documentType: consentAcceptances.documentType,
+        documentVersion: consentAcceptances.documentVersion,
+        accepted: consentAcceptances.accepted,
+        acceptedAt: consentAcceptances.acceptedAt,
+        ipAddress: consentAcceptances.ipAddress,
+        userAgent: consentAcceptances.userAgent,
+      })
+      .from(consentAcceptances)
+      .where(
+        and(
+          eq(consentAcceptances.userId, userId),
+          eq(consentAcceptances.documentType, OPS_TATTOO_CONSENT_DOCUMENT_TYPE),
+          eq(consentAcceptances.documentVersion, OPS_TATTOO_CONSENT_VERSION)
+        )
+      )
+      .orderBy(desc(consentAcceptances.acceptedAt))
+      .limit(1);
 
-  if (existing) {
+    const existing = existingRows[0];
+
+    if (existing) {
+      return {
+        record: existing,
+        created: false,
+      };
+    }
+
+    const now = new Date();
+    const insertedRows = await tx
+      .insert(consentAcceptances)
+      .values({
+        userId,
+        documentType: OPS_TATTOO_CONSENT_DOCUMENT_TYPE,
+        documentVersion: OPS_TATTOO_CONSENT_VERSION,
+        accepted: true,
+        acceptedAt: now,
+        ipAddress: metadata.ipAddress,
+        userAgent: metadata.userAgent,
+        createdAt: now,
+      })
+      .onConflictDoNothing({
+        target: [
+          consentAcceptances.userId,
+          consentAcceptances.documentType,
+          consentAcceptances.documentVersion,
+        ],
+      })
+      .returning({
+        id: consentAcceptances.id,
+        documentType: consentAcceptances.documentType,
+        documentVersion: consentAcceptances.documentVersion,
+        accepted: consentAcceptances.accepted,
+        acceptedAt: consentAcceptances.acceptedAt,
+        ipAddress: consentAcceptances.ipAddress,
+        userAgent: consentAcceptances.userAgent,
+      });
+
+    const inserted = insertedRows[0];
+
+    if (inserted) {
+      await writeAuditLog(
+        {
+          actorUserId: userId,
+          action: "consent.accepted",
+          entityType: "consent_acceptance",
+          entityId: inserted.id,
+          payload: {
+            documentType: inserted.documentType,
+            documentVersion: inserted.documentVersion,
+          },
+        },
+        tx
+      );
+
+      return {
+        record: inserted,
+        created: true,
+      };
+    }
+
+    const currentRows = await tx
+      .select({
+        id: consentAcceptances.id,
+        documentType: consentAcceptances.documentType,
+        documentVersion: consentAcceptances.documentVersion,
+        accepted: consentAcceptances.accepted,
+        acceptedAt: consentAcceptances.acceptedAt,
+        ipAddress: consentAcceptances.ipAddress,
+        userAgent: consentAcceptances.userAgent,
+      })
+      .from(consentAcceptances)
+      .where(
+        and(
+          eq(consentAcceptances.userId, userId),
+          eq(consentAcceptances.documentType, OPS_TATTOO_CONSENT_DOCUMENT_TYPE),
+          eq(consentAcceptances.documentVersion, OPS_TATTOO_CONSENT_VERSION)
+        )
+      )
+      .orderBy(desc(consentAcceptances.acceptedAt))
+      .limit(1);
+
+    const current = currentRows[0];
+
+    if (!current) {
+      throw new Error("Consent acceptance could not be loaded after insert.");
+    }
+
     return {
-      record: existing,
+      record: current,
       created: false,
     };
-  }
-
-  const now = new Date();
-  const insertedRows = await db
-    .insert(consentAcceptances)
-    .values({
-      userId,
-      documentType: OPS_TATTOO_CONSENT_DOCUMENT_TYPE,
-      documentVersion: OPS_TATTOO_CONSENT_VERSION,
-      accepted: true,
-      acceptedAt: now,
-      ipAddress: metadata.ipAddress,
-      userAgent: metadata.userAgent,
-      createdAt: now,
-    })
-    .onConflictDoNothing({
-      target: [
-        consentAcceptances.userId,
-        consentAcceptances.documentType,
-        consentAcceptances.documentVersion,
-      ],
-    })
-    .returning({
-      id: consentAcceptances.id,
-      documentType: consentAcceptances.documentType,
-      documentVersion: consentAcceptances.documentVersion,
-      accepted: consentAcceptances.accepted,
-      acceptedAt: consentAcceptances.acceptedAt,
-      ipAddress: consentAcceptances.ipAddress,
-      userAgent: consentAcceptances.userAgent,
-    });
-
-  if (insertedRows[0]) {
-    return {
-      record: insertedRows[0],
-      created: true,
-    };
-  }
-
-  const current = await getCurrentConsentAcceptance(userId);
-
-  if (!current) {
-    throw new Error("Consent acceptance could not be loaded after insert.");
-  }
-
-  return {
-    record: current,
-    created: false,
-  };
+  });
 }

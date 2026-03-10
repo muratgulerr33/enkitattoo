@@ -19,6 +19,7 @@ import {
   users,
 } from "@/db/schema";
 import type { UserRole } from "@/db/schema/users";
+import { writeAuditLog } from "./audit";
 export const APPOINTMENT_SLOT_CONFLICT_MESSAGE =
   "Ayni tarih ve saat icin baska bir randevu zaten kayitli.";
 
@@ -56,6 +57,7 @@ export type CreateAppointmentInput = {
 export type UpdateAppointmentStatusInput = {
   appointmentId: number;
   status: AppointmentStatus;
+  actorUserId: number;
 };
 
 type AppointmentRow = {
@@ -502,37 +504,58 @@ export async function createAppointment(input: CreateAppointmentInput): Promise<
   const now = new Date();
 
   try {
-    const insertedRows = await db
-      .insert(appointments)
-      .values({
-        customerUserId: input.customerUserId,
-        appointmentDate,
-        appointmentTime,
-        status: "scheduled",
-        source: input.source,
-        notes,
-        createdByUserId: input.createdByUserId,
-        createdAt: now,
-        updatedAt: now,
-      })
-      .returning({
-        id: appointments.id,
-        customerUserId: appointments.customerUserId,
-        appointmentDate: appointments.appointmentDate,
-        appointmentTime: appointments.appointmentTime,
-        status: appointments.status,
-        source: appointments.source,
-        notes: appointments.notes,
-        createdByUserId: appointments.createdByUserId,
-        createdAt: appointments.createdAt,
-        updatedAt: appointments.updatedAt,
-      });
+    const inserted = await db.transaction(async (tx) => {
+      const insertedRows = await tx
+        .insert(appointments)
+        .values({
+          customerUserId: input.customerUserId,
+          appointmentDate,
+          appointmentTime,
+          status: "scheduled",
+          source: input.source,
+          notes,
+          createdByUserId: input.createdByUserId,
+          createdAt: now,
+          updatedAt: now,
+        })
+        .returning({
+          id: appointments.id,
+          customerUserId: appointments.customerUserId,
+          appointmentDate: appointments.appointmentDate,
+          appointmentTime: appointments.appointmentTime,
+          status: appointments.status,
+          source: appointments.source,
+          notes: appointments.notes,
+          createdByUserId: appointments.createdByUserId,
+          createdAt: appointments.createdAt,
+          updatedAt: appointments.updatedAt,
+        });
 
-    const inserted = insertedRows[0];
+      const insertedRecord = insertedRows[0];
 
-    if (!inserted) {
-      throw new Error("Randevu kaydedilemedi.");
-    }
+      if (!insertedRecord) {
+        throw new Error("Randevu kaydedilemedi.");
+      }
+
+      await writeAuditLog(
+        {
+          actorUserId: input.createdByUserId,
+          action: "appointment.created",
+          entityType: "appointment",
+          entityId: insertedRecord.id,
+          payload: {
+            customerUserId: insertedRecord.customerUserId,
+            appointmentDate: insertedRecord.appointmentDate,
+            appointmentTime: insertedRecord.appointmentTime,
+            source: insertedRecord.source,
+            hasNotes: Boolean(insertedRecord.notes),
+          },
+        },
+        tx
+      );
+
+      return insertedRecord;
+    });
 
     const presentations = await getUserPresentationMap([
       inserted.customerUserId,
@@ -585,31 +608,52 @@ export async function updateAppointmentStatus(
   }
 
   try {
-    const updatedRows = await db
-      .update(appointments)
-      .set({
-        status: input.status,
-        updatedAt: new Date(),
-      })
-      .where(eq(appointments.id, input.appointmentId))
-      .returning({
-        id: appointments.id,
-        customerUserId: appointments.customerUserId,
-        appointmentDate: appointments.appointmentDate,
-        appointmentTime: appointments.appointmentTime,
-        status: appointments.status,
-        source: appointments.source,
-        notes: appointments.notes,
-        createdByUserId: appointments.createdByUserId,
-        createdAt: appointments.createdAt,
-        updatedAt: appointments.updatedAt,
-      });
+    const updated = await db.transaction(async (tx) => {
+      const updatedRows = await tx
+        .update(appointments)
+        .set({
+          status: input.status,
+          updatedAt: new Date(),
+        })
+        .where(eq(appointments.id, input.appointmentId))
+        .returning({
+          id: appointments.id,
+          customerUserId: appointments.customerUserId,
+          appointmentDate: appointments.appointmentDate,
+          appointmentTime: appointments.appointmentTime,
+          status: appointments.status,
+          source: appointments.source,
+          notes: appointments.notes,
+          createdByUserId: appointments.createdByUserId,
+          createdAt: appointments.createdAt,
+          updatedAt: appointments.updatedAt,
+        });
 
-    const updated = updatedRows[0];
+      const updatedRecord = updatedRows[0];
 
-    if (!updated) {
-      throw new Error("Randevu durumu guncellenemedi.");
-    }
+      if (!updatedRecord) {
+        throw new Error("Randevu durumu guncellenemedi.");
+      }
+
+      await writeAuditLog(
+        {
+          actorUserId: input.actorUserId,
+          action: "appointment.status_updated",
+          entityType: "appointment",
+          entityId: updatedRecord.id,
+          payload: {
+            previousStatus: current.status,
+            nextStatus: updatedRecord.status,
+            appointmentDate: updatedRecord.appointmentDate,
+            appointmentTime: updatedRecord.appointmentTime,
+            customerUserId: updatedRecord.customerUserId,
+          },
+        },
+        tx
+      );
+
+      return updatedRecord;
+    });
 
     const presentations = await getUserPresentationMap([
       updated.customerUserId,

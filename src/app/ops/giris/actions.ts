@@ -5,6 +5,7 @@ import { createOpsSession, isOpsAuthConfigured } from "@/lib/ops/auth/session";
 import { verifyPassword } from "@/lib/ops/auth/password";
 import { getOpsHomePath } from "@/lib/ops/auth/roles";
 import { canUseOpsAuthDatabase, findOpsUserByEmail } from "@/lib/ops/auth/users";
+import { writeAuditLogBestEffort } from "@/lib/ops/audit";
 
 export type LoginActionState = {
   error: string | null;
@@ -63,5 +64,15 @@ export async function loginAction(
   }
 
   await createOpsSession(user.id);
+  await writeAuditLogBestEffort({
+    actorUserId: user.id,
+    action: "ops_auth.logged_in",
+    entityType: "ops_session",
+    entityId: user.id,
+    payload: {
+      area: "ops",
+      roles: user.roles,
+    },
+  });
   redirect(nextPath);
 }
