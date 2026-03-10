@@ -1,146 +1,127 @@
 # OPS
 
-Bu dosya repo içinden doğrulanabilen runtime ve deploy hazırlık bilgisini tutar. Reverse proxy, Cloudflare ve VPS topolojisi burada varsayılmaz.
+Bu dosya repo içinden doğrulanabilen çalışma runbook’unu tutar. Reverse proxy, Cloudflare ve production host topolojisi burada varsayılmaz.
 
-## 1) Repo İçinden Doğrulanan Runtime Yüzeyi
+Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya komut, env, local DB, bootstrap ve smoke-check akışına odaklanır.
 
-- Local dev: `npm run dev` -> port `3002` (`package.json`)
-- Production start: `npm run start` -> port `3002` (`package.json`)
+## 1) Repo-İçi Runtime Özeti
+
+- Local dev: `npm run dev` -> `3002`
+- Production start: `npm run start` -> `3002`
 - Build: `npm run build`
 - Ana kalite kapısı: `npm run check:all`
-- I18n plugin girişi: `next.config.ts` -> `createNextIntlPlugin("./src/i18n/request.ts")`
-- Middleware locale davranışı: `src/middleware.ts`
-- `/ops` namespace'i middleware locale rewrite zincirinden bypass edilir ve locale'siz çalışır (`src/middleware.ts`, `src/app/ops/layout.tsx`)
-- DB foundation: `src/db/*`, `drizzle.config.ts`, `DATABASE_URL`, `drizzle-orm`, `drizzle-kit`, `postgres`
-- Ops auth: `src/lib/ops/auth/*`, `OPS_SESSION_SECRET`, `npm run ops:bootstrap-user`
-- Local DB standardi: Docker PostgreSQL + Drizzle
-- Base URL: `src/lib/site/base-url.ts`
-- Metadata route'ları: `src/app/robots.ts`, `src/app/sitemap.ts`, `src/app/manifest.ts`
-- Analytics yalnız `NEXT_PUBLIC_GA_ID` varsa aktif olur (`src/components/analytics/ga4.tsx`)
+- Route-content generator: `python3 scripts/generate-route-content.py`
+- DB migration generate: `npm run db:generate`
+- Ops bootstrap user: `npm run ops:bootstrap-user`
 
-## 2) Build, Check ve Generator İlişkisi
+## 2) Env ve Girdi Yüzeyi
 
-- `src/lib/route-content.generated.ts`, `data/route-content/enki-v1-sitemap-seo-template.csv` kaynağından üretilir (`scripts/generate-route-content.py`).
-- `src/db/migrations/*`, `src/db/schema/*` kaynağından `npm run db:generate` ile üretilir.
-- Ops bootstrap user akışı `scripts/db/bootstrap-ops-user.mjs` üzerinden env ile çalışır.
-- Route veya metadata seti değiştiyse build'den önce generator tekrar çalıştırılmalıdır.
-- DB schema değiştiyse migration generate akışı ayrıca çalıştırılmalıdır.
-- Ops auth env veya bootstrap akışı değiştiyse `/ops`, `/ops/giris`, `/ops/staff/*`, `/ops/user/*` smoke-check yapılmalıdır.
-- Local DB doğrulamasında Docker PostgreSQL instance'ı üzerinde `DATABASE_URL` ile çalışmak standart kabul edilir.
-- I18n message seti değiştiyse build'den önce `node scripts/i18n/check-messages.mjs` çalıştırmak mantıklıdır.
-- `check:all` route-content generator'ı otomatik çalıştırmaz; generator gerekiyorsa ayrı çalıştırılır.
-- `node scripts/i18n/check-messages.mjs` fiziksel olarak `docs/output/i18n-*.json` üretir; bu legacy artifact davranışıdır.
+### Kanıtlı env yüzeyi
 
-## 2.1) Ops Route, Auth ve DB Özeti
+- `DATABASE_URL`
+- `OPS_SESSION_SECRET`
+- `OPS_BOOTSTRAP_EMAIL`
+- `OPS_BOOTSTRAP_PASSWORD`
+- `OPS_BOOTSTRAP_ROLES`
+- `OPS_BOOTSTRAP_FULL_NAME`
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_GA_ID` yalnız analytics için opsiyoneldir
 
-- Route omurgası:
-  - `/ops`
-  - `/ops/giris`
-  - `/ops/staff/*`
-  - `/ops/user/form`
-  - `/ops/user/*`
-- Ops panel TR-only'dir ve `next-intl/messages/*` zincirine girmez.
-- Ops tarafında plain `next/link` ve plain `next/navigation` kullanılır.
-- Auth modeli ops-local email/password'tur.
-- Session signed cookie ile tutulur.
-- Role resolution DB tabanlıdır.
-- Foundation tabloları:
-  - `users`
-  - `user_profiles`
-  - `user_roles`
-  - `audit_logs`
-  - `tattoo_forms`
-  - `consent_acceptances`
-  - `appointments`
-  - `cash_entries`
-  - `customer_notes`
-- Appointment MVP isletme bazlidir; `appointments.artist_id` yoktur.
-- Appointment status seti:
-  - `scheduled`
-  - `completed`
-  - `cancelled`
-  - `no_show`
-- Appointment source seti:
-  - `customer`
-  - `admin`
-  - `artist`
-- `scheduled` durumundaki kayitlar icin ayni tarih + ayni saat conflict'i DB unique index + uygulama guard ile engellenir.
-- `/ops/staff/randevular` aylik gorunum + gun detayi + create/status update yuzeyidir.
-- `/ops/user/randevular` kullanicinin kendi randevularini gorme ve kendi adina randevu acma yuzeyidir.
-- `/ops/staff/musteriler` staff-only musteri liste ve arama yuzeyidir.
-- `/ops/staff/musteriler/[userId]` staff-only musteri detay yuzeyidir.
-- Admin ve artist musteri liste/detay yuzeylerini staff shell icinde gorebilir.
-- Cashbook MVP `cash_entries` uzerinden calisir; appointments ile zorunlu FK iliskisi yoktur.
-- `cash_entries.entry_type` seti `income` / `expense` olarak tutulur.
-- Tutar `amount_cents` alaninda pozitif integer olarak saklanir.
-- Soft delete `deleted_at` + `deleted_by_user_id` ile uygulanir.
-- `/ops/staff/kasa` hizli kayit + bugun toplam + tarih filtresi + admin manage yuzeyidir.
-- Artist yalniz bugunun kasa akisini gorur ve kayit acar; gecmis edit/delete admin'e aciktir.
-- Customer workspace yalniz `user` rolundeki hesaplari listeler; staff-only hesaplar musteri listesine dahil edilmez.
-- Musteri liste aramasi isim, telefon ve e-posta uzerinden calisir.
-- Musteri detayinda profil, form durumu, consent durumu, yaklasan/gecmis randevular ve staff-owned kisa not ayni yuzeyde toplanir.
-- `customer_notes.user_id` unique tutulur; staff-owned tek guncel note mantigi vardir ve bos note ile kayit temizlenebilir.
-- `audit_logs` mevcut schema uzerinde kullanilir; audit foundation icin yeni migration acilmamistir.
-- Kritik ops mutasyonlari `audit_logs` tablosuna hafif payload ile yazar; helper `src/lib/ops/audit.ts` uzerinden mutasyon transaction'larina baglanir. Login/logout kaydi auth akisina zarar vermemek icin best-effort calisir.
-- Audit action seti `profile.updated`, `tattoo_form.saved`, `tattoo_form.submitted`, `consent.accepted`, `appointment.created`, `appointment.status_updated`, `cash_entry.created`, `cash_entry.updated`, `cash_entry.soft_deleted`, `customer_note.saved` ile sinirlidir; parola/hash/session secret gibi hassas veri loglanmaz.
-- Local sanity'de `3004` kullanilmaz; cakismasiz preview portu tercih edilir.
+### Canonical dosyalar
 
-## 3) Pre-deploy ve Minimum Temsilî Smoke-check Matrix
+- `package.json`
+- `drizzle.config.ts`
+- `.env.example`
+- `scripts/db/bootstrap-ops-user.mjs`
+- `src/db/index.ts`
+- `src/lib/ops/auth/*`
 
-Bu matrix tam public route setinin birebir listesi değildir. Amaç, her kritik route ailesinden en az bir temsilî yol ile local repo-side doğrulama yapmaktır.
+## 3) Local DB Standardı
+
+- Repo veri katmanı PostgreSQL + Drizzle üstünden çalışır.
+- Local DB standardı Docker-backed PostgreSQL instance + Drizzle akışıdır.
+- Repo Docker compose dosyası vermez; bağlantı `DATABASE_URL` ile sağlanır.
+- `.env.example` canonical örnek olarak `postgresql://postgres:postgres@127.0.0.1:5432/enki_tattoo` kullanır.
+- `drizzle.config.ts` fallback olarak aynı host/DB adını kullanır.
+- Makineye özel `.env.local` port veya host override’ları çalışma kolaylığıdır; standart ilan edilmez.
+
+### Önerilen local DB akışı
+
+1. PostgreSQL instance’ını ayağa kaldır.
+2. `DATABASE_URL` değerini ayarla.
+3. Gerekirse `npm run db:migrate` çalıştır.
+4. İlk ops hesabı gerekiyorsa `npm run ops:bootstrap-user` çalıştır.
+
+## 4) Preview Standardı
+
+- Script tabanlı default port `3002`’dir.
+- İzole preview örneklerinde önce `3012`, gerekirse `3013` kullanılır.
+- `3004` kullanılmaz.
+- `NEXT_DIST_DIR=.next-...` türü makineye özel preview ayarları commit’e alınmaz.
+
+## 5) Generator ve Migration İlişkisi
+
+- Route veya metadata seti değiştiyse build’den önce `python3 scripts/generate-route-content.py` çalıştırılır.
+- DB schema değiştiyse `npm run db:generate` ile migration üretilir.
+- `check:all` generator veya migration üretmez.
+- `node scripts/i18n/check-messages.mjs` fiziksel olarak `docs/output/i18n-*.json` üretir; bu legacy output davranışıdır.
+
+## 6) Minimum Smoke-check Matrix
 
 | Alan | Ne yapılır | Beklenti |
 |---|---|---|
-| Repo-side pre-deploy | `npm run lint`, `npm run check:all` | temel kalite kapıları geçer |
-| Route-content değiştiyse | `python3 scripts/generate-route-content.py` | generated route-content beklenen farkı üretir |
-| DB schema değiştiyse | `npm run db:generate` | migration SQL beklenen farkı üretir |
-| Ops auth bootstrap gerekiyorsa | `npm run ops:bootstrap-user` | ilk ops kullanıcısı ve rolleri oluşur |
-| I18n değiştiyse | `node scripts/i18n/check-messages.mjs` | missing key yok, locale seti tutarlı |
-| Default locale smoke | `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/dovme-egitimi`, `/artistler`, `/iletisim`, `/sss` | prefixsiz `tr` çalışır |
-| Ops bypass smoke | `/ops`, `/ops/giris`, `/ops/staff/kasa` | locale rewrite'a girmez; `src/app/ops/**` açılır |
-| Ops auth guard smoke | `/ops`, `/ops/staff/*`, `/ops/user/*` | session ve role'e göre doğru redirect verir |
-| `/tr` canonical check | `/tr`, `/tr/...` | prefikssiz canonical yola `308` döner |
-| Prefixli locale smoke | `/en`, `/en/kesfet`, `/en/piercing` | 404 olmaz, message load kırılmaz |
-| UI locale smoke | header/footer/nav/card alanları | bariz text taşması olmaz |
-| Generator sonrası SEO smoke | ilgili route + `/sitemap.xml` + `/robots.txt` | canonical/noindex etkisi mantıklıdır |
+| Repo-side kalite | `npm run lint`, `npm run build`, gerekirse `npm run check:all` | temel kapılar geçer |
+| Route-content değiştiyse | generator sonrası ilgili route + `/sitemap.xml` + `/robots.txt` | canonical/noindex etkisi mantıklı kalır |
+| Ops auth | `/ops`, `/ops/giris`, `/ops/staff/kasa`, `/ops/user/randevular` | session ve role göre doğru redirect |
+| Locale bypass | `/ops` ailesi | locale rewrite katmanına girmez |
+| Default locale | `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/artistler`, `/iletisim` | prefixsiz `tr` açılır |
+| Prefixli locale | `/en`, `/en/kesfet`, `/en/piercing` | 404 olmaz, message load kırılmaz |
+| UI copy | giriş, bottom nav, başlık alanları | bariz iç sistem dili veya kırpılma kalmaz |
 
-## 4) Generator Sonrası Doğrulama
+## 7) Audit Doğrulama Temeli
 
-Generator çalıştıktan sonra en az şunlar kontrol edilir:
+Audit sözleşmesinin teknik ana evi `docs/SSOT.md`’dir. Repo-içi doğrulama için minimum checklist:
 
-- `src/lib/route-content.generated.ts` içine beklenen path ve metadata geldi mi?
-- İlgili route page'i `getRouteContent(path)` ile bu kaynağı gerçekten kullanıyor mu?
-- `src/app/sitemap.ts` içinde noindex veya canonical etkisi mantıklı mı?
-- Redirect veya internal route seti yanlışlıkla canonical listeye karıştı mı?
+- Schema: `src/db/schema/audit-logs.ts`
+- Migration: `src/db/migrations/0000_init_ops_foundation.sql`
+- Runtime helper: `src/lib/ops/audit.ts`
+- Auth login/logout: `src/app/ops/giris/actions.ts`, `src/app/ops/cikis/route.ts`
+- Mutasyon emitters: `src/lib/ops/user-workspace.ts`, `src/lib/ops/appointments.ts`, `src/lib/ops/cashbook.ts`, `src/lib/ops/customers.ts`
 
-## 5) Repo İçindeki Operasyonel Girdiler
+Repo gerçeği:
 
-- Paket ve script yüzeyi: `package.json`
-- Redirect ve i18n plugin: `next.config.ts`
-- Locale rewrite/canonical davranışı: `src/middleware.ts`
-- Ops-local route ve metadata yüzeyi: `src/app/ops/**`
-- DB config, schema ve migration yüzeyi: `drizzle.config.ts`, `src/db/schema/*`, `src/db/migrations/*`, `src/db/index.ts`
-- Ops auth/session/guard yüzeyi: `src/lib/ops/auth/*`, `src/app/ops/giris/actions.ts`, `scripts/db/bootstrap-ops-user.mjs`
-- Base URL ve site-level SEO temeli: `src/lib/site/base-url.ts`
-- Route-content kaynağı ve generator: `data/route-content/enki-v1-sitemap-seo-template.csv`, `scripts/generate-route-content.py`
-- NAP ve business info: `src/lib/site-info.ts`, `src/lib/site/links.ts`
+- Audit için yeni ayrı migration açılmamıştır.
+- Login/logout kaydı best-effort çalışır.
+- Payload hafif tutulur.
+- Hassas veri loglanmaz.
 
-## 6) Repo İçinden Görülen Başlıca Riskler
+## 8) Ops Bootstrap Notu
 
-- Generator unutulursa route-content ile page metadata drift eder.
-- DB migration generate unutulursa schema ile migration drift eder.
-- Ops auth env veya bootstrap unutulursa login çalışmaz.
-- I18n key veya namespace eksilirse build veya runtime message erişimi kırılabilir.
-- NAP veya maps link değişip JSON-LD / footer birlikte güncellenmezse business info drift eder.
-- Artifact veya legacy output dosyası source-of-truth sanılırsa yanlış karar verilir.
+`npm run ops:bootstrap-user` şunları bekler:
 
-## 7) UNKNOWN
+- `DATABASE_URL`
+- `OPS_SESSION_SECRET`
+- `OPS_BOOTSTRAP_EMAIL`
+- `OPS_BOOTSTRAP_PASSWORD`
 
-Aşağıdaki alanlar repo içinden doğrulanamaz:
+Script davranışı:
+
+- Kullanıcıyı e-posta üzerinden upsert eder.
+- Şifre hash’ini yeniler.
+- Rolleri silip yeniden yazar.
+- `FULL_NAME` varsa `user_profiles` içine işler.
+
+## 9) Repo-İçi Riskler
+
+- Generator unutulursa metadata ve sitemap drift eder.
+- Migration generate unutulursa schema ile migration ayrışır.
+- Bootstrap/env eksik kalırsa ops login çalışmaz.
+- Ops copy ve shell polish borçları ayrı bir ürün kalitesi konusu olarak açık kalır; bu dosya bunları çözülmüş varsaymaz.
+
+## 10) UNKNOWN
 
 - VPS servis topolojisi
 - systemd servis adları
-- reverse proxy / Nginx davranışı
+- Reverse proxy / Nginx davranışı
 - Cloudflare davranışı
-- host-level redirect zinciri
-- production env inventory'nin tam listesi
+- Production env inventory’nin tam listesi

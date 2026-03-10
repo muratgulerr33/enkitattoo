@@ -1,6 +1,8 @@
 # Enki Tattoo Web
 
-Enki Tattoo'nun Next.js tabanli kurumsal ve kesif sitesi.
+Bu repo Enki Tattoo’nun Next.js tabanlı public web yüzeyi ile `/ops` operasyon panelini birlikte taşır.
+
+Bu `README` repo giriş kapısıdır. Doküman haritası `docs/README.md`, teknik kanonik sözleşme `docs/SSOT.md` içindedir.
 
 ## Hızlı Başlangıç
 
@@ -13,103 +15,34 @@ npm run build
 npm run check:all
 ```
 
-## Kısa Özet
+## Repo Özeti
 
 - Framework: Next.js 16 App Router, React 19, TypeScript
-- I18n: `next-intl` (`tr`, `sq`, `sr`, `en`)
-- DB foundation: PostgreSQL + Drizzle ORM (`src/db/*`, `drizzle.config.ts`)
-- Ops auth: ops-local email/password + signed session cookie (`src/lib/ops/auth/*`)
-- Ops onboarding + operasyon MVP: `tattoo_forms`, `consent_acceptances`, `appointments`, `cash_entries`, `customer_notes`
-- Customer workspace: `/ops/staff/musteriler` liste + `/ops/staff/musteriler/[userId]` detay; staff-only ve `user` rol tabanli
-- Audit foundation: mevcut `audit_logs` schema'si uzerinde kritik ops mutasyonlari icin hafif audit kaydi
-- Local DB standardi: Docker PostgreSQL + Drizzle migration akisi
-- UI: Tailwind v4, Radix tabanlı componentler, `next-themes`
-- Analytics: `NEXT_PUBLIC_GA_ID` varsa GA4 aktif
+- Public yüzey: `next-intl` ile çok dilli site (`tr`, `sq`, `sr`, `en`)
+- Operasyon yüzeyi: locale ağacından ayrılan `/ops`
+- Veri katmanı: PostgreSQL + Drizzle (`src/db/*`, `drizzle.config.ts`)
+- Ops kimlik doğrulama: yerel e-posta/şifre + imzalı oturum çerezi
+- Aktif ops omurgası: kullanıcı/profil/rol, dövme formu, açık onay, randevu, kasa, müşteri notu, audit kayıtları
 
-Bağlam almak için önce `docs/README.md`, sonra `docs/SSOT.md` okunur. Çalışma sırası için `docs/WORKFLOW.md` kullanılır.
+## Yüzeyler
 
-## Public Route Seti
+### Public
 
-- `/`
-- `/kesfet`
-- `/kesfet/[hub]`
-- `/piercing`
-- `/piercing/[hub]`
-- `/galeri-tasarim`
-- `/dovme-egitimi`
-- `/artistler`
-- `/artistler/[slug]`
-- `/iletisim`
-- `/sss`
+Canonical public route seti ve SEO sahipliği `docs/SSOT.md` içindedir. Public sayfalar locale ağacı altında çalışır; metadata ve sitemap hattı route-content üretim zincirinden beslenir.
 
-Aktif redirect'ler: `/book` -> `/iletisim`, `/explore` -> `/kesfet`, `/profile` -> `/artistler` (`next.config.ts`).
+### `/ops`
 
-## Dahili Yüzeyler
+- `/ops` locale yönlendirme katmanından ayrıdır.
+- Staff alanı `admin` ve `artist` rolleri için açılır.
+- User alanı yalnız `user` rolü için açılır.
+- Oturum yoksa giriş noktası `/ops/giris` olur.
 
-- `/styleguide`: dahili kontrol yüzeyi; canonical public route setinin parçası değildir.
-- `/ops`: TR-only operations namespace; public locale subtree ve i18n zincirinden ayrıdır.
-- Metadata route'ları: `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest`
+Ops route, yetki, tablo ve audit sözleşmesi `docs/SSOT.md` içindedir. Local çalışma, bootstrap, smoke-check ve preview pratiği `docs/OPS.md` ile `docs/WORKFLOW.md` içindedir.
 
-## Ops Route Omurgasi
+## Dokümanlar
 
-- `/ops`
-- `/ops/giris`
-- `/ops/staff/*`
-- `/ops/staff/musteriler`
-- `/ops/staff/musteriler/[userId]`
-- `/ops/user/form`
-- `/ops/user/*`
-
-Randevu notu:
-
-- Isletme bazli randevu modeli kullanilir.
-- `appointments.artist_id` yoktur.
-- Status seti: `scheduled`, `completed`, `cancelled`, `no_show`
-- Source seti: `customer`, `admin`, `artist`
-- Slot engine yoktur.
-- Ayni tarih + ayni saat icin ikinci `scheduled` kayit acilamaz.
-- Local preview icin `3004` kullanilmaz; `3012` / `3013` tercih edilir.
-
-Kasa notu:
-
-- `cash_entries` randevudan bagimsizdir; zorunlu appointment FK yoktur.
-- `cash_entry_type` seti `income` / `expense` olarak sabittir.
-- `amount_cents` pozitif integer olarak saklanir.
-- Soft delete alanlari `deleted_at` ve `deleted_by_user_id` uzerinden tutulur.
-- Kasa quick-entry mantiginda calisir.
-- Admin gecmis kaydi duzenler ve soft delete yapar.
-- Artist yalniz bugunun kasasina kayit acar; gecmis edit/delete yapmaz.
-
-Musteri workspace notu:
-
-- Staff musteri yuzeyi `/ops/staff/musteriler` ve `/ops/staff/musteriler/[userId]` route'larinda calisir.
-- Admin ve artist musteri liste/detay yuzeylerini gorebilir.
-- Musteri listesi yalniz `user` rolundeki hesaplari gosterir; staff-only hesaplar listeye dahil edilmez.
-- Liste isim, telefon ve e-posta uzerinden arama yapar.
-- Detay yuzeyi profil, form durumu, consent durumu, randevu ozeti ve tek guncel staff notunu bir arada gosterir.
-- `customer_notes` staff-owned tek not mantigi kullanir; `user_id` unique kalir ve admin ile artist notu kaydedebilir veya bos birakarak temizleyebilir.
-
-Audit notu:
-
-- `audit_logs` mevcut schema uzerinden kullanilir; bu asamada yeni migration acilmamistir.
-- Kritik audit action seti:
-  - `profile.updated`
-  - `tattoo_form.saved`
-  - `tattoo_form.submitted`
-  - `consent.accepted`
-  - `appointment.created`
-  - `appointment.status_updated`
-  - `cash_entry.created`
-  - `cash_entry.updated`
-  - `cash_entry.soft_deleted`
-  - `customer_note.saved`
-- Ops auth login/logout audit'i best-effort calisir.
-- Payload hafif tutulur; parola, hash ve session secret gibi hassas veriler loglanmaz.
-
-## Dokümantasyon
-
-- [docs/README.md](docs/README.md): docs haritası ve okuma sırası
-- [docs/SSOT.md](docs/SSOT.md): routes, i18n, SEO, source-of-truth
-- [docs/UI-SYSTEM.md](docs/UI-SYSTEM.md): UI kontratları
+- [docs/README.md](docs/README.md): doküman haritası ve okuma sırası
+- [docs/SSOT.md](docs/SSOT.md): teknik gerçekler ve kanonik sözleşmeler
+- [docs/UI-SYSTEM.md](docs/UI-SYSTEM.md): public ve `/ops` UI kontratları
 - [docs/WORKFLOW.md](docs/WORKFLOW.md): çalışma biçimi ve kalite kapıları
-- [docs/OPS.md](docs/OPS.md): repo-side runtime ve deploy hazırlığı
+- [docs/OPS.md](docs/OPS.md): repo-içi çalışma runbook’u ve smoke-check seti

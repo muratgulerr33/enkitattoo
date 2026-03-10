@@ -1,28 +1,46 @@
 # WORKFLOW
 
-Bu dosya repo içindeki çalışma kitabıdır. Tek kişi geliştirme, kalite kapıları, görev tipine göre recipe'ler, AI ile çalışma sırası ve commit hazırlığı burada tutulur.
+Bu dosya repo içindeki çalışma kitabıdır. Görev sırası, kalite kapıları, doküman rol ayrımı ve değişiklik tipine göre kısa reçeteler burada tutulur.
 
 ## 1) Çalışma Modeli
 
 - Çalışma ağacı `main` kabul edilir.
 - Branch açma.
 - `git stash`, `git restore`, `git clean`, `git reset --hard` kullanma.
-- Repo gerçeği dışında varsayım yazma; doğrulanamayan şeyi `UNKNOWN` olarak işaretle.
-- Değişiklik yapmadan önce canonical kaynağı bul; aynı bilgiyi ikinci yerde üretme.
+- Repo gerçeği dışında varsayım yazma.
+- Doğrulanamayan şeyi `UNKNOWN` olarak işaretle.
+- Değişiklik yapmadan önce canonical kaynağı bul.
+- Aynı bilgiyi ikinci yerde üretmek yerine asıl evine referans ver.
 
-## 2) Günlük Çalışma Sırası
+## 2) Doküman Rolleri
 
-1. Önce `main` durumunu kontrol et.
-2. Uzak repo kullanılıyorsa güncel durumu al.
-3. Çalışmadan önce mevcut değişiklikleri ve hedef dosyaları oku.
-4. Uygulamadan önce değişiklik sınırını ve etkilenecek kaynakları netleştir.
-5. Geliştirmeyi yap.
+- `README.md`: repo giriş kapısı
+- `docs/README.md`: doküman haritası
+- `docs/SSOT.md`: teknik kanonik sözleşme
+- `docs/UI-SYSTEM.md`: UI kontratları
+- `docs/WORKFLOW.md`: çalışma biçimi ve kalite kapıları
+- `docs/OPS.md`: repo-içi runbook, local DB ve smoke-check seti
+
+Kural:
+
+- Teknik gerçek `SSOT`’a gider.
+- UI ritmi, copy ve shell kuralı `UI-SYSTEM`’e gider.
+- Çalışma disiplini ve komut reçetesi `WORKFLOW`’da kalır.
+- Runtime/runbook/smoke bilgisi `OPS`’a gider.
+
+## 3) Günlük Çalışma Sırası
+
+1. `main` durumunu ve worktree farkını kontrol et.
+2. Hedef dosyaları ve ilgili canonical kaynağı oku.
+3. Kod, schema, route ve action yüzeylerinden kanıt topla.
+4. Etkilenecek docs ve generated dosyaları önceden eşleştir.
+5. Uygulamayı yap.
 6. İlgili kalite kapılarını çalıştır.
-7. Commit hazırlığından önce docs, generated ve artifact etkisini tekrar kontrol et.
+7. Diff’i, docs rol ayrımını ve `UNKNOWN` sınırını son kez kontrol et.
 
-## 3) Temel Kalite Kapıları
+## 4) Temel Kalite Kapıları
 
-Asgari kontrol seti:
+Asgari komut seti:
 
 - `npm run lint`
 - `npm run build`
@@ -36,278 +54,95 @@ Duruma göre:
 - DB schema değiştiyse `npm run db:generate`
 - Mesaj seti değiştiyse `node scripts/i18n/check-messages.mjs`
 
-Not:
+Notlar:
 
-- `check:all` generator'ı otomatik çalıştırmaz.
-- `node scripts/i18n/check-messages.mjs` şu an npm script değildir; doğrudan çağrılır.
-- Bu makinede izole preview gerekiyorsa `3012` / `3013` tercih edilir; `3004` kullanılmaz.
-- İzole preview için `NEXT_DIST_DIR=.next-...` kullanılabilir; bu tür machine-local TypeScript include satırları repo gerçeği kabul edilmez ve commit'e alınmaz.
+- `check:all` generator çalıştırmaz.
+- `node scripts/i18n/check-messages.mjs` npm script değildir; doğrudan çağrılır.
 
-## 4) Doküman Asıl Ev Kuralı
+## 5) Local Preview ve Local DB Standardı
 
-- `README.md`: repo giriş kapısı
-- `docs/README.md`: docs haritası
-- `docs/SSOT.md`: teknik gerçekler, route, i18n, SEO, source-of-truth
-- `docs/UI-SYSTEM.md`: UI kontratları
-- `docs/WORKFLOW.md`: çalışma sırası ve kalite kapıları
-- `docs/OPS.md`: repo-side hazırlık runbook'u
+- Uygulamanın script tabanlı default portu `3002`’dir (`npm run dev`, `npm run start`).
+- İzole preview gerekiyorsa doküman örneklerinde önce `3012`, gerekirse `3013` kullanılır.
+- `3004` kullanılmaz.
+- Bu preview portları workflow konvansiyonudur; kod tarafında zorunlu kılınmış ayrı preview script’i yoktur.
+- Local DB akışı PostgreSQL + Drizzle üstünden yürür.
+- Repo Docker compose tarifi vermez; fakat yerel PostgreSQL instance’ı `DATABASE_URL` ile sağlanır ve çalışma standardı Docker-backed local PostgreSQL kabul edilir.
+- `drizzle.config.ts` fallback URL’si `postgresql://postgres:postgres@127.0.0.1:5432/enki_tattoo` değerini taşır.
+- Makineye özel `.env.local` override’ları repo gerçeği değildir; örnek olarak okunabilir ama standart ilan edilmez.
 
-Kural:
+## 6) Docs-only Reçetesi
 
-- Doküman değişikliği yapmadan önce bilginin asıl evini belirle.
-- Aynı teknik bilgiyi ikinci kez yazmak yerine asıl eve kısa referans ver.
+Önce bak:
 
-## 5) Task-type Recipes
+- İlgili aktif dokümanın rolüne
+- İlgili canonical kod dosyasına
+- Gerekirse ilgili migration ve commit zincirine
 
-### Yeni public page
+Adımlar:
 
-- Önce bak:
-  - `src/app/[locale]/(app)`
-  - `data/route-content/enki-v1-sitemap-seo-template.csv`
-  - benzer metadata pattern'leri (`kesfet`, `artistler/[slug]`)
-- Adımlar:
-  - page dosyasını aç
-  - canonical path için CSV'ye satır ekle
-  - `getRouteContent(path)` ile metadata bağla
-  - gerekiyorsa breadcrumb / JSON-LD ekle
-- Komutlar:
-  - `python3 scripts/generate-route-content.py`
-  - `npm run build`
-- Kontrol:
-  - public/internal route ayrımı
-  - sitemap / robots etkisi
-  - prefixsiz ve prefixli locale açılışı
-- Docs etkisi:
-  - teknik karar değiştiyse `docs/SSOT.md`
+1. Çelişki varsa kodu esas al.
+2. Tekrarlanan bilgiyi kısalt; bilgi kaybı yaratma.
+3. Kullanıcıya dönük copy örneklerinde gerçek Türkçe karakter kullan.
+4. Repo içinden doğrulanmayan iddiayı yazma.
+5. Gerekiyorsa açıkça `UNKNOWN` bırak.
 
-### Yeni hub slug
+Zorunlu komut yoktur; fakat en azından hedef diff ve hedef grep kontrolü yapılır.
 
-- Önce bak:
-  - `src/lib/hub/hubs.v1.ts`
-  - `src/app/[locale]/(app)/kesfet/page.tsx`
-  - `src/app/[locale]/(app)/kesfet/[hub]/page.tsx`
-  - `src/lib/gallery/manifest.v1.ts`
-- Adımlar:
-  - hub config'e slug ve `canonicalPath` ekle
-  - route-content CSV'ye aynı path'i ekle
-  - gerekirse gallery normalize katmanını güncelle
-- Komutlar:
-  - `python3 scripts/generate-route-content.py`
-  - `npm run build`
-- Kontrol:
-  - `/kesfet` landing kartı
-  - detail page açılışı
-  - gallery bağlantıları
-- Docs etkisi:
-  - ownership veya canonical kural değiştiyse `docs/SSOT.md`
+## 7) Kısa Task-type Reçeteleri
 
-### Yeni artist slug
+### Public route veya metadata
 
-- Önce bak:
-  - `src/app/[locale]/(app)/artistler/[slug]/page.tsx`
-  - `src/app/[locale]/(app)/artistler/page.tsx`
-  - route-content CSV
-- Adımlar:
-  - `ARTIST_SLUGS` ve artist info map'ini güncelle
-  - listing kartını besleyen veriyi tamamla
-  - route-content CSV'ye detail path ekle
-  - ilgili locale key'lerini tamamla
-- Komutlar:
-  - `python3 scripts/generate-route-content.py`
-  - `npm run build`
-- Kontrol:
-  - `/artistler`
-  - yeni detail route
-  - en az bir prefixli locale
-- Docs etkisi:
-  - slug ownership değiştiyse `docs/SSOT.md`
+- Önce: page dosyası, route-content CSV, generator zinciri
+- Komut: `python3 scripts/generate-route-content.py`, `npm run build`
+- Docs etkisi: çoğu durumda `docs/SSOT.md`
 
-### Yeni locale key
+### UI shell veya copy
 
-- Önce bak:
-  - ilgili component/page
-  - `messages/tr.json`
-  - diğer locale dosyaları
-- Adımlar:
-  - key'i önce `tr` içine ekle
-  - aynı key setini `en`, `sq`, `sr` içine tamamla
-  - component/page kullanımını güncelle
-- Komutlar:
-  - `node scripts/i18n/check-messages.mjs`
-  - `npm run build`
-- Kontrol:
-  - missing key yok mu
-  - uzun metin taşması var mı
-  - prefixli locale açılıyor mu
-- Docs etkisi:
-  - yalnız süreç değiştiyse `docs/WORKFLOW.md`; teknik contract değiştiyse `docs/SSOT.md`
+- Önce: `docs/UI-SYSTEM.md`, canonical component, `src/app/globals.css`
+- Komut: `npm run check:no-palette`, `npm run build`
+- Gözle kontrol: mobile, tablet, desktop, copy dili, taşma
+- Docs etkisi: `docs/UI-SYSTEM.md`
 
-### Yeni content namespace
+### DB schema veya migration
 
-- Önce bak:
-  - `src/i18n/request.ts`
-  - `src/content/**`
-  - tüketen component/page
-- Adımlar:
-  - locale bazlı content dosyalarını ekle
-  - explicit import zincirini güncelle
-  - merge objesini bozmadığını doğrula
-- Komutlar:
-  - `node scripts/i18n/check-messages.mjs` gerekiyorsa
-  - `npm run build`
-- Kontrol:
-  - runtime translation erişimi
-  - namespace tüketen UI
-- Docs etkisi:
-  - i18n contract değiştiyse `docs/SSOT.md`
+- Önce: `src/db/schema/*`, `drizzle.config.ts`, mevcut migration zinciri
+- Komut: `npm run db:generate`, `npm run build`
+- Docs etkisi: teknik sözleşme değiştiyse `docs/SSOT.md`, runbook değiştiyse `docs/OPS.md`
 
-### Route-content düzenleme
+### Ops auth veya guard
 
-- Önce bak:
-  - `data/route-content/enki-v1-sitemap-seo-template.csv`
-  - `scripts/generate-route-content.py`
-  - `src/lib/route-content.ts`
-- Adımlar:
-  - CSV'yi güncelle
-  - generator'ı çalıştır
-  - generated farkını kontrol et
-- Komutlar:
-  - `python3 scripts/generate-route-content.py`
-  - `npm run build`
-- Kontrol:
-  - ilgili page metadata
-  - sitemap / robots
-  - noindex / canonical etkisi
-- Docs etkisi:
-  - canonical kaynak veya karar değiştiyse `docs/SSOT.md`
+- Önce: `src/lib/ops/auth/*`, `src/app/ops/**`, bootstrap script
+- Komut: `npm run lint`, `npm run build`
+- Gözle kontrol: `/ops`, `/ops/giris`, staff/user redirect ve guard akışı
+- Docs etkisi: sözleşme değiştiyse `docs/SSOT.md`, runbook değiştiyse `docs/OPS.md`
 
-### UI shell / header / footer / card değişikliği
+### Yalnız doküman
 
-- Önce bak:
-  - `docs/UI-SYSTEM.md`
-  - ilgili canonical component
-  - `src/app/globals.css`
-- Adımlar:
-  - mevcut patterni bozmadan değiştir
-  - gerekiyorsa supporting file'ı birlikte güncelle
-- Komutlar:
-  - `npm run check:no-palette`
-  - `npm run build`
-  - gerekiyorsa `npm run ui:audit`
-- Kontrol:
-  - mobile/tablet/desktop
-  - locale taşması
-  - focus / hit area / truncate zinciri
-- Docs etkisi:
-  - UI kontratı değiştiyse `docs/UI-SYSTEM.md`
+- Önce: bilginin asıl evi
+- Komut: hedef diff, hedef grep, `git status -sb`
+- Kontrol: rol ayrımı, tekrar, yanlış kesinlik, `UNKNOWN`
 
-### DB schema / migration değişikliği
+## 8) Commit Hazırlığı
 
-- Önce bak:
-  - `drizzle.config.ts`
-  - `src/db/schema/*`
-  - `src/db/index.ts`
-- Adımlar:
-  - schema dosyalarını güncelle
-  - gerekiyorsa env beklentisini netleştir
-  - `npm run db:generate` ile migration üret
-- Komutlar:
-  - `npm run db:generate`
-  - `npm run build`
-- Kontrol:
-  - migration SQL beklenen tablo/FK/index farkını üretiyor mu
-  - public route/i18n zincirine istemsiz bağ yok mu
-- Docs etkisi:
-  - teknik contract değiştiyse `docs/SSOT.md`, repo-side akış değiştiyse `docs/OPS.md` ve/veya `docs/WORKFLOW.md`
+| Değişiklik türü | Zorunlu komut | Gözle kontrol | Docs etkisi |
+|---|---|---|---|
+| Route / metadata | `python3 scripts/generate-route-content.py`, `npm run build` | sitemap, robots, canonical | çoğu durumda `SSOT` |
+| UI kontratı | `npm run check:no-palette`, `npm run build` | mobile/tablet/desktop, copy, taşma | `UI-SYSTEM` |
+| DB schema / migration | `npm run db:generate`, `npm run build` | migration SQL, env beklentisi | `SSOT`, bazen `OPS` |
+| Ops auth / guard | `npm run lint`, `npm run build` | `/ops` redirect, staff/user guard, bootstrap/login | `SSOT`, bazen `OPS` |
+| Docs-only | hedef diff ve grep | rol ayrımı, tekrar, `UNKNOWN` | ilgili aktif docs |
 
-### Ops auth / guard değişikliği
-
-- Önce bak:
-  - `src/lib/ops/auth/*`
-  - `src/app/ops/**`
-  - `.env.example`
-- Adımlar:
-  - session, role resolve ve redirect zincirini birlikte güncelle
-  - gerekiyorsa bootstrap env/script beklentisini netleştir
-- Komutlar:
-  - `npm run lint`
-  - `npm run build`
-- Kontrol:
-  - `/ops` session yoksa `/ops/giris`
-  - staff/user cookie ile doğru home path
-  - yetkisiz role ile güvenli redirect
-- Docs etkisi:
-  - çoğu durumda `docs/SSOT.md`, repo-side runbook değişirse `docs/OPS.md`
-
-### Docs-only değişiklik
-
-- Önce bak:
-  - bilginin asıl evi
-  - ilgili canonical kod dosyası
-- Adımlar:
-  - yalnız doğrulanmış bilgiyi yaz
-  - tekrar eden bilgiyi kısalt
-  - `UNKNOWN` sınırını koru
-- Komutlar:
-  - zorunlu komut yok
-- Kontrol:
-  - rol ayrımı bozuldu mu
-  - artifact source-of-truth gibi anlatılıyor mu
-- Docs etkisi:
-  - yalnız ilgili aktif docs dosyası
-
-## 6) Commit Readiness Matrix
-
-| Değişiklik türü | Zorunlu komut | Opsiyonel komut | Gözle kontrol | Docs güncelleme gereği |
-|---|---|---|---|---|
-| Route / metadata | `python3 scripts/generate-route-content.py`, `npm run build` | `npm run lint` | sitemap, robots, canonical | çoğu durumda `SSOT` |
-| UI kontratı | `npm run check:no-palette`, `npm run build` | `npm run ui:audit` | mobile/tablet/desktop, locale taşması | gerekirse `UI-SYSTEM` |
-| DB schema / migration | `npm run db:generate`, `npm run build` | `npm run lint` | migration SQL, env beklentisi, import zinciri | çoğu durumda `SSOT`, bazen `OPS`/`WORKFLOW` |
-| Ops auth / guard | `npm run lint`, `npm run build` | `npm run check:all` | `/ops` redirect, staff/user guard, bootstrap/login akışı | çoğu durumda `SSOT`, bazen `OPS`/`WORKFLOW` |
-| I18n key/content | `node scripts/i18n/check-messages.mjs`, `npm run build` | `npm run lint` | prefixsiz + prefixli locale | süreç değişirse `WORKFLOW`, contract değişirse `SSOT` |
-| NAP / links | `npm run build` | `npm run lint` | footer, contact, JSON-LD | çoğu durumda `SSOT`, bazen `UI-SYSTEM` |
-| Docs-only | zorunlu yok | yok | rol ayrımı, tekrar, `UNKNOWN` | ilgili docs dosyası |
-
-## 7) AI Operating Mode
-
-- Keşif:
-  - önce canonical kaynağı bul
-  - artifact ile gerçek kaynağı ayır
-- Mapping:
-  - hangi dosya sahip, hangi dosya derived bunu çıkar
-  - değişiklik etkisini önceden listele
-- Uygulama:
-  - source-of-truth'tan başla
-  - generated dosyaya doğrudan yazma
-- Audit:
-  - komut sonucu, smoke check ve docs etkisini birlikte değerlendir
-- Kanıt toplama:
-  - kod dosyasına dayanmayan iddia yazma
-- `UNKNOWN` koruma:
-  - prod, proxy, Cloudflare, VPS ve env inventory alanlarını repo dışı kabul et
-- Source-of-truth doğrulama:
-  - aynı bilgi iki yerde varsa hangisinin canonical olduğunu belirlemeden yazma
-
-## 8) Legacy Transition Notes
-
-- `scripts/i18n/check-messages.mjs` fiziksel olarak hâlâ `docs/output/i18n-*.json` üretir. Hedef model `artifacts/` olsa da mevcut repo gerçeği budur.
-- Bazı output/artifact taşıma kararları tamamlanmış olsa da bu script legacy çıkış noktası olarak korunur.
-- Home page içindeki maps/reviews URL ayrışması bilinçli olarak dokümante edilmiştir; tek kaynağa indirilmiş değildir.
-- Prod keşfi yapılmadan ops dokümanı bilinçli olarak repo-side hazırlık runbook'u seviyesinde tutulur.
-
-## 9) Common Mistake Prevention
+## 9) Hata Önleme
 
 - Generated dosyayı elle düzenleme.
-- Docs dışı gerçeği docs'a kesin hüküm gibi yazma.
-- `/styleguide` veya `/gallery` benzeri yolları canonical public route sanma.
-- I18n key ekleyip diğer locale setlerini tamamlamama.
-- `src/i18n/request.ts` merge zincirini unutma.
-- Business veya source veriyi component içine gömme.
-- Artifact'i canonical source gibi gösterme.
+- Artifact veya local output’u canonical source sanma.
+- Public route ile internal route’u karıştırma.
+- Bir tablo veya route davranışını yalnız eski dokümana bakarak yazma.
+- Kullanıcıya dönük copy ile iç sistem notunu karıştırma.
+- Repo dışı production topolojisini kesin hüküm gibi yazma.
 
-## 10) Commit Hazırlığı
+## 10) `UNKNOWN` Sınırı
 
-- Çalışma ağacında gereksiz generated veya output farkı kalmadığını kontrol et.
-- Değişiklik yalnız kodda değil karar seviyesinde ise ilgili aktif docs dosyasını da güncelle.
-- `UNKNOWN` olması gereken ifadeleri kesin hüküm olarak bırakma.
-- Artifact'i canonical source gibi sunma.
+- Production host, reverse proxy, Cloudflare ve servis topolojisi repo dışıdır.
+- Production env inventory tam listesi repo dışıdır.
+- Repo dışı görsel bulgular veya kullanıcı raporları, koddan doğrulanmadıkça `UNKNOWN` kalır.

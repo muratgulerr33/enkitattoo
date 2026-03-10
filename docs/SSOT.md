@@ -1,40 +1,50 @@
 # SSOT
 
-Bu dosya repo içindeki teknik gerçeklerin ana evidir. Route, i18n, SEO, source-of-truth, değişiklik etkisi ve repo-side kararlar burada tutulur.
+Bu dosya repo içindeki teknik gerçeklerin ana evidir. Route, i18n, SEO, `/ops` sınırı, auth/rol akışı, tablo omurgası ve audit sözleşmesi burada tutulur.
 
-## 1) Kısa Stack ve Runtime Yüzeyi
+Repo kararı sırası:
+
+1. Canlı source code, schema, action ve route davranışı
+2. Aktif dokümanlar
+3. İlgili commit zinciri bağlamı
+
+## 1) Kapsam ve Doküman Rolleri
+
+- `README.md`: repo giriş kapısı
+- `docs/README.md`: doküman haritası
+- `docs/SSOT.md`: teknik kanonik sözleşme
+- `docs/UI-SYSTEM.md`: yaşayan UI kontratları
+- `docs/WORKFLOW.md`: çalışma biçimi ve kalite kapıları
+- `docs/OPS.md`: repo-içi çalışma runbook’u ve smoke-check seti
+
+Teknik bir bilgi ikinci kez yazılacaksa kısa referans verilir; asıl evi taşınmaz.
+
+## 2) Kısa Runtime ve Canonical Kaynaklar
 
 - Framework: Next.js 16 App Router, React 19, TypeScript (`package.json`)
-- I18n: `next-intl` (`src/i18n/routing.ts`, `src/i18n/request.ts`)
-- DB foundation: PostgreSQL + Drizzle ORM (`src/db/*`, `drizzle.config.ts`, `package.json`)
-- Ops auth: ops-local email/password + signed cookie session (`src/lib/ops/auth/*`, `src/app/ops/giris/actions.ts`)
-- Theme: `next-themes`, `storageKey="enki-theme"` (`src/app/layout.tsx`)
-- Site base URL: `https://enkitattoo.com.tr` (`src/lib/site/base-url.ts`)
-- Route-content generator: `scripts/generate-route-content.py`
-- Runtime port: dev/start için `3002` (`package.json`)
+- Public i18n: `next-intl` (`src/i18n/routing.ts`, `src/i18n/request.ts`)
+- Veri katmanı: PostgreSQL + Drizzle (`src/db/*`, `drizzle.config.ts`)
+- Ops auth: yerel e-posta/şifre + imzalı oturum çerezi (`src/lib/ops/auth/*`, `src/app/ops/giris/actions.ts`)
+- Site URL kaynağı: `src/lib/site/base-url.ts`
+- Route-content üretimi: `data/route-content/enki-v1-sitemap-seo-template.csv` -> `scripts/generate-route-content.py` -> `src/lib/route-content.generated.ts`
+- Dev/start portu: `3002` (`package.json`)
 
-## 2) Canonical Kaynak Envanteri
+### Canonical kaynak matrisi
 
-| Konu | Canonical dosya | Derived dosya / tüketen | Değişirse ne tetiklenir | Yanlış kullanım riski |
-|---|---|---|---|---|
-| Public route + SEO metadata registry | `data/route-content/enki-v1-sitemap-seo-template.csv` | `src/lib/route-content.generated.ts`, `src/lib/route-content.ts`, route metadata, sitemap | generator rerun, metadata kontrolü, sitemap/robots kontrolü | generated dosyayı elle düzenlemek drift üretir |
-| Hub slug ve canonical hub path | `src/lib/hub/hubs.v1.ts` | `/kesfet` landing, `/kesfet/[hub]`, home kartları, gallery eşleme | route-content CSV, landing ve detail smoke check | slug route-content ile ayrışırsa 404 veya yanlış link oluşur |
-| Gallery hub normalize katmanı | `src/lib/gallery/manifest.v1.ts` | `galeri-tasarim` filters/grid, hub-gallery | gallery smoke check, hub param kontrolü | canonical slug ile gallery hub paramı karışır |
-| I18n locale routing | `src/i18n/routing.ts` | `src/middleware.ts`, `src/app/[locale]/(app)/layout.tsx`, `@/i18n/navigation` | locale smoke check, middleware kontrolü | yanlış locale varsayımı URL davranışını bozar |
-| I18n load/merge zinciri | `src/i18n/request.ts` | `NextIntlClientProvider`, tüm `useTranslations` / `getTranslations` tüketicileri | build, locale smoke check, namespace kontrolü | namespace eklenip merge zinciri güncellenmezse runtime kırılır |
-| UI message kaynağı | `messages/*.json` | page/component copy | i18n kalite kontrolü, locale taşma kontrolü | TR eklenip diğer locale'ler unutulursa drift oluşur |
-| Review content namespace | `src/content/enki/reviews.*.json` | `reviews.*` namespace tüketen UI | `src/i18n/request.ts` kontrolü, reviews UI smoke check | content namespace mesaj dosyası sanılırsa yanlış yerde aranır |
-| Ops DB schema | `src/db/schema/*.ts` | `src/db/index.ts`, `src/db/migrations/*`, `drizzle.config.ts` | migration generate, DB client ve env kontrolü | schema ile migration drift ederse DB foundation bozulur |
-| Ops auth/session contract | `src/lib/ops/auth/*.ts` | `src/app/ops/**`, `scripts/db/bootstrap-ops-user.mjs`, `.env.example` | login, session, role redirect ve guard kontrolü | cookie/env/role contract drift ederse ops erişimi bozulur |
-| Business/NAP kaynağı | `src/lib/site-info.ts` | footer, contact, JSON-LD, home map | footer/contact/JSON-LD kontrolü | ikinci NAP kaynağı açılırsa business drift oluşur |
-| Site-level link sabitleri | `src/lib/site/links.ts` | CTA'lar, footer quick links, maps/social linkleri | footer/contact/home CTA kontrolü | component içine link gömmek drift üretir |
-| Dokümantasyon süreç evi | `docs/WORKFLOW.md` | aktif docs ve görev akışları | docs güncelleme | teknik gerçeği workflow dosyasında sabitlemek rol karışıklığı üretir |
+| Konu | Canonical dosya | Tüketen yüzey |
+|---|---|---|
+| Public route ve SEO registry | `data/route-content/enki-v1-sitemap-seo-template.csv` | metadata, sitemap, `src/lib/route-content.generated.ts` |
+| Keşfet hub slug seti | `src/lib/hub/hubs.v1.ts` | home, `/kesfet`, `/kesfet/[hub]`, galeri bağlantıları |
+| Galeri normalize katmanı | `src/lib/gallery/manifest.v1.ts` | `/galeri-tasarim`, hub-gallery bağlantıları |
+| Locale yönlendirme | `src/i18n/routing.ts` | `src/middleware.ts`, locale-aware navigation |
+| Mesaj yükleme zinciri | `src/i18n/request.ts` | `NextIntlClientProvider`, `useTranslations`, `getTranslations` |
+| Ops auth/session sözleşmesi | `src/lib/ops/auth/*.ts` | `src/app/ops/**`, bootstrap script |
+| Ops tablo sözleşmesi | `src/db/schema/*.ts` | `src/db/migrations/*`, `src/db/index.ts` |
+| İşletme/NAP kaynağı | `src/lib/site-info.ts`, `src/lib/site/links.ts` | footer, iletişim, JSON-LD |
 
 ## 3) Route Omurgası
 
 ### Public canonical route seti
-
-Canonical public set sayfa dosyaları ve `src/lib/route-content.generated.ts` üzerinden okunur:
 
 - `/`
 - `/kesfet`
@@ -48,22 +58,20 @@ Canonical public set sayfa dosyaları ve `src/lib/route-content.generated.ts` ü
 - `/iletisim`
 - `/sss`
 
-### Internal veya SEO-dışı yüzeyler
+### Dahili ve SEO-dışı yüzeyler
 
-- `/styleguide`: dahili kontrol yüzeyi (`src/app/styleguide/page.tsx`)
-- `/ops`: TR-only operations namespace; locale subtree dışında yaşar ve public `next-intl` zincirine girmez (`src/app/ops/layout.tsx`, `src/middleware.ts`)
-- `/ops/giris`: ops-local login yüzeyi; session varsa role bazlı home path'e redirect eder (`src/app/ops/giris/page.tsx`)
-- `/ops/staff/kasa`: staff-only cashbook yuzeyi; quick-entry, gun filtresi ve admin manage aksiyonlari burada calisir (`src/app/ops/staff/kasa/page.tsx`)
-- `/ops/staff/musteriler`: staff-only musteri liste ve arama yuzeyi; yalniz `user` rolundeki hesaplar listelenir (`src/app/ops/staff/musteriler/page.tsx`)
-- `/ops/staff/musteriler/[userId]`: staff-only musteri detay yuzeyi; profil, form, onay, randevu ve staff notu burada toplanir (`src/app/ops/staff/musteriler/[userId]/page.tsx`)
-- `/ops/staff/randevular`: aylik takvim + secili gun operasyon yuzeyi; isletme bazli randevu yönetimi burada yapilir (`src/app/ops/staff/randevular/page.tsx`)
-- `/ops/user/randevular`: kullanicinin kendi randevularini gordugu ve yeni kayit actigi yuzeydir (`src/app/ops/user/randevular/page.tsx`)
-- Metadata route'ları: `/robots.txt`, `/sitemap.xml`, `/manifest.webmanifest` (`src/app/robots.ts`, `src/app/sitemap.ts`, `src/app/manifest.ts`)
-- Middleware bypass yüzeyleri: `/ops`, `/_next`, `/api`, favicon, OG/Twitter image route'ları ve uzantılı dosyalar (`src/middleware.ts`)
+- `/styleguide`: dahili kontrol yüzeyi
+- `/ops`: operasyon namespace’i; locale ağacının dışındadır
+- `/ops/giris`
+- `/ops/staff/*`
+- `/ops/user/*`
+- `/robots.txt`
+- `/sitemap.xml`
+- `/manifest.webmanifest`
 
-### Aktif redirect'ler
+### Aktif redirect’ler
 
-Sadece şu redirect'ler tanımlıdır (`next.config.ts`):
+Sadece şu redirect’ler tanımlıdır (`next.config.ts`):
 
 - `/book` -> `/iletisim`
 - `/explore` -> `/kesfet`
@@ -72,159 +80,127 @@ Sadece şu redirect'ler tanımlıdır (`next.config.ts`):
 Notlar:
 
 - `/galeri` canonical route değildir; canonical route `/galeri-tasarim`dır.
-- `/gallery` için redirect yoktur. `next.config.ts` içindeki `/gallery/:path*` kaydı redirect değil, header kuralıdır.
+- `/gallery` için redirect yoktur.
 
-## 4) Public Page Contract Matrix
+## 4) Public Locale ve SEO Sözleşmesi
 
-| Route | Kaynak page dosyası | Metadata kaynağı | Route-content bağımlılığı | I18n bağımlılığı | SEO notu | Smoke-check notu |
-|---|---|---|---|---|---|---|
-| `/` | `src/app/[locale]/(app)/page.tsx` | `getRouteContent("/")` | yüksek | `messages/*.json`, `reviews.*` | canonical `/`; home içinde maps/reviews URL ayrışması var | `/` ve `/en` aç; hero, hub kartları, map/review alanı kontrol et |
-| `/kesfet` | `src/app/[locale]/(app)/kesfet/page.tsx` | `getRouteContent("/kesfet")` | yüksek | `messages/*.json` | canonical registry + hero OG image paterni | `/kesfet` ve bir hub chip linki kontrol et |
-| `/kesfet/[hub]` | `src/app/[locale]/(app)/kesfet/[hub]/page.tsx` | `getRouteContent("/kesfet/${slug}")` | yüksek | `messages/*.json` + locale bazlı hub key'leri | slug ve canonical path birlikte doğru olmalı | ör. `/kesfet/minimal-fine-line-dovme` aç; hero, gallery, related carousel kontrol et |
-| `/piercing` | `src/app/[locale]/(app)/piercing/page.tsx` | `getRouteContent("/piercing")` | yüksek | `messages/*.json` | landing metadata route-content'ten gelir | `/piercing` aç; featured carousel ve category grid kontrol et |
-| `/piercing/[hub]` | `src/app/[locale]/(app)/piercing/[hub]/page.tsx` | `getRouteContent("/piercing/${slug}")` | yüksek | `messages/*.json` + locale bazlı piercing hub key'leri | canonical ve gallery CTA query paramı doğru kalmalı | ör. `/piercing/kulak` aç; CTA ve related category grid kontrol et |
-| `/galeri-tasarim` | `src/app/[locale]/(app)/galeri-tasarim/page.tsx` | `getRouteContent("/galeri-tasarim")` | orta | `messages/*.json` | canonical path tek route; filtre `searchParams` ile çalışır | `/galeri-tasarim` ve `?hub=...` kontrol et |
-| `/dovme-egitimi` | `src/app/[locale]/(app)/dovme-egitimi/page.tsx` | `getRouteContent("/dovme-egitimi")` | yüksek | `messages/*.json` | route ayrı sayfadır; hub canonical path ile karıştırılmaz | `/dovme-egitimi` aç; TR ve prefixli locale copy kontrol et |
-| `/artistler` | `src/app/[locale]/(app)/artistler/page.tsx` | `getRouteContent("/artistler")` | yüksek | `messages/*.json` | artist kart listesi detail route'lara bağlanır | `/artistler` aç; iki artist kartı ve CTA'lar kontrol et |
-| `/artistler/[slug]` | `src/app/[locale]/(app)/artistler/[slug]/page.tsx` | `getRouteContent("/artistler/${slug}")` | yüksek | `messages/*.json` + artist profile key'leri | statik slug seti iki öğeden oluşur | iki slug da aç; TR ve prefixli locale fallback davranışını kontrol et |
-| `/iletisim` | `src/app/[locale]/(app)/iletisim/page.tsx` | `getRouteContent("/iletisim")` | yüksek | `messages/*.json` | contact metadata route-content'ten gelir, JSON-LD render edilir | `/iletisim` aç; NAP, maps ve CTA'ları kontrol et |
-| `/sss` | `src/app/[locale]/(app)/sss/page.tsx` | `getRouteContent("/sss")` | meta için orta | `messages/*.json`, `resolveKbItems()` | FAQPage JSON-LD üretir | `/sss` aç; KB client ve schema-eligible FAQ akışını kontrol et |
+- Varsayılan locale `tr`’dir; prefixsiz public istekler middleware içinde `tr`’ye rewrite edilir (`src/middleware.ts`).
+- `/tr` ve `/tr/...` canonical public yola `308` ile döner (`src/middleware.ts`).
+- Geçerli locale seti `tr`, `sq`, `sr`, `en` ile sınırlıdır (`src/i18n/routing.ts`).
+- Public sayfa metadata’sı `getRouteContent(path)` ile üretilir (`src/lib/route-content.ts`).
+- Sitemap yalnız route-content registry içinden üretilir (`src/app/sitemap.ts`).
+- `NOINDEX` davranışı route-content tabanlıdır (`src/lib/route-content.ts`, `src/app/sitemap.ts`).
+- NAP ve business linkleri component içine gömülmez; `src/lib/site-info.ts` ve `src/lib/site/links.ts` kullanılır.
 
-## 5) Slug Ownership Matrix
+## 5) `/ops` Ayrımı ve Auth Sözleşmesi
 
-| Alan | Sahip dosya | Ne üretir / doğrular | Tüketen yüzey | Not |
-|---|---|---|---|---|
-| Keşfet slug seti | `src/lib/hub/hubs.v1.ts` | hub slug, `canonicalPath`, tags | home, `/kesfet`, `/kesfet/[hub]`, gallery bağları | asıl sahip burasıdır |
-| Piercing slug seti | `src/lib/route-content.generated.ts` + `src/app/[locale]/(app)/piercing/[hub]/page.tsx` | bilinen path ve statik param seti | `/piercing`, `/piercing/[hub]`, label/icon eşlemeleri | ayrı bir piercing master config yok |
-| Artist slug seti | `src/app/[locale]/(app)/artistler/[slug]/page.tsx` | `ARTIST_SLUGS`, static params, artist info map | `/artistler`, detail route'lar | iki slug aktif: `halit-yalvac`, `mertcan-uludag` |
-| Gallery normalize katmanı | `src/lib/gallery/manifest.v1.ts` | alias -> valid gallery hub param | `galeri-tasarim`, `HubGallery`, piercing gallery CTA | canonical slug ile gallery param birebir değildir |
-| Piercing label/icon eşlemesi | `src/lib/piercing/piercing-labels.ts`, `src/lib/piercing/piercing-icons.ts` | path -> label/icon | `PiercingCategoryGrid` | UI lookup katmanıdır, slug sahibi değildir |
+- `/ops` istekleri middleware locale rewrite katmanından bypass edilir (`src/middleware.ts`).
+- `/ops` metadata’sı public metadata hattından ayrıdır (`src/app/ops/layout.tsx`).
+- Ops tarafı `next-intl` mesaj zincirine bağlı değildir; plain `next/link` ve plain `next/navigation` yaklaşımı kullanılır.
+- Giriş modeli yerel e-posta/şifre akışıdır (`src/app/ops/giris/actions.ts`, `src/lib/ops/auth/password.ts`).
+- Oturum `enki_ops_session` adlı imzalı çerez ile `/ops` path’inde tutulur (`src/lib/ops/auth/constants.ts`, `src/lib/ops/auth/session.ts`).
+- `OPS_SESSION_SECRET` en az 32 karakter olmalıdır (`src/lib/ops/auth/session.ts`).
+- `DATABASE_URL` ve `OPS_SESSION_SECRET` yoksa ops auth hazır kabul edilmez (`src/lib/ops/auth/session.ts`, `src/db/index.ts`).
 
-Piercing sahipliği notu:
+### Rol çözümü
 
-- Repo içinde `src/lib/hub/hubs.v1.ts` benzeri tekil bir piercing master config yoktur.
-- Bugünkü sahiplik şu kombinasyonla kurulur:
-  - canonical piercing path'leri `data/route-content/enki-v1-sitemap-seo-template.csv` -> `scripts/generate-route-content.py` -> `src/lib/route-content.generated.ts`
-  - static param ve detail route açılışı `src/app/[locale]/(app)/piercing/[hub]/page.tsx`
-  - UI label/icon lookup `src/lib/piercing/piercing-labels.ts` ve `src/lib/piercing/piercing-icons.ts`
-- Bu, repo gerçeğidir; tam merkezi slug kaynağı değildir.
-- Bu alan bilinçli bir repo durumu ve aynı zamanda tasarım borcudur. AI ajanı piercing için `tek dosyada tüm sahiplik var` varsayımı yapmamalıdır.
-
-## 6) I18N Contract Matrix
-
-| Data source | Namespace | Load noktası | Merge noktası | Consumer örnekleri | Değişiklik etkisi |
-|---|---|---|---|---|---|
-| `messages/tr.json`, `messages/en.json`, `messages/sq.json`, `messages/sr.json` | genel UI copy | `src/i18n/request.ts` switch | `messages: { ...localeMessages, reviews: reviewsMessages }` | home, kesfet, footer, header, sss | yeni key eklenirse tüm locale seti ve build kontrol edilir |
-| `src/content/enki/reviews.*.json` | `reviews.*` | `src/i18n/request.ts` switch | aynı merge objesi içinde `reviews` alanı | `src/components/google/google-reviews-section.tsx` | namespace dosyası veya import zinciri eksilirse runtime kırılır |
-| `src/i18n/routing.ts` | locale config | `@/i18n/navigation`, app layout, middleware | merge yok; routing config | locale-aware linkler, locale prefix davranışı | locale değişirse middleware, layout ve smoke check etkilenir |
-| `src/middleware.ts` | locale URL davranışı | request edge katmanı | merge yok | `/tr` canonicalizasyonu, prefixsiz `tr` rewrite | yanlış kural canonical URL ve 404 davranışını bozar |
-| `src/app/[locale]/(app)/layout.tsx` | request locale + provider | app shell sarımı | `NextIntlClientProvider` | tüm client/server translation tüketimi | provider setup bozulursa tüm app translation zinciri etkilenir |
-
-Ops notu:
-
-- `/ops` namespace'i bu i18n contract'inin dışındadır.
-- `src/app/ops/**` altında `@/i18n/navigation`, `useTranslations`, `getTranslations`, `NextIntlClientProvider`, `messages/*` ve `route-content` kullanılmamalıdır.
-- Ops tarafında plain `next/link` ve plain `next/navigation` yaklaşımı kullanılır.
-- `/ops` isteği middleware içinde bypass edildiği için varsayılan locale rewrite zincirine girmez (`src/middleware.ts`).
-- Ops auth session cookie ve role lookup tamamen ops-local tutulur; public auth/i18n contract'ine bağlanmaz (`src/lib/ops/auth/*`).
-
-## 6.1) Ops Route ve Auth Contract
-
-- Ops route omurgası:
-  - `/ops`
-  - `/ops/giris`
-  - `/ops/staff/*`
-  - `/ops/user/form`
-  - `/ops/user/*`
+- Staff alanı: `admin`, `artist`
+- User alanı: yalnız `user`
 - `/ops` dashboard değildir; session yoksa `/ops/giris`, staff rolü varsa `/ops/staff/kasa`, yalnız `user` rolü varsa `/ops/user/randevular` yönlenir (`src/app/ops/page.tsx`, `src/lib/ops/auth/roles.ts`).
-- Auth modeli ops-local email/password'tur (`src/app/ops/giris/actions.ts`, `src/lib/ops/auth/password.ts`).
-- Session signed cookie ile tutulur (`src/lib/ops/auth/session.ts`).
-- Role resolution DB tabanlıdır; `admin` veya `artist` varsa staff alanı, yalnız `user` varsa user alanı açılır (`src/lib/ops/auth/roles.ts`, `src/lib/ops/auth/users.ts`).
-- Foundation tabloları:
-  - `users`
-  - `user_profiles`
-  - `user_roles`
-  - `audit_logs`
-  - `tattoo_forms`
-  - `consent_acceptances`
-  - `appointments`
-  - `cash_entries`
-  - `customer_notes`
-- User onboarding akışı `profil -> tattoo formu -> acik onay` omurgasıyla `/ops/user/*` altında çalışır (`src/app/ops/user/profil/page.tsx`, `src/app/ops/user/form/page.tsx`, `src/app/ops/user/actions.ts`).
-- `tattoo_forms` snapshot mantığıyla tutulur; son aktif snapshot user workspace yüzeylerinde okunur (`src/db/schema/onboarding.ts`, `src/lib/ops/user-workspace.ts`).
-- `consent_acceptances` checkbox ile açık kabul, sürüm ve zaman damgası kaydı tutar (`src/db/schema/onboarding.ts`, `src/lib/ops/user-workspace.ts`).
-- `appointments` isletme bazlidir; `artist_id` yoktur, slot engine yoktur ve ayni tarih + ayni saat icin ikinci aktif `scheduled` kayit acilamaz (`src/db/schema/appointments.ts`, `src/lib/ops/appointments.ts`).
-- `appointments.status` seti `scheduled`, `completed`, `cancelled`, `no_show` olarak sabittir (`src/db/schema/appointments.ts`).
-- `appointments.source` seti `customer`, `admin`, `artist` olarak sabittir (`src/db/schema/appointments.ts`).
-- `cash_entries` appointment'tan bagimsiz tutulur; zorunlu appointment FK yoktur (`src/db/schema/cashbook.ts`).
-- `cash_entries.entry_type` seti `income`, `expense` olarak sabittir; tutar `amount_cents` alaninda pozitif integer olarak saklanir (`src/db/schema/cashbook.ts`).
-- `cash_entries` soft delete ile calisir; `deleted_at` ve `deleted_by_user_id` alanlari kaydi fiziksel olarak silmeden kapatir (`src/db/schema/cashbook.ts`, `src/lib/ops/cashbook.ts`).
-- Artist yalniz bugunun kasa listesini gorur ve bugune kayit acar; gecmis edit/delete yalniz admin'e aciktir (`src/lib/ops/cashbook.ts`, `src/app/ops/kasa/actions.ts`).
-- Customer workspace staff-only'dir; musteri tanimi `user` rolundeki hesaplar uzerinden yapilir, staff-only hesaplar listeye sokulmaz (`src/lib/ops/customers.ts`).
-- Admin ve artist staff shell icinde ayni musteri liste/detay yuzeylerini gorur (`src/app/ops/staff/layout.tsx`, `src/app/ops/staff/musteriler/page.tsx`).
-- Musteri liste aramasi `full_name`, `display_name`, `phone`, `email` uzerinden sade text search ile calisir (`src/lib/ops/customers.ts`).
-- Musteri detay yuzeyi profil bilgisi, aktif tattoo form snapshot'i, gecerli consent, yaklasan/gecmis randevular ve tek guncel staff notunu bir arada gosterir (`src/app/ops/staff/musteriler/[userId]/page.tsx`, `src/lib/ops/customers.ts`).
-- `customer_notes` tek guncel staff note mantigi ile tutulur; `user_id` unique constraint'i vardir, note staff tarafinda upsert edilir, bos note gonderilirse kayit temizlenir (`src/db/schema/customer-notes.ts`, `src/app/ops/musteriler/actions.ts`).
-- `audit_logs` mevcut schema uzerinden kullanilir; bu asamada yeni migration acilmamistir (`src/db/schema/audit-logs.ts`, `src/db/migrations/*`).
-- Kritik ops mutasyonlari hafif `audit_logs` kaydi uretir; helper `src/lib/ops/audit.ts` uzerinden profil, tattoo form, consent, randevu, kasa ve musteri notu yuzeylerine baglanir. Ops auth login/logout kaydi best-effort tutulur (`src/lib/ops/audit.ts`, `src/app/ops/giris/actions.ts`, `src/app/ops/cikis/route.ts`).
-- Audit action seti `profile.updated`, `tattoo_form.saved`, `tattoo_form.submitted`, `consent.accepted`, `appointment.created`, `appointment.status_updated`, `cash_entry.created`, `cash_entry.updated`, `cash_entry.soft_deleted`, `customer_note.saved` ile sinirlidir; payload hafif tutulur ve parola/hash/session secret gibi hassas veri loglanmaz (`src/lib/ops/audit.ts`).
-- Local Docker PostgreSQL + Drizzle dogrulamasinda `3004` kullanilmaz; preview icin cakismasiz port tercih edilir (`docs/OPS.md`).
 
-## 7) SEO, NAP ve Yapısal Veri Akışı
+## 6) Ops Feature Omurgası
 
-- Tek base URL kaynağı `SITE_URL`dır (`src/lib/site/base-url.ts`).
-- Root metadata, icon, manifest ve themeColor `src/app/layout.tsx` içinde tanımlıdır.
-- Sayfa bazlı metadata iyi örnekleri: `src/app/[locale]/(app)/kesfet/page.tsx`, `src/app/[locale]/(app)/artistler/[slug]/page.tsx`.
-- Sayfa metadata'sı `getRouteContent(path)` ile üretilir; canonical, description ve robots buradan gelir.
-- `NOINDEX` davranışı `hasNoIndex()` ile metadata ve sitemap filtrelerine uygulanır (`src/lib/route-content.ts`, `src/app/sitemap.ts`).
-- Sitemap sadece `ROUTE_CONTENT` içinden üretilir; canonical veya path absolute URL'ye çevrilir (`src/app/sitemap.ts`).
-- `robots.txt` tek sitemap referansını `SITE_URL` üzerinden verir (`src/app/robots.ts`).
-- NAP ve contact/business linkleri `SITE_INFO` ve `src/lib/site/links.ts` üzerinden dağılır.
-- `LocalBusinessJsonLd` bu verilerden `TattooParlor` + `WebSite` graph'ı üretir (`src/components/seo/local-business-jsonld.tsx`).
-- `/ops` route'ları `route-content` ve sitemap hattına dahil değildir; metadata'sı `src/app/ops/layout.tsx` içinde ayrı tutulur.
-- Ops DB foundation `src/db/schema/*.ts` + `src/db/migrations/*` + `drizzle.config.ts` ile tutulur; public SEO hattından ayrıdır.
-- Ops auth env yüzeyi `DATABASE_URL` + `OPS_SESSION_SECRET` + bootstrap env'leri ile sınırlıdır (`.env.example`, `scripts/db/bootstrap-ops-user.mjs`).
+### Temel tablolar
 
-## 8) Quick Impact Map
+- `users`
+- `user_profiles`
+- `user_roles`
+- `tattoo_forms`
+- `consent_acceptances`
+- `appointments`
+- `cash_entries`
+- `customer_notes`
+- `audit_logs`
 
-- Route değişirse: CSV -> generator -> generated route-content -> page metadata -> sitemap/robots
-- Slug değişirse: slug owner -> route-content -> link tüketen UI -> smoke check
-- Locale veya key değişirse: `messages/*` veya `src/content/**` -> `src/i18n/request.ts` -> build + locale smoke check
-- NAP/link değişirse: `site-info` / `site/links` -> footer/contact/home/JSON-LD
-- DB schema değişirse: `src/db/schema/*` -> `npm run db:generate` -> `src/db/migrations/*` -> migrate akışı
-- Ops auth değişirse: `src/lib/ops/auth/*` -> `/ops/giris` -> `/ops`, `/ops/staff/*`, `/ops/user/*` guard ve redirect smoke check
+### User workspace
 
-## 9) Known Intentional Inconsistencies
+- `/ops/user/profil` profil bilgilerini `users` + `user_profiles` üzerinde günceller.
+- `/ops/user/form` dövme formu snapshot mantığı ile çalışır; her kayıt yeni sürüm üretir (`src/lib/ops/user-workspace.ts`).
+- Açık onay `consent_acceptances` tablosunda belge tipi + sürüm bazında tekilleşir.
+- Güncel açık onay sürümü `2026-03-v1` olarak sabittir (`src/lib/ops/user-workspace.ts`).
 
-- Home page kendi `GOOGLE_REVIEWS_URL` ve `GOOGLE_EMBED_SRC` sabitlerini taşır; site-level maps SSOT'u ayrı olarak `SITE_INFO` ve `src/lib/site/links.ts` içindedir (`src/app/[locale]/(app)/page.tsx`, `src/lib/site-info.ts`, `src/lib/site/links.ts`).
-- Gallery hub param sistemi canonical hub slug setiyle birebir aynı değildir; alias normalize katmanı bilinçli olarak vardır (`src/lib/gallery/manifest.v1.ts`).
-- Repo içinde `hreflang` üretimi görünmüyor; bu alan `UNKNOWN`dur.
-- Prod host, reverse proxy ve Cloudflare davranışı repo içinden görülemez; bu alanlar `UNKNOWN`dur.
+### Appointments
 
-## 10) Failure Modes
+- Randevu modeli işletme bazlıdır; `appointments.artist_id` yoktur (`src/db/schema/appointments.ts`).
+- Status seti: `scheduled`, `completed`, `cancelled`, `no_show`
+- Source seti: `customer`, `admin`, `artist`
+- Slot motoru yoktur.
+- Aynı tarih + aynı saat için ikinci aktif `scheduled` kayıt açılamaz; hem partial unique index hem uygulama guard’ı vardır (`src/db/schema/appointments.ts`, `src/lib/ops/appointments.ts`).
+- `createStaffAppointmentAction` staff guard’ı ile korunur; bu akış hem `admin` hem `artist` için açıktır (`src/app/ops/randevular/actions.ts`, `src/lib/ops/auth/guards.ts`).
+- Staff create sırasında `source`, rol bazında `admin` veya `artist` olarak seçilir (`src/lib/ops/appointments.ts`).
+- Repo içinde admin’e özel create engeli görünmez. Canlı ortamda farklı bir admin create davranışı raporlanıyorsa, bu repo içinden doğrulanamaz ve `UNKNOWN` kabul edilir.
 
-| Failure mode | Ne olur | İlk bakılacak yer |
-|---|---|---|
-| Generator unutulur | route-content ile page metadata/sitemap drift eder | CSV, `scripts/generate-route-content.py`, `src/lib/route-content.generated.ts` |
-| Slug drift olur | linkler, static params veya detail page açılışı bozulur | `hubs.v1.ts`, artist detail page, route-content registry |
-| Messages drift olur | build kırılır veya bazı locale'lerde missing key oluşur | `messages/*.json`, `scripts/i18n/check-messages.mjs` |
-| Reviews/content drift olur | `reviews.*` tüketen UI eksik içerik veya runtime hata verir | `src/content/enki/reviews.*.json`, `src/i18n/request.ts` |
-| NAP drift olur | footer, contact ve JSON-LD farklı business bilgisi taşır | `src/lib/site-info.ts`, `src/lib/site/links.ts`, contact/footer/JSON-LD |
-| Canonical set bozulur | yanlış route indexlenir veya sitemap dışına düşer | route-content CSV, generator, sitemap |
-| DB schema drift olur | migration ile schema ayrışır; foundation kurulumu tutarsızlaşır | `src/db/schema/*`, `src/db/migrations/*`, `drizzle.config.ts` |
-| Ops auth env veya role drift olur | login çalışmaz veya kullanıcı yanlış alana yönlenir | `.env.example`, `src/lib/ops/auth/*`, `src/app/ops/**` |
+### Cashbook
 
-## 11) Anti-patternler
+- `cash_entries` randevudan bağımsızdır; zorunlu appointment FK yoktur (`src/db/schema/cashbook.ts`).
+- `entry_type` seti `income` / `expense` ile sınırlıdır.
+- `amount_cents` pozitif integer olarak saklanır.
+- Soft delete alanları `deleted_at` ve `deleted_by_user_id`’dir.
+- Artist yalnız bugünün kasasına kayıt açabilir.
+- Geçmiş kayıt düzenleme ve soft delete yalnız admin’e açıktır (`src/lib/ops/cashbook.ts`, `src/app/ops/kasa/actions.ts`).
 
-- İkinci route source-of-truth açma.
-- `src/lib/route-content.generated.ts` dosyasını elle düzenleme.
-- Route-content bypass ederek page içine sabit canonical/SEO metni yazma.
-- İkinci NAP, maps veya business link kaynağı açma.
-- Artifact veya generated dosyayı canonical source gibi kullanma.
-- Repo dışı prod, proxy, Cloudflare veya host-level davranışı kesin hüküm gibi yazma.
+### Customer workspace
 
-## 12) UNKNOWN Sınırı
+- Staff müşteri listesi ve detay yüzeyleri `/ops/staff/musteriler` ailesinde çalışır.
+- Liste yalnız `user` rolündeki aktif hesapları gösterir; staff-only hesaplar listeye dahil edilmez (`src/lib/ops/customers.ts`).
+- Liste araması `full_name`, `display_name`, `phone`, `email` alanları üzerinde çalışır.
+- Detay yüzeyi profil, form, açık onay, yaklaşan/geçmiş randevular ve tek güncel staff notunu birlikte gösterir.
+- `customer_notes.user_id` unique kalır; not upsert edilir, boş not gönderilirse kayıt temizlenir (`src/app/ops/musteriler/actions.ts`, `src/lib/ops/customers.ts`).
 
-- Host-level `www` -> apex redirect zinciri `UNKNOWN`dur.
-- Reverse proxy, Cloudflare ve VPS servis topolojisi `UNKNOWN`dur.
-- Production env inventory tam listesi `UNKNOWN`dur.
+## 7) Audit Foundation
+
+- `audit_logs` tablosu ilk ops foundation migration’ında açılmıştır (`src/db/migrations/0000_init_ops_foundation.sql`).
+- Audit kullanımı için ayrı yeni migration açılmamıştır; runtime yazımı mevcut tablo üstündedir (`src/db/schema/audit-logs.ts`, `src/lib/ops/audit.ts`).
+- Kritik mutasyonlar helper üzerinden hafif payload ile kayıt üretir.
+
+### Kanıtlı action seti
+
+- `profile.updated`
+- `tattoo_form.saved`
+- `tattoo_form.submitted`
+- `consent.accepted`
+- `appointment.created`
+- `appointment.status_updated`
+- `cash_entry.created`
+- `cash_entry.updated`
+- `cash_entry.soft_deleted`
+- `customer_note.saved`
+- `ops_auth.logged_in`
+- `ops_auth.logged_out`
+
+### Audit notları
+
+- Login/logout kaydı best-effort tutulur; auth akışını bozmaz (`src/app/ops/giris/actions.ts`, `src/app/ops/cikis/route.ts`).
+- Payload hafif tutulur; örnek olarak yalnız değişen alanlar, kaynak, tarih/saat, not varlığı gibi özet bilgiler yazılır.
+- Parola, hash, session secret ve benzeri hassas veriler audit payload’ına yazılmaz.
+
+## 8) Değişiklik Etki Haritası
+
+- Public route değişirse: CSV -> generator -> route-content -> metadata -> sitemap
+- Locale veya mesaj değişirse: `messages/*` veya `src/content/**` -> `src/i18n/request.ts` -> public build ve locale smoke-check
+- Ops auth değişirse: `src/lib/ops/auth/*` -> `/ops/giris` -> `/ops`, `/ops/staff/*`, `/ops/user/*`
+- Schema değişirse: `src/db/schema/*` -> `npm run db:generate` -> `src/db/migrations/*`
+- NAP/link değişirse: `site-info` / `site/links` -> footer, iletişim, JSON-LD
+
+## 9) Bilinen Repo Gerçekleri ve Sınırlar
+
+- Piercing için keşfet tarafındaki gibi tekil bir master slug dosyası yoktur; sahiplik route-content, route dosyası ve UI lookup katmanı arasında dağılmıştır.
+- Home page kendi review/maps sabitlerini ayrıca taşır; site-level link kaynağıyla birebir birleşmiş değildir.
+- `/ops` route’ları route-content ve sitemap hattına dahil değildir.
+
+## 10) UNKNOWN
+
+- Host-level `www`/apex redirect zinciri `UNKNOWN`dur.
+- Reverse proxy, Cloudflare ve production host topolojisi `UNKNOWN`dur.
+- Canlı ortam env envanterinin tam listesi `UNKNOWN`dur.
+- Repo dışı görsel render bulguları, örneğin “Türkçe karakterler ekranda bozuluyor” raporu, repo içinden doğrudan doğrulanamaz; repo yalnız mevcut ops copy’sinin kaynakta büyük ölçüde ASCII yazıldığını gösterir.

@@ -1,209 +1,105 @@
 # UI-SYSTEM
 
-Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut component, shell ve utility düzenini koruyan kuralları yazar.
+Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, component ve copy kurallarını yazar.
 
-Not:
+## 1) Kapsam
 
-- Bu doküman public web shell'i anlatır.
-- `/ops` altında açılan TR-only operations shell'i ayrı bir yüzeydir; public `AppShell` kontratına dahil değildir.
+- Public web shell’i `src/components/app/*` etrafında yaşar.
+- `/ops` shell’i ayrı bir yüzeydir; public `AppShell` sözleşmesine dahil değildir.
+- Component veya sayfa değişikliği yapılırken önce bu dosya, sonra ilgili canonical component okunur.
 
-## 1) UI Ownership Matrix
+## 2) Public UI Ownership Matrix
 
-| Alan | Canonical component/file | Supporting file | Dikkat edilecek kontrat |
-|---|---|---|---|
-| App shell | `src/components/app/app-shell.tsx` | `src/app/globals.css`, `src/app/[locale]/(app)/layout.tsx` | `app-container app-mobile-header-offset app-safe-bottom no-overflow-x` zinciri korunur |
-| Mobile header | `src/components/app/mobile-header.tsx` | `src/lib/ui/use-hide-header-on-scroll.ts`, `src/components/ui/icon-button.tsx` | top-level route seti, locale switch, active state, hide/show davranışı birlikte düşünülür |
-| Drawer | `src/components/app/mobile-header.tsx` | `MenuRow`, `Sheet` primitive'leri | text-only satır deseni korunur; ikinci nav kaynağı açılmaz |
-| Top-level nav | `src/components/app/mobile-header.tsx` | `@/i18n/navigation` | route listesi ve locale-aware link aynı yerde kalır |
-| Hub card | `src/components/hub/hub-card.tsx` | `src/lib/hub/hub-cover-map.ts`, `src/app/globals.css` | `min-w-0`, `truncate`, `card-media-hub`, CTA ritmi korunur |
-| Footer / contact | `src/components/app/site-footer.tsx`, `src/app/[locale]/(app)/iletisim/page.tsx` | `src/lib/site-info.ts`, `src/lib/site/links.ts` | ikinci NAP/link kaynağı açılmaz |
-| Icon button | `src/components/ui/icon-button.tsx` | `src/components/app/mobile-header.tsx` | min `h-11 w-11`, `ariaLabel`, focus-visible zorunlu |
-| SEO-related UI | `src/components/seo/local-business-jsonld.tsx`, `src/components/seo/breadcrumb-list-jsonld.tsx`, `src/components/seo/faqpage-jsonld.tsx` | ilgili route page'leri | UI içeriği ile schema kaynağı drift etmemeli |
-| Gallery grid | `src/app/[locale]/(app)/galeri-tasarim/gallery-grid.tsx` | `src/lib/gallery/manifest.v1.ts` | grid ritmi, viewer state, query-param davranışı korunur |
-| Featured carousel / piercing UI | `src/components/piercing/featured-piercing-carousel.tsx`, `src/components/piercing/piercing-category-grid.tsx` | `src/lib/piercing/featured-piercing.ts`, `src/lib/piercing/piercing-labels.ts`, `src/lib/piercing/piercing-icons.ts` | featured data, label/icon lookup ve layout birlikte düşünülür |
+| Alan | Canonical dosya | Not |
+|---|---|---|
+| App shell | `src/components/app/app-shell.tsx` | `app-container`, `app-mobile-header-offset`, `app-safe-bottom` zinciri korunur |
+| Mobile header ve drawer | `src/components/app/mobile-header.tsx` | route listesi ve locale-aware navigation tek elde kalır |
+| Footer ve iletişim | `src/components/app/site-footer.tsx`, `src/app/[locale]/(app)/iletisim/page.tsx` | ikinci NAP/link kaynağı açılmaz |
+| Hub kartı | `src/components/hub/hub-card.tsx` | medya oranı ve text taşma zinciri korunur |
+| Galeri grid | `src/app/[locale]/(app)/galeri-tasarim/gallery-grid.tsx` | query-param ve viewer davranışı bozulmaz |
+| Piercing yüzeyleri | `src/components/piercing/*` | lookup/data/layout birlikte ele alınır |
 
-## 2) Good Example References
+## 3) Public Shell Kontratı
 
-| Davranış | Referans dosya |
-|---|---|
-| Shell, safe-area ve desktop right rail | `src/components/app/app-shell.tsx` |
-| Scroll ile header hide/show | `src/lib/ui/use-hide-header-on-scroll.ts` |
-| Locale-aware header, drawer ve nav | `src/components/app/mobile-header.tsx` |
-| Hub kartı ve text taşma kontrolü | `src/components/hub/hub-card.tsx` |
-| Footer quick links ve NAP tüketimi | `src/components/app/site-footer.tsx` |
-| Contact CTA ve maps yüzeyi | `src/app/[locale]/(app)/iletisim/page.tsx` |
-| Icon-only action | `src/components/ui/icon-button.tsx` |
-| Gallery filter + grid + viewer | `src/app/[locale]/(app)/galeri-tasarim/page.tsx`, `gallery-grid.tsx` |
-| Piercing carousel ve category grid | `src/components/piercing/featured-piercing-carousel.tsx`, `src/components/piercing/piercing-category-grid.tsx` |
-
-## 3) Temel Katman
-
-- Theme sistemi `next-themes` ile çalışır; `defaultTheme="system"`, `enableSystem`, `disableTransitionOnChange`, `storageKey="enki-theme"` kullanılır (`src/app/layout.tsx`).
-- Ham palette sınıfı kullanımı yasaktır; semantik tokenlar kullanılır. Kontrol komutu `npm run check:no-palette` (`package.json`, `scripts/check-no-palette.sh`).
-- `src/app/globals.css` şu temel katmanları taşır:
-  - renk tokenları
-  - `typo-*` ve `t-*` alias tipografi sistemi
-  - `app-container`, `app-section`, `grid-cards`, `grid-cards-compact`
-  - `app-mobile-header-offset`, `app-safe-bottom`, `no-overflow-x`
-
-### Yapılmalı
-
-- `bg-background`, `text-foreground`, `border-border`, `bg-surface-1`, `bg-surface-2`, `ring-ring` gibi tokenları kullan.
-- Mevcut `typo-*` ve utility sınıflarını yeniden üretmek yerine kullan.
-
-### Yapılmamalı
-
-- `bg-white`, `text-black`, `bg-gray-*`, `text-zinc-*` benzeri palette sınıflarını app UI içinde açma.
-- Aynı iş için ikinci tipografi, spacing veya token sistemi kurma.
-
-## 4) App Shell, Header ve Drawer Kontratı
-
-- App shell `src/components/app/app-shell.tsx` içindedir.
-- Mobil shell `<xl`, desktop shell `xl+` çalışır.
+- Public shell `src/components/app/app-shell.tsx` içindedir.
 - `main` container şu zinciri korur: `app-container app-mobile-header-offset app-safe-bottom no-overflow-x`.
-- `src/app/globals.css` içindeki `--app-mobile-topbar-h`, `--app-mobile-tabbar-h`, `--app-mobile-header-h` shell yüksekliği hesabının parçasıdır.
-- Mobil header ve drawer mantığı `src/components/app/mobile-header.tsx` içindedir.
-- Top-level tab seti sabittir: `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/artistler`.
-- Drawer/top-level route listesi: `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/artistler`, `/sss`, `/iletisim`.
-- Header hide/show davranışı `useHideHeaderOnScroll` ile transform tabanlı çalışır; passive scroll + `requestAnimationFrame` kullanır.
+- Header hide/show davranışı `useHideHeaderOnScroll` ile çalışır; scroll dinleyicisi frame-frame React state ile yeniden kurulmaz.
+- Top-level nav kaynağı tek yerde kalır; ikinci nav kaynağı açılmaz.
+- Footer ve iletişim yüzeyi business bilgilerini component içine gömmez; `src/lib/site-info.ts` ve `src/lib/site/links.ts` kullanılır.
+- Çevrilebilir public copy `messages/*.json` veya ilgili content namespace içinden gelir.
 
-### Yapılmalı
+## 4) `/ops` UI Contract
 
-- Sayfa wrapper'larında `app-section` ve `no-overflow-x` kullan.
-- Safe-area ve header offset için utility sınıfları kullan.
-- Drawer satırlarını `MenuRow` pattern'i ile text-only tut.
-- Icon-only aksiyonlarda `IconButton` kullan.
-- `aria-current`, `aria-label`, `focus-visible` ve `active:scale-*` davranışını koru.
+### Sınır
 
-### Yapılmamalı
+- `/ops` public locale ağacından ayrıdır (`src/middleware.ts`, `src/app/ops/layout.tsx`).
+- `/ops` shell’i `src/components/ops/ops-shell.tsx` içindedir.
+- Staff ve user sayfaları bu shell üzerinde çalışır; public `AppShell` utility ve route mantığı taşınmaz.
 
-- Mobil header offset'i ayrı hack'lerle çözme.
-- İkinci shell veya ikinci nav kaynağı açma.
-- Header animasyonunu React state ile frame-frame yeniden kurma.
-- Top-level route listesini page içinde yeniden kopyalama.
+### Dil ve copy
 
-## 5) Kart, Medya ve Text Surface Kontratı
+- Ops panel yalnız Türkçe kullanıcı akışı olarak tasarlanır.
+- Kullanıcıya dönük copy gerçek Türkçe karakterlerle yazılmalıdır.
+- Kullanıcıya dönük metinlerde iç sistem dili gösterilmez.
+- İngilizce iç terimler, rol anahtarları, altyapı notları ve placeholder/foundation anlatıları kullanıcı copy’sine taşınmamalıdır.
 
-- Hub kart medyası `card-media-hub` (`4:5`) kullanır.
-- Gallery kart medyası `card-media-gallery` (`3:4`) kullanır.
-- Legacy `card-media` (`5:4`) hâlâ utility olarak vardır.
-- Hub kartların ortak evi `src/components/hub/hub-card.tsx`tir.
-- Hub kart metinleri `min-w-0`, `truncate`, `whitespace-nowrap` zinciri ile korunur; footer alanı `min-h-[92px]`tir.
-- Gallery grid `GalleryGrid` içindedir; query-param destekli viewer açılışı ve progressive yükleme mantığı vardır.
-- Featured piercing carousel ayrı data kaynağı (`FEATURED_PIERCING`) ile çalışır.
+### Shell ritmi
 
-### Yapılmalı
+- `OpsShell` zaten sticky üst bar, desktop nav ve fixed mobile bottom nav taşır (`src/components/ops/ops-shell.tsx`).
+- Sayfa içi hero alanları bu shell’i tekrar etmemelidir.
+- Özellikle badge + başlık + açıklama tekrarları dikey alan tüketimini artırıyorsa sadeleştirme tercih edilir.
+- Mobil alt navigasyon `safe-pb-ops-nav` ve `safe-pb-ops-shell` ile çalışır; label okunabilirliği korunur, etiketler kırpılacak kadar daraltılmaz.
 
-- Yeni kartta önce `HubCard`, `GalleryGrid`, `FeaturedPiercingCarousel` ve mevcut CTA desenlerini referans al.
-- Card/grid değişirse mobil, tablet ve desktop ritmini birlikte kontrol et.
-- Text surface açarken `min-w-0`, `truncate`, `line-clamp`, esnek width zincirini düşün.
+### Tek iş odağı
 
-### Yapılmamalı
+- Mobilde ana his “native app” ve “tek iş” olmalıdır.
+- Her `/ops` sayfasında birincil aksiyon görsel olarak açık olmalıdır; ikincil özetler ana işi gölgelememelidir.
+- Form, liste ve özetler aynı ekranda varsa öncelik sırası açık kurulmalıdır.
 
-- Aynı bilgi türü için ikinci kart markup sistemi açma.
-- Translation uzunluğu yüzünden CTA veya medya oranını bozma.
-- Query-param ile çalışan gallery viewer davranışını sayfa dışında tekrar kurma.
+### Ekran bazlı öncelik kuralları
 
-## 6) Footer, Contact, Icon ve Safe-area Kontratı
+- Kasa: hızlı yeni kayıt birincil aksiyondur; özet ve geçmiş listesi ikincil destek katmanıdır.
+- Randevular: seçili gün operasyonu birincildir; aylık takvim yön bulma katmanıdır.
+- Müşteri detayı: profil, form, açık onay, randevu ve staff notu aynı yüzeyde olabilir; fakat iç model terimleri kullanıcı copy’sine sızmamalıdır.
+- Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 
-- Footer `src/components/app/site-footer.tsx` içinde üç bloklu yapı ile render edilir.
-- Footer quick links `src/lib/site/links.ts` kaynaklıdır.
-- Contact ve footer aksiyonları minimum `h-11` hit area ve truncate ile çalışır.
-- Business info UI içinde hardcode edilmez; `SITE_INFO` ve site linkleri kullanılır.
-- `IconButton` min `h-11 w-11`, `ariaLabel`, `focus-visible` ve active state kontratı taşır.
-- Safe-area için `app-safe-bottom` ve ilgili padding hesapları kullanılır; sayfa bazlı farklı sistem açılmaz.
+## 5) Kanıtlı Known Issues ve Polish Backlog
 
-### Yapılmalı
+Bu bölüm çözüldü listesi değildir; repo içindeki mevcut durumun kısa kaydıdır.
 
-- CTA, footer ve drawer action'larında `min-h-11`, `min-w-0`, `truncate`, `focus-visible`, `active:scale-*` zincirini koru.
-- Footer/contact güncellemesinde `src/lib/site-info.ts` ve `src/lib/site/links.ts` kaynaklarını referans al.
-- Icon-only action varsa erişilebilir label zorunlu kabul et.
+- Ops kullanıcı copy’sinin önemli kısmı hâlâ ASCII yazılmıştır; bu yüzden kaynak düzeyinde gerçek Türkçe karakter borcu vardır (`src/app/ops/**`, `src/components/ops/**`).
+- Giriş ekranı kullanıcıya iç sistem dili gösterir; “operations”, locale/i18n ve env kurulum dili aynı yüzeyde kullanıcı copy’sine karışır (`src/app/ops/giris/page.tsx`).
+- `OpsShell` üst barı ile sayfa içi badge/başlık blokları birlikte kullanıldığı için dikey alan tekrarı oluşur (`src/components/ops/ops-shell.tsx`, `src/app/ops/staff/*.tsx`, `src/app/ops/user/*.tsx`).
+- Kasa ekranı hızlı kayıt odaklı bir POS akışından çok, özet + liste + form ağırlığını benzer seviyede taşır (`src/app/ops/staff/kasa/page.tsx`).
+- Randevu ekranı aylık takvim, gün listesi, yeni randevu ve özet kartlarını aynı anda öne çıkarır; tek iş akışı hiyerarşisi zayıftır (`src/app/ops/staff/randevular/page.tsx`).
+- Müşteri liste/detay yüzeylerinde iç model dili görünür; örneğin `user` rolü ve teknik durum anlatıları kullanıcı copy’sine sızar (`src/app/ops/staff/musteriler/page.tsx`, `src/app/ops/staff/musteriler/[userId]/page.tsx`).
+- Staff profil yüzeyi gerçek ürün copy’si yerine placeholder/foundation dili taşır (`src/app/ops/staff/profil/page.tsx`, `src/components/ops/ops-placeholder-page.tsx`).
 
-### Yapılmamalı
+Repo içinden doğrulanamayan “render’da Türkçe karakter bozuluyor” türü görsel raporlar burada kesin hüküm olarak yazılmaz; repo bugün yalnız kaynak copy borcunu kanıtlar.
 
-- Footer/contact için ikinci NAP veya link kaynağı açma.
-- Icon-only action'ı düz `<button>` ile kontratsız açma.
-- Safe-area ve header offset'i utility yerine sayfa içine gömme.
+## 6) Shared UI Foundations
 
-## 7) Component Decision Rules
+- Tema tokenları `src/app/globals.css` içindedir; palette sınıfı bypass edilmez.
+- `app-container`, `app-section`, `safe-pb-ops-shell`, `safe-pb-ops-nav` gibi utility’ler yeniden yazılmaz.
+- `IconButton`, `Button`, `Input`, `Textarea`, `Card` gibi mevcut primitive’ler varken ikinci primitive açılmaz.
+- Responsive kontrolde mobile, tablet ve desktop birlikte düşünülür.
 
-- Yeni action eklerken:
-  - önce `Button`, `IconButton`, `ExternalLink`, `IconRouteCta`, `WhatsAppCta`, `PhoneCta` kontrol edilir.
-  - yeni primitive son çaredir.
-- Yeni nav eklerken:
-  - `@/i18n/navigation` kullanılır.
-  - top-level nav / drawer route seti tek yerde tutulur.
-- Yeni card eklerken:
-  - önce `HubCard`, gallery grid item deseni veya featured carousel kartı referans alınır.
-  - medya oranı ve text yüzeyi mevcut utility ile çözülür.
-- Yeni text surface eklerken:
-  - çevrilebilir mi diye önce düşünülür.
-  - çevrilebilir ise `messages/*.json` veya ilgili content namespace kullanılır.
-  - taşma ihtimali varsa `min-w-0`, `truncate`, `line-clamp`, `whitespace-nowrap` planlanır.
-
-## 8) Responsive Acceptance Criteria
+## 7) Minimum Kabul Kriterleri
 
 | Yüzey | Kabul kriteri |
 |---|---|
-| Mobile | yatay taşma yok; header offset ve safe-area doğru |
-| Tablet | grid ritmi bozulmaz; CTA'lar kırılmaz |
-| Desktop | shell + right rail düzeni korunur |
-| Long-locale-content | TR dışı locale'lerde button/header/footer/card metni taşmadan kalır |
-| Icon-only actions | min 44px+ hit area ve `aria-label` korunur |
-| Footer/contact overflow | link ve NAP satırları truncate veya wrap ile düzenli kalır |
-| Card/grid rhythm | başlık/description/CTA zinciri grid yüksekliğini bozmaz |
+| Mobile | yatay taşma yok; safe-area ve fixed nav içeriği kapatmıyor |
+| Desktop | shell ve içerik hiyerarşisi korunuyor |
+| Bottom nav | etiketler okunabilir; anlam kaybı yaratacak kırpılma yok |
+| Copy | kullanıcıya dönük metin gerçek Türkçe karakterlerle ve ürün diliyle yazılmış |
+| Aksiyon hiyerarşisi | birincil iş akışı özet kartları veya teknik açıklamalar tarafından gölgelenmiyor |
+| Erişilebilirlik | hit area, `aria-label`, `aria-current`, `focus-visible` korunuyor |
 
-## 9) UI Failure Modes
+## 8) Anti-patternler
 
-| Failure mode | Ne bozulur | İlk bakılacak yer |
-|---|---|---|
-| İkinci shell açılır | offset, safe-area ve header ritmi drift eder | `app-shell.tsx`, `globals.css` |
-| Second nav source yaratılır | header, drawer ve route listesi ayrışır | `mobile-header.tsx` |
-| Hardcoded text kalır | locale değişince UI drift eder | ilgili component, `messages/*`, `src/content/**` |
-| `min-w-0` / `truncate` zinciri kırılır | card, header, footer ve CTA taşar | `HubCard`, `SiteFooter`, header yüzeyleri |
-| Palette bypass edilir | tema kontratı ve `check:no-palette` disiplini bozulur | `globals.css`, ilgili component |
-| NAP/link UI'ye gömülür | footer/contact/JSON-LD drift eder | `site-info.ts`, `site/links.ts` |
-
-## 10) Locale-aware UI Kontratı
-
-- Kullanıcıya görünen çevrilebilir UI metni `messages/*.json` veya locale bazlı content kaynağından gelmelidir.
-- TR varsayılan locale'dir ama `sq`, `sr`, `en` first-class citizen kabul edilir.
-- UI yalnızca TR metin uzunluğuna göre tasarlanmaz.
-- Header, drawer, tab, footer, card ve CTA alanları locale uzamasına dayanmalıdır.
-
-### Yapılmalı
-
-- Button, card, header, footer, drawer ve chip alanlarında `min-w-0`, `truncate`, `line-clamp`, `whitespace-nowrap` ve esnek container kullan.
-- Locale değişince satır yüksekliği, hit area ve focus davranışı korunmalı.
-- Prefixli locale ile en az bir görsel smoke check yapılmalı.
-
-### Yapılmamalı
-
-- Çevrilebilir UI metnini component içine sabitleme.
-- Locale değişince kırılan sabit genişlikli metin alanları bırakma.
-- Flag, icon veya kısa label var diye text taşmasını önemsememe.
-
-## 11) Accessibility ve Performance Minimumları
-
-### Accessibility
-
-- Icon-only action: minimum `44px+` hit area ve `aria-label`
-- Aktif navigation: `aria-current="page"`
-- Focus: `focus-visible:ring-*` görünür kalmalı
-- Truncate kullanılsa bile action erişilebilirliği bozulmamalı
-
-### Performance
-
-- Header scroll davranışı passive scroll + `requestAnimationFrame` ile kalmalı.
-- `prefers-reduced-motion` ve desktop breakpoint davranışı korunmalı.
-- Büyük görsellerde mevcut `next/image` ve `sizes` yaklaşımı korunmalı.
-- Gallery viewer ve carousel yüzeylerinde mevcut lazy/progressive desenler korunmalı; aynı sorunu çözen ikinci viewer/carousel mantığı açılmamalı.
-
-## 12) UI Anti-patternler
-
-- Hardcoded UI text
-- İkinci shell veya ikinci header mantığı açmak
-- Safe-area ve header offset'i utility yerine sayfa içine gömmek
-- Footer/contact için ikinci business info kaynağı açmak
-- Palette sınıflarıyla mevcut token sistemini bypass etmek
-- Artifact veya mock veriyi production UI kaynağı gibi kullanmak
+- Public ve `/ops` shell kurallarını birbirine karıştırmak
+- Kullanıcı copy’sine teknik iç sistem terimi taşımak
+- Sayfa içinde ikinci header ritmi açmak
+- Mobil alt navigasyonda okunamayacak kısa etiketlere güvenmek
+- Gerçek ürün alanında placeholder/foundation dili bırakmak
+- Aynı işi çözen ikinci kart, form veya nav primitive’i açmak
