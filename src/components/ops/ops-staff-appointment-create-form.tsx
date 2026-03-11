@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { LoaderCircle } from "lucide-react";
+import { CalendarDays, Clock3, LoaderCircle } from "lucide-react";
 import {
   createStaffAppointmentAction,
   type OpsAppointmentActionState,
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 const INITIAL_STATE: OpsAppointmentActionState = {
   error: null,
@@ -26,11 +27,17 @@ type StaffAppointmentCreateFormProps = {
     email: string | null;
   }>;
   defaultDate: string;
+  defaultDateLabel: string;
+  defaultTime: string;
+  compact?: boolean;
 };
 
 export function OpsStaffAppointmentCreateForm({
   customerOptions,
   defaultDate,
+  defaultDateLabel,
+  defaultTime,
+  compact = false,
 }: StaffAppointmentCreateFormProps) {
   const [state, formAction, pending] = useActionState(
     createStaffAppointmentAction,
@@ -39,15 +46,46 @@ export function OpsStaffAppointmentCreateForm({
   const isDisabled = pending || customerOptions.length === 0;
 
   return (
-    <form action={formAction} className="space-y-4">
-      <div className="grid gap-4">
+    <form action={formAction} className={cn("space-y-4", compact && "space-y-3")}>
+      <input type="hidden" name="appointmentDate" value={defaultDate} />
+
+      <div className={cn("grid gap-4", compact && "gap-3")}>
+        <div className="grid gap-3 rounded-2xl border border-border bg-background/80 p-3 sm:grid-cols-[minmax(0,1fr)_9rem] sm:items-center">
+          <div className="space-y-1">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Seçili gün
+            </p>
+            <p className="inline-flex items-center gap-2 text-sm font-medium text-foreground">
+              <CalendarDays className="size-4 text-muted-foreground" aria-hidden />
+              {defaultDateLabel}
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="appointmentTime">Saat</Label>
+            <div className="relative">
+              <Clock3 className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+              <Input
+                id="appointmentTime"
+                name="appointmentTime"
+                type="time"
+                defaultValue={defaultTime}
+                step={1800}
+                className="pl-9"
+                disabled={isDisabled}
+                required
+              />
+            </div>
+          </div>
+        </div>
+
         <div className="space-y-2">
           <Label htmlFor="customerUserId">Müşteri</Label>
           <select
             id="customerUserId"
             name="customerUserId"
             defaultValue={customerOptions[0]?.id.toString() ?? ""}
-            className={selectClassName}
+            className={cn(selectClassName, compact && "h-10 rounded-xl")}
             disabled={isDisabled}
             required
           >
@@ -60,40 +98,13 @@ export function OpsStaffAppointmentCreateForm({
           </select>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="appointmentDate">Tarih</Label>
-            <Input
-              id="appointmentDate"
-              name="appointmentDate"
-              type="date"
-              defaultValue={defaultDate}
-              disabled={isDisabled}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="appointmentTime">Saat</Label>
-            <Input
-              id="appointmentTime"
-              name="appointmentTime"
-              type="time"
-              defaultValue="12:00"
-              step={1800}
-              disabled={isDisabled}
-              required
-            />
-          </div>
-        </div>
-
         <div className="space-y-2">
           <Label htmlFor="notes">Not</Label>
           <Textarea
             id="notes"
             name="notes"
             placeholder="Kısa bir not ekleyin."
-            rows={3}
+            rows={compact ? 2 : 3}
             disabled={isDisabled}
           />
         </div>

@@ -10,6 +10,7 @@ import { APPOINTMENT_STATUS_LABELS } from "@/lib/ops/appointment-copy";
 import { APPOINTMENT_STATUS_VALUES, type AppointmentStatus } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
 const INITIAL_STATE: OpsAppointmentActionState = {
   error: null,
@@ -22,11 +23,13 @@ const selectClassName =
 type AppointmentStatusFormProps = {
   appointmentId: number;
   status: AppointmentStatus;
+  compact?: boolean;
 };
 
 export function OpsAppointmentStatusForm({
   appointmentId,
   status,
+  compact = false,
 }: AppointmentStatusFormProps) {
   const [state, formAction, pending] = useActionState(
     updateAppointmentStatusAction,
@@ -34,24 +37,45 @@ export function OpsAppointmentStatusForm({
   );
 
   return (
-    <form action={formAction} className="space-y-3">
+    <form action={formAction} className={cn("space-y-3", compact && "space-y-2")}>
       <input type="hidden" name="appointmentId" value={appointmentId} />
 
-      <div className="space-y-2">
-        <Label htmlFor={`status-${appointmentId}`}>Durum</Label>
-        <select
-          id={`status-${appointmentId}`}
-          name="status"
-          defaultValue={status}
-          className={selectClassName}
+      <div className={cn("space-y-2", compact && "grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end")}>
+        <div className="space-y-2">
+          <Label htmlFor={`status-${appointmentId}`} className={compact ? "sr-only" : undefined}>
+            Durum
+          </Label>
+          <select
+            id={`status-${appointmentId}`}
+            name="status"
+            defaultValue={status}
+            className={cn(selectClassName, compact && "h-10 rounded-xl")}
+            disabled={pending}
+          >
+            {APPOINTMENT_STATUS_VALUES.map((value) => (
+              <option key={value} value={value}>
+                {APPOINTMENT_STATUS_LABELS[value]}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <Button
+          type="submit"
+          variant="outline"
+          size="sm"
+          className={cn(compact && "w-full sm:w-auto")}
           disabled={pending}
         >
-          {APPOINTMENT_STATUS_VALUES.map((value) => (
-            <option key={value} value={value}>
-              {APPOINTMENT_STATUS_LABELS[value]}
-            </option>
-          ))}
-        </select>
+          {pending ? (
+            <>
+              <LoaderCircle className="size-4 animate-spin" aria-hidden />
+              Güncelleniyor
+            </>
+          ) : (
+            "Durumu kaydet"
+          )}
+        </Button>
       </div>
 
       {state.error ? (
@@ -65,17 +89,6 @@ export function OpsAppointmentStatusForm({
           {state.success}
         </p>
       ) : null}
-
-      <Button type="submit" variant="outline" size="sm" disabled={pending}>
-        {pending ? (
-          <>
-            <LoaderCircle className="size-4 animate-spin" aria-hidden />
-            Güncelleniyor
-          </>
-        ) : (
-          "Durumu kaydet"
-        )}
-      </Button>
     </form>
   );
 }

@@ -63,7 +63,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 ### Ekran bazlı öncelik kuralları
 
 - Kasa: hızlı kayıt birincil yüzeydir; kompakt `Gelir / Gider` kontrolü, kısa preset etiketleri, tutar ve `Kaydı ekle` akışı öne çıkar. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır.
-- Randevular: seçili gün operasyonu birincildir; aylık takvim yön bulma katmanıdır.
+- Randevular: ilk görünür ana yüzey aylık takvimdir; kullanıcı önce gün seçer, hemen ardından seçili gün operasyon paneli gelir. Seçili gün listesi ve hızlı create bu panel içinde birlikte çalışır.
 - Müşteri detayı: profil, form, açık onay, randevu ve staff notu aynı yüzeyde olabilir; fakat iç model terimleri kullanıcı copy’sine sızmamalıdır.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 
@@ -73,8 +73,6 @@ Bu bölüm çözüldü listesi değildir; repo içindeki mevcut durumun kısa ka
 
 - `OpsShell` üst alanı ve sayfa intro yoğunluğu azaltılmıştır; buna rağmen bazı staff ve user yüzeylerinde fold üstünde hâlâ bilgi baskısı oluşabilir (`src/components/ops/ops-shell.tsx`, `src/app/ops/staff/*.tsx`, `src/app/ops/user/*.tsx`).
 - Kasa ekranı artık hızlı kayıt merkezlidir; mobilde form fold üstünde daha nettir, desktop’ta summary rail daha sakin destek yüzeyi gibi davranır. Yine de spacing, micro-copy ve micro-motion tarafında ince polish alanı kalır (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`).
-- Randevu ekranı hâlâ timeline veya saat blokları odaklı bir akışa geçmemiştir (`src/app/ops/staff/randevular/page.tsx`).
-- Randevu mobil yüzeyinde ana aksiyona rağmen takvim hissi hâlâ güçlü kalabilir (`src/app/ops/staff/randevular/page.tsx`).
 - Müşteri ve user workspace yüzeylerinde kart yoğunluğu hâlâ yüksektir; ürün dili temizlenmiş olsa da bilgi hiyerarşisi sonraki polish turlarında sadeleştirilebilir (`src/app/ops/staff/musteriler/[userId]/page.tsx`, `src/app/ops/user/profil/page.tsx`, `src/app/ops/user/form/page.tsx`).
 - Repo içinde görülen `middleware` -> `proxy` build uyarısı ayrı bakım konusudur; mevcut UI polish bunu çözülmüş varsaymaz.
 
