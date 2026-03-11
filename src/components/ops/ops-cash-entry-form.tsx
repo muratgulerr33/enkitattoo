@@ -1,24 +1,40 @@
 "use client";
 
-import { useActionState } from "react";
-import { LoaderCircle } from "lucide-react";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { CalendarDays, ChevronDown, LoaderCircle } from "lucide-react";
 import {
   createCashEntryAction,
   type OpsCashEntryActionState,
 } from "@/app/ops/kasa/actions";
-import { CASH_ENTRY_TYPE_LABELS, CASH_ENTRY_TYPE_VALUES } from "@/lib/ops/cashbook-copy";
+import {
+  CASH_ENTRY_PRESETS,
+  CASH_ENTRY_TYPE_VALUES,
+  type CashEntryPreset,
+  type CashEntryTypeValue,
+} from "@/lib/ops/cashbook-copy";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 
 const INITIAL_STATE: OpsCashEntryActionState = {
   error: null,
   success: null,
 };
 
-const selectClassName =
-  "border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50";
+function getNotePlaceholder(entryType: CashEntryTypeValue, activePreset: CashEntryPreset | null): string {
+  if (activePreset) {
+    return `${activePreset.label} için kısa ek not`;
+  }
+
+  if (entryType === "income") {
+    return "Örn. Piercing / kapora";
+  }
+
+  return "Örn. Temizlik bezi / 3 iğne";
+}
 
 type OpsCashEntryFormProps = {
   defaultDate: string;
@@ -27,74 +43,228 @@ type OpsCashEntryFormProps = {
 
 export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFormProps) {
   const [state, formAction, pending] = useActionState(createCashEntryAction, INITIAL_STATE);
+  const [entryType, setEntryType] = useState<CashEntryTypeValue>("income");
+  const [selectedPresetKey, setSelectedPresetKey] = useState<string | null>(null);
+  const [amountValue, setAmountValue] = useState("");
+  const [noteValue, setNoteValue] = useState("");
+  const [entryDateValue, setEntryDateValue] = useState(defaultDate);
+  const [noteOpen, setNoteOpen] = useState(false);
+  const activePresetNoteRef = useRef("");
+
+  const presets = CASH_ENTRY_PRESETS[entryType];
+  const activePreset = presets.find((preset) => preset.key === selectedPresetKey) ?? null;
+
+  useEffect(() => {
+    setEntryDateValue(defaultDate);
+  }, [defaultDate]);
+
+  useEffect(() => {
+    activePresetNoteRef.current = activePreset?.note ?? "";
+  }, [activePreset]);
+
+  useEffect(() => {
+    if (!state.success) {
+      return;
+    }
+
+    setAmountValue("");
+    setNoteValue(activePresetNoteRef.current);
+    setNoteOpen(false);
+  }, [state]);
+
+  function handleEntryTypeSelect(nextType: CashEntryTypeValue) {
+    const previousPreset = activePreset;
+
+    setEntryType(nextType);
+    setSelectedPresetKey(null);
+    setNoteValue((currentValue) =>
+      previousPreset && currentValue === previousPreset.note ? "" : currentValue
+    );
+  }
+
+  function handlePresetSelect(preset: CashEntryPreset) {
+    if (selectedPresetKey === preset.key) {
+      setSelectedPresetKey(null);
+      setNoteValue((currentValue) => (currentValue === preset.note ? "" : currentValue));
+      return;
+    }
+
+    setSelectedPresetKey(preset.key);
+    setNoteValue(preset.note);
+  }
+
+  function handlePresetClear() {
+    setSelectedPresetKey(null);
+    setNoteValue((currentValue) =>
+      activePreset && currentValue === activePreset.note ? "" : currentValue
+    );
+  }
 
   return (
-    <form action={formAction} className="space-y-4">
-      {canChooseDate ? (
-        <div className="space-y-2">
-          <Label htmlFor="entryDate">Tarih</Label>
-          <Input
-            id="entryDate"
-            name="entryDate"
-            type="date"
-            defaultValue={defaultDate}
-            disabled={pending}
-            required
-          />
-        </div>
-      ) : (
-        <input type="hidden" name="entryDate" value={defaultDate} />
-      )}
+    <form action={formAction} className="space-y-3.5">
+      <input type="hidden" name="entryType" value={entryType} />
 
-      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
-        <div className="space-y-2">
-          <Label htmlFor="entryType">İşlem türü</Label>
-          <select
-            id="entryType"
-            name="entryType"
-            defaultValue="income"
-            className={selectClassName}
-            disabled={pending}
-            required
-          >
-            {CASH_ENTRY_TYPE_VALUES.map((value) => (
-              <option key={value} value={value}>
-                {CASH_ENTRY_TYPE_LABELS[value]}
-              </option>
-            ))}
-          </select>
+      {canChooseDate ? null : <input type="hidden" name="entryDate" value={entryDateValue} />}
+
+      <div className="space-y-2">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">İşlem</p>
+
+        <div className="grid grid-cols-2 rounded-2xl border border-border bg-surface-1 p-1">
+          {CASH_ENTRY_TYPE_VALUES.map((value) => {
+            const isActive = value === entryType;
+
+            return (
+              <Button
+                key={value}
+                type="button"
+                variant="ghost"
+                size="sm"
+                aria-pressed={isActive}
+                disabled={pending}
+                onClick={() => handleEntryTypeSelect(value)}
+                className={cn(
+                  "h-10 rounded-xl px-3 text-sm",
+                  isActive
+                    ? "bg-foreground text-background hover:bg-foreground"
+                    : "text-muted-foreground hover:bg-background hover:text-foreground"
+                )}
+              >
+                {value === "income" ? "Gelir" : "Gider"}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Etiket
+          </p>
+          {activePreset ? (
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              disabled={pending}
+              onClick={handlePresetClear}
+              className="rounded-full px-2 text-muted-foreground"
+            >
+              Temizle
+            </Button>
+          ) : null}
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="amount">Tutar</Label>
+        <div className="flex flex-wrap gap-2">
+          {presets.map((preset) => {
+            const isActive = preset.key === selectedPresetKey;
+
+            return (
+              <Button
+                key={preset.key}
+                type="button"
+                variant={isActive ? "default" : "outline"}
+                size="sm"
+                aria-pressed={isActive}
+                disabled={pending}
+                onClick={() => handlePresetSelect(preset)}
+                className="h-8 rounded-full px-3"
+              >
+                {preset.label}
+              </Button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="amount" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          Tutar
+        </Label>
+        <div className="relative">
           <Input
             id="amount"
             name="amount"
             inputMode="decimal"
             placeholder="0,00"
-            defaultValue=""
+            value={amountValue}
             disabled={pending}
             required
+            onChange={(event) => setAmountValue(event.target.value)}
+            className="h-14 rounded-2xl pr-14 text-2xl font-semibold tracking-tight md:text-2xl"
           />
+          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-medium text-muted-foreground">
+            TL
+          </span>
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="note">Not</Label>
-        <Textarea
-          id="note"
-          name="note"
-          rows={3}
-          placeholder="Kısa not"
-          disabled={pending}
-        />
-      </div>
+      <Button type="submit" size="cta" className="h-12 w-full rounded-2xl text-base" disabled={pending}>
+        {pending ? (
+          <>
+            <LoaderCircle className="size-4 animate-spin" aria-hidden />
+            Kaydediliyor
+          </>
+        ) : (
+          "Kaydı ekle"
+        )}
+      </Button>
 
-      {!canChooseDate ? (
-        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-muted-foreground">
+      {canChooseDate ? (
+        <div className="flex flex-col gap-2 border-t border-border pt-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <CalendarDays className="size-4" aria-hidden />
+            <Label htmlFor="entryDate">Tarih</Label>
+          </div>
+          <Input
+            id="entryDate"
+            name="entryDate"
+            type="date"
+            value={entryDateValue}
+            disabled={pending}
+            required
+            onChange={(event) => setEntryDateValue(event.target.value)}
+            className="h-9 rounded-lg sm:max-w-44"
+          />
+        </div>
+      ) : (
+        <p className="border-t border-border pt-3 text-sm text-muted-foreground">
           Artist yalnız bugünün kasasına kayıt açabilir.
         </p>
-      ) : null}
+      )}
+
+      <Collapsible open={noteOpen} onOpenChange={setNoteOpen} className="border-t border-border pt-3">
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-sm font-medium text-foreground">Not</p>
+
+          <CollapsibleTrigger asChild>
+            <Button type="button" variant="ghost" size="xs" className="rounded-full px-2 text-muted-foreground">
+              {noteOpen ? "Kapat" : "Ekle"}
+              <ChevronDown
+                className={cn("size-4 transition-transform", noteOpen && "rotate-180")}
+                aria-hidden
+              />
+            </Button>
+          </CollapsibleTrigger>
+        </div>
+
+        {noteOpen ? (
+          <CollapsibleContent className="pt-2.5">
+            <Textarea
+              id="note"
+              name="note"
+              rows={2}
+              value={noteValue}
+              disabled={pending}
+              onChange={(event) => setNoteValue(event.target.value)}
+              placeholder={getNotePlaceholder(entryType, activePreset)}
+              className="min-h-[72px] rounded-xl"
+            />
+          </CollapsibleContent>
+        ) : (
+          <input type="hidden" name="note" value={noteValue} />
+        )}
+      </Collapsible>
 
       {state.error ? (
         <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
@@ -107,17 +277,6 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
           {state.success}
         </p>
       ) : null}
-
-      <Button type="submit" size="cta" className="w-full sm:w-auto" disabled={pending}>
-        {pending ? (
-          <>
-            <LoaderCircle className="size-4 animate-spin" aria-hidden />
-            Kaydediliyor
-          </>
-        ) : (
-          "Kayıt ekle"
-        )}
-      </Button>
     </form>
   );
 }

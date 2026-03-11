@@ -64,9 +64,9 @@ export function OpsCashEntryManageDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button" variant="outline" size="sm">
+        <Button type="button" variant="ghost" size="xs" className="rounded-full">
           <PencilLine className="size-4" aria-hidden />
-          Detay
+          Yönet
         </Button>
       </DialogTrigger>
 
@@ -75,7 +75,7 @@ export function OpsCashEntryManageDialog({
           <DialogHeader className="space-y-2 text-left">
             <DialogTitle>Kasa kaydı</DialogTitle>
             <DialogDescription>
-              Geçmiş kayıtları yalnız yönetici düzenler veya kaldırır.
+              Düzenleme ve kaldırma yalnız yöneticiye açıktır.
             </DialogDescription>
           </DialogHeader>
 

@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import { CASH_ENTRY_TYPE_LABELS } from "@/lib/ops/cashbook-copy";
 import {
@@ -17,6 +16,7 @@ import {
   getCashbookSnapshot,
   getTodayCashDateValue,
   type CashEntryRecord,
+  type CashEntrySummary,
 } from "@/lib/ops/cashbook";
 import { cn } from "@/lib/utils";
 import { OpsCashEntryForm } from "@/components/ops/ops-cash-entry-form";
@@ -30,10 +30,72 @@ type PageProps = {
 
 function getEntryTypeBadgeClassName(entryType: CashEntryRecord["entryType"]): string {
   if (entryType === "income") {
-    return "border-emerald-500/20 bg-emerald-500/10 text-emerald-700";
+    return "text-emerald-700";
   }
 
-  return "border-amber-500/20 bg-amber-500/10 text-amber-700";
+  return "text-amber-700";
+}
+
+function getAmountClassName(entryType: CashEntryRecord["entryType"]): string {
+  if (entryType === "income") {
+    return "text-emerald-700";
+  }
+
+  return "text-amber-700";
+}
+
+function getNetClassName(netCents: number): string {
+  if (netCents > 0) {
+    return "text-emerald-700";
+  }
+
+  if (netCents < 0) {
+    return "text-amber-700";
+  }
+
+  return "text-foreground";
+}
+
+function getEntryTitle(entry: CashEntryRecord): string {
+  return entry.note?.trim() || `${CASH_ENTRY_TYPE_LABELS[entry.entryType]} kaydı`;
+}
+
+function SummaryRows({
+  label,
+  dateLabel,
+  summary,
+}: {
+  label: string;
+  dateLabel: string;
+  summary: CashEntrySummary;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between gap-3 text-sm">
+        <div>
+          <p className="font-medium text-foreground">{label}</p>
+          <p className="text-[11px] text-muted-foreground">{dateLabel}</p>
+        </div>
+        <p className={cn("font-medium font-numbers", getNetClassName(summary.netCents))}>
+          {formatCashAmount(summary.netCents)}
+        </p>
+      </div>
+      <div className="grid gap-1 text-xs text-muted-foreground">
+        <div className="flex items-center justify-between gap-3">
+          <span>Gelir</span>
+          <span className="font-numbers">{formatCashAmount(summary.incomeCents)}</span>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <span>Gider</span>
+          <span className="font-numbers">{formatCashAmount(summary.expenseCents)}</span>
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <span>Kayıt</span>
+          <span className="font-numbers">{summary.entryCount}</span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default async function OpsStaffCashPage({ searchParams }: PageProps) {
@@ -43,221 +105,150 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
   const canManageHistoryEntries = canManageCashHistory(sessionUser.roles);
   const selectedDateLabel = formatCashDateLong(cashbook.selectedDate);
   const todayDate = getTodayCashDateValue();
+  const todayDateLabel = formatCashDateLong(cashbook.todayDate);
+  const isSelectedDateToday = cashbook.selectedDate === cashbook.todayDate;
 
   return (
     <div className="ops-page-shell">
       <section className="ops-page-header">
         <h1 className="typo-page-title">Kasa</h1>
-        <p className="ops-page-intro">
-          Hızlı kayıt önce gelir. Günlük özet ve geçmiş hareketler aynı ekranda destek için kalır.
-        </p>
       </section>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] xl:gap-6">
-        <div className="order-2 space-y-5 sm:space-y-6 xl:order-1">
-          <Card>
-            <CardHeader className="gap-3">
-              <div className="space-y-2">
-                <CardTitle>Gün özeti</CardTitle>
-                <CardDescription>
-                  Bugünün neti ayrı izlenir. Tarih seçimi alttaki listeyi değiştirir.
-                </CardDescription>
-              </div>
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.36fr)_minmax(360px,0.64fr)] xl:items-start xl:gap-6">
+        <Card className="order-1">
+          <CardHeader className="gap-1 border-b pb-4">
+            <p className="text-xs text-muted-foreground">{selectedDateLabel}</p>
+            <CardTitle className="text-base sm:text-lg">Hızlı kayıt</CardTitle>
+            <CardDescription>Yönü seçin, tutarı girin.</CardDescription>
+          </CardHeader>
 
-              {canManageHistoryEntries ? (
-                <form action="/ops/staff/kasa" className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-                  <input
-                    type="date"
-                    name="date"
-                    defaultValue={cashbook.selectedDate}
-                    className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-11 rounded-xl border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
-                  />
-                  <button
-                    type="submit"
-                    className="inline-flex h-11 items-center justify-center rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/35"
-                  >
-                    Tarihi aç
-                  </button>
-                </form>
-              ) : (
-                <p className="rounded-2xl border border-border bg-surface-1 px-4 py-3 text-sm text-muted-foreground">
-                  Artist yalnız bugünün hareketlerini görür ve kayıt açar.
-                </p>
-              )}
-            </CardHeader>
+          <CardContent className="pt-4">
+            <OpsCashEntryForm
+              defaultDate={cashbook.selectedDate}
+              canChooseDate={canManageHistoryEntries}
+            />
+          </CardContent>
+        </Card>
 
-            <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-2xl border border-border p-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Bugün net
-                </p>
-                <p className="mt-2 text-lg font-semibold text-foreground">
-                  {formatCashAmount(cashbook.todaySummary.netCents)}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border p-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Bugün gelir
-                </p>
-                <p className="mt-2 text-lg font-semibold text-foreground">
-                  {formatCashAmount(cashbook.todaySummary.incomeCents)}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border p-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Bugün gider
-                </p>
-                <p className="mt-2 text-lg font-semibold text-foreground">
-                  {formatCashAmount(cashbook.todaySummary.expenseCents)}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border p-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Seçili gün
-                </p>
-                <p className="mt-2 text-lg font-semibold text-foreground">
-                  {formatCashAmount(cashbook.selectedSummary.netCents)}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+        <Card className="order-2">
+          <CardHeader className="gap-1 pb-3">
+            <CardTitle className="text-sm">Gün özeti</CardTitle>
+            {canManageHistoryEntries ? (
+              <form action="/ops/staff/kasa" className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                <input
+                  type="date"
+                  name="date"
+                  defaultValue={cashbook.selectedDate}
+                  className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 rounded-lg border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+                />
+                <button
+                  type="submit"
+                  className="inline-flex h-9 items-center justify-center rounded-lg border border-border px-3 text-sm text-muted-foreground transition-colors hover:bg-muted/35 hover:text-foreground"
+                >
+                  Günü aç
+                </button>
+              </form>
+            ) : null}
+          </CardHeader>
 
-          <Card>
-            <CardHeader className="gap-1.5">
-              <CardTitle>{selectedDateLabel}</CardTitle>
-              <CardDescription>
-                {cashbook.entries.length
-                  ? `${cashbook.entries.length} aktif kayıt listeleniyor.`
-                  : "Seçili gün için aktif kayıt yok."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {cashbook.entries.length ? (
-                cashbook.entries.map((entry) => (
-                  <div key={entry.id} className="rounded-3xl border border-border bg-card p-4">
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Badge
-                            variant="outline"
-                            className={cn(
-                              "rounded-full border",
-                              getEntryTypeBadgeClassName(entry.entryType)
-                            )}
-                          >
-                            {CASH_ENTRY_TYPE_LABELS[entry.entryType]}
-                          </Badge>
+          <CardContent className="space-y-3 pt-0">
+            <SummaryRows label="Bugün" dateLabel={todayDateLabel} summary={cashbook.todaySummary} />
+
+            {!isSelectedDateToday ? (
+              <div className="border-t border-border pt-3">
+                <SummaryRows
+                  label="Seçili gün"
+                  dateLabel={selectedDateLabel}
+                  summary={cashbook.selectedSummary}
+                />
+              </div>
+            ) : null}
+
+            {!canManageHistoryEntries ? (
+              <p className="border-t border-border pt-3 text-xs text-muted-foreground">
+                Artist bugünün defteriyle çalışır.
+              </p>
+            ) : null}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader className="gap-1.5 border-b pb-4">
+          <CardTitle>Defter</CardTitle>
+          <CardDescription>
+            {cashbook.entries.length
+              ? `${selectedDateLabel} için ${cashbook.entries.length} aktif kayıt var.`
+              : `${selectedDateLabel} için aktif kayıt yok.`}
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent className="px-0 pt-1">
+          {cashbook.entries.length ? (
+            <div className="divide-y divide-border">
+              {cashbook.entries.map((entry) => {
+                const entryTypeLabel = CASH_ENTRY_TYPE_LABELS[entry.entryType];
+
+                return (
+                  <div key={entry.id} className="px-4 py-2 xl:px-5">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0 flex-1 space-y-0.5">
+                        <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium uppercase tracking-wide">
+                          <span className={cn(getEntryTypeBadgeClassName(entry.entryType))}>
+                            {entryTypeLabel}
+                          </span>
                           {entry.entryDate !== todayDate ? (
-                            <Badge variant="outline" className="rounded-full">
-                              Geçmiş kayıt
-                            </Badge>
+                            <span className="text-[11px] text-muted-foreground">Geçmiş kayıt</span>
                           ) : null}
                         </div>
-                        <div className="space-y-1">
-                          <p className="text-lg font-semibold text-foreground">
-                            {formatCashAmount(entry.amountCents)}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {entry.createdByName} · {formatCashTime(entry.createdAt)}
-                          </p>
-                        </div>
+
+                        <p className="truncate text-sm font-semibold text-foreground sm:text-base">
+                          {getEntryTitle(entry)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {entry.createdByName} · {formatCashTime(entry.createdAt)}
+                        </p>
                       </div>
 
-                      {canManageHistoryEntries ? (
-                        <OpsCashEntryManageDialog
-                          entryId={entry.id}
-                          entryDate={entry.entryDate}
-                          entryType={entry.entryType}
-                          amountInput={formatCashAmountInput(entry.amountCents)}
-                          note={entry.note}
-                          createdByName={entry.createdByName}
-                          createdAtLabel={`${selectedDateLabel} · ${formatCashTime(entry.createdAt)}`}
-                          updatedByName={entry.updatedByName}
-                          updatedAtLabel={formatCashTime(entry.updatedAt)}
-                        />
-                      ) : null}
-                    </div>
-
-                    <div className="mt-4 grid gap-3 rounded-2xl border border-border bg-surface-1 p-4 text-sm">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="text-muted-foreground">Net etkisi</span>
-                        <span className="font-medium text-foreground">
+                      <div className="shrink-0 pt-0.5 text-right">
+                        <p
+                          className={cn(
+                            "text-lg font-semibold font-numbers sm:text-xl",
+                            getAmountClassName(entry.entryType)
+                          )}
+                        >
                           {entry.entryType === "income" ? "+" : "-"}
                           {formatCashAmount(entry.amountCents)}
-                        </span>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                          Not
                         </p>
-                        <p className="text-sm text-foreground">
-                          {entry.note ?? "Not eklenmemiş."}
-                        </p>
+
+                        {canManageHistoryEntries ? (
+                          <div className="mt-1 flex justify-end">
+                            <OpsCashEntryManageDialog
+                              entryId={entry.id}
+                              entryDate={entry.entryDate}
+                              entryType={entry.entryType}
+                              amountInput={formatCashAmountInput(entry.amountCents)}
+                              note={entry.note}
+                              createdByName={entry.createdByName}
+                              createdAtLabel={`${selectedDateLabel} · ${formatCashTime(entry.createdAt)}`}
+                              updatedByName={entry.updatedByName}
+                              updatedAtLabel={formatCashTime(entry.updatedAt)}
+                            />
+                          </div>
+                        ) : null}
                       </div>
                     </div>
                   </div>
-                ))
-              ) : (
-                <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Bu gün için kayıt yok. Sağdaki hızlı formdan yeni bir hareket ekleyin.
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="order-1 space-y-5 sm:space-y-6 xl:order-2">
-          <Card>
-            <CardHeader className="gap-1.5">
-              <CardTitle>Hızlı yeni kayıt</CardTitle>
-              <CardDescription>
-                İşlem türü, tutar ve not ile yeni hareket ekleyin.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <OpsCashEntryForm
-                defaultDate={cashbook.selectedDate}
-                canChooseDate={canManageHistoryEntries}
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="gap-1.5">
-              <CardTitle>Seçili gün özeti</CardTitle>
-              <CardDescription>
-                Seçili günün toplamlarını kısa kartlarla görün.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-3">
-              <div className="rounded-2xl border border-border p-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Seçili gelir
-                </p>
-                <p className="mt-2 text-sm font-medium text-foreground">
-                  {formatCashAmount(cashbook.selectedSummary.incomeCents)}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border p-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Seçili gider
-                </p>
-                <p className="mt-2 text-sm font-medium text-foreground">
-                  {formatCashAmount(cashbook.selectedSummary.expenseCents)}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border p-4">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Kayıt sayısı
-                </p>
-                <p className="mt-2 text-sm font-medium text-foreground">
-                  {cashbook.selectedSummary.entryCount}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="px-4 py-5 text-sm text-muted-foreground xl:px-5">
+              Kayıt yok.
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
