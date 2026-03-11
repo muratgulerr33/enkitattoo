@@ -62,7 +62,7 @@ export function OpsUserAppointmentCreateForm({
         <Textarea
           id="notes"
           name="notes"
-          placeholder="Eklemek istediginiz kisa bilgi."
+          placeholder="Eklemek istediğiniz kısa bilgi."
           rows={3}
           disabled={pending}
         />
@@ -87,7 +87,7 @@ export function OpsUserAppointmentCreateForm({
             Kaydediliyor
           </>
         ) : (
-          "Randevu olustur"
+          "Randevu oluştur"
         )}
       </Button>
     </form>

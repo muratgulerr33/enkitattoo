@@ -17,7 +17,7 @@ export async function loginAction(
 ): Promise<LoginActionState> {
   if (!isOpsAuthConfigured() || !canUseOpsAuthDatabase()) {
     return {
-      error: "Ops giris kurulumu eksik. Env ve veritabani baglantisini kontrol edin.",
+      error: "Giriş şu anda kullanılamıyor. Lütfen daha sonra tekrar deneyin.",
     };
   }
 
@@ -26,7 +26,7 @@ export async function loginAction(
 
   if (typeof email !== "string" || typeof password !== "string") {
     return {
-      error: "E-posta ve sifre gerekli.",
+      error: "E-posta ve şifre gerekli.",
     };
   }
 
@@ -35,7 +35,7 @@ export async function loginAction(
 
   if (!trimmedEmail || !trimmedPassword) {
     return {
-      error: "E-posta ve sifre gerekli.",
+      error: "E-posta ve şifre gerekli.",
     };
   }
 
@@ -43,7 +43,7 @@ export async function loginAction(
 
   if (!user || !user.isActive || !user.passwordHash) {
     return {
-      error: "E-posta veya sifre hatali.",
+      error: "E-posta veya şifre hatalı.",
     };
   }
 
@@ -51,7 +51,7 @@ export async function loginAction(
 
   if (!passwordValid) {
     return {
-      error: "E-posta veya sifre hatali.",
+      error: "E-posta veya şifre hatalı.",
     };
   }
 
@@ -59,7 +59,7 @@ export async function loginAction(
 
   if (nextPath === "/ops/giris") {
     return {
-      error: "Bu hesap icin ops erisimi tanimli degil.",
+      error: "Bu hesap için ops erişimi tanımlı değil.",
     };
   }
 

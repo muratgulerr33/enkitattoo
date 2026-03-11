@@ -20,7 +20,7 @@ type OpsConsentFormProps = {
 
 function formatAcceptedAt(value: Date | null): string {
   if (!value) {
-    return "Henuz onay verilmedi.";
+    return "Henüz onay verilmedi.";
   }
 
   return new Intl.DateTimeFormat("tr-TR", {
@@ -36,13 +36,13 @@ export function OpsConsentForm({ consent, canAccept, documentVersion }: OpsConse
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-3 rounded-2xl border border-border bg-surface-1 p-4">
-        <p className="text-sm font-medium text-foreground">Acik onay</p>
+        <p className="text-sm font-medium text-foreground">Açık onay</p>
         <p className="text-sm text-muted-foreground">
-          Form bilgilerimin degerlendirme amaciyla kaydedilmesini ve studyo iletisimi icin
-          kullanilmasini kabul ediyorum.
+          Form bilgilerimin değerlendirme amacıyla kaydedilmesini ve stüdyo iletişimi için
+          kullanılmasını kabul ediyorum.
         </p>
         <div className="text-xs text-muted-foreground">
-          Surum: <span className="font-medium text-foreground">{documentVersion}</span>
+          Sürüm: <span className="font-medium text-foreground">{documentVersion}</span>
         </div>
         <div className="text-xs text-muted-foreground">
           Durum: <span className="font-medium text-foreground">{formatAcceptedAt(consent?.acceptedAt ?? null)}</span>
@@ -58,13 +58,13 @@ export function OpsConsentForm({ consent, canAccept, documentVersion }: OpsConse
           disabled={pending || alreadyAccepted || !canAccept}
         />
         <Label htmlFor="accepted" className="text-sm leading-6 text-foreground">
-          Okudum. Onay kutusunu kendi istegimle isaretliyorum.
+          Okudum. Onay kutusunu kendi isteğimle işaretliyorum.
         </Label>
       </div>
 
       {!canAccept && !alreadyAccepted ? (
         <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-muted-foreground">
-          Onaydan once tattoo formunu tamamlayin.
+          Onaydan önce tattoo formunu tamamlayın.
         </p>
       ) : null}
 
@@ -87,9 +87,9 @@ export function OpsConsentForm({ consent, canAccept, documentVersion }: OpsConse
             Kaydediliyor
           </>
         ) : alreadyAccepted ? (
-          "Onay kayitli"
+          "Onay kayıtlı"
         ) : (
-          "Onayi kaydet"
+          "Onayı kaydet"
         )}
       </Button>
     </form>

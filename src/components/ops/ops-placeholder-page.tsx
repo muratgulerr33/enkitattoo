@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +9,6 @@ import {
 } from "@/components/ui/card";
 
 type OpsPlaceholderPageProps = {
-  eyebrow: string;
   title: string;
   description: string;
   nextStep: string;
@@ -21,7 +19,6 @@ type OpsPlaceholderPageProps = {
 };
 
 export function OpsPlaceholderPage({
-  eyebrow,
   title,
   description,
   nextStep,
@@ -31,28 +28,20 @@ export function OpsPlaceholderPage({
   secondaryLabel,
 }: OpsPlaceholderPageProps) {
   return (
-    <div className="space-y-6">
-      <header className="space-y-3">
-        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
-          {eyebrow}
-        </Badge>
-        <div className="space-y-2">
-          <h1 className="typo-page-title">{title}</h1>
-          <p className="typo-p max-w-2xl text-muted-foreground">{description}</p>
-        </div>
+    <div className="space-y-5">
+      <header className="space-y-2">
+        <h1 className="typo-page-title">{title}</h1>
+        <p className="typo-p max-w-2xl text-muted-foreground">{description}</p>
       </header>
 
       <Card className="border-border bg-card">
         <CardHeader>
-          <CardTitle className="text-lg">Bu alan foundation asamasinda</CardTitle>
-          <CardDescription>
-            Gercek domain davranisi bu PR kapsaminda degil. Bu yuzey route, shell ve
-            izolasyon omurgasini dogrulamak icin acildi.
-          </CardDescription>
+          <CardTitle className="text-lg">Bu alan yakında hazır olacak</CardTitle>
+          <CardDescription>O zamana kadar aşağıdaki hızlı geçişleri kullanabilirsiniz.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-xl border border-border bg-surface-1 p-4">
-            <p className="text-sm font-medium text-foreground">Sonraki adim</p>
+            <p className="text-sm font-medium text-foreground">Sonraki adım</p>
             <p className="mt-1 text-sm text-muted-foreground">{nextStep}</p>
           </div>
 

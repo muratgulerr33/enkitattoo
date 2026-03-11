@@ -25,11 +25,11 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
     <form action={formAction} className="space-y-4">
       <div className="grid gap-4">
         <div className="space-y-2">
-          <Label htmlFor="placement">Bolge</Label>
+          <Label htmlFor="placement">Bölge</Label>
           <Input
             id="placement"
             name="placement"
-            placeholder="Orn. kol ici, bilek, sirt"
+            placeholder="Örn. kol içi, bilek, sırt"
             defaultValue={latestTattooForm?.placement ?? ""}
             disabled={pending}
           />
@@ -40,18 +40,18 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
           <Input
             id="sizeNotes"
             name="sizeNotes"
-            placeholder="Orn. 8-10 cm, avuc ici kadar"
+            placeholder="Örn. 8-10 cm, avuç içi kadar"
             defaultValue={latestTattooForm?.sizeNotes ?? ""}
             disabled={pending}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="designNotes">Tasarim notu</Label>
+          <Label htmlFor="designNotes">Tasarım notu</Label>
           <Textarea
             id="designNotes"
             name="designNotes"
-            placeholder="Ne istediginizi kisaca anlatin."
+            placeholder="Ne istediğinizi kısaca anlatın."
             defaultValue={latestTattooForm?.designNotes ?? ""}
             disabled={pending}
             rows={4}
@@ -63,7 +63,7 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
           <Textarea
             id="styleNotes"
             name="styleNotes"
-            placeholder="Orn. minimal, fine line, blackwork"
+            placeholder="Örn. minimal, fine line, blackwork"
             defaultValue={latestTattooForm?.styleNotes ?? ""}
             disabled={pending}
             rows={3}
@@ -75,7 +75,7 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
           <Input
             id="colorNotes"
             name="colorNotes"
-            placeholder="Siyah gri, renkli veya kararsiz"
+            placeholder="Siyah gri, renkli veya kararsız"
             defaultValue={latestTattooForm?.colorNotes ?? ""}
             disabled={pending}
           />
@@ -86,7 +86,7 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
           <Textarea
             id="referenceNotes"
             name="referenceNotes"
-            placeholder="Referansiniz varsa kisaca belirtin."
+            placeholder="Referansınız varsa kısaca belirtin."
             defaultValue={latestTattooForm?.referenceNotes ?? ""}
             disabled={pending}
             rows={3}
@@ -94,7 +94,7 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="healthNotes">Saglik / hassasiyet notu</Label>
+          <Label htmlFor="healthNotes">Sağlık / hassasiyet notu</Label>
           <Textarea
             id="healthNotes"
             name="healthNotes"
@@ -141,7 +141,7 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
           {pending ? (
             <>
               <LoaderCircle className="size-4 animate-spin" aria-hidden />
-              Gonderiliyor
+              Gönderiliyor
             </>
           ) : (
             "Formu tamamla"

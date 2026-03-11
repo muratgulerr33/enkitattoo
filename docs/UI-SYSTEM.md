@@ -40,6 +40,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 
 - Ops panel yalnız Türkçe kullanıcı akışı olarak tasarlanır.
 - Kullanıcıya dönük copy gerçek Türkçe karakterlerle yazılmalıdır.
+- Mevcut ops kaynak copy’si büyük ölçüde gerçek Türkçe karakter standardına çekilmiştir; yeni ve güncellenen yüzeyler aynı standardı korur.
 - Kullanıcıya dönük metinlerde iç sistem dili gösterilmez.
 - İngilizce iç terimler, rol anahtarları, altyapı notları ve placeholder/foundation anlatıları kullanıcı copy’sine taşınmamalıdır.
 
@@ -67,15 +68,12 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 
 Bu bölüm çözüldü listesi değildir; repo içindeki mevcut durumun kısa kaydıdır.
 
-- Ops kullanıcı copy’sinin önemli kısmı hâlâ ASCII yazılmıştır; bu yüzden kaynak düzeyinde gerçek Türkçe karakter borcu vardır (`src/app/ops/**`, `src/components/ops/**`).
-- Giriş ekranı kullanıcıya iç sistem dili gösterir; “operations”, locale/i18n ve env kurulum dili aynı yüzeyde kullanıcı copy’sine karışır (`src/app/ops/giris/page.tsx`).
-- `OpsShell` üst barı ile sayfa içi badge/başlık blokları birlikte kullanıldığı için dikey alan tekrarı oluşur (`src/components/ops/ops-shell.tsx`, `src/app/ops/staff/*.tsx`, `src/app/ops/user/*.tsx`).
+- `OpsShell` üst ritminde düşük riskli sadeleşme yapılmıştır; buna rağmen sayfa içi başlık blokları ve çok kartlı içerik birleşince fold üstünde hâlâ yoğunluk oluşabilir (`src/components/ops/ops-shell.tsx`, `src/app/ops/staff/*.tsx`, `src/app/ops/user/*.tsx`).
 - Kasa ekranı hızlı kayıt odaklı bir POS akışından çok, özet + liste + form ağırlığını benzer seviyede taşır (`src/app/ops/staff/kasa/page.tsx`).
 - Randevu ekranı aylık takvim, gün listesi, yeni randevu ve özet kartlarını aynı anda öne çıkarır; tek iş akışı hiyerarşisi zayıftır (`src/app/ops/staff/randevular/page.tsx`).
-- Müşteri liste/detay yüzeylerinde iç model dili görünür; örneğin `user` rolü ve teknik durum anlatıları kullanıcı copy’sine sızar (`src/app/ops/staff/musteriler/page.tsx`, `src/app/ops/staff/musteriler/[userId]/page.tsx`).
-- Staff profil yüzeyi gerçek ürün copy’si yerine placeholder/foundation dili taşır (`src/app/ops/staff/profil/page.tsx`, `src/components/ops/ops-placeholder-page.tsx`).
+- Müşteri ve user workspace yüzeylerinde kart yoğunluğu hâlâ yüksektir; ürün dili temizlenmiş olsa da bilgi hiyerarşisi sonraki polish turlarında sadeleştirilebilir (`src/app/ops/staff/musteriler/[userId]/page.tsx`, `src/app/ops/user/profil/page.tsx`, `src/app/ops/user/form/page.tsx`).
 
-Repo içinden doğrulanamayan “render’da Türkçe karakter bozuluyor” türü görsel raporlar burada kesin hüküm olarak yazılmaz; repo bugün yalnız kaynak copy borcunu kanıtlar.
+Repo içinden doğrulanamayan “render’da Türkçe karakter bozuluyor” türü görsel raporlar burada kesin hüküm olarak yazılmaz; kaynak copy’nin mevcut hali tek başına bu görsel sonucu kanıtlamaz.
 
 ## 6) Shared UI Foundations
 

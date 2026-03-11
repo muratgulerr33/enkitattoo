@@ -9,7 +9,7 @@ export type OpsCustomerActionState = {
   success: string | null;
 };
 
-const INITIAL_ERROR_MESSAGE = "Musteri notu kaydedilemedi.";
+const INITIAL_ERROR_MESSAGE = "Müşteri notu kaydedilemedi.";
 
 function toRequiredNumber(value: FormDataEntryValue | null, message: string): number {
   if (typeof value !== "string") {
@@ -37,7 +37,7 @@ function toNullableNote(value: FormDataEntryValue | null): string | null {
   }
 
   if (normalized.length > 800) {
-    throw new Error("Not cok uzun. Lutfen kisaltin.");
+    throw new Error("Not çok uzun. Lütfen kısaltın.");
   }
 
   return normalized;
@@ -49,7 +49,7 @@ export async function saveCustomerNoteAction(
 ): Promise<OpsCustomerActionState> {
   try {
     const sessionUser = await requireOpsSessionArea("staff");
-    const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Musteri bulunamadi.");
+    const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Müşteri bulunamadı.");
     const note = toNullableNote(formData.get("note"));
 
     await saveCustomerNote(customerUserId, note, sessionUser.id);

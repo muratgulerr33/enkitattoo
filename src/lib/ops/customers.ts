@@ -93,7 +93,7 @@ export function getCustomerLabel(customer: {
   displayName: string | null;
   email: string | null;
 }): string {
-  return customer.displayName ?? customer.fullName ?? customer.email ?? "Isimsiz musteri";
+  return customer.displayName ?? customer.fullName ?? customer.email ?? "İsimsiz müşteri";
 }
 
 export function formatCustomerAppointmentShort(
@@ -333,7 +333,7 @@ async function assertCustomerExists(
     .limit(1);
 
   if (!rows[0]) {
-    throw new Error("Musteri bulunamadi.");
+    throw new Error("Müşteri bulunamadı.");
   }
 }
 

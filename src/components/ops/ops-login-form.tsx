@@ -35,7 +35,7 @@ export function OpsLoginForm({ disabled = false }: OpsLoginFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="password">Sifre</Label>
+        <Label htmlFor="password">Şifre</Label>
         <Input
           id="password"
           name="password"
@@ -57,10 +57,10 @@ export function OpsLoginForm({ disabled = false }: OpsLoginFormProps) {
         {pending ? (
           <>
             <LoaderCircle className="size-4 animate-spin" aria-hidden />
-            Giris yapiliyor
+            Giriş yapılıyor
           </>
         ) : (
-          "Giris yap"
+          "Giriş yap"
         )}
       </Button>
     </form>

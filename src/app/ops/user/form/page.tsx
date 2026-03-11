@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -16,14 +15,14 @@ import { OpsConsentForm } from "@/components/ops/ops-consent-form";
 
 function formatFormStatus(value: "draft" | "submitted" | null): string {
   if (value === "submitted") {
-    return "Tamamlandi";
+    return "Tamamlandı";
   }
 
   if (value === "draft") {
     return "Taslak";
   }
 
-  return "Henuz baslanmadi";
+  return "Henüz başlanmadı";
 }
 
 export default async function OpsUserFormPage() {
@@ -33,22 +32,17 @@ export default async function OpsUserFormPage() {
 
   return (
     <div className="space-y-6">
-      <section className="space-y-3">
-        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
-          Hesabim / Formum
-        </Badge>
-        <div className="space-y-2">
-          <h1 className="typo-page-title">Formum</h1>
-          <p className="typo-p text-muted-foreground">
-            Dovme formunu kaydedin, bitince acik onayi verin.
-          </p>
-        </div>
+      <section className="space-y-2">
+        <h1 className="typo-page-title">Formum</h1>
+        <p className="typo-p text-muted-foreground">
+          Dövme formunu kaydedin, bitince açık onayı verin.
+        </p>
       </section>
 
       <Card>
         <CardHeader>
           <CardTitle>Durum</CardTitle>
-          <CardDescription>Form ve onay adimlari ayri kayit tutulur.</CardDescription>
+          <CardDescription>Form ve onay adımları ayrı kayıt tutulur.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-3">
           <div className="rounded-2xl border border-border p-4">
@@ -60,8 +54,8 @@ export default async function OpsUserFormPage() {
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
               {latestTattooForm
-                ? `Kayit #${latestTattooForm.snapshotVersion}`
-                : "Ilk kayit henuz yok"}
+                ? `Kayıt #${latestTattooForm.snapshotVersion}`
+                : "İlk kayıt henüz yok"}
             </p>
           </div>
 
@@ -70,9 +64,9 @@ export default async function OpsUserFormPage() {
               Onay
             </p>
             <p className="mt-2 text-sm font-medium text-foreground">
-              {overview.hasCurrentConsent ? "Kayitli" : "Bekliyor"}
+              {overview.hasCurrentConsent ? "Kayıtlı" : "Bekliyor"}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">Surum {OPS_TATTOO_CONSENT_VERSION}</p>
+            <p className="mt-1 text-xs text-muted-foreground">Sürüm {OPS_TATTOO_CONSENT_VERSION}</p>
           </div>
 
           <div className="rounded-2xl border border-border p-4">
@@ -80,10 +74,10 @@ export default async function OpsUserFormPage() {
               Profil
             </p>
             <p className="mt-2 text-sm font-medium text-foreground">
-              {overview.isProfileComplete ? "Hazir" : "Eksik"}
+              {overview.isProfileComplete ? "Hazır" : "Eksik"}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
-              Iletisim bilgileri profil ekraninda duzenlenir
+              İletişim bilgileri profil ekranında düzenlenir
             </p>
           </div>
         </CardContent>
@@ -91,9 +85,9 @@ export default async function OpsUserFormPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Dovme formu</CardTitle>
+          <CardTitle>Dövme formu</CardTitle>
           <CardDescription>
-            Taslak kaydedebilir veya formu tamamlayabilirsiniz. Her kayit yeni bir form surumu olusturur.
+            Taslak kaydedebilir veya formu tamamlayabilirsiniz. Her kayıt yeni bir form sürümü oluşturur.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -103,9 +97,9 @@ export default async function OpsUserFormPage() {
 
       <Card id="onay">
         <CardHeader>
-          <CardTitle>Acik onay</CardTitle>
+          <CardTitle>Açık onay</CardTitle>
           <CardDescription>
-            Uyelik tek basina yeterli degil. Bu kutu isaretlenmeden onay kaydi olusmaz.
+            Üyelik tek başına yeterli değil. Bu kutu işaretlenmeden onay kaydı oluşmaz.
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -15,7 +15,7 @@ import { getUserWorkspaceOverview } from "@/lib/ops/user-workspace";
 
 function StatusBadge({ complete }: { complete: boolean }) {
   return complete ? (
-    <Badge className="rounded-full">Hazir</Badge>
+    <Badge className="rounded-full">Hazır</Badge>
   ) : (
     <Badge variant="outline" className="rounded-full">
       Eksik
@@ -61,22 +61,17 @@ export default async function OpsUserProfilePage() {
 
   return (
     <div className="space-y-6">
-      <section className="space-y-3">
-        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
-          Hesabim / Profil
-        </Badge>
-        <div className="space-y-2">
-          <h1 className="typo-page-title">Profil</h1>
-          <p className="typo-p text-muted-foreground">
-            Bilgilerinizi kisa tutun. Form ve onay durumu da buradan gorunur.
-          </p>
-        </div>
+      <section className="space-y-2">
+        <h1 className="typo-page-title">Profil</h1>
+        <p className="typo-p text-muted-foreground">
+          Bilgilerinizi kısa tutun. Form ve onay durumunu da buradan görün.
+        </p>
       </section>
 
       <Card>
         <CardHeader>
-          <CardTitle>Durum ozeti</CardTitle>
-          <CardDescription>Siradaki adimi tek ekranda gorun.</CardDescription>
+          <CardTitle>Durum özeti</CardTitle>
+          <CardDescription>Sıradaki adımı tek ekranda görün.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <SummaryRow
@@ -90,20 +85,20 @@ export default async function OpsUserProfilePage() {
             title="Profil bilgileri"
             description={
               overview.isProfileComplete
-                ? "Temel bilgiler kayitli."
-                : "Ad soyad ve telefon eksikse once bu bolumu tamamlayin."
+                ? "Temel bilgiler kayıtlı."
+                : "Ad soyad ve telefon eksikse önce bu bölümü tamamlayın."
             }
             complete={overview.isProfileComplete}
             href="/ops/user/profil"
-            linkLabel="Profili duzenle"
+            linkLabel="Profili düzenle"
           />
           <SummaryRow
             icon={<FileText className="size-5" aria-hidden />}
             title="Tattoo formu"
             description={
               overview.isTattooFormSubmitted
-                ? "Form tamamlandi. Isterseniz yeni bir kayit olusturarak guncelleyebilirsiniz."
-                : "Dovme formu henuz tamamlanmadi."
+                ? "Form tamamlandı. İsterseniz yeni bir kayıt oluşturarak güncelleyebilirsiniz."
+                : "Dövme formu henüz tamamlanmadı."
             }
             complete={overview.isTattooFormSubmitted}
             href="/ops/user/form"
@@ -111,15 +106,15 @@ export default async function OpsUserProfilePage() {
           />
           <SummaryRow
             icon={<ShieldCheck className="size-5" aria-hidden />}
-            title="Acik onay"
+            title="Açık onay"
             description={
               overview.hasCurrentConsent
-                ? "Guncel surum icin onay kaydi var."
-                : "Form tamamlandiktan sonra checkbox ile acik onay verin."
+                ? "Güncel sürüm için onay kaydı var."
+                : "Form tamamlandıktan sonra onay kutusunu işaretleyin."
             }
             complete={overview.hasCurrentConsent}
             href="/ops/user/form#onay"
-            linkLabel="Onayi gor"
+            linkLabel="Onayı gör"
           />
         </CardContent>
       </Card>
@@ -127,7 +122,7 @@ export default async function OpsUserProfilePage() {
       <Card>
         <CardHeader>
           <CardTitle>Profil bilgileri</CardTitle>
-          <CardDescription>E-posta sabit kalir. Ad soyad ve telefon aktif kullanilir.</CardDescription>
+          <CardDescription>E-posta sabit kalır. Ad soyad ve telefon aktif kullanılır.</CardDescription>
         </CardHeader>
         <CardContent>
           <OpsProfileForm

@@ -48,7 +48,7 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
 
       <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
         <div className="space-y-2">
-          <Label htmlFor="entryType">Islem turu</Label>
+          <Label htmlFor="entryType">İşlem türü</Label>
           <select
             id="entryType"
             name="entryType"
@@ -85,14 +85,14 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
           id="note"
           name="note"
           rows={3}
-          placeholder="Kisa not"
+          placeholder="Kısa not"
           disabled={pending}
         />
       </div>
 
       {!canChooseDate ? (
         <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-muted-foreground">
-          Artist yalniz bugunun kasasina kayit acabilir.
+          Artist yalnız bugünün kasasına kayıt açabilir.
         </p>
       ) : null}
 
@@ -115,7 +115,7 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
             Kaydediliyor
           </>
         ) : (
-          "Kayit ekle"
+          "Kayıt ekle"
         )}
       </Button>
     </form>

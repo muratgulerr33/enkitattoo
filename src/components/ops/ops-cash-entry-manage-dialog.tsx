@@ -73,16 +73,16 @@ export function OpsCashEntryManageDialog({
       <DialogContent className="max-w-xl rounded-3xl p-0">
         <div className="space-y-6 p-6">
           <DialogHeader className="space-y-2 text-left">
-            <DialogTitle>Kasa kaydi</DialogTitle>
+            <DialogTitle>Kasa kaydı</DialogTitle>
             <DialogDescription>
-              Gecmis kayitlari yalniz yonetici duzenler veya kaldirir.
+              Geçmiş kayıtları yalnız yönetici düzenler veya kaldırır.
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-3 rounded-2xl border border-border bg-surface-1 p-4 text-sm text-muted-foreground">
-            <p>Olusturan: {createdByName}</p>
-            <p>Olusturma: {createdAtLabel}</p>
-            <p>Son guncelleme: {updatedByName ? `${updatedByName} · ${updatedAtLabel}` : updatedAtLabel}</p>
+            <p>Oluşturan: {createdByName}</p>
+            <p>Oluşturma: {createdAtLabel}</p>
+            <p>Son güncelleme: {updatedByName ? `${updatedByName} · ${updatedAtLabel}` : updatedAtLabel}</p>
           </div>
 
           <form action={updateAction} className="space-y-4">
@@ -102,7 +102,7 @@ export function OpsCashEntryManageDialog({
 
             <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
               <div className="space-y-2">
-                <Label htmlFor={`entryType-${entryId}`}>Islem turu</Label>
+                <Label htmlFor={`entryType-${entryId}`}>İşlem türü</Label>
                 <select
                   id={`entryType-${entryId}`}
                   name="entryType"
@@ -163,7 +163,7 @@ export function OpsCashEntryManageDialog({
                     Kaydediliyor
                   </>
                 ) : (
-                  "Degisiklikleri kaydet"
+                  "Değişiklikleri kaydet"
                 )}
               </Button>
             </div>
@@ -193,12 +193,12 @@ export function OpsCashEntryManageDialog({
               {deletePending ? (
                 <>
                   <LoaderCircle className="size-4 animate-spin" aria-hidden />
-                  Kaldiriliyor
+                  Kaldırılıyor
                 </>
               ) : (
                 <>
                   <Trash2 className="size-4" aria-hidden />
-                  Kaydi kaldir
+                  Kaydı kaldır
                 </>
               )}
             </Button>

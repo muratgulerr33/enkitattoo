@@ -70,7 +70,7 @@ export function OpsAppointmentStatusForm({
         {pending ? (
           <>
             <LoaderCircle className="size-4 animate-spin" aria-hidden />
-            Guncelleniyor
+            Güncelleniyor
           </>
         ) : (
           "Durumu kaydet"

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { CalendarDays, Clock3, FileText, ShieldCheck, UserRound } from "lucide-react";
 import { OpsUserAppointmentCreateForm } from "@/components/ops/ops-user-appointment-create-form";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -9,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   formatAppointmentDateLong,
   getTodayDateValue,
@@ -51,23 +51,18 @@ export default async function OpsUserAppointmentsPage() {
 
   return (
     <div className="space-y-6">
-      <section className="space-y-3">
-        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
-          Hesabim / Randevular
-        </Badge>
-        <div className="space-y-2">
-          <h1 className="typo-page-title">Randevularim</h1>
-          <p className="typo-p text-muted-foreground">
-            Yeni talep acabilir, yaklasan kayitlarinizi gorebilir ve gecmisi takip edebilirsiniz.
-          </p>
-        </div>
+      <section className="space-y-2">
+        <h1 className="typo-page-title">Randevularım</h1>
+        <p className="typo-p text-muted-foreground">
+          Yeni talep açabilir, yaklaşan kayıtlarınızı görebilir ve geçmişi takip edebilirsiniz.
+        </p>
       </section>
 
       {hasAppointmentPrepGap ? (
         <Card>
           <CardHeader>
-            <CardTitle>Hazirlik durumu</CardTitle>
-            <CardDescription>Profil, form ve onay yuzeyleri ayri akislardir.</CardDescription>
+            <CardTitle>Hazırlık durumu</CardTitle>
+            <CardDescription>Profil, form ve onay alanları ayrı ilerler.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 md:grid-cols-3">
             <Link
@@ -79,7 +74,7 @@ export default async function OpsUserAppointmentsPage() {
                 <p className="text-sm font-medium text-foreground">Profil</p>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                {overview.isProfileComplete ? "Hazir" : "Eksik"}
+                {overview.isProfileComplete ? "Hazır" : "Eksik"}
               </p>
             </Link>
             <Link
@@ -88,10 +83,10 @@ export default async function OpsUserAppointmentsPage() {
             >
               <div className="flex items-center gap-2">
                 <FileText className="size-4" aria-hidden />
-                <p className="text-sm font-medium text-foreground">Dovme formu</p>
+                <p className="text-sm font-medium text-foreground">Dövme formu</p>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                {overview.isTattooFormSubmitted ? "Tamamlandi" : "Bekliyor"}
+                {overview.isTattooFormSubmitted ? "Tamamlandı" : "Bekliyor"}
               </p>
             </Link>
             <Link
@@ -100,10 +95,10 @@ export default async function OpsUserAppointmentsPage() {
             >
               <div className="flex items-center gap-2">
                 <ShieldCheck className="size-4" aria-hidden />
-                <p className="text-sm font-medium text-foreground">Acik onay</p>
+                <p className="text-sm font-medium text-foreground">Açık onay</p>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                {overview.hasCurrentConsent ? "Kayitli" : "Bekliyor"}
+                {overview.hasCurrentConsent ? "Kayıtlı" : "Bekliyor"}
               </p>
             </Link>
           </CardContent>
@@ -115,7 +110,7 @@ export default async function OpsUserAppointmentsPage() {
           <CardHeader>
             <CardTitle>Yeni randevu</CardTitle>
             <CardDescription>
-              Tarih ve saat secin. Uygun degilse sade bir hata mesaji gorursunuz.
+              Tarih ve saat seçin. Uygun değilse sade bir hata mesajı görürsünüz.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -126,8 +121,8 @@ export default async function OpsUserAppointmentsPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Yaklasan randevular</CardTitle>
-              <CardDescription>Sadece size ait aktif kayitlar listelenir.</CardDescription>
+              <CardTitle>Yaklaşan randevular</CardTitle>
+              <CardDescription>Sadece size ait aktif kayıtlar listelenir.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {appointmentLists.upcoming.length ? (
@@ -172,7 +167,7 @@ export default async function OpsUserAppointmentsPage() {
                 ))
               ) : (
                 <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Yaklasan randevunuz henuz yok.
+                  Yaklaşan randevunuz henüz yok.
                 </div>
               )}
             </CardContent>
@@ -180,8 +175,8 @@ export default async function OpsUserAppointmentsPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Gecmis</CardTitle>
-              <CardDescription>Tamamlanan veya kapanan kayitlar burada kalir.</CardDescription>
+              <CardTitle>Geçmiş</CardTitle>
+              <CardDescription>Tamamlanan veya kapanan kayıtlar burada kalır.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {appointmentLists.past.length ? (
@@ -212,7 +207,7 @@ export default async function OpsUserAppointmentsPage() {
                 ))
               ) : (
                 <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Gecmis kayit henuz yok.
+                  Geçmiş kayıt henüz yok.
                 </div>
               )}
             </CardContent>

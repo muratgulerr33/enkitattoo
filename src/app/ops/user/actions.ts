@@ -28,7 +28,7 @@ function emptyToNull(value: FormDataEntryValue | null, maxLength: number): strin
   }
 
   if (normalized.length > maxLength) {
-    throw new Error("Girdiler beklenenden uzun. Lutfen kisaltin.");
+    throw new Error("Girdiler beklenenden uzun. Lütfen kısaltın.");
   }
 
   return normalized;
@@ -69,7 +69,7 @@ export async function updateUserProfileAction(
 
     if (!isPhoneValid(phone)) {
       return {
-        error: "Telefon bilgisini daha sade yazin.",
+        error: "Telefon bilgisini daha sade yazın.",
         success: null,
       };
     }
@@ -136,7 +136,7 @@ export async function saveTattooFormAction(
 
     if (intent === "submit" && (!input.placement || !input.sizeNotes || !input.designNotes)) {
       return {
-        error: "Formu tamamlamak icin bolge, boyut ve tasarim notu gerekli.",
+        error: "Formu tamamlamak için bölge, boyut ve tasarım notu gerekli.",
         success: null,
       };
     }
@@ -146,7 +146,7 @@ export async function saveTattooFormAction(
 
     return {
       error: null,
-      success: intent === "submit" ? "Form tamamlandi." : "Taslak kaydedildi.",
+      success: intent === "submit" ? "Form tamamlandı." : "Taslak kaydedildi.",
     };
   } catch (error) {
     return {
@@ -176,14 +176,14 @@ export async function acceptConsentAction(
 
     if (!latestForm || latestForm.status !== "submitted") {
       return {
-        error: "Onaydan once formu tamamlayin.",
+        error: "Onaydan önce formu tamamlayın.",
         success: null,
       };
     }
 
     if (formData.get("accepted") !== "on") {
       return {
-        error: "Devam etmek icin kutuyu isaretleyin.",
+        error: "Devam etmek için kutuyu işaretleyin.",
         success: null,
       };
     }
@@ -205,7 +205,7 @@ export async function acceptConsentAction(
 
     return {
       error: null,
-      success: created ? "Onay kaydedildi." : "Bu surum icin onay zaten kayitli.",
+      success: created ? "Onay kaydedildi." : "Bu sürüm için onay zaten kayıtlı.",
     };
   } catch (error) {
     return {

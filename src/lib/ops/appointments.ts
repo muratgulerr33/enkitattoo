@@ -21,7 +21,7 @@ import {
 import type { UserRole } from "@/db/schema/users";
 import { writeAuditLog } from "./audit";
 export const APPOINTMENT_SLOT_CONFLICT_MESSAGE =
-  "Ayni tarih ve saat icin baska bir randevu zaten kayitli.";
+  "Aynı tarih ve saat için başka bir randevu zaten kayıtlı.";
 
 export type AppointmentRecord = {
   id: number;
@@ -284,9 +284,9 @@ function toAppointmentRecord(
 
   return {
     ...row,
-    customerName: getDisplayName(customer, `Kullanici #${row.customerUserId}`),
+    customerName: getDisplayName(customer, `Kullanıcı #${row.customerUserId}`),
     customerEmail: customer?.email ?? null,
-    createdByName: getDisplayName(creator, `Kullanici #${row.createdByUserId}`),
+    createdByName: getDisplayName(creator, `Kullanıcı #${row.createdByUserId}`),
   };
 }
 
@@ -327,7 +327,7 @@ function normalizeNotes(value: string | null): string | null {
   }
 
   if (normalized.length > 1200) {
-    throw new Error("Not alani cok uzun. Lutfen kisaltin.");
+    throw new Error("Not alanı çok uzun. Lütfen kısaltın.");
   }
 
   return normalized;
@@ -337,7 +337,7 @@ function assertDateValue(value: string): string {
   const normalized = value.trim();
 
   if (!isValidDateValue(normalized)) {
-    throw new Error("Gecerli bir tarih secin.");
+    throw new Error("Geçerli bir tarih seçin.");
   }
 
   return normalized;
@@ -347,7 +347,7 @@ function assertTimeValue(value: string): string {
   const normalized = value.trim();
 
   if (!isValidTimeValue(normalized)) {
-    throw new Error("Gecerli bir saat secin.");
+    throw new Error("Geçerli bir saat seçin.");
   }
 
   return normalized;
@@ -368,7 +368,7 @@ async function ensureCustomerUser(userId: number): Promise<void> {
     .limit(1);
 
   if (!rows[0]) {
-    throw new Error("Secilen musteri kullanilamiyor.");
+    throw new Error("Seçilen müşteri kullanılamıyor.");
   }
 }
 
@@ -435,7 +435,7 @@ export async function listCustomerOptions(): Promise<AppointmentCustomerOption[]
 
   return rows.map((row) => ({
     id: row.id,
-    label: row.displayName ?? row.fullName ?? row.email ?? `Kullanici #${row.id}`,
+    label: row.displayName ?? row.fullName ?? row.email ?? `Kullanıcı #${row.id}`,
     email: row.email ?? null,
   }));
 }
@@ -596,7 +596,7 @@ export async function updateAppointmentStatus(
   const current = currentRows[0];
 
   if (!current) {
-    throw new Error("Randevu bulunamadi.");
+    throw new Error("Randevu bulunamadı.");
   }
 
   if (input.status === "scheduled") {
@@ -632,7 +632,7 @@ export async function updateAppointmentStatus(
       const updatedRecord = updatedRows[0];
 
       if (!updatedRecord) {
-        throw new Error("Randevu durumu guncellenemedi.");
+        throw new Error("Randevu durumu güncellenemedi.");
       }
 
       await writeAuditLog(

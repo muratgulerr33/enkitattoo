@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { OpsSessionUser } from "@/lib/ops/auth/guards";
 import { cn } from "@/lib/utils";
@@ -73,30 +72,27 @@ function OpsNavLink({
 }
 
 function getDisplayName(sessionUser: OpsSessionUser): string {
-  return sessionUser.displayName ?? sessionUser.fullName ?? sessionUser.email ?? "Ops kullanicisi";
+  return sessionUser.displayName ?? sessionUser.fullName ?? sessionUser.email ?? "Ops kullanıcısı";
 }
 
 function formatRoleLabel(role: OpsSessionUser["roles"][number]): string {
   if (role === "admin") {
-    return "Yonetici";
+    return "Yönetici";
   }
 
   if (role === "artist") {
     return "Artist";
   }
 
-  return "Kullanici";
+  return "Kullanıcı";
 }
 
 export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShellProps) {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-        <div className="app-container flex min-h-16 items-center justify-between gap-3 py-3">
-          <div className="min-w-0 space-y-1">
-            <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
-              Enki Studio Operations
-            </Badge>
+        <div className="app-container flex min-h-14 items-center justify-between gap-3 py-2.5">
+          <div className="min-w-0">
             <div className="min-w-0">
               <p className="truncate text-base font-semibold tracking-tight text-foreground">
                 {areaLabel}
@@ -110,7 +106,7 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
           <Button asChild variant="ghost" size="sm" className="shrink-0">
             <Link href="/ops/cikis">
               <ChevronLeft className="size-4" aria-hidden />
-              Cikis
+              Çıkış
             </Link>
           </Button>
         </div>

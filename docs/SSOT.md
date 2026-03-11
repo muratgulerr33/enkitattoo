@@ -203,4 +203,4 @@ Notlar:
 - Host-level `www`/apex redirect zinciri `UNKNOWN`dur.
 - Reverse proxy, Cloudflare ve production host topolojisi `UNKNOWN`dur.
 - Canlı ortam env envanterinin tam listesi `UNKNOWN`dur.
-- Repo dışı görsel render bulguları, örneğin “Türkçe karakterler ekranda bozuluyor” raporu, repo içinden doğrudan doğrulanamaz; repo yalnız mevcut ops copy’sinin kaynakta büyük ölçüde ASCII yazıldığını gösterir.
+- Repo dışı görsel render bulguları, örneğin “Türkçe karakterler ekranda bozuluyor” raporu, repo içinden doğrudan doğrulanamaz; kaynak copy tek başına bu görsel sonucu kanıtlamaz.

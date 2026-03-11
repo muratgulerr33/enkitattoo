@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -6,6 +5,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import { CASH_ENTRY_TYPE_LABELS } from "@/lib/ops/cashbook-copy";
 import {
@@ -46,16 +46,11 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <section className="space-y-3">
-        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
-          Ekip / Kasa
-        </Badge>
-        <div className="space-y-2">
-          <h1 className="typo-page-title">Kasa</h1>
-          <p className="typo-p text-muted-foreground">
-            Hizli giris, gunluk toplam ve sade dukkan defteri mantigi ayni ekranda tutulur.
-          </p>
-        </div>
+      <section className="space-y-2">
+        <h1 className="typo-page-title">Kasa</h1>
+        <p className="typo-p text-muted-foreground">
+          Hızlı kayıt ve günlük özet aynı ekranda tutulur.
+        </p>
       </section>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
@@ -63,9 +58,9 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
           <Card>
             <CardHeader className="gap-4">
               <div className="space-y-2">
-                <CardTitle>Gun ozeti</CardTitle>
+                <CardTitle>Gün özeti</CardTitle>
                 <CardDescription>
-                  Bugunun neti her zaman ayridir; secili tarih listesi alttaki akisi belirler.
+                  Bugünün neti her zaman ayrıdır; seçili tarih listesi alttaki akışı belirler.
                 </CardDescription>
               </div>
 
@@ -81,12 +76,12 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                     type="submit"
                     className="inline-flex h-11 items-center justify-center rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/35"
                   >
-                    Tarihi ac
+                    Tarihi aç
                   </button>
                 </form>
               ) : (
                 <p className="rounded-2xl border border-border bg-surface-1 px-4 py-3 text-sm text-muted-foreground">
-                  Artist yalniz bugunun hareketlerini gorur ve kayit acar.
+                  Artist yalnız bugünün hareketlerini görür ve kayıt açar.
                 </p>
               )}
             </CardHeader>
@@ -94,7 +89,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
             <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Bugun net
+                  Bugün net
                 </p>
                 <p className="mt-2 text-lg font-semibold text-foreground">
                   {formatCashAmount(cashbook.todaySummary.netCents)}
@@ -102,7 +97,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
               </div>
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Bugun gelir
+                  Bugün gelir
                 </p>
                 <p className="mt-2 text-lg font-semibold text-foreground">
                   {formatCashAmount(cashbook.todaySummary.incomeCents)}
@@ -110,7 +105,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
               </div>
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Bugun gider
+                  Bugün gider
                 </p>
                 <p className="mt-2 text-lg font-semibold text-foreground">
                   {formatCashAmount(cashbook.todaySummary.expenseCents)}
@@ -118,7 +113,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
               </div>
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Secili gun
+                  Seçili gün
                 </p>
                 <p className="mt-2 text-lg font-semibold text-foreground">
                   {formatCashAmount(cashbook.selectedSummary.netCents)}
@@ -132,8 +127,8 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
               <CardTitle>{selectedDateLabel}</CardTitle>
               <CardDescription>
                 {cashbook.entries.length
-                  ? `${cashbook.entries.length} aktif kayit listeleniyor.`
-                  : "Secili gun icin aktif kasa kaydi yok."}
+                  ? `${cashbook.entries.length} aktif kayıt listeleniyor.`
+                  : "Seçili gün için aktif kasa kaydı yok."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -154,7 +149,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                           </Badge>
                           {entry.entryDate !== todayDate ? (
                             <Badge variant="outline" className="rounded-full">
-                              Gecmis kayit
+                              Geçmiş kayıt
                             </Badge>
                           ) : null}
                         </div>
@@ -196,7 +191,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                           Not
                         </p>
                         <p className="text-sm text-foreground">
-                          {entry.note ?? "Not eklenmemis."}
+                          {entry.note ?? "Not eklenmemiş."}
                         </p>
                       </div>
                     </div>
@@ -204,7 +199,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                 ))
               ) : (
                 <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Bu gun icin kayit yok. Sagdaki hizli formdan yeni bir hareket ekleyin.
+                  Bu gün için kayıt yok. Sağdaki hızlı formdan yeni bir hareket ekleyin.
                 </div>
               )}
             </CardContent>
@@ -214,9 +209,9 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Hizli yeni kayit</CardTitle>
+              <CardTitle>Hızlı yeni kayıt</CardTitle>
               <CardDescription>
-                Islem turu, tutar ve not ile kasa kaydi saniyeler icinde acilir.
+                İşlem türü, tutar ve not ile kasa kaydı saniyeler içinde açılır.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -229,15 +224,15 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
 
           <Card>
             <CardHeader>
-              <CardTitle>Secili gun ozeti</CardTitle>
+              <CardTitle>Seçili gün özeti</CardTitle>
               <CardDescription>
-                Filtrelenen gunun net tablo yerine kartlarla okunur.
+                Filtrelenen günün neti tablo yerine kartlarla okunur.
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-3">
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Secili gelir
+                  Seçili gelir
                 </p>
                 <p className="mt-2 text-sm font-medium text-foreground">
                   {formatCashAmount(cashbook.selectedSummary.incomeCents)}
@@ -245,7 +240,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
               </div>
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Secili gider
+                  Seçili gider
                 </p>
                 <p className="mt-2 text-sm font-medium text-foreground">
                   {formatCashAmount(cashbook.selectedSummary.expenseCents)}
@@ -253,7 +248,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
               </div>
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Kayit sayisi
+                  Kayıt sayısı
                 </p>
                 <p className="mt-2 text-sm font-medium text-foreground">
                   {cashbook.selectedSummary.entryCount}

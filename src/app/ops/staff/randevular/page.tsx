@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, Clock3, UserRound } from "lucide-react";
 import { OpsAppointmentStatusForm } from "@/components/ops/ops-appointment-status-form";
 import { OpsStaffAppointmentCreateForm } from "@/components/ops/ops-staff-appointment-create-form";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -10,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   buildMonthCalendar,
   formatAppointmentDateLong,
@@ -26,7 +26,7 @@ import {
 } from "@/lib/ops/appointment-copy";
 import { cn } from "@/lib/utils";
 
-const WEEKDAY_LABELS = ["Pzt", "Sal", "Car", "Per", "Cum", "Cmt", "Paz"] as const;
+const WEEKDAY_LABELS = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"] as const;
 
 type PageProps = {
   searchParams: Promise<{
@@ -81,16 +81,11 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
 
   return (
     <div className="space-y-6">
-      <section className="space-y-3">
-        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
-          Ekip / Randevular
-        </Badge>
-        <div className="space-y-2">
-          <h1 className="typo-page-title">Randevular</h1>
-          <p className="typo-p text-muted-foreground">
-            Aylik gorunum yon bulma icin, secilen gun ise asil operasyon akisi icin kullanilir.
-          </p>
-        </div>
+      <section className="space-y-2">
+        <h1 className="typo-page-title">Randevular</h1>
+        <p className="typo-p text-muted-foreground">
+          Aylık görünüm yön bulma için, seçilen gün ise asıl operasyon akışı için kullanılır.
+        </p>
       </section>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
@@ -101,7 +96,7 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
                 <div>
                   <CardTitle>{getMonthLabel(monthValue)}</CardTitle>
                   <CardDescription>
-                    Gun secin, detay listesi altta yenilensin.
+                    Gün seçin, detay listesi altta yenilensin.
                   </CardDescription>
                 </div>
                 <div className="flex gap-2">
@@ -156,12 +151,12 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
                               : "bg-foreground text-background"
                           )}
                         >
-                          Bugun
+                          Bugün
                         </span>
                       ) : null}
                     </div>
                     <div className="mt-auto text-xs">
-                      {cell.count ? `${cell.count} kayit` : "Bos"}
+                      {cell.count ? `${cell.count} kayıt` : "Boş"}
                     </div>
                   </Link>
                 )
@@ -174,8 +169,8 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
               <CardTitle>{formatAppointmentDateLong(selectedDay)}</CardTitle>
               <CardDescription>
                 {dayAppointments.length
-                  ? `${dayAppointments.length} kayit var. ${scheduledCount} tanesi planli.`
-                  : "Bu gun icin kayit yok."}
+                  ? `${dayAppointments.length} kayıt var. ${scheduledCount} tanesi planlı.`
+                  : "Bu gün için kayıt yok."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -243,7 +238,7 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
                 ))
               ) : (
                 <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Secilen gunde kayit yok. Sagdaki formdan yeni bir randevu acabilirsiniz.
+                  Seçilen günde kayıt yok. Sağdaki formdan yeni bir randevu açabilirsiniz.
                 </div>
               )}
             </CardContent>
@@ -255,7 +250,7 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
             <CardHeader>
               <CardTitle>Yeni randevu</CardTitle>
               <CardDescription>
-                Randevu isletme bazlidir. Artist secimi veya slot motoru bu surumde yoktur.
+                Randevu işletme bazlıdır. Artist seçimi veya slot motoru bu sürümde yoktur.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -268,19 +263,19 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
 
           <Card>
             <CardHeader>
-              <CardTitle>Gun ozeti</CardTitle>
-              <CardDescription>Secilen gunu hizli okuyun.</CardDescription>
+              <CardTitle>Gün özeti</CardTitle>
+              <CardDescription>Seçilen günü hızlıca okuyun.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-3">
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Planli
+                  Planlı
                 </p>
                 <p className="mt-2 text-sm font-medium text-foreground">{scheduledCount}</p>
               </div>
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Tum kayit
+                  Tüm kayıt
                 </p>
                 <p className="mt-2 text-sm font-medium text-foreground">
                   {dayAppointments.length}
@@ -288,7 +283,7 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
               </div>
               <div className="rounded-2xl border border-border p-4">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Aylik toplu sayi
+                  Aylık toplam sayı
                 </p>
                 <p className="mt-2 text-sm font-medium text-foreground">
                   {monthAppointments.length}

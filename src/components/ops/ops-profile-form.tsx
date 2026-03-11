@@ -49,11 +49,11 @@ export function OpsProfileForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="displayName">Gorunen ad</Label>
+          <Label htmlFor="displayName">Görünen ad</Label>
           <Input
             id="displayName"
             name="displayName"
-            placeholder="Isterseniz kisa ad"
+            placeholder="İsterseniz kısa ad"
             defaultValue={displayName ?? ""}
             disabled={pending}
           />

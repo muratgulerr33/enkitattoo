@@ -18,7 +18,7 @@ export type OpsCashEntryActionState = {
   success: string | null;
 };
 
-const INITIAL_ERROR_MESSAGE = "Kasa islemi tamamlanamadi.";
+const INITIAL_ERROR_MESSAGE = "Kasa işlemi tamamlanamadı.";
 
 function toRequiredString(value: FormDataEntryValue | null, message: string): string {
   if (typeof value !== "string") {
@@ -60,7 +60,7 @@ function toNullableText(value: FormDataEntryValue | null, maxLength: number): st
   }
 
   if (normalized.length > maxLength) {
-    throw new Error("Not cok uzun. Lutfen kisaltin.");
+    throw new Error("Not çok uzun. Lütfen kısaltın.");
   }
 
   return normalized;
@@ -90,7 +90,7 @@ export async function createCashEntryAction(
     await createCashEntry({
       entryDate,
       entryType: toCashEntryType(
-        toRequiredString(formData.get("entryType"), "Islem turu gerekli.")
+        toRequiredString(formData.get("entryType"), "İşlem türü gerekli.")
       ),
       amountCents: parseCashAmountToCents(
         toRequiredString(formData.get("amount"), "Tutar gerekli.")
@@ -103,7 +103,7 @@ export async function createCashEntryAction(
 
     return {
       error: null,
-      success: "Kasa kaydi eklendi.",
+      success: "Kasa kaydı eklendi.",
     };
   } catch (error) {
     return {
@@ -122,16 +122,16 @@ export async function updateCashEntryAction(
 
     if (!canManageCashHistory(sessionUser.roles)) {
       return {
-        error: "Bu islem yalniz yoneticiye acik.",
+        error: "Bu işlem yalnız yöneticiye açık.",
         success: null,
       };
     }
 
     await updateCashEntry({
-      entryId: toRequiredNumber(formData.get("entryId"), "Kayit bulunamadi."),
+      entryId: toRequiredNumber(formData.get("entryId"), "Kayıt bulunamadı."),
       entryDate: toRequiredString(formData.get("entryDate"), "Tarih gerekli."),
       entryType: toCashEntryType(
-        toRequiredString(formData.get("entryType"), "Islem turu gerekli.")
+        toRequiredString(formData.get("entryType"), "İşlem türü gerekli.")
       ),
       amountCents: parseCashAmountToCents(
         toRequiredString(formData.get("amount"), "Tutar gerekli.")
@@ -144,7 +144,7 @@ export async function updateCashEntryAction(
 
     return {
       error: null,
-      success: "Kasa kaydi guncellendi.",
+      success: "Kasa kaydı güncellendi.",
     };
   } catch (error) {
     return {
@@ -163,13 +163,13 @@ export async function deleteCashEntryAction(
 
     if (!canManageCashHistory(sessionUser.roles)) {
       return {
-        error: "Bu islem yalniz yoneticiye acik.",
+        error: "Bu işlem yalnız yöneticiye açık.",
         success: null,
       };
     }
 
     await softDeleteCashEntry({
-      entryId: toRequiredNumber(formData.get("entryId"), "Kayit bulunamadi."),
+      entryId: toRequiredNumber(formData.get("entryId"), "Kayıt bulunamadı."),
       actorUserId: sessionUser.id,
     });
 
@@ -177,7 +177,7 @@ export async function deleteCashEntryAction(
 
     return {
       error: null,
-      success: "Kayit kaldirildi.",
+      success: "Kayıt kaldırıldı.",
     };
   } catch (error) {
     return {

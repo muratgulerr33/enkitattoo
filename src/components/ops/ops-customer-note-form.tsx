@@ -34,7 +34,7 @@ export function OpsCustomerNoteForm({
         name="note"
         defaultValue={note ?? ""}
         rows={6}
-        placeholder="Kisa staff notu"
+        placeholder="Kısa not"
         disabled={pending}
       />
 

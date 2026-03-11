@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -8,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { OpsCustomerNoteForm } from "@/components/ops/ops-customer-note-form";
 import { APPOINTMENT_STATUS_LABELS } from "@/lib/ops/appointment-copy";
 import {
@@ -27,7 +27,7 @@ type PageProps = {
 
 function getFormStatusLabel(status: "draft" | "submitted" | null): string {
   if (status === "submitted") {
-    return "Tamamlandi";
+    return "Tamamlandı";
   }
 
   if (status === "draft") {
@@ -85,31 +85,26 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
 
   return (
     <div className="space-y-6">
-      <section className="space-y-3">
-        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
-          Ekip / Musteri detayi
-        </Badge>
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="typo-page-title">{getCustomerLabel(customer)}</h1>
-            <Link
-              href="/ops/staff/musteriler"
-              className="text-sm font-medium text-muted-foreground underline-offset-4 hover:underline"
-            >
-              Listeye don
-            </Link>
-          </div>
-          <p className="typo-p text-muted-foreground">
-            Form, onay, randevu ve staff notu tek musteri yuzeyinde toplanir.
-          </p>
+      <section className="space-y-2">
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="typo-page-title">{getCustomerLabel(customer)}</h1>
+          <Link
+            href="/ops/staff/musteriler"
+            className="text-sm font-medium text-muted-foreground underline-offset-4 hover:underline"
+          >
+            Listeye dön
+          </Link>
         </div>
+        <p className="typo-p text-muted-foreground">
+          Form, onay, randevu ve notlar bu ekranda birlikte görünür.
+        </p>
       </section>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
         <Card>
           <CardHeader>
             <CardTitle>Temel bilgi</CardTitle>
-            <CardDescription>Musteri kaydi `user` rolunden gelir.</CardDescription>
+            <CardDescription>İletişim ve profil bilgileri</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-2xl border border-border p-4">
@@ -117,15 +112,15 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 Ad soyad
               </p>
               <p className="mt-2 text-sm font-medium text-foreground">
-                {customer.fullName ?? "Kayit yok"}
+                {customer.fullName ?? "Kayıt yok"}
               </p>
             </div>
             <div className="rounded-2xl border border-border p-4">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Gorunen ad
+                Görünen ad
               </p>
               <p className="mt-2 text-sm font-medium text-foreground">
-                {customer.displayName ?? "Kayit yok"}
+                {customer.displayName ?? "Kayıt yok"}
               </p>
             </div>
             <div className="rounded-2xl border border-border p-4">
@@ -133,7 +128,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 E-posta
               </p>
               <p className="mt-2 text-sm font-medium text-foreground">
-                {customer.email ?? "Kayit yok"}
+                {customer.email ?? "Kayıt yok"}
               </p>
             </div>
             <div className="rounded-2xl border border-border p-4">
@@ -141,7 +136,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 Telefon
               </p>
               <p className="mt-2 text-sm font-medium text-foreground">
-                {customer.phone ?? "Kayit yok"}
+                {customer.phone ?? "Kayıt yok"}
               </p>
             </div>
           </CardContent>
@@ -150,7 +145,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         <Card>
           <CardHeader>
             <CardTitle>Durum</CardTitle>
-            <CardDescription>Form ve onay ayri kayitlar olarak izlenir.</CardDescription>
+            <CardDescription>Form ve onay durumu birlikte izlenir.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-2xl border border-border p-4">
@@ -172,16 +167,16 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 Onay
               </p>
               <p className="mt-3 text-sm font-medium text-foreground">
-                {customer.workspace.hasCurrentConsent ? "Mevcut surum kabul edildi" : "Yok"}
+                {customer.workspace.hasCurrentConsent ? "Güncel sürüm onaylandı" : "Yok"}
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">Surum {OPS_TATTOO_CONSENT_VERSION}</p>
+              <p className="mt-1 text-xs text-muted-foreground">Sürüm {OPS_TATTOO_CONSENT_VERSION}</p>
             </div>
             <div className="rounded-2xl border border-border p-4">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Profil
               </p>
               <p className="mt-3 text-sm font-medium text-foreground">
-                {customer.workspace.isProfileComplete ? "Hazir" : "Eksik"}
+                {customer.workspace.isProfileComplete ? "Hazır" : "Eksik"}
               </p>
             </div>
           </CardContent>
@@ -192,18 +187,18 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Form ozeti</CardTitle>
-              <CardDescription>Son aktif snapshot goruntulenir.</CardDescription>
+              <CardTitle>Form özeti</CardTitle>
+              <CardDescription>Son aktif kayıt görüntülenir.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {latestForm ? (
                 <>
                   <div className="rounded-2xl border border-border p-4">
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Bolge
+                      Bölge
                     </p>
                     <p className="mt-2 text-sm text-foreground">
-                      {latestForm.placement ?? "Kayit yok"}
+                      {latestForm.placement ?? "Kayıt yok"}
                     </p>
                   </div>
                   <div className="rounded-2xl border border-border p-4">
@@ -211,21 +206,21 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                       Boyut
                     </p>
                     <p className="mt-2 text-sm text-foreground">
-                      {latestForm.sizeNotes ?? "Kayit yok"}
+                      {latestForm.sizeNotes ?? "Kayıt yok"}
                     </p>
                   </div>
                   <div className="rounded-2xl border border-border p-4">
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Tasarim notu
+                      Tasarım notu
                     </p>
                     <p className="mt-2 text-sm text-foreground">
-                      {latestForm.designNotes ?? "Kayit yok"}
+                      {latestForm.designNotes ?? "Kayıt yok"}
                     </p>
                   </div>
                 </>
               ) : (
                 <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Tattoo formu henuz yok.
+                  Tattoo formu henüz yok.
                 </div>
               )}
             </CardContent>
@@ -234,7 +229,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
           <Card>
             <CardHeader>
               <CardTitle>Staff notu</CardTitle>
-              <CardDescription>Kisa, tek guncel not mantigi kullanilir.</CardDescription>
+              <CardDescription>Kısa ve güncel not alanı</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {customer.note ? (
@@ -259,8 +254,8 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Yaklasan randevular</CardTitle>
-              <CardDescription>Planli ve ileride kalan kayitlar burada gorulur.</CardDescription>
+              <CardTitle>Yaklaşan randevular</CardTitle>
+              <CardDescription>Planlı ve ileride kalan randevular burada görünür.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {customer.upcomingAppointments.length ? (
@@ -288,7 +283,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 ))
               ) : (
                 <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Yaklasan randevu yok.
+                  Yaklaşan randevu yok.
                 </div>
               )}
             </CardContent>
@@ -296,8 +291,8 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
 
           <Card>
             <CardHeader>
-              <CardTitle>Gecmis</CardTitle>
-              <CardDescription>Tamamlanan veya kapanan randevular burada kalir.</CardDescription>
+              <CardTitle>Geçmiş</CardTitle>
+              <CardDescription>Tamamlanan veya kapanan randevular burada kalır.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {customer.pastAppointments.length ? (
@@ -325,7 +320,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 ))
               ) : (
                 <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Gecmis randevu yok.
+                  Geçmiş randevu yok.
                 </div>
               )}
             </CardContent>

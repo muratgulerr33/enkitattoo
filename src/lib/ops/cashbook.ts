@@ -11,7 +11,7 @@ import {
 import { writeAuditLog } from "./audit";
 
 export const CASHBOOK_DATE_LOCK_MESSAGE =
-  "Artist yalniz bugun icin kasa kaydi acabilir.";
+  "Artist yalnız bugün için kasa kaydı açabilir.";
 
 export type CashEntryRecord = {
   id: number;
@@ -116,7 +116,7 @@ export function isValidCashDateValue(value: string): boolean {
 
 function assertCashDateValue(value: string): string {
   if (!isValidCashDateValue(value)) {
-    throw new Error("Tarih gecerli degil.");
+    throw new Error("Tarih geçerli değil.");
   }
 
   return value;
@@ -244,7 +244,7 @@ export function parseCashAmountToCents(value: string): number {
   const normalized = value.trim().replace(",", ".");
 
   if (!/^\d{1,7}(\.\d{1,2})?$/.test(normalized)) {
-    throw new Error("Tutari 12.50 gibi yazin.");
+    throw new Error("Tutarı 12.50 gibi yazın.");
   }
 
   const [wholePart, fractionPart = ""] = normalized.split(".");
@@ -252,7 +252,7 @@ export function parseCashAmountToCents(value: string): number {
     Number(wholePart) * 100 + Number(fractionPart.padEnd(2, "0").slice(0, 2));
 
   if (!Number.isInteger(amountCents) || amountCents <= 0) {
-    throw new Error("Tutar sifirdan buyuk olmali.");
+    throw new Error("Tutar sıfırdan büyük olmalı.");
   }
 
   return amountCents;
@@ -260,7 +260,7 @@ export function parseCashAmountToCents(value: string): number {
 
 function assertPositiveAmountCents(amountCents: number): number {
   if (!Number.isInteger(amountCents) || amountCents <= 0) {
-    throw new Error("Tutar sifirdan buyuk olmali.");
+    throw new Error("Tutar sıfırdan büyük olmalı.");
   }
 
   return amountCents;
@@ -271,7 +271,7 @@ function assertCashEntryType(value: string): CashEntryType {
     return value;
   }
 
-  throw new Error("Islem turu gecerli degil.");
+  throw new Error("İşlem türü geçerli değil.");
 }
 
 export function toCashEntryType(value: string): CashEntryType {
@@ -392,7 +392,7 @@ export async function createCashEntry(input: CreateCashEntryInput): Promise<Cash
     const inserted = insertedRows[0];
 
     if (!inserted) {
-      throw new Error("Kasa kaydi eklenemedi.");
+      throw new Error("Kasa kaydı eklenemedi.");
     }
 
     await writeAuditLog(
@@ -422,7 +422,7 @@ export async function updateCashEntry(input: UpdateCashEntryInput): Promise<Cash
     const current = await getActiveCashEntry(input.entryId, tx);
 
     if (!current) {
-      throw new Error("Kasa kaydi bulunamadi.");
+      throw new Error("Kasa kaydı bulunamadı.");
     }
 
     const updatedRows = await tx
@@ -447,7 +447,7 @@ export async function updateCashEntry(input: UpdateCashEntryInput): Promise<Cash
     const updated = updatedRows[0];
 
     if (!updated) {
-      throw new Error("Kasa kaydi guncellenemedi.");
+      throw new Error("Kasa kaydı güncellenemedi.");
     }
 
     await writeAuditLog(
@@ -485,7 +485,7 @@ export async function softDeleteCashEntry(
     const current = await getActiveCashEntry(input.entryId, tx);
 
     if (!current) {
-      throw new Error("Kasa kaydi bulunamadi.");
+      throw new Error("Kasa kaydı bulunamadı.");
     }
 
     const updatedRows = await tx
@@ -508,7 +508,7 @@ export async function softDeleteCashEntry(
     const deleted = updatedRows[0];
 
     if (!deleted) {
-      throw new Error("Kasa kaydi kaldirilamadi.");
+      throw new Error("Kasa kaydı kaldırılamadı.");
     }
 
     await writeAuditLog(

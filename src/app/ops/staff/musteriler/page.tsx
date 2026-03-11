@@ -25,7 +25,7 @@ type PageProps = {
 
 function getFormStatusLabel(status: CustomerFormStatus): string {
   if (status === "submitted") {
-    return "Form tamamlandi";
+    return "Form tamamlandı";
   }
 
   if (status === "draft") {
@@ -36,7 +36,7 @@ function getFormStatusLabel(status: CustomerFormStatus): string {
 }
 
 function getConsentStatusLabel(status: CustomerConsentStatus): string {
-  return status === "accepted" ? "Onay kayitli" : "Onay yok";
+  return status === "accepted" ? "Onay kayıtlı" : "Onay yok";
 }
 
 function getFormBadgeClassName(status: CustomerFormStatus): string {
@@ -64,23 +64,18 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
 
   return (
     <div className="space-y-6">
-      <section className="space-y-3">
-        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px]">
-          Ekip / Musteriler
-        </Badge>
-        <div className="space-y-2">
-          <h1 className="typo-page-title">Musteriler</h1>
-          <p className="typo-p text-muted-foreground">
-            Hizli arama, temel durum ozetleri ve detay ekranina gecis ayni listede tutulur.
-          </p>
-        </div>
+      <section className="space-y-2">
+        <h1 className="typo-page-title">Müşteriler</h1>
+        <p className="typo-p text-muted-foreground">
+          Hızlı arama, temel durum özetleri ve detay ekranına geçiş aynı listede tutulur.
+        </p>
       </section>
 
       <Card>
         <CardHeader>
           <CardTitle>Arama</CardTitle>
           <CardDescription>
-            Isim, telefon veya e-posta ile arayin. Liste yalniz `user` rolundeki hesaplari gosterir.
+            İsim, telefon veya e-posta ile arayın.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -88,7 +83,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
             <Input
               name="q"
               defaultValue={query}
-              placeholder="Isim, telefon veya e-posta"
+              placeholder="İsim, telefon veya e-posta"
               autoComplete="off"
             />
             <button
@@ -106,8 +101,8 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
           <CardTitle>Liste</CardTitle>
           <CardDescription>
             {customers.length
-              ? `${customers.length} musteri bulundu.`
-              : "Aramaya uygun musteri bulunamadi."}
+              ? `${customers.length} müşteri bulundu.`
+              : "Aramaya uygun müşteri bulunamadı."}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -155,10 +150,10 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
 
                   <div className="mt-4 rounded-2xl border border-border bg-surface-1 p-4 text-sm">
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Siradaki randevu
+                      Sıradaki randevu
                     </p>
                     <p className="mt-2 text-foreground">
-                      {nextAppointmentText ?? "Yaklasan randevu yok."}
+                      {nextAppointmentText ?? "Yaklaşan randevu yok."}
                     </p>
                   </div>
                 </Link>
@@ -166,7 +161,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
             })
           ) : (
             <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-              Eslesen musteri yok. Arama kelimesini sadelestirip tekrar deneyin.
+              Eşleşen müşteri yok. Arama kelimesini sadeleştirip tekrar deneyin.
             </div>
           )}
         </CardContent>

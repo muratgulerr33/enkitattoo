@@ -17,7 +17,7 @@ export type OpsAppointmentActionState = {
   success: string | null;
 };
 
-const INITIAL_ERROR_MESSAGE = "Islem tamamlanamadi.";
+const INITIAL_ERROR_MESSAGE = "İşlem tamamlanamadı.";
 
 function toNullableText(value: FormDataEntryValue | null, maxLength: number): string | null {
   if (typeof value !== "string") {
@@ -31,7 +31,7 @@ function toNullableText(value: FormDataEntryValue | null, maxLength: number): st
   }
 
   if (normalized.length > maxLength) {
-    throw new Error("Metin alani cok uzun. Lutfen kisaltin.");
+    throw new Error("Metin alanı çok uzun. Lütfen kısaltın.");
   }
 
   return normalized;
@@ -80,9 +80,9 @@ export async function createStaffAppointmentAction(
 ): Promise<OpsAppointmentActionState> {
   try {
     const sessionUser = await requireOpsSessionArea("staff");
-    const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Musteri secin.");
-    const appointmentDate = toRequiredString(formData.get("appointmentDate"), "Tarih secin.");
-    const appointmentTime = toRequiredString(formData.get("appointmentTime"), "Saat secin.");
+    const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Müşteri seçin.");
+    const appointmentDate = toRequiredString(formData.get("appointmentDate"), "Tarih seçin.");
+    const appointmentTime = toRequiredString(formData.get("appointmentTime"), "Saat seçin.");
     const notes = toNullableText(formData.get("notes"), 1200);
 
     await createAppointment({
@@ -98,7 +98,7 @@ export async function createStaffAppointmentAction(
 
     return {
       error: null,
-      success: "Randevu acildi.",
+      success: "Randevu açıldı.",
     };
   } catch (error) {
     return {
@@ -114,8 +114,8 @@ export async function createUserAppointmentAction(
 ): Promise<OpsAppointmentActionState> {
   try {
     const sessionUser = await requireOpsSessionArea("user");
-    const appointmentDate = toRequiredString(formData.get("appointmentDate"), "Tarih secin.");
-    const appointmentTime = toRequiredString(formData.get("appointmentTime"), "Saat secin.");
+    const appointmentDate = toRequiredString(formData.get("appointmentDate"), "Tarih seçin.");
+    const appointmentTime = toRequiredString(formData.get("appointmentTime"), "Saat seçin.");
     const notes = toNullableText(formData.get("notes"), 1200);
 
     await createAppointment({
@@ -149,13 +149,13 @@ export async function updateAppointmentStatusAction(
     const sessionUser = await requireOpsSessionArea("staff");
     const appointmentId = toRequiredNumber(
       formData.get("appointmentId"),
-      "Randevu bulunamadi."
+      "Randevu bulunamadı."
     );
-    const rawStatus = toRequiredString(formData.get("status"), "Durum secin.");
+    const rawStatus = toRequiredString(formData.get("status"), "Durum seçin.");
 
     if (!isAppointmentStatus(rawStatus)) {
       return {
-        error: "Durum secimi gecerli degil.",
+        error: "Durum seçimi geçerli değil.",
         success: null,
       };
     }
@@ -170,7 +170,7 @@ export async function updateAppointmentStatusAction(
 
     return {
       error: null,
-      success: "Durum guncellendi.",
+      success: "Durum güncellendi.",
     };
   } catch (error) {
     return {

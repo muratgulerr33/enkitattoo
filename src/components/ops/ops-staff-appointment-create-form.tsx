@@ -42,7 +42,7 @@ export function OpsStaffAppointmentCreateForm({
     <form action={formAction} className="space-y-4">
       <div className="grid gap-4">
         <div className="space-y-2">
-          <Label htmlFor="customerUserId">Musteri</Label>
+          <Label htmlFor="customerUserId">Müşteri</Label>
           <select
             id="customerUserId"
             name="customerUserId"
@@ -51,7 +51,7 @@ export function OpsStaffAppointmentCreateForm({
             disabled={isDisabled}
             required
           >
-            {customerOptions.length ? null : <option value="">Musteri bulunamadi</option>}
+            {customerOptions.length ? null : <option value="">Müşteri bulunamadı</option>}
             {customerOptions.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.email ? `${option.label} · ${option.email}` : option.label}
@@ -92,7 +92,7 @@ export function OpsStaffAppointmentCreateForm({
           <Textarea
             id="notes"
             name="notes"
-            placeholder="Kisa bir not ekleyin."
+            placeholder="Kısa bir not ekleyin."
             rows={3}
             disabled={isDisabled}
           />
@@ -101,7 +101,7 @@ export function OpsStaffAppointmentCreateForm({
 
       {!customerOptions.length ? (
         <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-muted-foreground">
-          Randevu acmak icin once user rolunde bir hesap olusturun.
+          Randevu açmak için önce müşteri hesabı oluşturun.
         </p>
       ) : null}
 
@@ -124,7 +124,7 @@ export function OpsStaffAppointmentCreateForm({
             Kaydediliyor
           </>
         ) : (
-          "Randevu ac"
+          "Randevu aç"
         )}
       </Button>
     </form>
