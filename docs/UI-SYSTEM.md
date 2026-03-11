@@ -25,6 +25,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `main` container şu zinciri korur: `app-container app-mobile-header-offset app-safe-bottom no-overflow-x`.
 - Header hide/show davranışı `useHideHeaderOnScroll` ile çalışır; scroll dinleyicisi frame-frame React state ile yeniden kurulmaz.
 - Top-level nav kaynağı tek yerde kalır; ikinci nav kaynağı açılmaz.
+- Mobil drawer footer CTA alanı hesap açma ve giriş akışına hizmet eder; WhatsApp burada birincil footer CTA değildir (`src/components/app/mobile-header.tsx`).
 - Footer ve iletişim yüzeyi business bilgilerini component içine gömmez; `src/lib/site-info.ts` ve `src/lib/site/links.ts` kullanılır.
 - Çevrilebilir public copy `messages/*.json` veya ilgili content namespace içinden gelir.
 
@@ -63,7 +64,8 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 ### Ekran bazlı öncelik kuralları
 
 - Kasa: hızlı kayıt birincil yüzeydir; kompakt `Gelir / Gider` kontrolü, kısa preset etiketleri, tutar ve `Kaydı ekle` akışı öne çıkar. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır.
-- Randevular: ilk görünür ana yüzey aylık takvimdir; kullanıcı önce gün seçer, hemen ardından seçili gün operasyon paneli gelir. Seçili gün listesi ve hızlı create bu panel içinde birlikte çalışır.
+- Randevular: ilk görünür ana yüzey aylık takvimdir; kullanıcı önce gün seçer, hemen ardından seçili gün operasyon paneli gelir. Takvim doluluk sayısı okunur kalır; staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır, status yönetimi bu yüzeyde görünmez.
+- Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez.
 - Müşteri detayı: profil, form, açık onay, randevu ve staff notu aynı yüzeyde olabilir; fakat iç model terimleri kullanıcı copy’sine sızmamalıdır.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 

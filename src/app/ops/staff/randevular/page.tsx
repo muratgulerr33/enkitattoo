@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Circle, Clock3, UserRound } from "lucide-react";
-import { OpsAppointmentStatusForm } from "@/components/ops/ops-appointment-status-form";
+import { ChevronLeft, ChevronRight, Clock3 } from "lucide-react";
 import { OpsStaffAppointmentCreateForm } from "@/components/ops/ops-staff-appointment-create-form";
+import { OpsStaffAppointmentManageCard } from "@/components/ops/ops-staff-appointment-manage-card";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,10 +26,6 @@ import {
   parseMonthValue,
   shiftMonthValue,
 } from "@/lib/ops/appointments";
-import {
-  APPOINTMENT_SOURCE_LABELS,
-  APPOINTMENT_STATUS_LABELS,
-} from "@/lib/ops/appointment-copy";
 import { cn } from "@/lib/utils";
 
 const WEEKDAY_LABELS = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"] as const;
@@ -88,20 +84,20 @@ function getShiftedSelectedDay(monthValue: string, selectedDay: string, offset: 
   return buildDateValue(year, monthIndex, Math.min(dayValue, daysInMonth));
 }
 
-function getStatusBadgeClassName(status: keyof typeof APPOINTMENT_STATUS_LABELS): string {
-  if (status === "scheduled") {
-    return "border-emerald-500/20 bg-emerald-500/10 text-emerald-700";
+function getDayRangeLabel(dayAppointments: AppointmentRecord[]): string {
+  if (!dayAppointments.length) {
+    return "Uygun";
   }
 
-  if (status === "completed") {
-    return "border-sky-500/20 bg-sky-500/10 text-sky-700";
+  const times = [...dayAppointments]
+    .map((appointment) => appointment.appointmentTime)
+    .sort((left, right) => left.localeCompare(right));
+
+  if (times.length === 1) {
+    return times[0] ?? "Uygun";
   }
 
-  if (status === "cancelled") {
-    return "border-border bg-muted/40 text-foreground";
-  }
-
-  return "border-amber-500/20 bg-amber-500/10 text-amber-700";
+  return `${times[0]} - ${times.at(-1) ?? times[0]}`;
 }
 
 export default async function OpsStaffAppointmentsPage({ searchParams }: PageProps) {
@@ -112,26 +108,22 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
     listAppointmentsForMonth(monthValue),
     listCustomerOptions(),
   ]);
+  const scheduledAppointments = monthAppointments.filter(
+    (appointment) => appointment.status === "scheduled"
+  );
 
   const countsByDate = new Map<string, number>();
 
-  for (const appointment of monthAppointments) {
+  for (const appointment of scheduledAppointments) {
     countsByDate.set(
       appointment.appointmentDate,
       (countsByDate.get(appointment.appointmentDate) ?? 0) + 1
     );
   }
 
-  const dayAppointments = monthAppointments.filter(
+  const dayAppointments = scheduledAppointments.filter(
     (appointment) => appointment.appointmentDate === selectedDay
   );
-  const scheduledCount = dayAppointments.filter(
-    (appointment) => appointment.status === "scheduled"
-  ).length;
-  const completedCount = dayAppointments.filter(
-    (appointment) => appointment.status === "completed"
-  ).length;
-  const otherCount = dayAppointments.length - scheduledCount - completedCount;
   const calendarCells = buildMonthCalendar(monthValue, countsByDate, selectedDay);
   const previousMonth = shiftMonthValue(monthValue, -1);
   const nextMonth = shiftMonthValue(monthValue, 1);
@@ -143,12 +135,13 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
   const quickCreateDefaultTime = getQuickCreateDefaultTime(selectedDay, dayAppointments);
   const isSelectedDayToday = selectedDay === todayDateValue;
   const showTodayShortcut = monthValue !== todayMonthValue || selectedDay !== todayDateValue;
-  const monthSummaryText = monthAppointments.length
-    ? `${monthAppointments.length} kayıt, ${countsByDate.size} dolu gün`
+  const dayRangeLabel = getDayRangeLabel(dayAppointments);
+  const monthSummaryText = scheduledAppointments.length
+    ? `${scheduledAppointments.length} randevu, ${countsByDate.size} dolu gün`
     : "Bu ay için kayıt görünmüyor.";
   const selectedDaySummaryText = dayAppointments.length
-    ? `${dayAppointments.length} kayıt var. ${scheduledCount} planlı, ${completedCount} tamamlandı.`
-    : "Seçili gün açık görünüyor. Saat seçip ilk randevuyu açın.";
+    ? `${dayAppointments.length} randevu var. Saat aralığı ${dayRangeLabel}.`
+    : "Seçili gün açık. Saat seçip ilk randevuyu ekleyin.";
 
   return (
     <div className="ops-page-shell">
@@ -212,26 +205,35 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
                       cell.isSelected
                         ? "border-foreground bg-foreground text-background shadow-sm"
                         : cell.count
-                          ? "border-border bg-surface-1/85 text-foreground"
+                          ? "border-foreground/15 bg-surface-1/90 text-foreground shadow-sm"
                           : "border-border/80 bg-card text-foreground"
                     )}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <span className="text-sm font-semibold sm:text-base">{cell.dayNumber}</span>
-                      <span
-                        className={cn(
-                          "mt-1 inline-flex size-2 shrink-0 rounded-full",
-                          cell.isSelected
-                            ? "bg-background"
-                            : cell.count
-                              ? "bg-foreground"
-                              : "bg-border"
-                        )}
-                        aria-hidden
-                      />
+                      {cell.count ? (
+                        <span
+                          className={cn(
+                            "inline-flex min-w-8 items-center justify-center rounded-full px-2 py-1 text-xs font-semibold",
+                            cell.isSelected
+                              ? "bg-background text-foreground"
+                              : "bg-foreground text-background"
+                          )}
+                        >
+                          {cell.count}
+                        </span>
+                      ) : (
+                        <span
+                          className={cn(
+                            "mt-1 inline-flex size-2 shrink-0 rounded-full",
+                            cell.isSelected ? "bg-background/75" : "bg-border"
+                          )}
+                          aria-hidden
+                        />
+                      )}
                     </div>
 
-                    <div className="mt-auto space-y-1">
+                    <div className="mt-auto flex items-end justify-between gap-2">
                       <div className="flex items-center gap-1 text-[11px] font-medium">
                         {cell.isToday ? (
                           <span
@@ -241,23 +243,21 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
                                 ? "bg-background/15 text-background"
                                 : "bg-foreground text-background"
                             )}
-                          >
+                              >
                             Bugün
                           </span>
                         ) : null}
                       </div>
-                      <p
-                        className={cn(
-                          "text-[11px] leading-none",
-                          cell.isSelected
-                            ? "text-background/82"
-                            : cell.count
-                              ? "text-foreground"
-                              : "text-muted-foreground"
-                        )}
-                      >
-                        {cell.count ? `${cell.count} kayıt` : "Açık"}
-                      </p>
+                      {cell.count ? (
+                        <p
+                          className={cn(
+                            "text-[11px] font-medium leading-none",
+                            cell.isSelected ? "text-background/82" : "text-muted-foreground"
+                          )}
+                        >
+                          Randevu
+                        </p>
+                      ) : null}
                     </div>
                   </Link>
                 )
@@ -281,31 +281,20 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
                 <CardTitle className="text-lg leading-tight">{selectedDayLabel}</CardTitle>
                 <CardDescription>{selectedDaySummaryText}</CardDescription>
               </div>
-
-              <div className="hidden items-center gap-2 rounded-full border border-border bg-surface-1 px-3 py-2 text-xs text-muted-foreground sm:flex">
-                <Circle className="size-3 fill-current" aria-hidden />
-                Gün operasyonu
-              </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-2">
-              <div className="rounded-2xl border border-border bg-surface-1/70 px-3 py-3">
-                <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                  Planlı
-                </p>
-                <p className="mt-1 text-sm font-semibold text-foreground">{scheduledCount}</p>
-              </div>
-              <div className="rounded-2xl border border-border bg-surface-1/70 px-3 py-3">
-                <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                  Tamamlanan
-                </p>
-                <p className="mt-1 text-sm font-semibold text-foreground">{completedCount}</p>
-              </div>
+            <div className="grid grid-cols-2 gap-2">
               <div className="rounded-2xl border border-border bg-surface-1/70 px-3 py-3">
                 <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
                   Toplam
                 </p>
                 <p className="mt-1 text-sm font-semibold text-foreground">{dayAppointments.length}</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-surface-1/70 px-3 py-3">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
+                  Saat aralığı
+                </p>
+                <p className="mt-1 text-sm font-semibold text-foreground">{dayRangeLabel}</p>
               </div>
             </div>
           </CardHeader>
@@ -314,7 +303,7 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
             <section className="space-y-3 rounded-[1.6rem] border border-border bg-surface-1/80 p-4">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h2 className="text-base font-semibold text-foreground">Hızlı randevu aç</h2>
+                  <h2 className="text-base font-semibold text-foreground">Yeni randevu</h2>
                   <p className="text-sm text-muted-foreground">
                     Saati seçin, randevuyu seçili güne ekleyin.
                   </p>
@@ -336,16 +325,13 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
             <section className="space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-base font-semibold text-foreground">Günün kayıtları</h2>
+                  <h2 className="text-base font-semibold text-foreground">Günün randevuları</h2>
                   <p className="text-sm text-muted-foreground">
                     {dayAppointments.length
-                      ? `${dayAppointments.length} kayıt görüntüleniyor.`
-                      : "Henüz kayıt yok."}
+                      ? `${dayAppointments.length} randevu görüntüleniyor.`
+                      : "Henüz randevu yok."}
                   </p>
                 </div>
-                {otherCount > 0 ? (
-                  <p className="text-xs text-muted-foreground">{otherCount} kayıt farklı durumda</p>
-                ) : null}
               </div>
 
               {dayAppointments.length ? (
@@ -355,61 +341,48 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
                       key={appointment.id}
                       className="rounded-[1.45rem] border border-border bg-card p-4"
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-3">
                         <div className="space-y-2">
                           <div className="flex flex-wrap items-center gap-2">
-                            <Badge
-                              variant="outline"
-                              className={cn(
-                                "rounded-full border",
-                                getStatusBadgeClassName(appointment.status)
-                              )}
-                            >
-                              {APPOINTMENT_STATUS_LABELS[appointment.status]}
-                            </Badge>
-                            <Badge variant="outline" className="rounded-full">
-                              {APPOINTMENT_SOURCE_LABELS[appointment.source]}
-                            </Badge>
+                            <span className="inline-flex items-center gap-1 rounded-full border border-border bg-surface-1 px-3 py-1 text-xs font-semibold text-foreground">
+                              <Clock3 className="size-3.5" aria-hidden />
+                              {appointment.appointmentTime}
+                            </span>
+                            {appointment.customerEmail ? (
+                              <span className="text-xs text-muted-foreground">
+                                {appointment.customerEmail}
+                              </span>
+                            ) : null}
                           </div>
 
                           <div className="space-y-1">
                             <p className="text-base font-semibold text-foreground">
                               {appointment.customerName}
                             </p>
-                            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                              <span className="inline-flex items-center gap-1">
-                                <Clock3 className="size-4" aria-hidden />
-                                {appointment.appointmentTime}
-                              </span>
-                              <span className="inline-flex items-center gap-1">
-                                <UserRound className="size-4" aria-hidden />
-                                {appointment.createdByName}
-                              </span>
-                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              Kaydı açan: {appointment.createdByName}
+                            </p>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="mt-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(14rem,15rem)]">
                         <div className="rounded-2xl border border-border bg-surface-1/75 p-3">
                           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                             Not
                           </p>
                           <p className="mt-1 text-sm text-foreground">
-                            {appointment.notes ?? "Not eklenmedi."}
-                          </p>
-                          <p className="mt-2 text-xs text-muted-foreground">
-                            {appointment.customerEmail ?? "E-posta yok"}
+                            {appointment.notes ?? "Not yok."}
                           </p>
                         </div>
 
-                        <div className="rounded-2xl border border-border p-3">
-                          <OpsAppointmentStatusForm
-                            appointmentId={appointment.id}
-                            status={appointment.status}
-                            compact
-                          />
-                        </div>
+                        <OpsStaffAppointmentManageCard
+                          appointmentId={appointment.id}
+                          appointmentDate={appointment.appointmentDate}
+                          appointmentDateLabel={selectedDayLabel}
+                          appointmentTime={appointment.appointmentTime}
+                          customerUserId={appointment.customerUserId}
+                          customerOptions={customerOptions}
+                          notes={appointment.notes}
+                        />
                       </div>
                     </div>
                   ))}

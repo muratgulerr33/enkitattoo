@@ -1,5 +1,6 @@
 "use client";
 
+import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import type { RefObject } from "react";
@@ -27,9 +28,9 @@ import {
 import {
   IconSearch,
 } from "@/components/icons/nandd";
-import { WhatsAppCta } from "@/components/app/cta-actions";
 import { cn } from "@/lib/utils";
 import { IconButton } from "@/components/ui/icon-button";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetClose,
@@ -487,12 +488,30 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                           </DropdownMenu>
                         </div>
                       </div>
-                      <div className="mt-3 border-t border-border/60 p-2">
-                        <WhatsAppCta
-                          label={t("common.social.whatsapp")}
-                          className="w-full"
-                          onClick={() => setHamburgerOpen(false)}
-                        />
+                      <div className="mt-3 border-t border-border/60 px-2 pt-4">
+                        <div className="rounded-[1.7rem] border border-border bg-surface-1/70 p-3">
+                          <div className="space-y-1 px-1 pb-3">
+                            <p className="text-sm font-semibold tracking-tight text-foreground">
+                              {t("mobileHeader.accountTitle")}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {t("mobileHeader.accountDescription")}
+                            </p>
+                          </div>
+
+                          <div className="grid gap-2">
+                            <Button asChild size="cta" className="w-full rounded-2xl">
+                              <NextLink href="/ops/giris?kayit=1" onClick={() => setHamburgerOpen(false)}>
+                                {t("mobileHeader.signUpCta")}
+                              </NextLink>
+                            </Button>
+                            <Button asChild variant="outline" size="cta" className="w-full rounded-2xl">
+                              <NextLink href="/ops/giris" onClick={() => setHamburgerOpen(false)}>
+                                {t("mobileHeader.signInCta")}
+                              </NextLink>
+                            </Button>
+                          </div>
+                        </div>
                       </div>
                     </SheetContent>
                   </Sheet>

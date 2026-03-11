@@ -263,6 +263,76 @@ export async function listCustomers(searchQuery?: string | null): Promise<Custom
   }));
 }
 
+export type CreateCustomerRecordInput = {
+  email: string | null;
+  passwordHash: string | null;
+  phone: string;
+  fullName: string;
+  displayName?: string | null;
+};
+
+export async function createCustomerRecord(
+  input: CreateCustomerRecordInput
+): Promise<{
+  userId: number;
+  email: string | null;
+  phone: string;
+  fullName: string;
+  displayName: string | null;
+}> {
+  const db = getDb();
+  const now = new Date();
+
+  const createdCustomer = await db.transaction(async (tx) => {
+    const insertedUsers = await tx
+      .insert(users)
+      .values({
+        email: input.email,
+        passwordHash: input.passwordHash,
+        phone: input.phone,
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .returning({
+        userId: users.id,
+        email: users.email,
+        phone: users.phone,
+      });
+
+    const user = insertedUsers[0];
+
+    if (!user) {
+      throw new Error("Müşteri oluşturulamadı.");
+    }
+
+    await tx.insert(userProfiles).values({
+      userId: user.userId,
+      fullName: input.fullName,
+      displayName: input.displayName ?? null,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    await tx.insert(userRoles).values({
+      userId: user.userId,
+      role: "user",
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    return user;
+  });
+
+  return {
+    userId: createdCustomer.userId,
+    email: createdCustomer.email,
+    phone: createdCustomer.phone ?? input.phone,
+    fullName: input.fullName,
+    displayName: input.displayName ?? null,
+  };
+}
+
 export async function getCustomerDetail(userId: number): Promise<CustomerDetail | null> {
   const db = getDb();
   const rows = await db

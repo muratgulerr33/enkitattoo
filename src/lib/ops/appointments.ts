@@ -54,10 +54,22 @@ export type CreateAppointmentInput = {
   createdByUserId: number;
 };
 
+export type UpdateAppointmentInput = {
+  appointmentId: number;
+  customerUserId: number;
+  appointmentDate: string;
+  appointmentTime: string;
+  notes: string | null;
+};
+
 export type UpdateAppointmentStatusInput = {
   appointmentId: number;
   status: AppointmentStatus;
   actorUserId: number;
+};
+
+export type DeleteAppointmentInput = {
+  appointmentId: number;
 };
 
 type AppointmentRow = {
@@ -313,6 +325,34 @@ async function loadAppointmentRecords(whereClause?: SQL<unknown>): Promise<Appoi
   const presentations = await getUserPresentationMap(ids);
 
   return rows.map((row) => toAppointmentRecord(row, presentations));
+}
+
+async function findAppointmentRowById(appointmentId: number): Promise<AppointmentRow> {
+  const db = getDb();
+  const rows = await db
+    .select({
+      id: appointments.id,
+      customerUserId: appointments.customerUserId,
+      appointmentDate: appointments.appointmentDate,
+      appointmentTime: appointments.appointmentTime,
+      status: appointments.status,
+      source: appointments.source,
+      notes: appointments.notes,
+      createdByUserId: appointments.createdByUserId,
+      createdAt: appointments.createdAt,
+      updatedAt: appointments.updatedAt,
+    })
+    .from(appointments)
+    .where(eq(appointments.id, appointmentId))
+    .limit(1);
+
+  const record = rows[0];
+
+  if (!record) {
+    throw new Error("Randevu bulunamadı.");
+  }
+
+  return record;
 }
 
 function normalizeNotes(value: string | null): string | null {
@@ -572,32 +612,70 @@ export async function createAppointment(input: CreateAppointmentInput): Promise<
   }
 }
 
+export async function updateAppointment(input: UpdateAppointmentInput): Promise<AppointmentRecord> {
+  const current = await findAppointmentRowById(input.appointmentId);
+  const customerUserId = input.customerUserId;
+  const appointmentDate = assertDateValue(input.appointmentDate);
+  const appointmentTime = assertTimeValue(input.appointmentTime);
+  const notes = normalizeNotes(input.notes);
+
+  await ensureCustomerUser(customerUserId);
+
+  if (current.status === "scheduled") {
+    await assertAvailableScheduledSlot(appointmentDate, appointmentTime, current.id);
+  }
+
+  try {
+    const db = getDb();
+    const updatedRows = await db
+      .update(appointments)
+      .set({
+        customerUserId,
+        appointmentDate,
+        appointmentTime,
+        notes,
+        updatedAt: new Date(),
+      })
+      .where(eq(appointments.id, input.appointmentId))
+      .returning({
+        id: appointments.id,
+        customerUserId: appointments.customerUserId,
+        appointmentDate: appointments.appointmentDate,
+        appointmentTime: appointments.appointmentTime,
+        status: appointments.status,
+        source: appointments.source,
+        notes: appointments.notes,
+        createdByUserId: appointments.createdByUserId,
+        createdAt: appointments.createdAt,
+        updatedAt: appointments.updatedAt,
+      });
+
+    const updated = updatedRows[0];
+
+    if (!updated) {
+      throw new Error("Randevu güncellenemedi.");
+    }
+
+    const presentations = await getUserPresentationMap([
+      updated.customerUserId,
+      updated.createdByUserId,
+    ]);
+
+    return toAppointmentRecord(updated, presentations);
+  } catch (error) {
+    if (isUniqueConflict(error)) {
+      throw new Error(APPOINTMENT_SLOT_CONFLICT_MESSAGE);
+    }
+
+    throw error;
+  }
+}
+
 export async function updateAppointmentStatus(
   input: UpdateAppointmentStatusInput
 ): Promise<AppointmentRecord> {
   const db = getDb();
-  const currentRows = await db
-    .select({
-      id: appointments.id,
-      customerUserId: appointments.customerUserId,
-      appointmentDate: appointments.appointmentDate,
-      appointmentTime: appointments.appointmentTime,
-      status: appointments.status,
-      source: appointments.source,
-      notes: appointments.notes,
-      createdByUserId: appointments.createdByUserId,
-      createdAt: appointments.createdAt,
-      updatedAt: appointments.updatedAt,
-    })
-    .from(appointments)
-    .where(eq(appointments.id, input.appointmentId))
-    .limit(1);
-
-  const current = currentRows[0];
-
-  if (!current) {
-    throw new Error("Randevu bulunamadı.");
-  }
+  const current = await findAppointmentRowById(input.appointmentId);
 
   if (input.status === "scheduled") {
     await assertAvailableScheduledSlot(
@@ -667,5 +745,17 @@ export async function updateAppointmentStatus(
     }
 
     throw error;
+  }
+}
+
+export async function deleteAppointment(input: DeleteAppointmentInput): Promise<void> {
+  const db = getDb();
+  const deletedRows = await db
+    .delete(appointments)
+    .where(eq(appointments.id, input.appointmentId))
+    .returning({ id: appointments.id });
+
+  if (!deletedRows[0]) {
+    throw new Error("Randevu bulunamadı.");
   }
 }

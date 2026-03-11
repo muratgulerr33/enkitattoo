@@ -4,7 +4,9 @@ import { revalidatePath } from "next/cache";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import {
   createAppointment,
+  deleteAppointment,
   getSourceForStaffRoles,
+  updateAppointment,
   updateAppointmentStatus,
 } from "@/lib/ops/appointments";
 import {
@@ -171,6 +173,72 @@ export async function updateAppointmentStatusAction(
     return {
       error: null,
       success: "Durum güncellendi.",
+    };
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : INITIAL_ERROR_MESSAGE,
+      success: null,
+    };
+  }
+}
+
+export async function updateStaffAppointmentAction(
+  _previousState: OpsAppointmentActionState,
+  formData: FormData
+): Promise<OpsAppointmentActionState> {
+  try {
+    await requireOpsSessionArea("staff");
+    const appointmentId = toRequiredNumber(
+      formData.get("appointmentId"),
+      "Randevu bulunamadı."
+    );
+    const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Müşteri seçin.");
+    const appointmentDate = toRequiredString(formData.get("appointmentDate"), "Tarih seçin.");
+    const appointmentTime = toRequiredString(formData.get("appointmentTime"), "Saat seçin.");
+    const notes = toNullableText(formData.get("notes"), 1200);
+
+    await updateAppointment({
+      appointmentId,
+      customerUserId,
+      appointmentDate,
+      appointmentTime,
+      notes,
+    });
+
+    revalidateAppointmentPaths();
+
+    return {
+      error: null,
+      success: "Randevu güncellendi.",
+    };
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : INITIAL_ERROR_MESSAGE,
+      success: null,
+    };
+  }
+}
+
+export async function deleteStaffAppointmentAction(
+  _previousState: OpsAppointmentActionState,
+  formData: FormData
+): Promise<OpsAppointmentActionState> {
+  try {
+    await requireOpsSessionArea("staff");
+    const appointmentId = toRequiredNumber(
+      formData.get("appointmentId"),
+      "Randevu bulunamadı."
+    );
+
+    await deleteAppointment({
+      appointmentId,
+    });
+
+    revalidateAppointmentPaths();
+
+    return {
+      error: null,
+      success: "Randevu silindi.",
     };
   } catch (error) {
     return {

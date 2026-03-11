@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState } from "react";
 import { CalendarDays, Clock3, LoaderCircle } from "lucide-react";
 import {
   createStaffAppointmentAction,
   type OpsAppointmentActionState,
+  updateStaffAppointmentAction,
 } from "@/app/ops/randevular/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +31,11 @@ type StaffAppointmentCreateFormProps = {
   defaultDate: string;
   defaultDateLabel: string;
   defaultTime: string;
+  defaultCustomerUserId?: number;
+  defaultNotes?: string | null;
+  appointmentId?: number;
+  mode?: "create" | "edit";
+  submitLabel?: string;
   compact?: boolean;
 };
 
@@ -37,16 +44,42 @@ export function OpsStaffAppointmentCreateForm({
   defaultDate,
   defaultDateLabel,
   defaultTime,
+  defaultCustomerUserId,
+  defaultNotes,
+  appointmentId,
+  mode = "create",
+  submitLabel,
   compact = false,
 }: StaffAppointmentCreateFormProps) {
+  const action = mode === "edit" ? updateStaffAppointmentAction : createStaffAppointmentAction;
   const [state, formAction, pending] = useActionState(
-    createStaffAppointmentAction,
+    action,
     INITIAL_STATE
   );
-  const isDisabled = pending || customerOptions.length === 0;
+  const isDisabled = pending;
+
+  if (!customerOptions.length) {
+    return (
+      <div className="space-y-3">
+        <div className="rounded-2xl border border-border bg-background/80 p-4 text-sm">
+          <p className="font-medium text-foreground">Seçilebilir müşteri yok.</p>
+          <p className="mt-1 text-muted-foreground">
+            Önce müşteri oluşturun, sonra bu güne dönüp randevuyu açın.
+          </p>
+        </div>
+
+        <Button asChild size="cta" className="w-full sm:w-auto">
+          <Link href="/ops/staff/musteriler#yeni-musteri">Müşteri oluştur</Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <form action={formAction} className={cn("space-y-4", compact && "space-y-3")}>
+      {mode === "edit" && appointmentId ? (
+        <input type="hidden" name="appointmentId" value={appointmentId} />
+      ) : null}
       <input type="hidden" name="appointmentDate" value={defaultDate} />
 
       <div className={cn("grid gap-4", compact && "gap-3")}>
@@ -84,12 +117,11 @@ export function OpsStaffAppointmentCreateForm({
           <select
             id="customerUserId"
             name="customerUserId"
-            defaultValue={customerOptions[0]?.id.toString() ?? ""}
+            defaultValue={(defaultCustomerUserId ?? customerOptions[0]?.id)?.toString() ?? ""}
             className={cn(selectClassName, compact && "h-10 rounded-xl")}
             disabled={isDisabled}
             required
           >
-            {customerOptions.length ? null : <option value="">Müşteri bulunamadı</option>}
             {customerOptions.map((option) => (
               <option key={option.id} value={option.id}>
                 {option.email ? `${option.label} · ${option.email}` : option.label}
@@ -105,16 +137,11 @@ export function OpsStaffAppointmentCreateForm({
             name="notes"
             placeholder="Kısa bir not ekleyin."
             rows={compact ? 2 : 3}
+            defaultValue={defaultNotes ?? ""}
             disabled={isDisabled}
           />
         </div>
       </div>
-
-      {!customerOptions.length ? (
-        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-muted-foreground">
-          Randevu açmak için önce müşteri hesabı oluşturun.
-        </p>
-      ) : null}
 
       {state.error ? (
         <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
@@ -132,10 +159,10 @@ export function OpsStaffAppointmentCreateForm({
         {pending ? (
           <>
             <LoaderCircle className="size-4 animate-spin" aria-hidden />
-            Kaydediliyor
+            {mode === "edit" ? "Güncelleniyor" : "Kaydediliyor"}
           </>
         ) : (
-          "Randevu aç"
+          submitLabel ?? (mode === "edit" ? "Kaydı güncelle" : "Randevu aç")
         )}
       </Button>
     </form>

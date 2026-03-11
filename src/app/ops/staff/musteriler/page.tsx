@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { OpsStaffCustomerCreateForm } from "@/components/ops/ops-staff-customer-create-form";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -66,33 +67,45 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
     <div className="ops-page-shell">
       <section className="ops-page-header">
         <h1 className="typo-page-title">Müşteriler</h1>
-        <p className="ops-page-intro">
-          Arama, temel durum ve detay geçişi tek listede toplanır.
-        </p>
+        <p className="ops-page-intro">Arayın, yeni müşteri ekleyin ve randevu akışına geri dönün.</p>
       </section>
 
-      <Card>
-        <CardHeader className="gap-1.5">
-          <CardTitle>Arama</CardTitle>
-          <CardDescription>İsim, telefon veya e-posta ile arayın.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form action="/ops/staff/musteriler" className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
-            <Input
-              name="q"
-              defaultValue={query}
-              placeholder="İsim, telefon veya e-posta"
-              autoComplete="off"
-            />
-            <button
-              type="submit"
-              className="inline-flex h-11 items-center justify-center rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/35"
-            >
-              Ara
-            </button>
-          </form>
-        </CardContent>
-      </Card>
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.7fr)] xl:items-start">
+        <Card id="yeni-musteri">
+          <CardHeader className="gap-1.5">
+            <CardTitle>Hızlı müşteri oluştur</CardTitle>
+            <CardDescription>
+              Randevu açmadan önce müşteriyi bu alandan ekleyin.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <OpsStaffCustomerCreateForm />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="gap-1.5">
+            <CardTitle>Arama</CardTitle>
+            <CardDescription>İsim, telefon veya e-posta ile arayın.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form action="/ops/staff/musteriler" className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+              <Input
+                name="q"
+                defaultValue={query}
+                placeholder="İsim, telefon veya e-posta"
+                autoComplete="off"
+              />
+              <button
+                type="submit"
+                className="inline-flex h-11 items-center justify-center rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/35"
+              >
+                Ara
+              </button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardHeader className="gap-1.5">
@@ -159,7 +172,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
             })
           ) : (
             <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-              Eşleşen müşteri yok. Arama kelimesini sadeleştirip tekrar deneyin.
+              Eşleşen müşteri yok. Yukarıdan yeni müşteri ekleyin veya arama kelimesini sadeleştirin.
             </div>
           )}
         </CardContent>
