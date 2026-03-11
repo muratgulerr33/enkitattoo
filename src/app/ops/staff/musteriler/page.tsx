@@ -63,20 +63,18 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
   const customers = await listCustomers(query);
 
   return (
-    <div className="space-y-6">
-      <section className="space-y-2">
+    <div className="ops-page-shell">
+      <section className="ops-page-header">
         <h1 className="typo-page-title">Müşteriler</h1>
-        <p className="typo-p text-muted-foreground">
-          Hızlı arama, temel durum özetleri ve detay ekranına geçiş aynı listede tutulur.
+        <p className="ops-page-intro">
+          Arama, temel durum ve detay geçişi tek listede toplanır.
         </p>
       </section>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="gap-1.5">
           <CardTitle>Arama</CardTitle>
-          <CardDescription>
-            İsim, telefon veya e-posta ile arayın.
-          </CardDescription>
+          <CardDescription>İsim, telefon veya e-posta ile arayın.</CardDescription>
         </CardHeader>
         <CardContent>
           <form action="/ops/staff/musteriler" className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
@@ -97,7 +95,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
       </Card>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="gap-1.5">
           <CardTitle>Liste</CardTitle>
           <CardDescription>
             {customers.length
@@ -130,7 +128,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                     <span className="text-sm font-medium text-muted-foreground">Detay</span>
                   </div>
 
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="mt-3 flex flex-wrap gap-2">
                     <Badge
                       variant="outline"
                       className={cn("rounded-full border", getFormBadgeClassName(customer.formStatus))}
@@ -148,7 +146,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                     </Badge>
                   </div>
 
-                  <div className="mt-4 rounded-2xl border border-border bg-surface-1 p-4 text-sm">
+                  <div className="mt-3 rounded-2xl border border-border bg-surface-1 p-4 text-sm">
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                       Sıradaki randevu
                     </p>

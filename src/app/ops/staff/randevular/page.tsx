@@ -80,23 +80,23 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
   const nextMonth = shiftMonthValue(monthValue, 1);
 
   return (
-    <div className="space-y-6">
-      <section className="space-y-2">
+    <div className="ops-page-shell">
+      <section className="ops-page-header">
         <h1 className="typo-page-title">Randevular</h1>
-        <p className="typo-p text-muted-foreground">
-          Aylık görünüm yön bulma için, seçilen gün ise asıl operasyon akışı için kullanılır.
+        <p className="ops-page-intro">
+          Seçilen gün ana akıştır. Aylık görünüm yön bulma ve hızlı geçiş içindir.
         </p>
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-        <div className="space-y-6">
-          <Card>
-            <CardHeader className="space-y-4">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] xl:gap-6">
+        <div className="flex flex-col gap-5 sm:gap-6">
+          <Card className="order-2 xl:order-1">
+            <CardHeader className="space-y-3">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <CardTitle>{getMonthLabel(monthValue)}</CardTitle>
                   <CardDescription>
-                    Gün seçin, detay listesi altta yenilensin.
+                    Gün seçin, seçili gün listesi buna göre yenilensin.
                   </CardDescription>
                 </div>
                 <div className="flex gap-2">
@@ -164,8 +164,8 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
+          <Card className="order-1 xl:order-2">
+            <CardHeader className="gap-1.5">
               <CardTitle>{formatAppointmentDateLong(selectedDay)}</CardTitle>
               <CardDescription>
                 {dayAppointments.length
@@ -245,12 +245,12 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
           </Card>
         </div>
 
-        <div className="space-y-6">
+        <div className="flex flex-col gap-5 sm:gap-6">
           <Card>
-            <CardHeader>
+            <CardHeader className="gap-1.5">
               <CardTitle>Yeni randevu</CardTitle>
               <CardDescription>
-                Randevu işletme bazlıdır. Artist seçimi veya slot motoru bu sürümde yoktur.
+                Müşteri, tarih ve saat seçerek hızlıca yeni kayıt açın.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -262,9 +262,9 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="gap-1.5">
               <CardTitle>Gün özeti</CardTitle>
-              <CardDescription>Seçilen günü hızlıca okuyun.</CardDescription>
+              <CardDescription>Seçilen günün sayı özetini görün.</CardDescription>
             </CardHeader>
             <CardContent className="grid gap-3">
               <div className="rounded-2xl border border-border p-4">

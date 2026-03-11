@@ -45,22 +45,22 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
   const todayDate = getTodayCashDateValue();
 
   return (
-    <div className="space-y-6">
-      <section className="space-y-2">
+    <div className="ops-page-shell">
+      <section className="ops-page-header">
         <h1 className="typo-page-title">Kasa</h1>
-        <p className="typo-p text-muted-foreground">
-          Hızlı kayıt ve günlük özet aynı ekranda tutulur.
+        <p className="ops-page-intro">
+          Hızlı kayıt önce gelir. Günlük özet ve geçmiş hareketler aynı ekranda destek için kalır.
         </p>
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-        <div className="space-y-6">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] xl:gap-6">
+        <div className="order-2 space-y-5 sm:space-y-6 xl:order-1">
           <Card>
-            <CardHeader className="gap-4">
+            <CardHeader className="gap-3">
               <div className="space-y-2">
                 <CardTitle>Gün özeti</CardTitle>
                 <CardDescription>
-                  Bugünün neti her zaman ayrıdır; seçili tarih listesi alttaki akışı belirler.
+                  Bugünün neti ayrı izlenir. Tarih seçimi alttaki listeyi değiştirir.
                 </CardDescription>
               </div>
 
@@ -123,12 +123,12 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="gap-1.5">
               <CardTitle>{selectedDateLabel}</CardTitle>
               <CardDescription>
                 {cashbook.entries.length
                   ? `${cashbook.entries.length} aktif kayıt listeleniyor.`
-                  : "Seçili gün için aktif kasa kaydı yok."}
+                  : "Seçili gün için aktif kayıt yok."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -206,12 +206,12 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
           </Card>
         </div>
 
-        <div className="space-y-6">
+        <div className="order-1 space-y-5 sm:space-y-6 xl:order-2">
           <Card>
-            <CardHeader>
+            <CardHeader className="gap-1.5">
               <CardTitle>Hızlı yeni kayıt</CardTitle>
               <CardDescription>
-                İşlem türü, tutar ve not ile kasa kaydı saniyeler içinde açılır.
+                İşlem türü, tutar ve not ile yeni hareket ekleyin.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -223,10 +223,10 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="gap-1.5">
               <CardTitle>Seçili gün özeti</CardTitle>
               <CardDescription>
-                Filtrelenen günün neti tablo yerine kartlarla okunur.
+                Seçili günün toplamlarını kısa kartlarla görün.
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-3">

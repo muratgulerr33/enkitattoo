@@ -50,19 +50,19 @@ export default async function OpsUserAppointmentsPage() {
     !overview.hasCurrentConsent;
 
   return (
-    <div className="space-y-6">
-      <section className="space-y-2">
+    <div className="ops-page-shell">
+      <section className="ops-page-header">
         <h1 className="typo-page-title">Randevularım</h1>
-        <p className="typo-p text-muted-foreground">
-          Yeni talep açabilir, yaklaşan kayıtlarınızı görebilir ve geçmişi takip edebilirsiniz.
+        <p className="ops-page-intro">
+          Yeni talep açın, yaklaşan kayıtları görün ve geçmişi aynı akışta takip edin.
         </p>
       </section>
 
       {hasAppointmentPrepGap ? (
         <Card>
-          <CardHeader>
+          <CardHeader className="gap-1.5">
             <CardTitle>Hazırlık durumu</CardTitle>
-            <CardDescription>Profil, form ve onay alanları ayrı ilerler.</CardDescription>
+            <CardDescription>Eksik adımlar varsa önce bunları tamamlayın.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 md:grid-cols-3">
             <Link
@@ -105,12 +105,12 @@ export default async function OpsUserAppointmentsPage() {
         </Card>
       ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] xl:gap-6">
         <Card>
-          <CardHeader>
+          <CardHeader className="gap-1.5">
             <CardTitle>Yeni randevu</CardTitle>
             <CardDescription>
-              Tarih ve saat seçin. Uygun değilse sade bir hata mesajı görürsünüz.
+              Tarih ve saat seçin. Uygun değilse kısa bir hata mesajı görürsünüz.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -118,9 +118,9 @@ export default async function OpsUserAppointmentsPage() {
           </CardContent>
         </Card>
 
-        <div className="space-y-6">
+        <div className="space-y-5 sm:space-y-6">
           <Card>
-            <CardHeader>
+            <CardHeader className="gap-1.5">
               <CardTitle>Yaklaşan randevular</CardTitle>
               <CardDescription>Sadece size ait aktif kayıtlar listelenir.</CardDescription>
             </CardHeader>
@@ -174,7 +174,7 @@ export default async function OpsUserAppointmentsPage() {
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="gap-1.5">
               <CardTitle>Geçmiş</CardTitle>
               <CardDescription>Tamamlanan veya kapanan kayıtlar burada kalır.</CardDescription>
             </CardHeader>

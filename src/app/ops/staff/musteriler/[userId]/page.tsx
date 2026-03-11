@@ -84,8 +84,8 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
   const latestForm = customer.workspace.latestTattooForm;
 
   return (
-    <div className="space-y-6">
-      <section className="space-y-2">
+    <div className="ops-page-shell">
+      <section className="ops-page-header">
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="typo-page-title">{getCustomerLabel(customer)}</h1>
           <Link
@@ -95,14 +95,14 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
             Listeye dön
           </Link>
         </div>
-        <p className="typo-p text-muted-foreground">
-          Form, onay, randevu ve notlar bu ekranda birlikte görünür.
+        <p className="ops-page-intro">
+          Temel bilgi, not ve randevu geçmişi aynı ekranda birlikte görünür.
         </p>
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-6">
         <Card>
-          <CardHeader>
+          <CardHeader className="gap-1.5">
             <CardTitle>Temel bilgi</CardTitle>
             <CardDescription>İletişim ve profil bilgileri</CardDescription>
           </CardHeader>
@@ -143,7 +143,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         </Card>
 
         <Card>
-          <CardHeader>
+          <CardHeader className="gap-1.5">
             <CardTitle>Durum</CardTitle>
             <CardDescription>Form ve onay durumu birlikte izlenir.</CardDescription>
           </CardHeader>
@@ -183,10 +183,10 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         </Card>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]">
-        <div className="space-y-6">
-          <Card>
-            <CardHeader>
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:gap-6">
+        <div className="flex flex-col gap-5 sm:gap-6">
+          <Card className="order-2 xl:order-1">
+            <CardHeader className="gap-1.5">
               <CardTitle>Form özeti</CardTitle>
               <CardDescription>Son aktif kayıt görüntülenir.</CardDescription>
             </CardHeader>
@@ -226,8 +226,8 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
+          <Card className="order-1 xl:order-2">
+            <CardHeader className="gap-1.5">
               <CardTitle>Staff notu</CardTitle>
               <CardDescription>Kısa ve güncel not alanı</CardDescription>
             </CardHeader>
@@ -251,9 +251,9 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
           </Card>
         </div>
 
-        <div className="space-y-6">
+        <div className="flex flex-col gap-5 sm:gap-6">
           <Card>
-            <CardHeader>
+            <CardHeader className="gap-1.5">
               <CardTitle>Yaklaşan randevular</CardTitle>
               <CardDescription>Planlı ve ileride kalan randevular burada görünür.</CardDescription>
             </CardHeader>
@@ -290,7 +290,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
           </Card>
 
           <Card>
-            <CardHeader>
+            <CardHeader className="gap-1.5">
               <CardTitle>Geçmiş</CardTitle>
               <CardDescription>Tamamlanan veya kapanan randevular burada kalır.</CardDescription>
             </CardHeader>

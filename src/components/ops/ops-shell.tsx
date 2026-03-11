@@ -59,14 +59,20 @@ function OpsNavLink({
       aria-current={active ? "page" : undefined}
       className={cn(
         "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border px-3 text-sm font-medium transition-[transform,background-color,color,border-color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99]",
-        compact ? "min-w-0 flex-1 px-2" : "shrink-0",
+        compact ? "min-w-0 flex-1 flex-col gap-1 rounded-2xl px-1.5 py-2.5 text-[11px] leading-none" : "shrink-0",
         active
           ? "border-border bg-foreground text-background"
           : "border-border bg-background text-foreground hover:bg-muted/45"
       )}
     >
       <OpsNavIcon href={href} />
-      <span className={cn("truncate", compact && "text-xs")}>{label}</span>
+      <span
+        className={cn(
+          compact ? "block whitespace-nowrap text-center text-[11px] leading-none" : "truncate"
+        )}
+      >
+        {label}
+      </span>
     </Link>
   );
 }
@@ -88,30 +94,40 @@ function formatRoleLabel(role: OpsSessionUser["roles"][number]): string {
 }
 
 export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShellProps) {
+  const roleSummary = sessionUser.roles.map(formatRoleLabel).join(", ");
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
-        <div className="app-container flex min-h-14 items-center justify-between gap-3 py-2.5">
-          <div className="min-w-0">
-            <div className="min-w-0">
-              <p className="truncate text-base font-semibold tracking-tight text-foreground">
-                {areaLabel}
+      <header className="sticky top-0 z-30 border-b border-border bg-background/95 supports-[backdrop-filter]:bg-background/82 supports-[backdrop-filter]:backdrop-blur">
+        <div className="app-container flex min-h-12 items-center justify-between gap-2 py-2">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+              {areaLabel}
+            </p>
+            <div className="flex min-w-0 items-baseline gap-2">
+              <p className="truncate text-sm font-semibold tracking-tight text-foreground sm:text-[15px]">
+                {getDisplayName(sessionUser)}
               </p>
-              <p className="truncate text-sm text-muted-foreground">
-                {getDisplayName(sessionUser)} · {sessionUser.roles.map(formatRoleLabel).join(", ")}
+              <p className="hidden truncate text-xs text-muted-foreground sm:block">
+                {roleSummary}
               </p>
             </div>
           </div>
 
-          <Button asChild variant="ghost" size="sm" className="shrink-0">
-            <Link href="/ops/cikis">
+          <Button
+            asChild
+            variant="ghost"
+            size="icon-sm"
+            className="shrink-0 rounded-lg sm:h-8 sm:w-auto sm:px-2.5"
+          >
+            <Link href="/ops/cikis" aria-label="Çıkış">
               <ChevronLeft className="size-4" aria-hidden />
-              Çıkış
+              <span className="sr-only sm:not-sr-only">Çıkış</span>
             </Link>
           </Button>
         </div>
 
-        <div className="app-container hidden gap-2 overflow-x-auto pb-3 md:flex">
+        <div className="app-container hidden gap-2 overflow-x-auto pb-2 md:flex">
           {navItems.map((item) => (
             <OpsNavLink key={item.href} href={item.href} label={item.label} />
           ))}
@@ -119,11 +135,13 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
       </header>
 
       <main className="app-container safe-pb-ops-shell md:pb-10">
-        <div className="app-section">{children}</div>
+        <div className="app-section space-y-5 py-5 sm:space-y-6 sm:py-6 md:py-8 lg:py-9">
+          {children}
+        </div>
       </main>
 
-      <nav className="safe-pb-ops-nav fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 px-3 pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden">
-        <div className="mx-auto flex max-w-6xl gap-2">
+      <nav className="safe-pb-ops-nav fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 px-3 pt-2.5 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden">
+        <div className="mx-auto grid max-w-6xl grid-cols-4 gap-1.5">
           {navItems.map((item) => (
             <OpsNavLink
               key={item.href}

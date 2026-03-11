@@ -31,18 +31,30 @@ export default async function OpsUserFormPage() {
   const latestTattooForm = overview.latestTattooForm;
 
   return (
-    <div className="space-y-6">
-      <section className="space-y-2">
+    <div className="ops-page-shell">
+      <section className="ops-page-header">
         <h1 className="typo-page-title">Formum</h1>
-        <p className="typo-p text-muted-foreground">
-          Dövme formunu kaydedin, bitince açık onayı verin.
+        <p className="ops-page-intro">
+          Önce dövme formunu kaydedin, sonra açık onayı verin.
         </p>
       </section>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="gap-1.5">
+          <CardTitle>Dövme formu</CardTitle>
+          <CardDescription>
+            Taslak kaydedebilir veya formu tamamlayabilirsiniz. Her kayıt yeni bir sürüm oluşturur.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <OpsTattooForm latestTattooForm={latestTattooForm} />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="gap-1.5">
           <CardTitle>Durum</CardTitle>
-          <CardDescription>Form ve onay adımları ayrı kayıt tutulur.</CardDescription>
+          <CardDescription>Form, onay ve profil hazırlığını kısa özetle görün.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 sm:grid-cols-3">
           <div className="rounded-2xl border border-border p-4">
@@ -83,23 +95,11 @@ export default async function OpsUserFormPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Dövme formu</CardTitle>
-          <CardDescription>
-            Taslak kaydedebilir veya formu tamamlayabilirsiniz. Her kayıt yeni bir form sürümü oluşturur.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <OpsTattooForm latestTattooForm={latestTattooForm} />
-        </CardContent>
-      </Card>
-
       <Card id="onay">
-        <CardHeader>
+        <CardHeader className="gap-1.5">
           <CardTitle>Açık onay</CardTitle>
           <CardDescription>
-            Üyelik tek başına yeterli değil. Bu kutu işaretlenmeden onay kaydı oluşmaz.
+            Form tamamlanmadan ve kutu işaretlenmeden onay kaydı oluşmaz.
           </CardDescription>
         </CardHeader>
         <CardContent>

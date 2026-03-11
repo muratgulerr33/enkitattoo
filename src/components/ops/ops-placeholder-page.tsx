@@ -28,14 +28,14 @@ export function OpsPlaceholderPage({
   secondaryLabel,
 }: OpsPlaceholderPageProps) {
   return (
-    <div className="space-y-5">
-      <header className="space-y-2">
+    <div className="ops-page-shell">
+      <header className="ops-page-header">
         <h1 className="typo-page-title">{title}</h1>
-        <p className="typo-p max-w-2xl text-muted-foreground">{description}</p>
+        <p className="ops-page-intro">{description}</p>
       </header>
 
       <Card className="border-border bg-card">
-        <CardHeader>
+        <CardHeader className="gap-1.5">
           <CardTitle className="text-lg">Bu alan yakında hazır olacak</CardTitle>
           <CardDescription>O zamana kadar aşağıdaki hızlı geçişleri kullanabilirsiniz.</CardDescription>
         </CardHeader>

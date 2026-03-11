@@ -10,7 +10,7 @@ export default async function OpsUserLayout({
   const sessionUser = await requireOpsSessionArea("user");
 
   return (
-    <OpsShell areaLabel="Hesabim" navItems={USER_NAV_ITEMS} sessionUser={sessionUser}>
+    <OpsShell areaLabel="Hesabım" navItems={USER_NAV_ITEMS} sessionUser={sessionUser}>
       {children}
     </OpsShell>
   );
