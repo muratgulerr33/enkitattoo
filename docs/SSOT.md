@@ -145,6 +145,8 @@ Notlar:
 - `cash_entries` randevudan bağımsızdır; zorunlu appointment FK yoktur (`src/db/schema/cashbook.ts`).
 - `entry_type` seti `income` / `expense` ile sınırlıdır.
 - `amount_cents` pozitif integer olarak saklanır.
+- Staff kasa yüzeyi hızlı kayıt + defter mantığıyla çalışır; ana akış yön seçimi, kısa preset etiket, tutar ve kayıt submit zinciridir (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`).
+- Kasa presetleri UI seviyesindedir; mevcut payload içinde `note` alanını hızlandırır, schema veya action contract genişletmez (`src/lib/ops/cashbook-copy.ts`, `src/app/ops/kasa/actions.ts`).
 - Soft delete alanları `deleted_at` ve `deleted_by_user_id`’dir.
 - Artist yalnız bugünün kasasına kayıt açabilir.
 - Geçmiş kayıt düzenleme ve soft delete yalnız admin’e açıktır (`src/lib/ops/cashbook.ts`, `src/app/ops/kasa/actions.ts`).

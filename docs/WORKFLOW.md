@@ -136,6 +136,7 @@ Zorunlu komut yoktur; fakat en azından hedef diff ve hedef grep kontrolü yapı
 
 - Generated dosyayı elle düzenleme.
 - Artifact veya local output’u canonical source sanma.
+- `next build` sonrası `tsconfig.json` içine eklenen `.next/dev/types/**/*.ts` include’ını canonical sanma; commit’e alma.
 - Public route ile internal route’u karıştırma.
 - Bir tablo veya route davranışını yalnız eski dokümana bakarak yazma.
 - Kullanıcıya dönük copy ile iç sistem notunu karıştırma.

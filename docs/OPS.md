@@ -58,7 +58,8 @@ Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya k
 - İzole preview örneklerinde önce `3012`, gerekirse `3013` kullanılır.
 - `3004` kullanılmaz.
 - `NEXT_DIST_DIR=.next-...` türü makineye özel preview ayarları commit’e alınmaz.
-- `next build` bazı makinelerde `tsconfig.json` veya `next-env.d.ts` içinde machine-local satır oynatabilir; `.next/dev/types` benzeri local include farkları commit’e alınmaz.
+- `next build` bazı makinelerde `tsconfig.json` içine `.next/dev/types/**/*.ts` include’ı ekleyebilir; bu machine-local noise’tur ve commit’e alınmaz.
+- `next-env.d.ts` yalnız gerçek source değişikliği varsa dokunulur; local type-path oynamaları canonical kabul edilmez.
 
 ## 5) Generator ve Migration İlişkisi
 
