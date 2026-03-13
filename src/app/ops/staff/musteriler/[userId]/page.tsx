@@ -13,7 +13,7 @@ import { APPOINTMENT_STATUS_LABELS } from "@/lib/ops/appointment-copy";
 import {
   formatAppointmentDateLong,
 } from "@/lib/ops/appointments";
-import { getCustomerDetail, getCustomerLabel } from "@/lib/ops/customers";
+import { getCustomerDetail } from "@/lib/ops/customers";
 import {
   OPS_TATTOO_CONSENT_VERSION,
 } from "@/lib/ops/user-workspace";
@@ -85,20 +85,14 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
 
   return (
     <div className="ops-page-shell">
-      <section className="ops-page-header">
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="typo-page-title">{getCustomerLabel(customer)}</h1>
-          <Link
-            href="/ops/staff/musteriler"
-            className="text-sm font-medium text-muted-foreground underline-offset-4 hover:underline"
-          >
-            Listeye dön
-          </Link>
-        </div>
-        <p className="ops-page-intro">
-          Temel bilgi, not ve randevu geçmişi aynı ekranda birlikte görünür.
-        </p>
-      </section>
+      <div>
+        <Link
+          href="/ops/staff/musteriler"
+          className="text-sm font-medium text-muted-foreground underline-offset-4 hover:underline"
+        >
+          Listeye dön
+        </Link>
+      </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-6">
         <Card>

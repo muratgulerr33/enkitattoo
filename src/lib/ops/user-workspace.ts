@@ -53,6 +53,20 @@ export type UserWorkspaceOverview = {
   hasCurrentConsent: boolean;
 };
 
+export type UserWorkspaceStepKey =
+  | "profile"
+  | "tattooForm"
+  | "consent"
+  | "appointments";
+
+export type UserWorkspaceNextStep = {
+  key: UserWorkspaceStepKey;
+  title: string;
+  description: string;
+  href: string;
+  actionLabel: string;
+};
+
 export type UpdateUserProfileInput = {
   fullName: string;
   displayName: string | null;
@@ -105,6 +119,64 @@ export function isUserProfileComplete(profile: UserWorkspaceProfile): boolean {
 
 export function isSubmittedTattooForm(form: TattooFormSnapshot | null): boolean {
   return form?.status === "submitted";
+}
+
+export function isUserReadyForAppointments(
+  overview: Pick<
+    UserWorkspaceOverview,
+    "isProfileComplete" | "isTattooFormSubmitted" | "hasCurrentConsent"
+  >
+): boolean {
+  return (
+    overview.isProfileComplete &&
+    overview.isTattooFormSubmitted &&
+    overview.hasCurrentConsent
+  );
+}
+
+export function getUserWorkspaceNextStep(
+  overview: Pick<
+    UserWorkspaceOverview,
+    "isProfileComplete" | "isTattooFormSubmitted" | "hasCurrentConsent"
+  >
+): UserWorkspaceNextStep {
+  if (!overview.isProfileComplete) {
+    return {
+      key: "profile",
+      title: "Profilini tamamla",
+      description: "Ad soyad ve telefon bilgisi randevu akışında kullanılır.",
+      href: "/ops/user/profil",
+      actionLabel: "Profili tamamla",
+    };
+  }
+
+  if (!overview.isTattooFormSubmitted) {
+    return {
+      key: "tattooForm",
+      title: "Dövme formunu tamamla",
+      description: "Bölge, boyut ve tasarım notu girildiğinde onay adımı açılır.",
+      href: "/ops/user/form",
+      actionLabel: "Forma git",
+    };
+  }
+
+  if (!overview.hasCurrentConsent) {
+    return {
+      key: "consent",
+      title: "Açık onayı kaydet",
+      description: "Güncel onay kaydı olmadan yeni randevu talebi açılamaz.",
+      href: "/ops/user/form#onay",
+      actionLabel: "Onaya git",
+    };
+  }
+
+  return {
+    key: "appointments",
+    title: "Yeni randevu oluştur",
+    description: "Hazırlığın tamam. Tarih ve saat seçerek talebini açabilirsin.",
+    href: "/ops/user/randevular",
+    actionLabel: "Randevu aç",
+  };
 }
 
 export async function getUserWorkspaceOverview(userId: number): Promise<UserWorkspaceOverview> {

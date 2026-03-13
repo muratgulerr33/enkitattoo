@@ -29,15 +29,10 @@ export function OpsPlaceholderPage({
 }: OpsPlaceholderPageProps) {
   return (
     <div className="ops-page-shell">
-      <header className="ops-page-header">
-        <h1 className="typo-page-title">{title}</h1>
-        <p className="ops-page-intro">{description}</p>
-      </header>
-
       <Card className="border-border bg-card">
         <CardHeader className="gap-1.5">
-          <CardTitle className="text-lg">Bu alan yakında hazır olacak</CardTitle>
-          <CardDescription>O zamana kadar aşağıdaki hızlı geçişleri kullanabilirsiniz.</CardDescription>
+          <CardTitle className="text-lg">{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-xl border border-border bg-surface-1 p-4">

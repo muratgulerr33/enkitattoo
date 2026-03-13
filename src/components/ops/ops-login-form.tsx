@@ -19,7 +19,7 @@ export function OpsLoginForm({ disabled = false }: OpsLoginFormProps) {
   const [state, formAction, pending] = useActionState(loginAction, INITIAL_STATE);
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-3.5">
       <div className="space-y-2">
         <Label htmlFor="email">E-posta</Label>
         <Input

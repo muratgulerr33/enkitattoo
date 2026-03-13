@@ -51,7 +51,8 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Shell üst alanı kısa ve sakin kalmalıdır; kullanıcı adı, rol bilgisi, çıkış aksiyonu ve nav aynı anda baskın görünmemelidir.
 - Sayfa içi hero alanları bu shell’i tekrar etmemelidir.
 - Özellikle badge + başlık + açıklama tekrarları dikey alan tüketimini artırıyorsa sadeleştirme tercih edilir.
-- Sayfa başlığı ve kısa intro metni tutulur; ilk gerçek iş bloğu fold üstüne mümkün olduğunca yakın gelmelidir.
+- Shell altındaki `/ops` sayfalarında page-body H1 ve intro varsayılan değildir; kullanıcı konumu shell üst barı ve alt nav üzerinden anlaşılır kalmalıdır.
+- İlk gerçek iş bloğu fold üstüne mümkün olduğunca yakın gelmelidir.
 - Mobil alt navigasyon `safe-pb-ops-nav` ve `safe-pb-ops-shell` ile çalışır; etiketler tam okunur kalır.
 - Staff mobile nav etiketi seti `Kasa`, `Randevu`, `Müşteri`, `Profil` olarak tam görünür (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 
@@ -64,16 +65,30 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 ### Ekran bazlı öncelik kuralları
 
 - Kasa: hızlı kayıt birincil yüzeydir; kompakt `Gelir / Gider` kontrolü, kısa preset etiketleri, tutar ve `Kaydı ekle` akışı öne çıkar. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır.
-- Randevular: ilk görünür ana yüzey aylık takvimdir; kullanıcı önce gün seçer, hemen ardından seçili gün operasyon paneli gelir. Takvim doluluk sayısı okunur kalır; staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır, status yönetimi bu yüzeyde görünmez.
+- Randevular: ilk görünür ana yüzey aylık takvimdir; mobile ve tablet month root, shell safe padding dışında kalan genişliği mümkün olduğunca kullanır ve dar ortalı kart gibi durmaz.
+- Staff month overview sessiz kalır; hücre içinde yalnız gün numarası, kategorik occupancy decoration ve seçili state görünür.
+- Staff month root içinde exact count rakamı gösterilmez; doluluk bilgisi küçük ikinci numeral yerine decoration tabanlı marker ile verilir.
+- Staff month occupancy final kontratı sabittir: `low` kısa kapsül, `medium` daha geniş kapsül, `high` en geniş ve daha güçlü kapsüldür; hiçbir seviyede ikinci numeral kullanılmaz.
+- Staff month state kontratı sabittir: `selected` ana dolu bloktur, `today` hafif ama net ikincil işarettir, `occupancy` tarih rakamıyla yarışmayan ayrı secondary decoration ailesidir.
+- Mobile month root mümkün olduğunca screen-first davranır; dış card hissi ve gereksiz inset azaltılır, takvim ana yüzey olarak okunur.
+- Staff day/detail bağlamı exact count bilgisini taşır; month grid tarama yüzeyi olarak kategorik yoğunluk okutur.
+- Staff randevu katmanları mobilde net ayrılır: month overview -> day agenda sheet -> detail sheet -> create/edit form sheet.
+- Day agenda utility sheet gibi davranır; kısa liste, exact count ve yakın create bağlamı taşır. Detail sheet read-first, create/edit sheet form-first davranır.
+- Desktop staff randevu yüzeyi mobilin büyütülmüş hali gibi kalmaz; root takvim alanı daha geniş kullanılır, day/create katmanları sağ panel veya floating panel hissine yaklaşır, detail tek odaklı ayrı katman olarak okunur.
+- Staff randevu FAB görünürlük kuralı sabittir: root month view görünür, day agenda görünür, detail gizli, create/edit gizli.
+- Staff randevu FAB, grid veya sheet listesinin üstüne veri örtecek şekilde bırakılmaz; mobile’da içerik alt padding’i ve safe area birlikte düşünülür.
+- Staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
 - Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez.
 - Müşteri detayı: profil, form, açık onay, randevu ve staff notu aynı yüzeyde olabilir; fakat iç model terimleri kullanıcı copy’sine sızmamalıdır.
+- User lane: akış sırası `giriş/kayıt -> profil -> dövme formu -> açık onay -> randevu` olarak okunur kalır. Her user sayfası tek baskın sonraki adımı göstermeli; readiness kartları ana CTA’nın önüne geçmemelidir.
+- User randevuları: müşteri hazır değilse yeni randevu formu yerine eksik adıma yönlendiren baskın CTA görünür; hazırsa yeni randevu formu fold üstünde ana yüzey olur.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 
 ## 5) Kanıtlı Known Issues ve Polish Backlog
 
 Bu bölüm çözüldü listesi değildir; repo içindeki mevcut durumun kısa kaydıdır.
 
-- `OpsShell` üst alanı ve sayfa intro yoğunluğu azaltılmıştır; buna rağmen bazı staff ve user yüzeylerinde fold üstünde hâlâ bilgi baskısı oluşabilir (`src/components/ops/ops-shell.tsx`, `src/app/ops/staff/*.tsx`, `src/app/ops/user/*.tsx`).
+- `OpsShell` üst alanı sakin tutulur; buna rağmen bazı dense workspace yüzeylerinde kart yoğunluğu veya secondary copy yeni polish turlarında daha da azaltılabilir (`src/components/ops/ops-shell.tsx`, `src/app/ops/staff/*.tsx`, `src/app/ops/user/*.tsx`).
 - Kasa ekranı artık hızlı kayıt merkezlidir; mobilde form fold üstünde daha nettir, desktop’ta summary rail daha sakin destek yüzeyi gibi davranır. Yine de spacing, micro-copy ve micro-motion tarafında ince polish alanı kalır (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`).
 - Müşteri ve user workspace yüzeylerinde kart yoğunluğu hâlâ yüksektir; ürün dili temizlenmiş olsa da bilgi hiyerarşisi sonraki polish turlarında sadeleştirilebilir (`src/app/ops/staff/musteriler/[userId]/page.tsx`, `src/app/ops/user/profil/page.tsx`, `src/app/ops/user/form/page.tsx`).
 - Repo içinde görülen `middleware` -> `proxy` build uyarısı ayrı bakım konusudur; mevcut UI polish bunu çözülmüş varsaymaz.

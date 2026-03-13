@@ -28,8 +28,8 @@ export function OpsProfileForm({
   const [state, formAction, pending] = useActionState(updateUserProfileAction, INITIAL_STATE);
 
   return (
-    <form action={formAction} className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
+    <form action={formAction} className="space-y-3.5">
+      <div className="grid gap-3 sm:grid-cols-2">
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="email">E-posta</Label>
           <Input id="email" value={email ?? ""} disabled readOnly />
@@ -49,17 +49,6 @@ export function OpsProfileForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="displayName">Görünen ad</Label>
-          <Input
-            id="displayName"
-            name="displayName"
-            placeholder="İsterseniz kısa ad"
-            defaultValue={displayName ?? ""}
-            disabled={pending}
-          />
-        </div>
-
-        <div className="space-y-2">
           <Label htmlFor="phone">Telefon</Label>
           <Input
             id="phone"
@@ -71,6 +60,17 @@ export function OpsProfileForm({
             defaultValue={phone ?? ""}
             disabled={pending}
             required
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="displayName">Görünen ad</Label>
+          <Input
+            id="displayName"
+            name="displayName"
+            placeholder="İsterseniz kısa ad"
+            defaultValue={displayName ?? ""}
+            disabled={pending}
           />
         </div>
       </div>

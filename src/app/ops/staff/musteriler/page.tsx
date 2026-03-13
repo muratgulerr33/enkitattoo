@@ -65,11 +65,6 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
 
   return (
     <div className="ops-page-shell">
-      <section className="ops-page-header">
-        <h1 className="typo-page-title">Müşteriler</h1>
-        <p className="ops-page-intro">Arayın, yeni müşteri ekleyin ve randevu akışına geri dönün.</p>
-      </section>
-
       <div className="grid gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.7fr)] xl:items-start">
         <Card id="yeni-musteri">
           <CardHeader className="gap-1.5">

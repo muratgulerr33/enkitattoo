@@ -133,12 +133,14 @@ Notlar:
 ### Appointments
 
 - Randevu modeli işletme bazlıdır; `appointments.artist_id` yoktur (`src/db/schema/appointments.ts`).
+- Teknik randevu modeli tek saatlidir; payload yalnız `appointmentDate` + `appointmentTime` taşır. Başlangıç/bitiş alanı ve süre mantığı yoktur (`src/app/ops/randevular/actions.ts`, `src/lib/ops/appointments.ts`).
 - Status seti: `scheduled`, `completed`, `cancelled`, `no_show`
 - Source seti: `customer`, `admin`, `artist`
 - Slot motoru yoktur.
 - Aynı tarih + aynı saat için ikinci aktif `scheduled` kayıt açılamaz; hem partial unique index hem uygulama guard’ı vardır (`src/db/schema/appointments.ts`, `src/lib/ops/appointments.ts`).
 - `createStaffAppointmentAction` staff guard’ı ile korunur; bu akış hem `admin` hem `artist` için açıktır (`src/app/ops/randevular/actions.ts`, `src/lib/ops/auth/guards.ts`).
 - Staff create sırasında `source`, rol bazında `admin` veya `artist` olarak seçilir (`src/lib/ops/appointments.ts`).
+- Staff appointments V2 görünür akışı month-first root -> day sheet -> detail sheet -> create/edit sheet zinciridir; month cell içinde exact count yerine decoration tabanlı occupancy kullanılır. UI ritmi `docs/UI-SYSTEM.md` içinde yaşar (`src/app/ops/staff/randevular/page.tsx`, `src/components/ops/ops-staff-appointments-workspace.tsx`).
 - Repo içinde admin’e özel create engeli görünmez. Canlı ortamda farklı bir admin create davranışı raporlanıyorsa, bu repo içinden doğrulanamaz ve `UNKNOWN` kabul edilir.
 
 ### Cashbook

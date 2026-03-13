@@ -21,8 +21,8 @@ export function OpsCustomerRegisterForm() {
   );
 
   return (
-    <form action={formAction} className="space-y-4">
-      <div className="grid gap-4">
+    <form action={formAction} className="space-y-3.5">
+      <div className="grid gap-3">
         <div className="space-y-2">
           <Label htmlFor="fullName">Ad soyad</Label>
           <Input

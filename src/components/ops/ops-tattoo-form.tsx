@@ -23,7 +23,14 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
 
   return (
     <form action={formAction} className="space-y-4">
-      <div className="grid gap-4">
+      <div className="space-y-3">
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-foreground">Gerekli alanlar</p>
+          <p className="text-sm text-muted-foreground">
+            Formu tamamlamak için bu üç alan gerekli.
+          </p>
+        </div>
+
         <div className="space-y-2">
           <Label htmlFor="placement">Bölge</Label>
           <Input
@@ -54,55 +61,66 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
             placeholder="Ne istediğinizi kısaca anlatın."
             defaultValue={latestTattooForm?.designNotes ?? ""}
             disabled={pending}
-            rows={4}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="styleNotes">Stil notu</Label>
-          <Textarea
-            id="styleNotes"
-            name="styleNotes"
-            placeholder="Örn. minimal, fine line, blackwork"
-            defaultValue={latestTattooForm?.styleNotes ?? ""}
-            disabled={pending}
             rows={3}
           />
         </div>
+      </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="colorNotes">Renk tercihi</Label>
-          <Input
-            id="colorNotes"
-            name="colorNotes"
-            placeholder="Siyah gri, renkli veya kararsız"
-            defaultValue={latestTattooForm?.colorNotes ?? ""}
-            disabled={pending}
-          />
+      <div className="space-y-3">
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-foreground">İsteğe bağlı notlar</p>
+          <p className="text-sm text-muted-foreground">
+            Taslağı netleştirmek için ek detay bırakabilirsiniz.
+          </p>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="referenceNotes">Referans notu</Label>
-          <Textarea
-            id="referenceNotes"
-            name="referenceNotes"
-            placeholder="Referansınız varsa kısaca belirtin."
-            defaultValue={latestTattooForm?.referenceNotes ?? ""}
-            disabled={pending}
-            rows={3}
-          />
-        </div>
+        <div className="grid gap-3">
+          <div className="space-y-2">
+            <Label htmlFor="styleNotes">Stil notu</Label>
+            <Textarea
+              id="styleNotes"
+              name="styleNotes"
+              placeholder="Örn. minimal, fine line, blackwork"
+              defaultValue={latestTattooForm?.styleNotes ?? ""}
+              disabled={pending}
+              rows={2}
+            />
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="healthNotes">Sağlık / hassasiyet notu</Label>
-          <Textarea
-            id="healthNotes"
-            name="healthNotes"
-            placeholder="Varsa alerji, hassasiyet veya dikkat edilmesi gereken not."
-            defaultValue={latestTattooForm?.healthNotes ?? ""}
-            disabled={pending}
-            rows={3}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="colorNotes">Renk tercihi</Label>
+            <Input
+              id="colorNotes"
+              name="colorNotes"
+              placeholder="Siyah gri, renkli veya kararsız"
+              defaultValue={latestTattooForm?.colorNotes ?? ""}
+              disabled={pending}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="referenceNotes">Referans notu</Label>
+            <Textarea
+              id="referenceNotes"
+              name="referenceNotes"
+              placeholder="Referansınız varsa kısaca belirtin."
+              defaultValue={latestTattooForm?.referenceNotes ?? ""}
+              disabled={pending}
+              rows={2}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="healthNotes">Sağlık / hassasiyet notu</Label>
+            <Textarea
+              id="healthNotes"
+              name="healthNotes"
+              placeholder="Varsa alerji, hassasiyet veya dikkat edilmesi gereken not."
+              defaultValue={latestTattooForm?.healthNotes ?? ""}
+              disabled={pending}
+              rows={2}
+            />
+          </div>
         </div>
       </div>
 
@@ -118,13 +136,32 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
         </p>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <div className="grid gap-2.5">
+        <Button
+          type="submit"
+          size="cta"
+          name="intent"
+          value="submit"
+          className="w-full"
+          disabled={pending}
+        >
+          {pending ? (
+            <>
+              <LoaderCircle className="size-4 animate-spin" aria-hidden />
+              Gönderiliyor
+            </>
+          ) : (
+            "Formu tamamla"
+          )}
+        </Button>
+
         <Button
           type="submit"
           name="intent"
           value="save"
           size="cta"
           variant="outline"
+          className="w-full"
           disabled={pending}
         >
           {pending ? (
@@ -134,17 +171,6 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
             </>
           ) : (
             "Taslak kaydet"
-          )}
-        </Button>
-
-        <Button type="submit" name="intent" value="submit" size="cta" disabled={pending}>
-          {pending ? (
-            <>
-              <LoaderCircle className="size-4 animate-spin" aria-hidden />
-              Gönderiliyor
-            </>
-          ) : (
-            "Formu tamamla"
           )}
         </Button>
       </div>

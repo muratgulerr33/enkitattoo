@@ -110,10 +110,6 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
 
   return (
     <div className="ops-page-shell">
-      <section className="ops-page-header">
-        <h1 className="typo-page-title">Kasa</h1>
-      </section>
-
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.36fr)_minmax(360px,0.64fr)] xl:items-start xl:gap-6">
         <Card className="order-1">
           <CardHeader className="gap-1 border-b pb-4">

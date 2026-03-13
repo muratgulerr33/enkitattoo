@@ -64,7 +64,7 @@ export function OpsConsentForm({ consent, canAccept, documentVersion }: OpsConse
 
       {!canAccept && !alreadyAccepted ? (
         <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-muted-foreground">
-          Onaydan önce tattoo formunu tamamlayın.
+          Onaydan önce dövme formunu tamamlayın.
         </p>
       ) : null}
 
@@ -80,7 +80,12 @@ export function OpsConsentForm({ consent, canAccept, documentVersion }: OpsConse
         </p>
       ) : null}
 
-      <Button type="submit" size="cta" className="w-full sm:w-auto" disabled={pending || alreadyAccepted || !canAccept}>
+      <Button
+        type="submit"
+        size="cta"
+        className="w-full sm:w-auto"
+        disabled={pending || alreadyAccepted || !canAccept}
+      >
         {pending ? (
           <>
             <LoaderCircle className="size-4 animate-spin" aria-hidden />
