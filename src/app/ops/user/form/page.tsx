@@ -20,7 +20,7 @@ function getEditorDescription(value: "draft" | "submitted" | null): string {
     return "Kaydettiğin taslağı burada sürdürür, dövme detaylarını istediğin zaman düzenlersin.";
   }
 
-  return "Randevu öncesi paylaşmak istediğin dövme detaylarını burada eklersin.";
+  return "Randevu öncesi paylaşmak istediğin dövme detaylarını burada ekleyip istediğin zaman düzenleyebilirsin.";
 }
 
 export default async function OpsUserFormPage() {
@@ -33,7 +33,7 @@ export default async function OpsUserFormPage() {
       <Card className="overflow-hidden">
         <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
           <div className="space-y-1">
-            <CardTitle>Dövme detayları</CardTitle>
+            <CardTitle>Dövme detaylarını düzenle</CardTitle>
             <CardDescription>
               {getEditorDescription(latestTattooForm?.status ?? null)}
             </CardDescription>
@@ -45,7 +45,7 @@ export default async function OpsUserFormPage() {
               <div className="space-y-1">
                 <p className="text-sm font-medium text-foreground">Önce profil bilgilerini ekle</p>
                 <p className="text-sm text-muted-foreground">
-                  Randevu kaydı için ad soyad ve telefon bilgini de ekle.
+                  Dövme detaylarını kaydetmeden önce ad soyad ve telefon bilgisini ekle.
                 </p>
               </div>
               <Button asChild variant="outline" size="cta" className="w-full sm:w-auto">

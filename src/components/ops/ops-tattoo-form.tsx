@@ -20,14 +20,18 @@ type OpsTattooFormProps = {
 
 export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
   const [state, formAction, pending] = useActionState(saveTattooFormAction, INITIAL_STATE);
+  const primaryActionLabel =
+    latestTattooForm?.status === "submitted" ? "Detayları güncelle" : "Detayları kaydet";
 
   return (
     <form action={formAction} className="space-y-4">
+      <input type="hidden" name="currentStatus" value={latestTattooForm?.status ?? ""} />
+
       <div className="space-y-3">
         <div className="space-y-1">
           <p className="text-sm font-medium text-foreground">Ana detaylar</p>
           <p className="text-sm text-muted-foreground">
-            Bölge, boyut ve tasarım notu randevu planlaması için en çok ihtiyaç duyulan bilgiler.
+            Bölge, boyut ve tasarım notu ekibin hazırlık yapması için en çok ihtiyaç duyulan bilgiler.
           </p>
         </div>
 
@@ -151,7 +155,7 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
               Kaydediliyor
             </>
           ) : (
-            "Detayları kaydet"
+            primaryActionLabel
           )}
         </Button>
 

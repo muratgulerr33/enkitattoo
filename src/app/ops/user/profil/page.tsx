@@ -18,14 +18,14 @@ function getFormShortcutState(
   } | null
 ): {
   statusLabel: string;
-  actionLabel: string;
   description: string;
+  actionLabel: string | null;
 } {
   if (!latestTattooForm) {
     return {
       statusLabel: "Henüz detay yok",
-      actionLabel: "Detayları ekle",
-      description: "Randevu öncesi paylaşmak istediğin dövme detaylarını buradan ekleyebilirsin.",
+      actionLabel: null,
+      description: "Randevu öncesi paylaşmak istediğin dövme detaylarını daha sonra bu alandan ekleyebilirsin.",
     };
   }
 
@@ -93,9 +93,11 @@ export default async function OpsUserProfilePage() {
               <p className="text-sm text-muted-foreground">{formShortcut.description}</p>
             </div>
 
-            <Button asChild variant="outline" className="w-full sm:w-auto">
-              <Link href="/ops/user/form">{formShortcut.actionLabel}</Link>
-            </Button>
+            {formShortcut.actionLabel ? (
+              <Button asChild variant="outline" className="w-full sm:w-auto">
+                <Link href="/ops/user/form">{formShortcut.actionLabel}</Link>
+              </Button>
+            ) : null}
           </CardContent>
         </Card>
       ) : null}

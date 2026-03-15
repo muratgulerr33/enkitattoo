@@ -163,17 +163,17 @@ export function getUserWorkspaceNextStep(
   if (!overview.isTattooFormSubmitted) {
     return {
       key: "tattooForm",
-      title: "Dövme formunu tamamla",
-      description: "Bölge, boyut ve tasarım notları ekibe hazırlık sağlar.",
+      title: "Dövme detaylarını ekle",
+      description: "Bölge, boyut ve tasarım notları randevu hazırlığı için en çok ihtiyaç duyulan bilgiler.",
       href: "/ops/user/form",
-      actionLabel: "Forma git",
+      actionLabel: "Detayları aç",
     };
   }
 
   return {
     key: "appointments",
     title: "Yeni randevu oluştur",
-    description: "Profil ve dövme formu hazır. Tarih ve saat seçerek talep açabilirsin.",
+    description: "Profilin ve dövme detayların hazır. Tarih ve saat seçerek talep açabilirsin.",
     href: "/ops/user/randevular",
     actionLabel: "Randevu aç",
   };

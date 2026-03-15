@@ -58,6 +58,10 @@ function ReadinessRow({
 }
 
 function getTattooDetailsActionLabel(status: "draft" | "submitted" | null): string {
+  if (status === "submitted") {
+    return "Detayları güncelle";
+  }
+
   if (status === "draft") {
     return "Taslağı sürdür";
   }
@@ -145,7 +149,7 @@ export default async function OpsUserAppointmentsPage() {
               <p className="text-sm text-muted-foreground">
                 {needsProfile
                   ? "Ad soyad ve telefon bilgini kaydetmeden randevu talebi açılamaz."
-                  : "Randevu öncesi paylaşmak istediğin dövme detaylarını buradan ekleyip güncelleyebilirsin."}
+                  : "Randevu öncesi paylaşmak istediğin dövme detaylarını bu editörde ekleyip güncelleyebilirsin."}
               </p>
             </div>
 

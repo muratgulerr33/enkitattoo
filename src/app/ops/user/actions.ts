@@ -134,6 +134,7 @@ export async function saveTattooFormAction(
     const sessionUser = await requireOpsSessionArea("user");
     const rawIntent = formData.get("intent");
     const intent = rawIntent === "submit" ? "submit" : "save";
+    const currentStatus = formData.get("currentStatus");
     const input = toTattooFormInput(formData, intent);
 
     const hasAnyValue = Boolean(
@@ -165,11 +166,16 @@ export async function saveTattooFormAction(
 
     return {
       error: null,
-      success: intent === "submit" ? "Dövme detayların kaydedildi." : "Taslağın kaydedildi.",
+      success:
+        intent === "submit"
+          ? currentStatus === "submitted"
+            ? "Dövme detayların güncellendi."
+            : "Dövme detayların kaydedildi."
+          : "Taslak kaydedildi.",
     };
   } catch (error) {
     return {
-      error: error instanceof Error ? error.message : "Detaylar kaydedilemedi.",
+      error: error instanceof Error ? error.message : "Dövme detayları kaydedilemedi.",
       success: null,
     };
   }
