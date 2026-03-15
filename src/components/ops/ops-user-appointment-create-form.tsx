@@ -29,8 +29,8 @@ export function OpsUserAppointmentCreateForm({
   );
 
   return (
-    <form action={formAction} className="space-y-3.5">
-      <div className="grid gap-3 sm:grid-cols-2">
+    <form action={formAction} className="space-y-3">
+      <div className="grid gap-2.5 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="appointmentDate">Tarih</Label>
           <Input
@@ -62,7 +62,7 @@ export function OpsUserAppointmentCreateForm({
         <Textarea
           id="notes"
           name="notes"
-          placeholder="Eklemek istediğiniz kısa bilgi."
+          placeholder="Kısa not"
           rows={2}
           disabled={pending}
         />

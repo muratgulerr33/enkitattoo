@@ -71,7 +71,7 @@ function OpsNavLink({
       aria-current={active ? "page" : undefined}
       className={cn(
         "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border px-3 text-sm font-medium transition-[transform,background-color,color,border-color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99]",
-        compact ? "min-w-0 flex-1 flex-col gap-1 rounded-2xl px-1.5 py-2.5 text-[11px] leading-none" : "shrink-0",
+        compact ? "min-w-0 flex-1 flex-col gap-0.5 rounded-xl px-1 py-2 text-[10px] leading-none" : "shrink-0",
         active
           ? "border-border bg-foreground text-background"
           : "border-border bg-background text-foreground hover:bg-muted/45"
@@ -80,7 +80,7 @@ function OpsNavLink({
       <OpsNavIcon href={href} />
       <span
         className={cn(
-          compact ? "block whitespace-nowrap text-center text-[11px] leading-none" : "truncate"
+          compact ? "block whitespace-nowrap text-center text-[10px] leading-none" : "truncate"
         )}
       >
         {label}
@@ -147,14 +147,14 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
       </header>
 
       <main className="app-container safe-pb-ops-shell md:pb-10">
-        <div className="app-section space-y-5 py-5 sm:space-y-6 sm:py-6 md:py-8 lg:py-9">
+        <div className="app-section space-y-4 py-4 sm:space-y-5 sm:py-5 md:py-8 lg:py-9">
           {children}
         </div>
       </main>
 
-      <nav className="safe-pb-ops-nav fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 px-3 pt-2.5 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden">
+      <nav className="safe-pb-ops-nav fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 px-2.5 pt-2 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden">
         <div
-          className="mx-auto grid max-w-6xl gap-1.5"
+          className="mx-auto grid max-w-6xl gap-1"
           style={{ gridTemplateColumns: `repeat(${navItems.length}, minmax(0, 1fr))` }}
         >
           {navItems.map((item) => (

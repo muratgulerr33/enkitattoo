@@ -39,9 +39,9 @@ function buildTattooStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: stri
   }
 
   return {
-    badgeLabel: "İncele",
-    summary: "Belgeyi açıp dövme onayını tamamlayabilirsin.",
-    detail: "Okuduktan sonra tek onay yeterli.",
+    badgeLabel: "Bekliyor",
+    summary: "Dövme onayı bekliyor.",
+    detail: "Belgeyi açıp tek onay verirsin.",
   };
 }
 
@@ -61,9 +61,9 @@ function buildPiercingStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: st
   }
 
   return {
-    badgeLabel: "İncele",
-    summary: "Belgeyi açıp piercing onayını tamamlayabilirsin.",
-    detail: "Okuduktan sonra tek onay yeterli.",
+    badgeLabel: "Bekliyor",
+    summary: "Piercing onayı bekliyor.",
+    detail: "Belgeyi açıp tek onay verirsin.",
   };
 }
 
@@ -88,15 +88,15 @@ export default async function OpsUserApprovalsPage() {
   return (
     <div className="ops-page-shell">
       <Card className="overflow-hidden">
-        <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
+        <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
           <div className="space-y-1">
             <CardTitle>Onaylar</CardTitle>
-            <CardDescription>Onay gerektiren belgeler burada görünür.</CardDescription>
+            <CardDescription>Belgelerini burada açıp takip edersin.</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-4 px-5 pb-5 sm:px-6 lg:grid-cols-2">
-          <Card className="border-border bg-surface-1/70">
-            <CardHeader className="gap-2">
+        <CardContent className="grid gap-3 px-4 pb-4 sm:px-5 sm:pb-5 lg:grid-cols-2">
+          <Card className="border-border bg-surface-1/55">
+            <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1">
                   <CardTitle className="text-base">
@@ -114,21 +114,21 @@ export default async function OpsUserApprovalsPage() {
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="rounded-2xl border border-border bg-background px-4 py-4">
-                <p className="text-sm font-medium text-foreground">{tattooStatus.summary}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{tattooStatus.detail}</p>
+            <CardContent className="space-y-2.5 px-4 pb-4">
+              <div className="space-y-1 text-sm">
+                <p className="font-medium text-foreground">{tattooStatus.summary}</p>
+                <p className="text-muted-foreground">{tattooStatus.detail}</p>
               </div>
               {tattooDocument ? (
-                <Button asChild variant="outline" className="w-full sm:w-auto">
+                <Button asChild variant="outline" className="w-full rounded-xl sm:w-auto">
                   <Link href={`/ops/user/onaylar/${tattooDocument.id}`}>Belgeyi aç</Link>
                 </Button>
               ) : null}
             </CardContent>
           </Card>
 
-          <Card className="border-border bg-surface-1/70">
-            <CardHeader className="gap-2">
+          <Card className="border-border bg-surface-1/55">
+            <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1">
                   <CardTitle className="text-base">
@@ -147,13 +147,13 @@ export default async function OpsUserApprovalsPage() {
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="rounded-2xl border border-border bg-background px-4 py-4">
-                <p className="text-sm font-medium text-foreground">{piercingStatus.summary}</p>
-                <p className="mt-2 text-sm text-muted-foreground">{piercingStatus.detail}</p>
+            <CardContent className="space-y-2.5 px-4 pb-4">
+              <div className="space-y-1 text-sm">
+                <p className="font-medium text-foreground">{piercingStatus.summary}</p>
+                <p className="text-muted-foreground">{piercingStatus.detail}</p>
               </div>
               {piercingDocument ? (
-                <Button asChild variant="outline" className="w-full sm:w-auto">
+                <Button asChild variant="outline" className="w-full rounded-xl sm:w-auto">
                   <Link href={`/ops/user/onaylar/${piercingDocument.id}`}>Belgeyi aç</Link>
                 </Button>
               ) : null}

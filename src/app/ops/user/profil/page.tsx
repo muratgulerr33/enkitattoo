@@ -17,11 +17,11 @@ export default async function OpsUserProfilePage() {
   return (
     <div className="ops-page-shell">
       <Card className="overflow-hidden">
-        <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
+        <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="space-y-1">
               <CardTitle>Profil bilgileri</CardTitle>
-              <CardDescription>E-posta sabit kalır. Bilgilerini burada güncellersin.</CardDescription>
+              <CardDescription>İletişim bilgilerini burada güncellersin.</CardDescription>
             </div>
             <Badge
               variant={overview.isProfileComplete ? "default" : "outline"}
@@ -31,11 +31,11 @@ export default async function OpsUserProfilePage() {
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4 px-5 pb-5 sm:px-6">
-          <div className="rounded-2xl border border-border bg-surface-1 px-3.5 py-3 text-sm text-muted-foreground">
+        <CardContent className="space-y-3.5 px-4 pb-4 sm:px-5 sm:pb-5">
+          <div className="rounded-xl border border-border bg-surface-1 px-3 py-2.5 text-sm text-muted-foreground">
             {overview.isProfileComplete
-              ? "Profil hazır. İstersen bilgilerini güncelleyebilirsin."
-              : "İletişim bilgilerini kaydet. Randevu kayıtları bu bilgilerle eşleşir."}
+              ? "Profilin hazır. İstersen bilgilerini güncelleyebilirsin."
+              : "Ad soyad ve telefonunu ekle. Randevularda bunları kullanırız."}
           </div>
 
           <OpsProfileForm

@@ -71,8 +71,8 @@ export default async function OpsUserApprovalDocumentPage({ params }: PageProps)
 
   return (
     <div className="ops-page-shell">
-      <div className="flex items-center justify-between gap-3">
-        <Button asChild variant="ghost" size="sm" className="-ml-2 w-fit">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Button asChild variant="ghost" size="sm" className="-ml-2 h-9 rounded-xl px-2.5">
           <Link href="/ops/user/onaylar">
             <ChevronLeft className="size-4" aria-hidden />
             Onaylara dön
@@ -84,27 +84,27 @@ export default async function OpsUserApprovalDocumentPage({ params }: PageProps)
       </div>
 
       <Card id="approval-document-top" className="overflow-hidden">
-        <CardHeader className="gap-3 px-5 pt-5 pb-4 sm:px-6">
+        <CardHeader className="gap-2.5 px-4 pt-4 pb-3 sm:px-5 sm:pt-5">
           <div className="space-y-1">
             <CardTitle>{document.title}</CardTitle>
             {document.summary ? <CardDescription>{document.summary}</CardDescription> : null}
           </div>
 
-          <div className="rounded-2xl border border-border bg-surface-1/70 px-4 py-3 text-sm text-muted-foreground">
+          <div className="rounded-xl border border-border bg-surface-1/55 px-3.5 py-3 text-sm text-muted-foreground">
             <p className="font-medium text-foreground">
               {approvalRecorded
-                ? `${approvalSubject} tamamlandı.`
-                : "Belgeyi okuyup onayını aşağıdan tamamlayabilirsin."}
+                ? `${approvalSubject} kaydedildi.`
+                : "Belgeyi okuyup alttan onay ver."}
             </p>
             <p className="mt-1">
               {approvalRecorded && acceptedAtLabel
                 ? `Kaydedildi: ${acceptedAtLabel}`
-                : "Belgenin sonuna geldiğinde onay alanı açılır."}
+                : "Son satıra geldiğinde onay alanı açılır."}
             </p>
           </div>
         </CardHeader>
 
-        <CardContent className="px-5 pb-5 sm:px-6">
+        <CardContent className="px-4 pb-4 sm:px-5 sm:pb-5">
           <OpsApprovalReader
             documentId={documentId}
             markdown={cleanedMarkdown}

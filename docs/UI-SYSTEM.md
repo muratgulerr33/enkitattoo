@@ -25,7 +25,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `main` container şu zinciri korur: `app-container app-mobile-header-offset app-safe-bottom no-overflow-x`.
 - Header hide/show davranışı `useHideHeaderOnScroll` ile çalışır; scroll dinleyicisi frame-frame React state ile yeniden kurulmaz.
 - Top-level nav kaynağı tek yerde kalır; ikinci nav kaynağı açılmaz.
-- Mobil drawer footer CTA alanı hesap açma ve giriş akışına hizmet eder; WhatsApp burada birincil footer CTA değildir (`src/components/app/mobile-header.tsx`).
+- Mobil drawer footer CTA alanı hesap açma ve giriş akışına hizmet eder; copy kısa tutulur, utility blok gibi davranır ve kaldırılmış form akışına referans vermez (`src/components/app/mobile-header.tsx`).
 - Footer ve iletişim yüzeyi business bilgilerini component içine gömmez; `src/lib/site-info.ts` ve `src/lib/site/links.ts` kullanılır.
 - Footer hukuki linkleri locale-aware kalır; label seti `KVKK Aydınlatma Metni`, `Gizlilik Politikası`, `Çerez Politikası`, `Dövme Sözleşmesi`, `Piercing Sözleşmesi` olarak görünür ve `src/lib/legal/legal-registry.ts` içinden beslenir.
 - Çevrilebilir public copy `messages/*.json` veya ilgili content namespace içinden gelir.
@@ -45,6 +45,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Mevcut ops kaynak copy’si büyük ölçüde gerçek Türkçe karakter standardına çekilmiştir; yeni ve güncellenen yüzeyler aynı standardı korur.
 - Kullanıcıya dönük metinlerde iç sistem dili gösterilmez.
 - İngilizce iç terimler, rol anahtarları, altyapı notları ve placeholder/foundation anlatıları kullanıcı copy’sine taşınmamalıdır.
+- Placeholder ve seçilmemiş select değeri gerçek veri gibi görünmez; düşük kontrastlı, ikincil yardımcı katman olarak kalır (`src/components/ui/input.tsx`, `src/components/ui/textarea.tsx`, `src/components/ui/select.tsx`).
 
 ### Shell ritmi
 
@@ -55,6 +56,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Shell altındaki `/ops` sayfalarında page-body H1 ve intro varsayılan değildir; kullanıcı konumu shell üst barı ve alt nav üzerinden anlaşılır kalmalıdır.
 - İlk gerçek iş bloğu fold üstüne mümkün olduğunca yakın gelmelidir.
 - Mobil alt navigasyon `safe-pb-ops-nav` ve `safe-pb-ops-shell` ile çalışır; etiketler tam okunur kalır.
+- User mobile shell fold üstünde daha ekonomik kalır; alt nav ve page-body padding içerikten gereksiz alan çalmaz (`src/components/ops/ops-shell.tsx`).
 - Staff mobile nav etiketi seti `Kasa`, `Randevu`, `Müşteri`, `Profil` olarak tam görünür (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 - User mobile nav etiketi seti `Onaylar`, `Randevular`, `Profil` olarak tam görünür; kolon yapısı item sayısına göre akar (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 
@@ -99,6 +101,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 
 - User primary nav desktop ve mobile’da `Onaylar`, `Randevular`, `Profil` setiyle görünür; user lane içinde ayrı dövme detay route’u veya tab’ı bulunmaz (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 - `/ops/user/onaylar` current runtime’da tattoo ve piercing belgelerini özet kartlarla gösterir; `Metni oku` public legal route’a değil ops içi focused approval reader’a gider.
+- `/ops/user/onaylar`, `/ops/user/randevular` ve `/ops/user/profil` current runtime’da mobile-first daha sıkı card padding, daha kısa yardımcı metin ve tek net aksiyon hiyerarşisiyle çalışır; aynı işi tekrar eden ikinci CTA açılmaz.
 - Ops approval reader aynı markdown kaynağını kullanır; tattoo ve piercing için scroll sonuna inmeden tek checkbox ve kayıt CTA’sı açılmaz. Reader gövdesi ops yüzeyinde sanitize edilir; `Sitede kullanılacak ...` ve `Kısa ekran özeti` gibi iç kullanım başlıkları kullanıcıya gösterilmez. Current runtime iç scroll yerine ana sayfa scroll’u ve belge sonu marker’ı ile gating uygular.
 - `/ops/user/profil` current runtime’da yalnız profil alanıdır; ayrı dövme detay kartı veya secondary route handoff’u içermez.
 - `/ops/user/randevular` current runtime’da aktif yaklaşan randevu varsa bunu sayfanın ana yüzeyi yapar; prerequisite veya yeni talep yüzeyi yalnız yaklaşan randevu yoksa görünür. Prerequisite mantığı yalnız profil eksiğine bakar; ayrı dövme detay prerequisite’i yoktur.

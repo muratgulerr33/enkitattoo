@@ -78,58 +78,57 @@ export function OpsApprovalReader({
   }, [router, state.success]);
 
   return (
-    <div className="space-y-4">
-      <div className="rounded-3xl border border-border bg-background px-5 py-5 sm:px-6">
+    <div className="space-y-3.5">
+      <div className="rounded-2xl border border-border bg-background px-4 py-4 sm:px-5">
         <LegalMarkdown markdown={markdown} />
       </div>
 
       {!approvalRecorded && approvalEnabled ? (
         <div
           ref={endMarkerRef}
-          className="rounded-2xl border border-dashed border-border bg-surface-1/70 px-4 py-3 text-sm text-muted-foreground"
+          className="rounded-xl border border-dashed border-border bg-surface-1/55 px-3.5 py-3 text-sm text-muted-foreground"
         >
-          <p className="font-medium text-foreground">Belgenin sonu</p>
-          <p className="mt-1">
-            Bu alanı gördüğünde onay bölümü açılır.
-          </p>
+          <p className="font-medium text-foreground">Sona geldin</p>
+          <p className="mt-1">Onay alanı şimdi açıldı.</p>
         </div>
       ) : null}
 
       {approvalEnabled ? (
         approvalRecorded ? (
-          <div className="rounded-2xl border border-border bg-surface-1/70 px-4 py-4 text-sm text-muted-foreground">
+          <div className="rounded-xl border border-border bg-surface-1/55 px-3.5 py-3.5 text-sm text-muted-foreground">
             <div className="flex items-start gap-3">
               <div className="mt-0.5 rounded-full bg-foreground/6 p-2 text-foreground">
                 <CircleCheckBig className="size-4" aria-hidden />
               </div>
-              <div className="min-w-0 space-y-2">
+              <div className="min-w-0 space-y-1.5">
                 <p className="font-medium text-foreground">Onay kaydedildi.</p>
-                <p>Bu kayıt hesabında tamamlandı.</p>
+                <p>Hesabında aktif görünüyor.</p>
                 {approvalRecordedAtLabel ? <p>Kaydedildi: {approvalRecordedAtLabel}</p> : null}
-                <Button asChild variant="ghost" size="sm" className="-ml-3 w-fit">
+                <Button asChild variant="ghost" size="sm" className="-ml-3 mt-0.5 h-8 w-fit rounded-xl">
                   <Link href={`#${documentAnchorId}`}>Belgeye dön</Link>
                 </Button>
               </div>
             </div>
           </div>
         ) : (
-          <form action={formAction} className="space-y-4 rounded-3xl border border-border bg-surface-1/70 px-5 py-5 sm:px-6">
+          <form
+            action={formAction}
+            className="space-y-3.5 rounded-2xl border border-border bg-surface-1/55 px-4 py-4 sm:px-5"
+          >
             <input type="hidden" name="documentId" value={documentId} />
 
             <div className="space-y-1">
               <p className="text-sm font-medium text-foreground">
-                {hasReachedEnd
-                  ? "Onay vermeye hazırsın."
-                  : "Devam etmek için belgenin sonuna gel."}
+                {hasReachedEnd ? "Hazırsın." : "Belgenin sonuna gel."}
               </p>
               <p className="text-sm text-muted-foreground">
                 {hasReachedEnd
-                  ? "Kutuyu işaretleyip onayını tamamlayabilirsin."
-                  : "Onay kutusu belgeyi tamamladığında açılır."}
+                  ? "Kutuyu işaretleyip onayını kaydedebilirsin."
+                  : "Onay kutusu sona ulaştığında açılır."}
               </p>
             </div>
 
-            <div className="flex items-start gap-3 rounded-2xl border border-border bg-background px-4 py-3">
+            <div className="flex items-start gap-3 rounded-xl border border-border bg-background px-3.5 py-3">
               <input
                 id={`approval-${documentId}`}
                 type="checkbox"
@@ -148,13 +147,13 @@ export function OpsApprovalReader({
             </div>
 
             {state.error ? (
-              <p className="rounded-2xl border border-destructive/20 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+              <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3.5 py-3 text-sm text-destructive">
                 {state.error}
               </p>
             ) : null}
 
             {state.success ? (
-              <p className="rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground">
+              <p className="rounded-xl border border-border bg-background px-3.5 py-3 text-sm text-foreground">
                 {state.success}
               </p>
             ) : null}
@@ -172,9 +171,9 @@ export function OpsApprovalReader({
           </form>
         )
       ) : (
-        <div className="rounded-2xl border border-border bg-surface-1/70 px-4 py-4 text-sm text-muted-foreground">
+        <div className="rounded-xl border border-border bg-surface-1/55 px-3.5 py-3.5 text-sm text-muted-foreground">
           <p className="font-medium text-foreground">Bu belgeyi ops içinde okuyabilirsin.</p>
-          <p className="mt-2">
+          <p className="mt-1.5">
             Bu belge için hesap kaydı bu yüzeyde açılmadı.
           </p>
         </div>

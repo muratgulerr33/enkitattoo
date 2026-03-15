@@ -28,8 +28,8 @@ export function OpsProfileForm({
   const [state, formAction, pending] = useActionState(updateUserProfileAction, INITIAL_STATE);
 
   return (
-    <form action={formAction} className="space-y-3.5">
-      <div className="grid gap-3 sm:grid-cols-2">
+    <form action={formAction} className="space-y-3">
+      <div className="grid gap-2.5 sm:grid-cols-2">
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="email">E-posta</Label>
           <Input id="email" value={email ?? ""} disabled readOnly />
@@ -68,7 +68,7 @@ export function OpsProfileForm({
           <Input
             id="displayName"
             name="displayName"
-            placeholder="İsterseniz kısa ad"
+            placeholder="Kısa ad"
             defaultValue={displayName ?? ""}
             disabled={pending}
           />
@@ -94,7 +94,7 @@ export function OpsProfileForm({
             Kaydediliyor
           </>
         ) : (
-          "Profili kaydet"
+          "Bilgileri kaydet"
         )}
       </Button>
     </form>

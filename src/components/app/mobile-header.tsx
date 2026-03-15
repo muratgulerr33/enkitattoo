@@ -96,7 +96,7 @@ const HAMBURGER_PAGE_LINKS = [
   { href: "/sss", labelKey: "common.nav.questionBank" },
 ] as const;
 const MENU_ROW_BASE =
-  "flex h-11 w-full items-center gap-3 rounded-xl px-4 text-base font-medium transition-[background-color,color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99]";
+  "flex h-10 w-full items-center gap-2.5 rounded-2xl px-3.5 text-[15px] font-medium transition-[background-color,color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99]";
 const TOPBAR_ICON_BUTTON_CLASS =
   "inline-flex size-11 items-center justify-center rounded-lg hover:bg-muted/40 active:scale-[0.98] [&_svg]:size-5 [&_svg]:text-foreground/80";
 const HAMBURGER_BUTTON_CLASS =
@@ -421,7 +421,7 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                           {t("mobileHeader.menuDescription")}
                         </SheetDescription>
                       </SheetHeader>
-                      <div className="flex items-center justify-between px-2 pt-1">
+                      <div className="flex items-center justify-between px-1.5 pt-1">
                         <p className="px-2 text-sm font-semibold tracking-tight text-foreground">
                           {t("mobileHeader.menuTitle")}
                         </p>
@@ -431,7 +431,10 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                           </IconButton>
                         </SheetClose>
                       </div>
-                      <nav className="mt-2 flex flex-1 flex-col gap-1 px-2" aria-label={t("mobileHeader.mainMenuAria")}>
+                      <nav
+                        className="mt-1.5 flex flex-1 flex-col gap-0.5 px-1.5"
+                        aria-label={t("mobileHeader.mainMenuAria")}
+                      >
                         {HAMBURGER_PAGE_LINKS.map(({ href, labelKey }) => (
                           <MenuRow
                             key={href}
@@ -443,10 +446,10 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                         ))}
                       </nav>
                       <div className="border-t border-border/60 pt-1">
-                        <p className="px-4 pt-4 pb-2 text-xs uppercase tracking-wider text-muted-foreground">
+                        <p className="px-4 pt-3 pb-2 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                           {t("mobileHeader.accessibility")}
                         </p>
-                        <div className="px-2">
+                        <div className="px-1.5">
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <button
@@ -454,11 +457,13 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                                 aria-label={t("theme.selectMode")}
                                 className={cn(
                                   MENU_ROW_BASE,
-                                  "justify-between text-foreground/80 hover:bg-muted/40 active:bg-muted/70"
+                                  "justify-between border border-border/70 bg-surface-1/55 text-foreground hover:bg-muted/35 active:bg-muted/55"
                                 )}
                               >
-                                <span>{t("theme.mode")}</span>
-                                <span className="text-sm text-muted-foreground">
+                                <span className="text-sm font-medium text-foreground">
+                                  {t("theme.mode")}
+                                </span>
+                                <span className="rounded-full bg-background px-2.5 py-1 text-xs text-muted-foreground">
                                   {activeThemeLabel}
                                 </span>
                               </button>
@@ -488,24 +493,24 @@ export function MobileHeader({ contentShellRef, initialLocaleOrder }: MobileHead
                           </DropdownMenu>
                         </div>
                       </div>
-                      <div className="mt-3 border-t border-border/60 px-2 pt-4">
-                        <div className="rounded-[1.7rem] border border-border bg-surface-1/70 p-3">
-                          <div className="space-y-1 px-1 pb-3">
+                      <div className="mt-2.5 border-t border-border/60 px-1.5 pt-3.5">
+                        <div className="rounded-[1.45rem] border border-border/70 bg-surface-1/55 p-2.5">
+                          <div className="space-y-1 px-1 pb-2.5">
                             <p className="text-sm font-semibold tracking-tight text-foreground">
                               {t("mobileHeader.accountTitle")}
                             </p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-xs text-muted-foreground">
                               {t("mobileHeader.accountDescription")}
                             </p>
                           </div>
 
                           <div className="grid gap-2">
-                            <Button asChild size="cta" className="w-full rounded-2xl">
+                            <Button asChild size="cta" className="h-10 w-full rounded-2xl">
                               <NextLink href="/ops/giris?kayit=1" onClick={() => setHamburgerOpen(false)}>
                                 {t("mobileHeader.signUpCta")}
                               </NextLink>
                             </Button>
-                            <Button asChild variant="outline" size="cta" className="w-full rounded-2xl">
+                            <Button asChild variant="outline" size="cta" className="h-10 w-full rounded-2xl">
                               <NextLink href="/ops/giris" onClick={() => setHamburgerOpen(false)}>
                                 {t("mobileHeader.signInCta")}
                               </NextLink>

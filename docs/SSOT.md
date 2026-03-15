@@ -102,7 +102,7 @@ Notlar:
 - `/ops` metadata’sı public metadata hattından ayrıdır (`src/app/ops/layout.tsx`).
 - Ops tarafı `next-intl` mesaj zincirine bağlı değildir; plain `next/link` ve plain `next/navigation` yaklaşımı kullanılır.
 - Giriş modeli yerel e-posta/şifre akışıdır (`src/app/ops/giris/actions.ts`, `src/lib/ops/auth/password.ts`).
-- `/ops/giris` aynı zamanda minimum müşteri hesap kaydı girişini taşır; başarılı kayıt aktif `user` rolü üretir ve `Onaylar` alanına yönlenir (`src/app/ops/giris/page.tsx`, `src/app/ops/giris/actions.ts`, `src/lib/ops/customers.ts`).
+- `/ops/giris` aynı zamanda minimum müşteri hesap kaydı girişini taşır; başarılı kayıt aktif `user` rolü üretir ve `Onaylar` alanına yönlenir. Current runtime login/register yüzeyi kısa `Giriş yap` / `Hesap oluştur` başlık sistemiyle çalışır (`src/app/ops/giris/page.tsx`, `src/app/ops/giris/actions.ts`, `src/lib/ops/customers.ts`).
 - Oturum `enki_ops_session` adlı imzalı çerez ile `/ops` path’inde tutulur (`src/lib/ops/auth/constants.ts`, `src/lib/ops/auth/session.ts`).
 - `OPS_SESSION_SECRET` en az 32 karakter olmalıdır (`src/lib/ops/auth/session.ts`).
 - `DATABASE_URL` ve `OPS_SESSION_SECRET` yoksa ops auth hazır kabul edilmez (`src/lib/ops/auth/session.ts`, `src/db/index.ts`).
@@ -216,6 +216,7 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - Home page kendi review/maps sabitlerini ayrıca taşır; site-level link kaynağıyla birebir birleşmiş değildir.
 - `/ops` route’ları route-content ve sitemap hattına dahil değildir.
 - Public legal route `src/app/[locale]/(app)/hukuki/[slug]/page.tsx` içinde public app tree’de render edilir; `BreadcrumbListJsonLd`, route-content metadata ve `LegalMarkdown` aynı yüzeyde çalışır.
+- Public mobile drawer hesap utility bloğu current runtime’da yalnız `/ops/giris` ve `/ops/giris?kayit=1` akışlarına çıkar; copy form-flow referansı taşımaz (`src/components/app/mobile-header.tsx`, `messages/*.json`).
 - Legal page, markdown içeriğinin yalnız ilk `#` başlığını strip eder; gövde içindeki diğer başlıklar aynen render edilir (`src/app/[locale]/(app)/hukuki/[slug]/page.tsx`, `src/lib/legal/legal-content.ts`).
 - Repo içindeki kanıtlı markdown başlık örnekleri arasında `Sitede kullanılacak zorunlu onay metni` ve `Kısa ekran özeti` bulunur (`src/content/ops/legal/dovme-sozlesmesi-yetiskin.md`).
 - Footer hukuki linkleri public legal route’lara gider; `/ops/user/onaylar` içindeki `Metni oku` linkleri ise ops approval reader route’una açılır. İki yüzey aynı markdown kaynağını paylaşır (`src/app/ops/user/onaylar/page.tsx`, `src/app/ops/user/onaylar/[documentId]/page.tsx`, `src/components/app/site-footer.tsx`, `src/lib/legal/legal-registry.ts`).

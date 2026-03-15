@@ -73,7 +73,7 @@ function AppointmentCard({
         ) : null}
       </div>
 
-      <div className="mt-3 flex flex-col gap-2">
+      <div className="mt-2.5 flex flex-col gap-1.5">
         <p className="text-base font-semibold text-foreground">
           {formatAppointmentDateLong(appointmentDate)}
         </p>
@@ -86,7 +86,7 @@ function AppointmentCard({
         </div>
       </div>
 
-      <p className="mt-3 text-sm text-foreground">{notes ?? "Ek not yok."}</p>
+      <p className="mt-2.5 text-sm text-foreground">{notes ?? "Not eklenmedi."}</p>
     </div>
   );
 }
@@ -107,7 +107,7 @@ export default async function OpsUserAppointmentsPage() {
     <div className="ops-page-shell">
       {showPrerequisiteCard ? (
         <Card className="border-border bg-surface-1/70">
-          <CardContent className="space-y-4 px-5 py-5 sm:px-6">
+          <CardContent className="space-y-3.5 px-4 py-4 sm:px-5 sm:py-5">
             <div className="space-y-1">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
                 Randevu alanı
@@ -127,18 +127,18 @@ export default async function OpsUserAppointmentsPage() {
 
       {showCreateCard ? (
         <Card className="overflow-hidden">
-          <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
+          <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="space-y-1">
                 <CardTitle>Yeni randevu</CardTitle>
                 <CardDescription>
-                  Profilin kayıtlı. Tarih ve saat seçerek yeni talebini açabilirsin.
+                  Profilin hazır. Uygun gün ve saati seç.
                 </CardDescription>
               </div>
               <Badge className="rounded-full">Hazır</Badge>
             </div>
           </CardHeader>
-          <CardContent className="px-5 pb-5 sm:px-6">
+          <CardContent className="px-4 pb-4 sm:px-5 sm:pb-5">
             <OpsUserAppointmentCreateForm defaultDate={getTodayDateValue()} />
           </CardContent>
         </Card>
@@ -146,7 +146,7 @@ export default async function OpsUserAppointmentsPage() {
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-5">
         <Card className="overflow-hidden">
-          <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
+          <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
             <CardTitle>Yaklaşan randevular</CardTitle>
             <CardDescription>
               {hasUpcomingAppointments
@@ -154,7 +154,7 @@ export default async function OpsUserAppointmentsPage() {
                 : "Aktif kayıtların burada görünür."}
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3 px-5 pb-5 sm:px-6">
+          <CardContent className="space-y-2.5 px-4 pb-4 sm:px-5 sm:pb-5">
             {appointmentLists.upcoming.length ? (
               appointmentLists.upcoming.map((appointment) => (
                 <AppointmentCard
@@ -168,19 +168,19 @@ export default async function OpsUserAppointmentsPage() {
                 />
               ))
             ) : (
-              <div className="rounded-2xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
-                Yaklaşan randevunuz henüz yok.
+              <div className="rounded-xl border border-dashed border-border px-3.5 py-4 text-sm text-muted-foreground">
+                Yaklaşan randevun yok.
               </div>
             )}
           </CardContent>
         </Card>
 
         <Card className="overflow-hidden">
-          <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
+          <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
             <CardTitle>Geçmiş</CardTitle>
             <CardDescription>Tamamlanan veya kapanan kayıtlar burada kalır.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3 px-5 pb-5 sm:px-6">
+          <CardContent className="space-y-2.5 px-4 pb-4 sm:px-5 sm:pb-5">
             {appointmentLists.past.length ? (
               appointmentLists.past.map((appointment) => (
                 <AppointmentCard
@@ -192,8 +192,8 @@ export default async function OpsUserAppointmentsPage() {
                 />
               ))
             ) : (
-              <div className="rounded-2xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
-                Geçmiş kayıt henüz yok.
+              <div className="rounded-xl border border-dashed border-border px-3.5 py-4 text-sm text-muted-foreground">
+                Geçmiş randevu yok.
               </div>
             )}
           </CardContent>
