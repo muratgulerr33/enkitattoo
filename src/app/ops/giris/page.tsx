@@ -78,8 +78,8 @@ export default async function OpsLoginPage({ searchParams }: PageProps) {
               </CardTitle>
               <CardDescription>
                 {showRegister
-                  ? "Hesabını aç. Sonra profil, form ve randevu akışına devam et."
-                  : "E-posta ve şifrenle giriş yapıp kaldığın adımdan devam et."}
+                  ? "Hesabını açtıktan sonra Onaylar alanına geçersin."
+                  : "Girişten sonra Onaylar alanından devam edersin."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 px-5 pb-5 sm:px-6">

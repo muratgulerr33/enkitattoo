@@ -79,9 +79,13 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Staff randevu FAB, grid veya sheet listesinin üstüne veri örtecek şekilde bırakılmaz; mobile’da içerik alt padding’i ve safe area birlikte düşünülür.
 - Staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
 - Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez.
-- Müşteri detayı: profil, form, açık onay, randevu ve staff notu aynı yüzeyde olabilir; fakat iç model terimleri kullanıcı copy’sine sızmamalıdır.
-- User lane: akış sırası `giriş/kayıt -> profil -> dövme formu -> açık onay -> randevu` olarak okunur kalır. Her user sayfası tek baskın sonraki adımı göstermeli; readiness kartları ana CTA’nın önüne geçmemelidir.
-- User randevuları: müşteri hazır değilse yeni randevu formu yerine eksik adıma yönlendiren baskın CTA görünür; hazırsa yeni randevu formu fold üstünde ana yüzey olur.
+- Müşteri detayı: profil, form, onay durumu, randevu ve staff notu aynı yüzeyde olabilir; fakat iç model terimleri kullanıcı copy’sine sızmamalıdır.
+- User lane top-level hedefleri `Onaylar`, `Randevular`, `Formum`, `Profil` olarak görünür. Kullanıcı login/register sonrası `Onaylar` alanına düşer.
+- `Onaylar` user lane içinde bağımsız, sakin, read-only bilgi merkezidir; form veya randevu alt adımı gibi kurgulanmaz.
+- `Onaylar` form ve randevu alanlarından ayrı durur; belge adı, durum, sürüm ve hesap kaydı bilgisini kısa kartlarla gösterir; süreç özeti, placeholder etiketleri ve yönlendirici anlatı açmaz.
+- User next-step mantığı yalnız gerçek eksik hazırlık adımlarını işaret eder; `Onaylar` alanı formu tamamlayınca açılan zorunlu kapı gibi yazılmaz.
+- User randevuları: müşteri hazır değilse yeni randevu formu yerine eksik profile/form adımına yönlendiren baskın CTA görünür; hazırsa yeni randevu formu fold üstünde ana yüzey olur.
+- Bu repo sürümünde `Onaylar` sayfası bilgi merkezi ve read-only durum yüzeyidir. Tek checkbox submit/save, hesap kaydı write akışı, admin müşteri görünürlüğü genişletmesi ve legal markdown binding sonraki PR kapsamıdır.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 
 ## 5) Kanıtlı Known Issues ve Polish Backlog

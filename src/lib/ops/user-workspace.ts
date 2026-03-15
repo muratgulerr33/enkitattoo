@@ -56,7 +56,6 @@ export type UserWorkspaceOverview = {
 export type UserWorkspaceStepKey =
   | "profile"
   | "tattooForm"
-  | "consent"
   | "appointments";
 
 export type UserWorkspaceNextStep = {
@@ -122,29 +121,19 @@ export function isSubmittedTattooForm(form: TattooFormSnapshot | null): boolean 
 }
 
 export function isUserReadyForAppointments(
-  overview: Pick<
-    UserWorkspaceOverview,
-    "isProfileComplete" | "isTattooFormSubmitted" | "hasCurrentConsent"
-  >
+  overview: Pick<UserWorkspaceOverview, "isProfileComplete" | "isTattooFormSubmitted">
 ): boolean {
-  return (
-    overview.isProfileComplete &&
-    overview.isTattooFormSubmitted &&
-    overview.hasCurrentConsent
-  );
+  return overview.isProfileComplete && overview.isTattooFormSubmitted;
 }
 
 export function getUserWorkspaceNextStep(
-  overview: Pick<
-    UserWorkspaceOverview,
-    "isProfileComplete" | "isTattooFormSubmitted" | "hasCurrentConsent"
-  >
+  overview: Pick<UserWorkspaceOverview, "isProfileComplete" | "isTattooFormSubmitted">
 ): UserWorkspaceNextStep {
   if (!overview.isProfileComplete) {
     return {
       key: "profile",
       title: "Profilini tamamla",
-      description: "Ad soyad ve telefon bilgisi randevu akışında kullanılır.",
+      description: "Ad soyad ve telefon bilgisi randevu için gerekir.",
       href: "/ops/user/profil",
       actionLabel: "Profili tamamla",
     };
@@ -154,26 +143,16 @@ export function getUserWorkspaceNextStep(
     return {
       key: "tattooForm",
       title: "Dövme formunu tamamla",
-      description: "Bölge, boyut ve tasarım notu girildiğinde onay adımı açılır.",
+      description: "Bölge, boyut ve tasarım notları ekibe hazırlık sağlar.",
       href: "/ops/user/form",
       actionLabel: "Forma git",
-    };
-  }
-
-  if (!overview.hasCurrentConsent) {
-    return {
-      key: "consent",
-      title: "Açık onayı kaydet",
-      description: "Güncel onay kaydı olmadan yeni randevu talebi açılamaz.",
-      href: "/ops/user/form#onay",
-      actionLabel: "Onaya git",
     };
   }
 
   return {
     key: "appointments",
     title: "Yeni randevu oluştur",
-    description: "Hazırlığın tamam. Tarih ve saat seçerek talebini açabilirsin.",
+    description: "Profil ve dövme formu hazır. Tarih ve saat seçerek talep açabilirsin.",
     href: "/ops/user/randevular",
     actionLabel: "Randevu aç",
   };

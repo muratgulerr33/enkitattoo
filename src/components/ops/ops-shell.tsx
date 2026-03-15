@@ -6,7 +6,15 @@ import { Button } from "@/components/ui/button";
 import type { OpsSessionUser } from "@/lib/ops/auth/guards";
 import { cn } from "@/lib/utils";
 import type { OpsNavItem } from "@/lib/ops/navigation";
-import { CalendarDays, ChevronLeft, FileText, UserRound, Users, WalletCards } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronLeft,
+  FileText,
+  ShieldCheck,
+  UserRound,
+  Users,
+  WalletCards,
+} from "lucide-react";
 
 type OpsShellProps = {
   areaLabel: string;
@@ -36,6 +44,10 @@ function OpsNavIcon({ href }: { href: string }) {
 
   if (href.includes("/form")) {
     return <FileText className={iconClassName} aria-hidden />;
+  }
+
+  if (href.includes("/onaylar")) {
+    return <ShieldCheck className={iconClassName} aria-hidden />;
   }
 
   return <UserRound className={iconClassName} aria-hidden />;

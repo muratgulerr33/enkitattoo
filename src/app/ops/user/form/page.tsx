@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { OpsConsentForm } from "@/components/ops/ops-consent-form";
 import { OpsTattooForm } from "@/components/ops/ops-tattoo-form";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +14,6 @@ import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import {
   getUserWorkspaceNextStep,
   getUserWorkspaceOverview,
-  OPS_TATTOO_CONSENT_VERSION,
 } from "@/lib/ops/user-workspace";
 
 function formatFormStatus(value: "draft" | "submitted" | null): string {
@@ -43,9 +41,7 @@ export default async function OpsUserFormPage() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="space-y-1">
               <CardTitle>Dövme formu</CardTitle>
-              <CardDescription>
-                Gerekli alanları doldurup formu tamamlayabilir ya da önce taslak kaydedebilirsin.
-              </CardDescription>
+              <CardDescription>Dövme detaylarını burada güncellersin.</CardDescription>
             </div>
             <div className="flex flex-wrap gap-2">
               <Badge
@@ -66,9 +62,9 @@ export default async function OpsUserFormPage() {
           {!overview.isProfileComplete ? (
             <div className="flex flex-col gap-3 rounded-2xl border border-border bg-surface-1 px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
-                <p className="text-sm font-medium text-foreground">Profil adımı hâlâ eksik</p>
+                <p className="text-sm font-medium text-foreground">Profil bilgisi eksik</p>
                 <p className="text-sm text-muted-foreground">
-                  Formu doldurabilirsin; randevu için profilini de tamamlaman gerekir.
+                  Randevu açabilmek için ad soyad ve telefon bilgini de kaydet.
                 </p>
               </div>
               <Button asChild variant="outline" size="cta" className="w-full sm:w-auto">
@@ -78,40 +74,6 @@ export default async function OpsUserFormPage() {
           ) : null}
 
           <OpsTattooForm latestTattooForm={latestTattooForm} />
-        </CardContent>
-      </Card>
-
-      <Card id="onay" className="overflow-hidden">
-        <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="space-y-1">
-              <CardTitle>Açık onay</CardTitle>
-              <CardDescription>
-                {overview.hasCurrentConsent
-                  ? "Güncel onay kaydı var. İstersen randevu adımına geçebilirsin."
-                  : overview.isTattooFormSubmitted
-                    ? "Form tamamlandı. Şimdi onayı kaydet."
-                    : "Onay, form tamamlandıktan sonra açılır."}
-              </CardDescription>
-            </div>
-            <Badge
-              variant={overview.hasCurrentConsent ? "default" : "outline"}
-              className="rounded-full"
-            >
-              {overview.hasCurrentConsent ? "Kayıtlı" : "Bekliyor"}
-            </Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4 px-5 pb-5 sm:px-6">
-          <div className="rounded-2xl border border-border bg-surface-1 px-3.5 py-3 text-sm text-muted-foreground">
-            Sürüm <span className="font-medium text-foreground">{OPS_TATTOO_CONSENT_VERSION}</span>
-          </div>
-
-          <OpsConsentForm
-            consent={overview.latestConsent}
-            canAccept={overview.isTattooFormSubmitted}
-            documentVersion={OPS_TATTOO_CONSENT_VERSION}
-          />
         </CardContent>
       </Card>
 

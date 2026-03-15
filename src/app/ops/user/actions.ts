@@ -1,12 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { headers } from "next/headers";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import {
-  acceptCurrentConsent,
   createTattooFormSnapshot,
-  getLatestTattooForm,
   type SaveTattooFormInput,
   updateUserWorkspaceProfile,
 } from "@/lib/ops/user-workspace";
@@ -39,8 +36,10 @@ function isPhoneValid(phone: string): boolean {
 }
 
 function revalidateUserWorkspacePaths() {
+  revalidatePath("/ops/user/onaylar");
   revalidatePath("/ops/user/profil");
   revalidatePath("/ops/user/form");
+  revalidatePath("/ops/user/randevular");
 }
 
 export async function updateUserProfileAction(
@@ -151,65 +150,6 @@ export async function saveTattooFormAction(
   } catch (error) {
     return {
       error: error instanceof Error ? error.message : "Form kaydedilemedi.",
-      success: null,
-    };
-  }
-}
-
-function getRequestMetadata(value: string | null, maxLength: number): string | null {
-  if (!value) {
-    return null;
-  }
-
-  const normalized = value.trim();
-
-  return normalized ? normalized.slice(0, maxLength) : null;
-}
-
-export async function acceptConsentAction(
-  _previousState: OpsFormActionState,
-  formData: FormData
-): Promise<OpsFormActionState> {
-  try {
-    const sessionUser = await requireOpsSessionArea("user");
-    const latestForm = await getLatestTattooForm(sessionUser.id);
-
-    if (!latestForm || latestForm.status !== "submitted") {
-      return {
-        error: "Onaydan önce formu tamamlayın.",
-        success: null,
-      };
-    }
-
-    if (formData.get("accepted") !== "on") {
-      return {
-        error: "Devam etmek için kutuyu işaretleyin.",
-        success: null,
-      };
-    }
-
-    const requestHeaders = await headers();
-    const forwardedFor = requestHeaders.get("x-forwarded-for");
-    const ipAddress = getRequestMetadata(
-      forwardedFor?.split(",")[0] ?? requestHeaders.get("x-real-ip"),
-      64
-    );
-    const userAgent = getRequestMetadata(requestHeaders.get("user-agent"), 512);
-
-    const { created } = await acceptCurrentConsent(sessionUser.id, {
-      ipAddress,
-      userAgent,
-    });
-
-    revalidateUserWorkspacePaths();
-
-    return {
-      error: null,
-      success: created ? "Onay kaydedildi." : "Bu sürüm için onay zaten kayıtlı.",
-    };
-  } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : "Onay kaydedilemedi.",
       success: null,
     };
   }

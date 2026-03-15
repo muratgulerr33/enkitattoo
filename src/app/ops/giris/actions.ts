@@ -191,7 +191,7 @@ export async function registerCustomerAccountAction(
     await createOpsSession(customer.userId);
     revalidatePath("/ops/staff/musteriler");
     revalidatePath("/ops/staff/randevular");
-    redirect("/ops/user/profil");
+    redirect("/ops/user/onaylar");
   } catch (error) {
     return {
       error: error instanceof Error ? error.message : "Hesap oluşturulamadı.",

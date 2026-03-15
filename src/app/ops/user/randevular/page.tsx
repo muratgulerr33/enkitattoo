@@ -123,7 +123,7 @@ export default async function OpsUserAppointmentsPage() {
           <CardContent className="space-y-4 px-5 py-5 sm:px-6">
             <div className="space-y-1">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                Önce bunu tamamla
+                Randevu için gerekli
               </p>
               <p className="text-lg font-semibold text-foreground">{nextStep.title}</p>
               <p className="text-sm text-muted-foreground">{nextStep.description}</p>
@@ -145,10 +145,6 @@ export default async function OpsUserAppointmentsPage() {
                 label="Dövme formu"
                 value={overview.isTattooFormSubmitted ? "Tamamlandı" : "Bekliyor"}
               />
-              <ReadinessRow
-                label="Açık onay"
-                value={overview.hasCurrentConsent ? "Kayıtlı" : "Bekliyor"}
-              />
             </div>
           </CardContent>
         </Card>
@@ -159,7 +155,7 @@ export default async function OpsUserAppointmentsPage() {
               <div className="space-y-1">
                 <CardTitle>Yeni randevu</CardTitle>
                 <CardDescription>
-                  Hazırlığın tamam. Tarih ve saat seçerek yeni talebini açabilirsin.
+                  Profil ve dövme formu hazır. Tarih ve saat seçerek yeni talebini açabilirsin.
                 </CardDescription>
               </div>
               <Badge className="rounded-full">Hazır</Badge>

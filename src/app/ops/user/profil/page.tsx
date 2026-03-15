@@ -26,15 +26,13 @@ export default async function OpsUserProfilePage() {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="space-y-1">
               <CardTitle>Profil bilgileri</CardTitle>
-              <CardDescription>
-                E-posta sabit kalır. Ad soyad ve telefon randevu akışında kullanılır.
-              </CardDescription>
+              <CardDescription>E-posta sabit kalır. Bilgilerini burada güncellersin.</CardDescription>
             </div>
             <Badge
               variant={overview.isProfileComplete ? "default" : "outline"}
               className="rounded-full"
             >
-              {overview.isProfileComplete ? "Hazır" : "Bu adım"}
+              {overview.isProfileComplete ? "Hazır" : "Eksik"}
             </Badge>
           </div>
         </CardHeader>
@@ -42,7 +40,7 @@ export default async function OpsUserProfilePage() {
           <div className="rounded-2xl border border-border bg-surface-1 px-3.5 py-3 text-sm text-muted-foreground">
             {overview.isProfileComplete
               ? "Profil hazır. İstersen bilgilerini güncelleyebilirsin."
-              : "Kaydettikten sonra sıradaki adım dövme formu olur."}
+              : "İletişim bilgilerini kaydet. Form ve randevu alanları bu bilgilerle çalışır."}
           </div>
 
           <OpsProfileForm

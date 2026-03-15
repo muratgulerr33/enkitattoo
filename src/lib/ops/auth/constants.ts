@@ -3,6 +3,6 @@ export const OPS_SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 
 export const OPS_LOGIN_PATH = "/ops/giris";
 export const OPS_STAFF_HOME_PATH = "/ops/staff/kasa";
-export const OPS_USER_HOME_PATH = "/ops/user/randevular";
+export const OPS_USER_HOME_PATH = "/ops/user/onaylar";
 
 export const STAFF_ROLES = ["admin", "artist"] as const;
