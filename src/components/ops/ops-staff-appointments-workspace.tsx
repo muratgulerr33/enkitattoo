@@ -553,7 +553,7 @@ export function OpsStaffAppointmentsWorkspace({
         className="-mx-4 -mt-3 overflow-hidden rounded-none border-x-0 border-t-0 shadow-none sm:-mx-6 sm:-mt-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm"
         data-testid="appointments-month-card"
       >
-        <CardHeader className="border-b px-2.5 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-4">
+        <CardHeader className="border-b px-1.5 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-4">
           <div className="flex items-start justify-between gap-4">
             <CardTitle className="text-base sm:text-lg xl:text-xl">{getMonthLabel(monthValue)}</CardTitle>
 
@@ -584,7 +584,7 @@ export function OpsStaffAppointmentsWorkspace({
           </div>
         </CardHeader>
 
-        <CardContent className="px-2 pt-2.5 pb-24 sm:px-3 sm:pt-3 sm:pb-28 lg:px-6 lg:pt-4 lg:pb-6">
+        <CardContent className="px-1 pt-2 pb-24 sm:px-3 sm:pt-3 sm:pb-28 lg:px-6 lg:pt-4 lg:pb-6">
           <div
             className="grid grid-cols-7 gap-1 sm:gap-1.5 lg:gap-2.5 xl:gap-3"
             data-testid="appointments-month-grid"
