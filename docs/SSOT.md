@@ -101,6 +101,8 @@ Notlar:
 - `/ops` istekleri middleware locale rewrite katmanından bypass edilir (`src/middleware.ts`).
 - `/ops` metadata’sı public metadata hattından ayrıdır (`src/app/ops/layout.tsx`).
 - Ops tarafı `next-intl` mesaj zincirine bağlı değildir; plain `next/link` ve plain `next/navigation` yaklaşımı kullanılır.
+- `/ops` layout kökü ve `OpsShell` current runtime’da `min-h-viewport` utility’sini kullanır; mobile bottom nav `safe-pb-ops-shell` ve `safe-pb-ops-nav` zinciriyle viewport’a fixed kalır (`src/app/ops/layout.tsx`, `src/components/ops/ops-shell.tsx`, `src/app/globals.css`).
+- Staff mobile nav label seti current runtime’da `Kasa`, `Randevu`, `Müşteri`, `Profil` olarak tam görünür (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 - Giriş modeli yerel e-posta/şifre akışıdır (`src/app/ops/giris/actions.ts`, `src/lib/ops/auth/password.ts`).
 - `/ops/giris` aynı zamanda minimum müşteri hesap kaydı girişini taşır; başarılı kayıt aktif `user` rolü üretir ve `Onaylar` alanına yönlenir. Current runtime login/register yüzeyi kısa `Giriş yap` / `Hesap oluştur` başlık sistemiyle çalışır; başlık altında ikinci açıklama satırı açılmaz (`src/app/ops/giris/page.tsx`, `src/app/ops/giris/actions.ts`, `src/lib/ops/customers.ts`).
 - Oturum `enki_ops_session` adlı imzalı çerez ile `/ops` path’inde tutulur (`src/lib/ops/auth/constants.ts`, `src/lib/ops/auth/session.ts`).
@@ -154,6 +156,7 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - `createStaffAppointmentAction` staff guard’ı ile korunur; bu akış hem `admin` hem `artist` için açıktır (`src/app/ops/randevular/actions.ts`, `src/lib/ops/auth/guards.ts`).
 - Staff create sırasında `source`, rol bazında `admin` veya `artist` olarak seçilir (`src/lib/ops/appointments.ts`).
 - Staff appointments V2 görünür akışı month-first root -> day sheet -> detail sheet -> create/edit sheet zinciridir; month cell içinde exact count yerine decoration tabanlı occupancy kullanılır. UI ritmi `docs/UI-SYSTEM.md` içinde yaşar (`src/app/ops/staff/randevular/page.tsx`, `src/components/ops/ops-staff-appointments-workspace.tsx`).
+- Staff appointments current runtime’da mobile month root’u shell hack’iyle değil, workspace kendi dikey budget’ını yöneterek screen-first calendar surface gibi kurar; gerçek cihaz viewport’unda ilk açılışta page vertical scroll üretmez. Bu davranış shell bottom nav anchoring kontratından ayrıdır (`src/components/ops/ops-staff-appointments-workspace.tsx`, `src/components/ops/ops-shell.tsx`).
 - Repo içinde admin’e özel create engeli görünmez. Canlı ortamda farklı bir admin create davranışı raporlanıyorsa, bu repo içinden doğrulanamaz ve `UNKNOWN` kabul edilir.
 
 ### Cashbook
@@ -163,6 +166,7 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - `amount_cents` pozitif integer olarak saklanır.
 - Staff kasa yüzeyi hızlı kayıt + defter mantığıyla çalışır; ana akış yön seçimi, kısa preset etiket, tutar ve kayıt submit zinciridir (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`).
 - Kasa presetleri UI seviyesindedir; mevcut payload içinde `note` alanını hızlandırır, schema veya action contract genişletmez (`src/lib/ops/cashbook-copy.ts`, `src/app/ops/kasa/actions.ts`).
+- Staff kasa note disclosure row’u current runtime’da mobile-safe’tir; `Not ekle` / `Kapat` satırı yatay taşma üretmez (`src/components/ops/ops-cash-entry-form.tsx`).
 - Soft delete alanları `deleted_at` ve `deleted_by_user_id`’dir.
 - Artist yalnız bugünün kasasına kayıt açabilir.
 - Geçmiş kayıt düzenleme ve soft delete yalnız admin’e açıktır (`src/lib/ops/cashbook.ts`, `src/app/ops/kasa/actions.ts`).
@@ -172,9 +176,10 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - Staff müşteri listesi ve detay yüzeyleri `/ops/staff/musteriler` ailesinde çalışır.
 - Staff hızlı müşteri oluşturma akışı `users` + `user_profiles` + `user_roles` üzerinde aktif `user` hesabı açar; bu kayıt staff müşteri listesi ve staff randevu müşteri seçeneklerine dahil olur (`src/app/ops/musteriler/actions.ts`, `src/lib/ops/customers.ts`, `src/lib/ops/appointments.ts`).
 - Staff müşteri create kartı current runtime’da ana akışta `Ad soyad` + `Telefon` alanlarını açık tutar; `Kısa not` alanı aynı form içinde disclosure olarak secondary açılır (`src/components/ops/ops-staff-customer-create-form.tsx`).
+- Staff müşteri create disclosure row’u current runtime’da mobile-safe’tir; `Kısa not` / `Not ekle` / `Kapat` satırı yatay taşma üretmez (`src/components/ops/ops-staff-customer-create-form.tsx`).
 - Liste yalnız `user` rolündeki aktif hesapları gösterir; staff-only hesaplar listeye dahil edilmez (`src/lib/ops/customers.ts`).
 - Liste araması `full_name`, `display_name`, `phone`, `email` alanları üzerinde çalışır.
-- Staff müşteri listesi current runtime’da kompakt link kartlarıyla çalışır; kart üstünde isim ve kısa iletişim bilgisi, alt satırda tek consent badge ve `Sıradaki randevu` özeti yer alır (`src/app/ops/staff/musteriler/page.tsx`).
+- Staff müşteri listesi current runtime’da kompakt link kartlarıyla çalışır; kart üstünde isim ve kısa iletişim bilgisi, alt satırda tek consent badge, `Sıradaki randevu` özeti ve görünür `Detaya git` aksiyonu yer alır (`src/app/ops/staff/musteriler/page.tsx`).
 - Staff müşteri listesi current runtime’da tek consent badge gösterir; bu badge yalnız güncel tattoo onayını `tattoo_form_consent` + `OPS_TATTOO_CONSENT_VERSION` üzerinden hesaplar ve copy’de bunu açıkça `Dövme onayı` olarak yazar. Piercing onayı listede ayrı badge olarak yer almaz; piercing görünürlüğü customer detail seviyesindedir (`src/lib/ops/customers.ts`, `src/app/ops/staff/musteriler/page.tsx`).
 - Detay yüzeyi profil, onay durumu, yaklaşan/geçmiş randevular ve tek güncel staff notunu birlikte gösterir.
 - `customer_notes.user_id` unique kalır; not upsert edilir, boş not gönderilirse kayıt temizlenir (`src/app/ops/musteriler/actions.ts`, `src/lib/ops/customers.ts`).
