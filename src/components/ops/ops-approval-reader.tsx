@@ -83,16 +83,6 @@ export function OpsApprovalReader({
         <LegalMarkdown markdown={markdown} />
       </div>
 
-      {!approvalRecorded && approvalEnabled ? (
-        <div
-          ref={endMarkerRef}
-          className="rounded-xl border border-dashed border-border bg-surface-1/55 px-3.5 py-3 text-sm text-muted-foreground"
-        >
-          <p className="font-medium text-foreground">Sona geldin</p>
-          <p className="mt-1">Onay alanı şimdi açıldı.</p>
-        </div>
-      ) : null}
-
       {approvalEnabled ? (
         approvalRecorded ? (
           <div className="rounded-xl border border-border bg-surface-1/55 px-3.5 py-3.5 text-sm text-muted-foreground">
@@ -117,13 +107,16 @@ export function OpsApprovalReader({
           >
             <input type="hidden" name="documentId" value={documentId} />
 
-            <div className="space-y-1">
+            <div
+              ref={endMarkerRef}
+              className="space-y-1 rounded-xl border border-dashed border-border bg-background px-3.5 py-3"
+            >
               <p className="text-sm font-medium text-foreground">
-                {hasReachedEnd ? "Hazırsın." : "Belgenin sonuna gel."}
+                {hasReachedEnd ? "Onay alanı açıldı." : "Belgenin sonuna gel."}
               </p>
               <p className="text-sm text-muted-foreground">
                 {hasReachedEnd
-                  ? "Kutuyu işaretleyip onayını kaydedebilirsin."
+                  ? "Kutuyu işaretleyip kaydedebilirsin."
                   : "Onay kutusu sona ulaştığında açılır."}
               </p>
             </div>

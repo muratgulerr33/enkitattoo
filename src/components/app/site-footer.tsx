@@ -22,9 +22,9 @@ export function SiteFooter() {
 
   return (
     <footer className="mt-8 border-t border-border bg-background/85 xl:mt-12">
-      <div className="app-container no-overflow-x py-6 xl:py-8">
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-[minmax(0,1.5fr)_auto_auto]">
-          <section className="min-w-0 space-y-2">
+      <div className="app-container no-overflow-x py-5 xl:py-7">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[minmax(0,1.5fr)_auto_auto]">
+          <section className="min-w-0 space-y-3">
             <Link
               href={HOME_URL}
               aria-label={t("footer.homeAria", { site: SITE_INFO.name })}
@@ -40,50 +40,52 @@ export function SiteFooter() {
               <p>{t("footer.sundayHours")}</p>
             </div>
 
-            <div className="mt-1 flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap">
-              <ExternalLink
-                href={GOOGLE_MAPS_BUSINESS_URL}
-                aria-label={t("footer.openOnGoogleMapsAria")}
-                title={t("common.openInMap")}
-                className={cn(textActionClass, "min-w-0 max-w-full")}
-              >
-                <span className="truncate">{t("common.openInMap")}</span>
-              </ExternalLink>
-              {FOOTER_QUICK_LINKS.map(({ labelKey, href }) => (
-                <Link
-                  key={labelKey}
-                  href={href}
-                  aria-label={t(labelKey)}
-                  title={t(labelKey)}
-                  className={cn(textActionClass, "min-w-0 max-w-full")}
+            <div className="space-y-3 pt-1">
+              <div className="grid gap-1.5 sm:grid-cols-2">
+                <ExternalLink
+                  href={GOOGLE_MAPS_BUSINESS_URL}
+                  aria-label={t("footer.openOnGoogleMapsAria")}
+                  title={t("common.openInMap")}
+                  className={cn(textActionClass, "min-w-0 max-w-full justify-start")}
                 >
-                  <span className="truncate">{t(labelKey)}</span>
-                </Link>
-              ))}
-            </div>
-
-            <div className="space-y-2 pt-2">
-              <p className="text-sm font-medium text-foreground">Bilgilendirme</p>
-              <div
-                aria-label="Bilgilendirme bağlantıları"
-                className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1"
-              >
-                {FOOTER_LEGAL_LINKS.map(({ label, href }) => (
+                  <span className="truncate">{t("common.openInMap")}</span>
+                </ExternalLink>
+                {FOOTER_QUICK_LINKS.map(({ labelKey, href }) => (
                   <Link
-                    key={href}
+                    key={labelKey}
                     href={href}
-                    aria-label={label}
-                    title={label}
+                    aria-label={t(labelKey)}
+                    title={t(labelKey)}
                     className={cn(textActionClass, "min-w-0 max-w-full justify-start")}
                   >
-                    <span className="truncate">{label}</span>
+                    <span className="truncate">{t(labelKey)}</span>
                   </Link>
                 ))}
+              </div>
+
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-foreground">Bilgilendirme</p>
+                <div
+                  aria-label="Bilgilendirme bağlantıları"
+                  className="grid gap-1.5 sm:grid-cols-2 xl:grid-cols-1"
+                >
+                  {FOOTER_LEGAL_LINKS.map(({ label, href }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      aria-label={label}
+                      title={label}
+                      className={cn(textActionClass, "min-w-0 max-w-full justify-start")}
+                    >
+                      <span className="truncate">{label}</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
 
-          <section aria-label={t("footer.socialLinksAria")} className="min-w-0">
+          <section aria-label={t("footer.socialLinksAria")} className="min-w-0 pt-1 md:pt-0">
             <p className="sr-only">{t("footer.social")}</p>
             <SocialIconsRow />
           </section>

@@ -27,16 +27,13 @@ export default async function OpsLoginPage({ searchParams }: PageProps) {
   return (
     <main className="app-container">
       <div className="flex min-h-[100svh] items-start justify-center py-4 sm:py-6 md:items-center md:py-8">
-        <div className="w-full max-w-md space-y-3.5 sm:space-y-4">
-          <header className="space-y-1.5 px-1 text-center">
+        <div className="w-full max-w-md space-y-3 sm:space-y-3.5">
+          <header className="space-y-1 px-1 text-center">
             <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
               Enki Tattoo Ops
             </p>
             <p className="text-lg font-semibold tracking-tight text-foreground">
               {showRegister ? "Hesap oluştur" : "Giriş yap"}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {showRegister ? "Randevuların için hesap aç." : "Müşteri hesabınla devam et."}
             </p>
           </header>
 
@@ -72,7 +69,7 @@ export default async function OpsLoginPage({ searchParams }: PageProps) {
           </div>
 
           <Card className="overflow-hidden border-border bg-card">
-            <CardContent className="space-y-3.5 px-4 pt-4 pb-4 sm:px-5 sm:pt-5 sm:pb-5">
+            <CardContent className="space-y-3 px-4 pt-4 pb-4 sm:px-5 sm:pt-5 sm:pb-5">
               {authReady ? (
                 showRegister ? <OpsCustomerRegisterForm /> : <OpsLoginForm />
               ) : (

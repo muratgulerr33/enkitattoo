@@ -26,7 +26,7 @@ function formatAcceptanceDate(value: Date | null): string | null {
 function buildTattooStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: string | null): {
   badgeLabel: string;
   summary: string;
-  detail: string;
+  detail: string | null;
 } {
   if (hasCurrentConsent) {
     return {
@@ -40,15 +40,15 @@ function buildTattooStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: stri
 
   return {
     badgeLabel: "Bekliyor",
-    summary: "Dövme onayı bekliyor.",
-    detail: "Belgeyi açıp tek onay verirsin.",
+    summary: "Belgeyi açıp onay verirsin.",
+    detail: null,
   };
 }
 
 function buildPiercingStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: string | null): {
   badgeLabel: string;
   summary: string;
-  detail: string;
+  detail: string | null;
 } {
   if (hasCurrentConsent) {
     return {
@@ -62,8 +62,8 @@ function buildPiercingStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: st
 
   return {
     badgeLabel: "Bekliyor",
-    summary: "Piercing onayı bekliyor.",
-    detail: "Belgeyi açıp tek onay verirsin.",
+    summary: "Belgeyi açıp onay verirsin.",
+    detail: null,
   };
 }
 
@@ -117,7 +117,9 @@ export default async function OpsUserApprovalsPage() {
             <CardContent className="space-y-2.5 px-4 pb-4">
               <div className="space-y-1 text-sm">
                 <p className="font-medium text-foreground">{tattooStatus.summary}</p>
-                <p className="text-muted-foreground">{tattooStatus.detail}</p>
+                {tattooStatus.detail ? (
+                  <p className="text-muted-foreground">{tattooStatus.detail}</p>
+                ) : null}
               </div>
               {tattooDocument ? (
                 <Button asChild variant="outline" className="w-full rounded-xl sm:w-auto">
@@ -150,7 +152,9 @@ export default async function OpsUserApprovalsPage() {
             <CardContent className="space-y-2.5 px-4 pb-4">
               <div className="space-y-1 text-sm">
                 <p className="font-medium text-foreground">{piercingStatus.summary}</p>
-                <p className="text-muted-foreground">{piercingStatus.detail}</p>
+                {piercingStatus.detail ? (
+                  <p className="text-muted-foreground">{piercingStatus.detail}</p>
+                ) : null}
               </div>
               {piercingDocument ? (
                 <Button asChild variant="outline" className="w-full rounded-xl sm:w-auto">

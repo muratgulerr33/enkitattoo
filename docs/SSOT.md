@@ -102,7 +102,7 @@ Notlar:
 - `/ops` metadata’sı public metadata hattından ayrıdır (`src/app/ops/layout.tsx`).
 - Ops tarafı `next-intl` mesaj zincirine bağlı değildir; plain `next/link` ve plain `next/navigation` yaklaşımı kullanılır.
 - Giriş modeli yerel e-posta/şifre akışıdır (`src/app/ops/giris/actions.ts`, `src/lib/ops/auth/password.ts`).
-- `/ops/giris` aynı zamanda minimum müşteri hesap kaydı girişini taşır; başarılı kayıt aktif `user` rolü üretir ve `Onaylar` alanına yönlenir. Current runtime login/register yüzeyi kısa `Giriş yap` / `Hesap oluştur` başlık sistemiyle çalışır (`src/app/ops/giris/page.tsx`, `src/app/ops/giris/actions.ts`, `src/lib/ops/customers.ts`).
+- `/ops/giris` aynı zamanda minimum müşteri hesap kaydı girişini taşır; başarılı kayıt aktif `user` rolü üretir ve `Onaylar` alanına yönlenir. Current runtime login/register yüzeyi kısa `Giriş yap` / `Hesap oluştur` başlık sistemiyle çalışır; başlık altında ikinci açıklama satırı açılmaz (`src/app/ops/giris/page.tsx`, `src/app/ops/giris/actions.ts`, `src/lib/ops/customers.ts`).
 - Oturum `enki_ops_session` adlı imzalı çerez ile `/ops` path’inde tutulur (`src/lib/ops/auth/constants.ts`, `src/lib/ops/auth/session.ts`).
 - `OPS_SESSION_SECRET` en az 32 karakter olmalıdır (`src/lib/ops/auth/session.ts`).
 - `DATABASE_URL` ve `OPS_SESSION_SECRET` yoksa ops auth hazır kabul edilmez (`src/lib/ops/auth/session.ts`, `src/db/index.ts`).
@@ -133,7 +133,7 @@ Notlar:
 - `/ops/user/profil` profil bilgilerini `users` + `user_profiles` üzerinde günceller.
 - Onay kayıtları `consent_acceptances` tablosunda belge tipi + sürüm bazında tekilleşir.
 - Güncel dövme onayı sürümü `2026-03-v1`, güncel piercing onayı sürümü de `2026-03-v1` olarak sabittir (`src/lib/ops/user-workspace.ts`).
-- `/ops/user/onaylar/[documentId]` ops içi focused approval reader route’udur; tattoo ve piercing için ana sayfa scroll’u + belge sonu marker’ı ile scroll-gated tek checkbox + save akışı sunar. Reader gövdesi aynı markdown kaynağının sanitize edilmiş sürümüdür; `Sitede kullanılacak ...` ve `Kısa ekran özeti` gibi iç kullanım başlıkları user-facing ops yüzeyine taşınmaz (`src/lib/legal/legal-content.ts`, `src/app/ops/user/onaylar/[documentId]/page.tsx`, `src/components/ops/ops-approval-reader.tsx`).
+- `/ops/user/onaylar/[documentId]` ops içi focused approval reader route’udur; tattoo ve piercing için ana sayfa scroll’u + belge sonu marker’ı ile scroll-gated tek checkbox + save akışı sunar. Reader gövdesi aynı markdown kaynağının sanitize edilmiş sürümüdür; `Sitede kullanılacak ...` ve `Kısa ekran özeti` gibi iç kullanım başlıkları user-facing ops yüzeyine taşınmaz. Pending state tek kısa durum bloğu taşır; detail header yalnız gerekli meta bilgisini gösterir (`src/lib/legal/legal-content.ts`, `src/app/ops/user/onaylar/[documentId]/page.tsx`, `src/components/ops/ops-approval-reader.tsx`).
 - Approval submit action mevcut `consent_acceptances` omurgasını reuse eder; tattoo `acceptCurrentConsent()`, piercing `acceptCurrentPiercingConsent()` yoluyla kaydolur ve audit `consent.accepted` kaydı korunur (`src/app/ops/user/actions.ts`, `src/lib/ops/user-workspace.ts`).
 - Randevu readiness mantığı current runtime’da yalnız profil üzerinden çalışır; `consent_acceptances` bu hesaplamaya dahil edilmez (`src/lib/ops/user-workspace.ts`).
 - `/ops/user/profil` sayfası current runtime’da yalnız profil bilgilerini gösterir ve günceller; user lane içinde ayrı dövme detay yüzeyi veya buna giden CTA yaşamaz (`src/app/ops/user/profil/page.tsx`, `src/lib/ops/user-workspace.ts`).
