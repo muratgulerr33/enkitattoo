@@ -15,7 +15,7 @@ function buildLocalizedLegalPath(locale: string, slug: string): string {
     : routing.defaultLocale;
   const localePrefix = normalizedLocale === routing.defaultLocale ? "" : `/${normalizedLocale}`;
 
-  return `${localePrefix}/bilgilendirme/${slug}`;
+  return `${localePrefix}/${slug}`;
 }
 
 export default async function LegacyLegalDocumentRedirectPage({ params }: PageProps) {
