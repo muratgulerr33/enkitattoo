@@ -438,6 +438,11 @@
     padding-bottom: calc(env(safe-area-inset-bottom) + 96px);
   }
 
+  .min-h-viewport {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
   .safe-pb-ops-shell {
     padding-bottom: calc(env(safe-area-inset-bottom) + 5.5rem);
   }
