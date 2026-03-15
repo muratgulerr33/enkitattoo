@@ -63,9 +63,9 @@ export function SiteFooter() {
             </div>
 
             <div className="space-y-2 pt-2">
-              <p className="text-sm font-medium text-foreground">Hukuki</p>
+              <p className="text-sm font-medium text-foreground">Bilgilendirme</p>
               <div
-                aria-label="Hukuki bağlantılar"
+                aria-label="Bilgilendirme bağlantıları"
                 className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1"
               >
                 {FOOTER_LEGAL_LINKS.map(({ label, href }) => (

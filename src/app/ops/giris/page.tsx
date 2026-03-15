@@ -83,10 +83,6 @@ export default async function OpsLoginPage({ searchParams }: PageProps) {
               )}
             </CardContent>
           </Card>
-
-          <p className="text-center text-xs text-muted-foreground">
-            Ekip girişi de burada.
-          </p>
         </div>
       </div>
     </main>

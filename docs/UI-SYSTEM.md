@@ -14,7 +14,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 |---|---|---|
 | App shell | `src/components/app/app-shell.tsx` | `app-container`, `app-mobile-header-offset`, `app-safe-bottom` zinciri korunur |
 | Mobile header ve drawer | `src/components/app/mobile-header.tsx` | route listesi ve locale-aware navigation tek elde kalır |
-| Footer ve iletişim | `src/components/app/site-footer.tsx`, `src/app/[locale]/(app)/iletisim/page.tsx`, `src/lib/legal/legal-registry.ts` | ikinci NAP/link kaynağı açılmaz; footer hukuki linkleri registry üzerinden beslenir |
+| Footer ve iletişim | `src/components/app/site-footer.tsx`, `src/app/[locale]/(app)/iletisim/page.tsx`, `src/lib/legal/legal-registry.ts` | ikinci NAP/link kaynağı açılmaz; footer bilgilendirme linkleri registry üzerinden beslenir |
 | Hub kartı | `src/components/hub/hub-card.tsx` | medya oranı ve text taşma zinciri korunur |
 | Galeri grid | `src/app/[locale]/(app)/galeri-tasarim/gallery-grid.tsx` | query-param ve viewer davranışı bozulmaz |
 | Piercing yüzeyleri | `src/components/piercing/*` | lookup/data/layout birlikte ele alınır |
@@ -25,9 +25,9 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `main` container şu zinciri korur: `app-container app-mobile-header-offset app-safe-bottom no-overflow-x`.
 - Header hide/show davranışı `useHideHeaderOnScroll` ile çalışır; scroll dinleyicisi frame-frame React state ile yeniden kurulmaz.
 - Top-level nav kaynağı tek yerde kalır; ikinci nav kaynağı açılmaz.
-- Mobil drawer footer CTA alanı hesap açma ve giriş akışına hizmet eder; copy kısa tutulur, utility blok gibi davranır ve kaldırılmış form akışına referans vermez (`src/components/app/mobile-header.tsx`).
+- Mobil drawer footer CTA alanı hesap açma ve giriş akışına hizmet eder; `Kullanıcı hesabı` utility bloğu tek kısa yardımcı satır taşır ve kaldırılmış form akışına referans vermez (`src/components/app/mobile-header.tsx`, `messages/*.json`).
 - Footer ve iletişim yüzeyi business bilgilerini component içine gömmez; `src/lib/site-info.ts` ve `src/lib/site/links.ts` kullanılır.
-- Footer hukuki linkleri locale-aware kalır; label seti `KVKK Aydınlatma Metni`, `Gizlilik Politikası`, `Çerez Politikası`, `Dövme Sözleşmesi`, `Piercing Sözleşmesi` olarak görünür ve `src/lib/legal/legal-registry.ts` içinden beslenir.
+- Footer bilgilendirme linkleri locale-aware kalır; bölüm başlığı `Bilgilendirme` olarak görünür, link seti `KVKK Aydınlatma Metni`, `Gizlilik Politikası`, `Çerez Politikası`, `Dövme Sözleşmesi`, `Piercing Sözleşmesi` olarak kalır ve `src/lib/legal/legal-registry.ts` içinden beslenir.
 - Çevrilebilir public copy `messages/*.json` veya ilgili content namespace içinden gelir.
 
 ## 4) `/ops` UI Contract
@@ -84,7 +84,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
 - Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez.
 - Müşteri detayı: profil, form, onay durumu, randevu ve staff notu aynı yüzeyde olabilir; fakat iç model terimleri kullanıcı copy’sine sızmamalıdır.
-- Public legal sayfalar ve `/ops/user/onaylar` aynı markdown kaynak ailesini kullanır (`src/content/legal/*.md`, `src/content/ops/legal/*.md`); içerik ikinci kez hardcode edilmez.
+- Public bilgilendirme sayfaları ve `/ops/user/onaylar` aynı markdown kaynak ailesini kullanır (`src/content/legal/*.md`, `src/content/ops/legal/*.md`); içerik ikinci kez hardcode edilmez.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 
 ### User lane karar matrisi
@@ -100,7 +100,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 #### Current runtime
 
 - User primary nav desktop ve mobile’da `Onaylar`, `Randevular`, `Profil` setiyle görünür; user lane içinde ayrı dövme detay route’u veya tab’ı bulunmaz (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
-- `/ops/user/onaylar` current runtime’da tattoo ve piercing belgelerini özet kartlarla gösterir; `Metni oku` public legal route’a değil ops içi focused approval reader’a gider.
+- `/ops/user/onaylar` current runtime’da tattoo ve piercing belgelerini özet kartlarla gösterir; `Metni oku` public bilgilendirme route’una değil ops içi focused approval reader’a gider.
 - `/ops/user/onaylar`, `/ops/user/randevular` ve `/ops/user/profil` current runtime’da mobile-first daha sıkı card padding, daha kısa yardımcı metin ve tek net aksiyon hiyerarşisiyle çalışır; aynı işi tekrar eden ikinci CTA açılmaz.
 - Ops approval reader aynı markdown kaynağını kullanır; tattoo ve piercing için scroll sonuna inmeden tek checkbox ve kayıt CTA’sı açılmaz. Reader gövdesi ops yüzeyinde sanitize edilir; `Sitede kullanılacak ...` ve `Kısa ekran özeti` gibi iç kullanım başlıkları kullanıcıya gösterilmez. Current runtime iç scroll yerine ana sayfa scroll’u ve belge sonu marker’ı ile gating uygular.
 - `/ops/user/profil` current runtime’da yalnız profil alanıdır; ayrı dövme detay kartı veya secondary route handoff’u içermez.
@@ -108,12 +108,12 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `/ops/user/form` current runtime’da user surface olarak yaşamaz; bu path’e giden CTA, helper veya readiness bağı kalmamıştır.
 - Tattoo ve piercing onayı kaydedildiğinde `/ops/user/onaylar` kartları kısa kullanıcı özeti gösterir; staff customer detail aynı onayları sürüm ve onay tarihiyle görünür tutar.
 - Staff müşteri listesi current runtime’da yalnız güncel tattoo onay badge’ini gösterir; customer detail ise tattoo ve piercing onaylarını ayrı bloklarda özetler.
-- Public legal page, public site shell içinde açılır; ops shell devamlılığı taşımaz.
+- Public bilgilendirme page, public site shell içinde açılır; ops shell devamlılığı taşımaz.
 
 #### Current inconsistency
 
-- Public legal page belge-odaklı özel yüzey değildir; mevcut durumda public site shell içinde yaşar ve belge odağını dağıtan site-level bağlamı taşır.
-- Public legal page ilk `#` başlık dışındaki markdown gövdesini aynen render eder. Ops approval reader bu markdown’ın user-facing sanitize edilmiş sürümünü gösterse de public legal route tam gövdeyi göstermeye devam eder. Repo içindeki kanıtlı iç kullanım başlık örnekleri `Sitede kullanılacak zorunlu onay metni` ve `Kısa ekran özeti`dir.
+- Public bilgilendirme page belge-odaklı özel yüzey değildir; mevcut durumda public site shell içinde yaşar ve belge odağını dağıtan site-level bağlamı taşır.
+- Public bilgilendirme page ilk `#` başlık dışındaki markdown gövdesini aynen render eder. Ops approval reader bu markdown’ın user-facing sanitize edilmiş sürümünü gösterse de public bilgilendirme route’u tam gövdeyi göstermeye devam eder. Repo içindeki kanıtlı iç kullanım başlık örnekleri `Sitede kullanılacak zorunlu onay metni` ve `Kısa ekran özeti`dir.
 
 ## 5) Kanıtlı Known Issues ve Polish Backlog
 
