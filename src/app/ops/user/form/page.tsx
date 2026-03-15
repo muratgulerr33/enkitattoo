@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { OpsTattooForm } from "@/components/ops/ops-tattoo-form";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -12,16 +11,16 @@ import {
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import { getUserWorkspaceOverview } from "@/lib/ops/user-workspace";
 
-function formatFormStatus(value: "draft" | "submitted" | null): string {
+function getEditorDescription(value: "draft" | "submitted" | null): string {
   if (value === "submitted") {
-    return "Hazır";
+    return "Kaydettiğin dövme detaylarını burada gözden geçirir ve gerektiğinde güncellersin.";
   }
 
   if (value === "draft") {
-    return "Taslak";
+    return "Kaydettiğin taslağı burada sürdürür, dövme detaylarını istediğin zaman düzenlersin.";
   }
 
-  return "Eklenmedi";
+  return "Randevu öncesi paylaşmak istediğin dövme detaylarını burada eklersin.";
 }
 
 export default async function OpsUserFormPage() {
@@ -33,26 +32,18 @@ export default async function OpsUserFormPage() {
     <div className="ops-page-shell">
       <Card className="overflow-hidden">
         <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="space-y-1">
-              <CardTitle>Dövme detayları</CardTitle>
-              <CardDescription>
-                Randevu öncesi paylaşmak istediğin dövme detaylarını burada ekler ve güncellersin.
-              </CardDescription>
-            </div>
-            <Badge
-              variant={latestTattooForm?.status === "submitted" ? "default" : "outline"}
-              className="rounded-full"
-            >
-              {formatFormStatus(latestTattooForm?.status ?? null)}
-            </Badge>
+          <div className="space-y-1">
+            <CardTitle>Dövme detayları</CardTitle>
+            <CardDescription>
+              {getEditorDescription(latestTattooForm?.status ?? null)}
+            </CardDescription>
           </div>
         </CardHeader>
         <CardContent className="space-y-4 px-5 pb-5 sm:px-6">
           {!overview.isProfileComplete ? (
             <div className="flex flex-col gap-3 rounded-2xl border border-border bg-surface-1 px-3.5 py-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="space-y-1">
-                <p className="text-sm font-medium text-foreground">Profil bilgisi eksik</p>
+                <p className="text-sm font-medium text-foreground">Önce profil bilgilerini ekle</p>
                 <p className="text-sm text-muted-foreground">
                   Randevu kaydı için ad soyad ve telefon bilgini de ekle.
                 </p>

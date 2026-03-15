@@ -25,9 +25,9 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
     <form action={formAction} className="space-y-4">
       <div className="space-y-3">
         <div className="space-y-1">
-          <p className="text-sm font-medium text-foreground">Önce bunları ekle</p>
+          <p className="text-sm font-medium text-foreground">Ana detaylar</p>
           <p className="text-sm text-muted-foreground">
-            Randevu talebi açmadan önce bu üç detayı paylaş.
+            Bölge, boyut ve tasarım notu randevu planlaması için en çok ihtiyaç duyulan bilgiler.
           </p>
         </div>
 
@@ -58,7 +58,7 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
           <Textarea
             id="designNotes"
             name="designNotes"
-            placeholder="Ne istediğinizi kısaca anlatın."
+            placeholder="Ne istediğini kısaca anlat."
             defaultValue={latestTattooForm?.designNotes ?? ""}
             disabled={pending}
             rows={3}
@@ -68,9 +68,9 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
 
       <div className="space-y-3">
         <div className="space-y-1">
-          <p className="text-sm font-medium text-foreground">İsteğe bağlı notlar</p>
+          <p className="text-sm font-medium text-foreground">Ek notlar</p>
           <p className="text-sm text-muted-foreground">
-            Taslağı netleştirmek için ek detay bırakabilirsiniz.
+            İstersen stil, renk, referans veya hassasiyet notlarını da ekleyebilirsin.
           </p>
         </div>
 
@@ -148,10 +148,10 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
           {pending ? (
             <>
               <LoaderCircle className="size-4 animate-spin" aria-hidden />
-              Tamamlanıyor
+              Kaydediliyor
             </>
           ) : (
-            "Detayları tamamla"
+            "Detayları kaydet"
           )}
         </Button>
 
@@ -167,10 +167,10 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
           {pending ? (
             <>
               <LoaderCircle className="size-4 animate-spin" aria-hidden />
-              Kaydediliyor
+              Taslak kaydediliyor
             </>
           ) : (
-            "Taslak olarak kaydet"
+            "Taslağı kaydet"
           )}
         </Button>
       </div>

@@ -33,7 +33,7 @@ function getFormShortcutState(
     return {
       statusLabel: "Taslak hazır",
       actionLabel: "Taslağı sürdür",
-      description: "Kaydettiğin dövme detayları burada duruyor. İstersen gözden geçirip tamamlayabilirsin.",
+      description: "Kaydettiğin dövme detaylarını burada gözden geçirip sürdürmeye devam edebilirsin.",
     };
   }
 

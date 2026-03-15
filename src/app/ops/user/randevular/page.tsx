@@ -145,7 +145,7 @@ export default async function OpsUserAppointmentsPage() {
               <p className="text-sm text-muted-foreground">
                 {needsProfile
                   ? "Ad soyad ve telefon bilgini kaydetmeden randevu talebi açılamaz."
-                  : "Randevu öncesi paylaşmak istediğin dövme detaylarını buradan ekleyip tamamlayabilirsin."}
+                  : "Randevu öncesi paylaşmak istediğin dövme detaylarını buradan ekleyip güncelleyebilirsin."}
               </p>
             </div>
 

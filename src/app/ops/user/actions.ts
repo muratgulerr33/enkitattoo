@@ -155,7 +155,7 @@ export async function saveTattooFormAction(
 
     if (intent === "submit" && (!input.placement || !input.sizeNotes || !input.designNotes)) {
       return {
-        error: "Detayları tamamlamak için bölge, boyut ve tasarım notu gerekli.",
+        error: "Detayları kaydetmek için bölge, boyut ve tasarım notu gerekli.",
         success: null,
       };
     }
@@ -165,7 +165,7 @@ export async function saveTattooFormAction(
 
     return {
       error: null,
-      success: intent === "submit" ? "Detaylar tamamlandı." : "Taslak kaydedildi.",
+      success: intent === "submit" ? "Dövme detayların kaydedildi." : "Taslağın kaydedildi.",
     };
   } catch (error) {
     return {

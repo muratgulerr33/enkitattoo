@@ -102,7 +102,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `/ops/user/onaylar` current runtime’da tattoo ve piercing belgelerini özet kartlarla gösterir; `Metni oku` public legal route’a değil ops içi focused approval reader’a gider.
 - Ops approval reader aynı markdown kaynağını kullanır; tattoo ve piercing için scroll sonuna inmeden tek checkbox ve kayıt CTA’sı açılmaz. Reader gövdesi ops yüzeyinde sanitize edilir; `Sitede kullanılacak ...` ve `Kısa ekran özeti` gibi iç kullanım başlıkları kullanıcıya gösterilmez. Current runtime iç scroll yerine ana sayfa scroll’u ve belge sonu marker’ı ile gating uygular.
 - `/ops/user/profil` profil tamamlandıktan sonra dövme detaylarına yalnız secondary CTA verir; CTA mevcut detay durumuna göre `Detayları ekle`, `Taslağı sürdür`, `Detayları güncelle` gibi dürüst copy kullanır. `/ops/user/randevular` aynı route’u yalnız gerektiğinde contextual CTA olarak gösterir.
-- `/ops/user/form` route’u yaşamaya devam eder; user-facing tarafta ise top-level sekme gibi değil, profil ve randevular içinden açılan `dövme detayları editörü` yüzeyi gibi davranır. Teknik snapshot omurgası korunur ama kullanıcıya legacy form gibi sunulmaz.
+- `/ops/user/form` route’u yaşamaya devam eder; user-facing tarafta ise top-level sekme gibi değil, profil ve randevular içinden açılan `dövme detayları editörü` yüzeyi gibi davranır. Üst açıklama, helper blokları ve kayıt aksiyonları `detay ekle / sürdür / güncelle / kaydet` diline çekilmiştir; teknik snapshot omurgası korunur ama kullanıcıya legacy form gibi sunulmaz.
 - `/ops/user/randevular` current runtime’da aktif yaklaşan randevu varsa bunu sayfanın ana yüzeyi yapar; prerequisite veya yeni talep yüzeyi yalnız yaklaşan randevu yoksa görünür.
 - Tattoo ve piercing onayı kaydedildiğinde `/ops/user/onaylar` kartları kısa kullanıcı özeti gösterir; staff customer detail aynı onayları sürüm ve onay tarihiyle görünür tutar.
 - Staff müşteri listesi current runtime’da form durumu ile birlikte yalnız güncel tattoo onay badge’ini gösterir; customer detail ise tattoo ve piercing onaylarını ayrı bloklarda özetler.
@@ -111,7 +111,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 #### Current inconsistency
 
 - Readiness mantığı tattoo-form merkezlidir. Bu yüzden piercing kullanıcı yolu user lane IA içinde eşit görünür değildir ve dövme akışı tarafından gölgelenir.
-- `/ops/user/form` route’u user-facing olarak `dövme detayları editörü` çizgisine çekilmiştir; buna rağmen tek kartlı eski form kompozisyonundan tamamen kopmuş sayılmaz ve üst hiyerarşi polish’i ayrı tur gerektirir.
+- `/ops/user/form` route’u user-facing olarak `dövme detayları editörü` çizgisine çekilmiştir; route URL’i ve teknik snapshot modeli korunurken kullanıcı katmanında `form` yerine `dövme detayları` dili kullanılır.
 - Public legal page belge-odaklı özel yüzey değildir; mevcut durumda public site shell içinde yaşar ve belge odağını dağıtan site-level bağlamı taşır.
 - Public legal page ilk `#` başlık dışındaki markdown gövdesini aynen render eder. Ops approval reader bu markdown’ın user-facing sanitize edilmiş sürümünü gösterse de public legal route tam gövdeyi göstermeye devam eder. Repo içindeki kanıtlı iç kullanım başlık örnekleri `Sitede kullanılacak zorunlu onay metni` ve `Kısa ekran özeti`dir.
 
