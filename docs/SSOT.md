@@ -171,9 +171,11 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 
 - Staff müşteri listesi ve detay yüzeyleri `/ops/staff/musteriler` ailesinde çalışır.
 - Staff hızlı müşteri oluşturma akışı `users` + `user_profiles` + `user_roles` üzerinde aktif `user` hesabı açar; bu kayıt staff müşteri listesi ve staff randevu müşteri seçeneklerine dahil olur (`src/app/ops/musteriler/actions.ts`, `src/lib/ops/customers.ts`, `src/lib/ops/appointments.ts`).
+- Staff müşteri create kartı current runtime’da ana akışta `Ad soyad` + `Telefon` alanlarını açık tutar; `Kısa not` alanı aynı form içinde disclosure olarak secondary açılır (`src/components/ops/ops-staff-customer-create-form.tsx`).
 - Liste yalnız `user` rolündeki aktif hesapları gösterir; staff-only hesaplar listeye dahil edilmez (`src/lib/ops/customers.ts`).
 - Liste araması `full_name`, `display_name`, `phone`, `email` alanları üzerinde çalışır.
-- Staff müşteri listesi current runtime’da tek consent badge gösterir; bu badge yalnız güncel tattoo onayını `tattoo_form_consent` + `OPS_TATTOO_CONSENT_VERSION` üzerinden hesaplar. Piercing onayı listede ayrı badge olarak yer almaz; piercing görünürlüğü customer detail seviyesindedir (`src/lib/ops/customers.ts`, `src/app/ops/staff/musteriler/page.tsx`).
+- Staff müşteri listesi current runtime’da kompakt link kartlarıyla çalışır; kart üstünde isim ve kısa iletişim bilgisi, alt satırda tek consent badge ve `Sıradaki randevu` özeti yer alır (`src/app/ops/staff/musteriler/page.tsx`).
+- Staff müşteri listesi current runtime’da tek consent badge gösterir; bu badge yalnız güncel tattoo onayını `tattoo_form_consent` + `OPS_TATTOO_CONSENT_VERSION` üzerinden hesaplar ve copy’de bunu açıkça `Dövme onayı` olarak yazar. Piercing onayı listede ayrı badge olarak yer almaz; piercing görünürlüğü customer detail seviyesindedir (`src/lib/ops/customers.ts`, `src/app/ops/staff/musteriler/page.tsx`).
 - Detay yüzeyi profil, onay durumu, yaklaşan/geçmiş randevular ve tek güncel staff notunu birlikte gösterir.
 - `customer_notes.user_id` unique kalır; not upsert edilir, boş not gönderilirse kayıt temizlenir (`src/app/ops/musteriler/actions.ts`, `src/lib/ops/customers.ts`).
 

@@ -82,7 +82,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Staff randevu FAB görünürlük kuralı sabittir: root month view görünür, day agenda görünür, detail gizli, create/edit gizli.
 - Staff randevu FAB, grid veya sheet listesinin üstüne veri örtecek şekilde bırakılmaz; mobile’da içerik alt padding’i ve safe area birlikte düşünülür.
 - Staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
-- Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez.
+- Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez. Hızlı create kartı ana akışta `Ad soyad` + `Telefon` alanlarını önde tutar, `Kısa not` disclosure olarak secondary açılır.
 - Müşteri detayı: profil, form, onay durumu, randevu ve staff notu aynı yüzeyde olabilir; fakat iç model terimleri kullanıcı copy’sine sızmamalıdır.
 - Prefixsiz public legal sayfalar ve `/ops/user/onaylar` aynı markdown kaynak ailesini kullanır (`src/content/legal/*.md`, `src/content/ops/legal/*.md`); içerik ikinci kez hardcode edilmez.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
@@ -107,7 +107,8 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `/ops/user/randevular` current runtime’da aktif yaklaşan randevu varsa bunu sayfanın ana yüzeyi yapar; liste açıklamaları sizli-resmi dille yazılır. Prerequisite veya yeni talep yüzeyi yalnız yaklaşan randevu yoksa görünür; create kartı badge taşımaz ve `Uygun gün ve saati seçerek randevu oluşturabilirsiniz.` açıklamasıyla açılır. Prerequisite mantığı yalnız profil eksiğine bakar; ayrı dövme detay prerequisite’i yoktur.
 - `/ops/user/form` current runtime’da user surface olarak yaşamaz; bu path’e giden CTA, helper veya readiness bağı kalmamıştır.
 - Tattoo ve piercing onayı kaydedildiğinde `/ops/user/onaylar` kartları kısa kullanıcı özeti gösterir; staff customer detail aynı onayları sürüm ve onay tarihiyle görünür tutar.
-- Staff müşteri listesi current runtime’da yalnız güncel tattoo onay badge’ini gösterir; customer detail ise tattoo ve piercing onaylarını ayrı bloklarda özetler.
+- Staff müşteri listesi current runtime’da daha kompakt tarama ritmiyle çalışır; kart içinde güçlü isim, kısa iletişim bilgisi, tek satırlık `Sıradaki randevu` özeti ve daha görünür `Detaya git` aksiyonu yer alır.
+- Staff müşteri listesi current runtime’da yalnız güncel tattoo onay badge’ini gösterir; badge copy’si bunu açıkça `Dövme onayı` olarak yazar. Customer detail ise tattoo ve piercing onaylarını ayrı bloklarda özetler.
 - Prefixsiz public legal page, public site shell içinde açılır; ops shell devamlılığı taşımaz.
 
 #### Current inconsistency

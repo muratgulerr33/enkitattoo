@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { OpsStaffCustomerCreateForm } from "@/components/ops/ops-staff-customer-create-form";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -24,13 +25,13 @@ type PageProps = {
 };
 
 function getConsentStatusLabel(status: CustomerConsentStatus): string {
-  return status === "accepted" ? "Onay kayıtlı" : "Onay yok";
+  return status === "accepted" ? "Dövme onayı kayıtlı" : "Dövme onayı yok";
 }
 
 function getConsentBadgeClassName(status: CustomerConsentStatus): string {
   return status === "accepted"
     ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-700"
-    : "border-border bg-muted/40 text-foreground";
+    : "border-border bg-muted/35 text-muted-foreground";
 }
 
 export default async function OpsStaffCustomersPage({ searchParams }: PageProps) {
@@ -41,34 +42,33 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
   return (
     <div className="ops-page-shell">
       <div className="grid gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.7fr)] xl:items-start">
-        <Card id="yeni-musteri">
-          <CardHeader className="gap-1.5">
+        <Card id="yeni-musteri" className="gap-4">
+          <CardHeader className="gap-1">
             <CardTitle>Hızlı müşteri oluştur</CardTitle>
-            <CardDescription>
-              Randevu açmadan önce müşteriyi bu alandan ekleyin.
-            </CardDescription>
+            <CardDescription>Müşteriyi hızlıca ekleyin.</CardDescription>
           </CardHeader>
           <CardContent>
             <OpsStaffCustomerCreateForm />
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="gap-1.5">
+        <Card className="gap-3">
+          <CardHeader className="gap-1">
             <CardTitle>Arama</CardTitle>
-            <CardDescription>İsim, telefon veya e-posta ile arayın.</CardDescription>
+            <CardDescription>İsim, telefon veya e-posta.</CardDescription>
           </CardHeader>
           <CardContent>
-            <form action="/ops/staff/musteriler" className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
+            <form action="/ops/staff/musteriler" className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
               <Input
                 name="q"
                 defaultValue={query}
-                placeholder="İsim, telefon veya e-posta"
+                placeholder="Müşteri ara"
                 autoComplete="off"
+                className="h-10 rounded-xl"
               />
               <button
                 type="submit"
-                className="inline-flex h-11 items-center justify-center rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/35"
+                className="inline-flex h-10 items-center justify-center rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/35"
               >
                 Ara
               </button>
@@ -77,16 +77,16 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
         </Card>
       </div>
 
-      <Card>
-        <CardHeader className="gap-1.5">
-          <CardTitle>Liste</CardTitle>
+      <Card className="gap-4">
+        <CardHeader className="gap-1">
+          <CardTitle>Müşteriler</CardTitle>
           <CardDescription>
             {customers.length
               ? `${customers.length} müşteri bulundu.`
               : "Aramaya uygun müşteri bulunamadı."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-3">
           {customers.length ? (
             customers.map((customer) => {
               const nextAppointmentText = formatCustomerAppointmentShort(customer.nextAppointment);
@@ -95,23 +95,26 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                 <Link
                   key={customer.userId}
                   href={`/ops/staff/musteriler/${customer.userId}`}
-                  className="block rounded-3xl border border-border bg-card p-4 transition-colors hover:bg-muted/20"
+                  className="group block rounded-2xl border border-border/80 bg-card px-4 py-3.5 transition-[border-color,background-color,box-shadow] hover:border-foreground/15 hover:bg-muted/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 >
                   <div className="flex items-start justify-between gap-4">
-                    <div className="space-y-2">
+                    <div className="min-w-0 space-y-1.5">
                       <p className="text-base font-semibold text-foreground">
                         {getCustomerLabel(customer)}
                       </p>
-                      <div className="space-y-1 text-sm text-muted-foreground">
-                        <p>{customer.email ?? "E-posta yok"}</p>
+                      <div className="space-y-0.5 text-sm text-muted-foreground">
                         <p>{customer.phone ?? "Telefon yok"}</p>
+                        <p>{customer.email ?? "E-posta yok"}</p>
                       </div>
                     </div>
 
-                    <span className="text-sm font-medium text-muted-foreground">Detay</span>
+                    <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs font-medium text-foreground transition-colors group-hover:border-foreground/20 group-hover:bg-muted/20">
+                      Detaya git
+                      <ChevronRight className="size-3.5" aria-hidden />
+                    </span>
                   </div>
 
-                  <div className="mt-3 flex flex-wrap gap-2">
+                  <div className="mt-3 flex flex-wrap items-center gap-2 border-t border-border/60 pt-3">
                     <Badge
                       variant="outline"
                       className={cn(
@@ -121,21 +124,21 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                     >
                       {getConsentStatusLabel(customer.consentStatus)}
                     </Badge>
-                  </div>
 
-                  <div className="mt-3 rounded-2xl border border-border bg-surface-1 p-4 text-sm">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Sıradaki randevu
-                    </p>
-                    <p className="mt-2 text-foreground">
-                      {nextAppointmentText ?? "Yaklaşan randevu yok."}
+                    <p className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm sm:ml-auto">
+                      <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                        Sıradaki randevu
+                      </span>
+                      <span className={cn(nextAppointmentText ? "text-foreground" : "text-muted-foreground")}>
+                        {nextAppointmentText ?? "Yok"}
+                      </span>
                     </p>
                   </div>
                 </Link>
               );
             })
           ) : (
-            <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
+            <div className="rounded-2xl border border-dashed border-border p-5 text-sm text-muted-foreground">
               Eşleşen müşteri yok. Yukarıdan yeni müşteri ekleyin veya arama kelimesini sadeleştirin.
             </div>
           )}
