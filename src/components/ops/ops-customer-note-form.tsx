@@ -26,14 +26,14 @@ export function OpsCustomerNoteForm({
   const [state, formAction, pending] = useActionState(saveCustomerNoteAction, INITIAL_STATE);
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={formAction} className="space-y-3">
       <input type="hidden" name="customerUserId" value={customerUserId} />
 
       <Textarea
         id={`customer-note-${customerUserId}`}
         name="note"
         defaultValue={note ?? ""}
-        rows={6}
+        rows={4}
         placeholder="Kısa not"
         disabled={pending}
       />

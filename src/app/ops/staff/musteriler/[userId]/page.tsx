@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -55,6 +54,22 @@ function formatAcceptanceDate(value: Date | null): string | null {
   }).format(value);
 }
 
+function getConsentSummary(acceptedAt: string | null): string {
+  return acceptedAt ? `Onaylandı ${acceptedAt}` : "Bu sürüm için kayıt yok.";
+}
+
+function getCustomerContactLine(customer: {
+  phone: string | null;
+  email: string | null;
+}): string | null {
+  const items = [customer.phone, customer.email].filter(Boolean);
+  return items.length ? items.join(" · ") : null;
+}
+
+function getAppointmentEmptyMessage(section: "upcoming" | "past"): string {
+  return section === "upcoming" ? "Yaklaşan kayıt yok." : "Geçmiş kayıt yok.";
+}
+
 export default async function OpsStaffCustomerDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const customerUserId = Number(resolvedParams.userId);
@@ -75,109 +90,116 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
   const latestPiercingConsentAcceptedAt = formatAcceptanceDate(
     customer.workspace.latestPiercingConsent?.acceptedAt ?? null
   );
+  const customerLabel =
+    customer.fullName ?? customer.displayName ?? customer.email ?? "İsimsiz müşteri";
+  const contactLine = getCustomerContactLine(customer);
 
   return (
     <div className="ops-page-shell">
-      <div>
+      <div className="space-y-1">
         <Link
           href="/ops/staff/musteriler"
           className="text-sm font-medium text-muted-foreground underline-offset-4 hover:underline"
         >
           Listeye dön
         </Link>
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">{customerLabel}</h1>
+          {contactLine ? (
+            <p className="text-sm text-muted-foreground">{contactLine}</p>
+          ) : (
+            <p className="text-sm text-muted-foreground">İletişim bilgisi kayıtlı değil.</p>
+          )}
+        </div>
       </div>
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-6">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:gap-6">
         <Card>
-          <CardHeader className="gap-1.5">
+          <CardHeader className="gap-1 px-5 py-5">
             <CardTitle>Temel bilgi</CardTitle>
-            <CardDescription>İletişim ve profil bilgileri</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-border p-4">
+          <CardContent className="grid gap-x-5 gap-y-4 pt-0 sm:grid-cols-2">
+            <div className="min-w-0 sm:col-span-2">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Ad soyad
               </p>
-              <p className="mt-2 text-sm font-medium text-foreground">
+              <p className="mt-1 text-sm font-medium text-foreground">
                 {customer.fullName ?? "Kayıt yok"}
               </p>
             </div>
-            <div className="rounded-2xl border border-border p-4">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Görünen ad
-              </p>
-              <p className="mt-2 text-sm font-medium text-foreground">
-                {customer.displayName ?? "Kayıt yok"}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border p-4">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                E-posta
-              </p>
-              <p className="mt-2 text-sm font-medium text-foreground">
-                {customer.email ?? "Kayıt yok"}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border p-4">
+            {customer.displayName && customer.displayName !== customer.fullName ? (
+              <div className="min-w-0 sm:col-span-2">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Görünen ad
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">{customer.displayName}</p>
+              </div>
+            ) : null}
+            <div className="min-w-0">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Telefon
               </p>
-              <p className="mt-2 text-sm font-medium text-foreground">
+              <p className="mt-1 break-words text-sm font-medium text-foreground">
                 {customer.phone ?? "Kayıt yok"}
+              </p>
+            </div>
+            <div className="min-w-0">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                E-posta
+              </p>
+              <p className="mt-1 break-words text-sm font-medium text-foreground">
+                {customer.email ?? "Kayıt yok"}
               </p>
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardHeader className="gap-1.5">
-            <CardTitle>Durum</CardTitle>
-            <CardDescription>Onay ve profil durumu birlikte izlenir.</CardDescription>
+          <CardHeader className="gap-1 px-5 py-5">
+            <CardTitle>Onaylar</CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-3 sm:grid-cols-3">
-            <div className="rounded-2xl border border-border p-4">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Dövme onayı
-              </p>
-              <Badge
-                variant={customer.workspace.hasCurrentTattooConsent ? "default" : "outline"}
-                className="mt-3 rounded-full"
-              >
-                {customer.workspace.hasCurrentTattooConsent ? "Hesaba işlendi" : "Kayıt yok"}
-              </Badge>
-              <div className="mt-3 space-y-1 text-sm text-muted-foreground">
-                <p>Sürüm {OPS_TATTOO_CONSENT_VERSION}</p>
-                <p>
-                  {latestTattooConsentAcceptedAt
-                    ? `Onay tarihi ${latestTattooConsentAcceptedAt}`
-                    : "Bu sürüm için kayıt görünmüyor."}
-                </p>
+          <CardContent className="space-y-3 pt-0">
+            <div className="rounded-2xl border border-border px-4 py-3">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">Dövme onayı</p>
+                  <p className="text-xs text-muted-foreground">
+                    Sürüm {OPS_TATTOO_CONSENT_VERSION}
+                  </p>
+                </div>
+                <Badge
+                  variant={customer.workspace.hasCurrentTattooConsent ? "default" : "outline"}
+                  className="rounded-full"
+                >
+                  {customer.workspace.hasCurrentTattooConsent ? "Kayıtlı" : "Kayıt yok"}
+                </Badge>
               </div>
-            </div>
-            <div className="rounded-2xl border border-border p-4">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Piercing onayı
+              <p className="mt-2 text-sm text-muted-foreground">
+                {getConsentSummary(latestTattooConsentAcceptedAt)}
               </p>
-              <Badge
-                variant={customer.workspace.hasCurrentPiercingConsent ? "default" : "outline"}
-                className="mt-3 rounded-full"
-              >
-                {customer.workspace.hasCurrentPiercingConsent ? "Hesaba işlendi" : "Kayıt yok"}
-              </Badge>
-              <div className="mt-3 space-y-1 text-sm text-muted-foreground">
-                <p>Sürüm {OPS_PIERCING_CONSENT_VERSION}</p>
-                <p>
-                  {latestPiercingConsentAcceptedAt
-                    ? `Onay tarihi ${latestPiercingConsentAcceptedAt}`
-                    : "Bu sürüm için kayıt görünmüyor."}
-                </p>
+            </div>
+            <div className="rounded-2xl border border-border px-4 py-3">
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">Piercing onayı</p>
+                  <p className="text-xs text-muted-foreground">
+                    Sürüm {OPS_PIERCING_CONSENT_VERSION}
+                  </p>
+                </div>
+                <Badge
+                  variant={customer.workspace.hasCurrentPiercingConsent ? "default" : "outline"}
+                  className="rounded-full"
+                >
+                  {customer.workspace.hasCurrentPiercingConsent ? "Kayıtlı" : "Kayıt yok"}
+                </Badge>
               </div>
-            </div>
-            <div className="rounded-2xl border border-border p-4">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Profil
+              <p className="mt-2 text-sm text-muted-foreground">
+                {getConsentSummary(latestPiercingConsentAcceptedAt)}
               </p>
-              <p className="mt-3 text-sm font-medium text-foreground">
+            </div>
+            <div className="flex items-center justify-between gap-3 rounded-2xl bg-muted/35 px-4 py-3">
+              <p className="text-sm text-muted-foreground">Profil</p>
+              <p className="text-sm font-medium text-foreground">
                 {customer.workspace.isProfileComplete ? "Hazır" : "Eksik"}
               </p>
             </div>
@@ -188,15 +210,14 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:gap-6">
         <div className="flex flex-col gap-5 sm:gap-6">
           <Card>
-            <CardHeader className="gap-1.5">
+            <CardHeader className="gap-1 px-5 py-5">
               <CardTitle>Staff notu</CardTitle>
-              <CardDescription>Kısa ve güncel not alanı</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 pt-0">
               {customer.note ? (
-                <div className="rounded-2xl border border-border bg-surface-1 p-4 text-sm text-muted-foreground">
-                  <p>{customer.note.updatedByName}</p>
-                  <p className="mt-1">
+                <div className="rounded-2xl border border-border bg-surface-1 px-4 py-3 text-sm text-muted-foreground">
+                  <p className="font-medium text-foreground">{customer.note.updatedByName}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
                     {new Intl.DateTimeFormat("tr-TR", {
                       day: "numeric",
                       month: "long",
@@ -214,15 +235,18 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
 
         <div className="flex flex-col gap-5 sm:gap-6">
           <Card>
-            <CardHeader className="gap-1.5">
+            <CardHeader className="gap-1 px-5 py-5">
               <CardTitle>Yaklaşan randevular</CardTitle>
-              <CardDescription>Planlı ve ileride kalan randevular burada görünür.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {customer.upcomingAppointments.length ? (
                 customer.upcomingAppointments.map((appointment) => (
-                  <div key={appointment.id} className="rounded-3xl border border-border p-4">
-                    <div className="flex flex-wrap items-center gap-2">
+                  <div key={appointment.id} className="rounded-2xl border border-border px-4 py-3">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <p className="min-w-0 text-sm font-medium text-foreground">
+                        {formatAppointmentDateLong(appointment.appointmentDate)} ·{" "}
+                        {appointment.appointmentTime}
+                      </p>
                       <Badge
                         variant="outline"
                         className={cn(
@@ -233,33 +257,32 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                         {APPOINTMENT_STATUS_LABELS[appointment.status]}
                       </Badge>
                     </div>
-                    <p className="mt-3 text-sm font-medium text-foreground">
-                      {formatAppointmentDateLong(appointment.appointmentDate)} ·{" "}
-                      {appointment.appointmentTime}
-                    </p>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      {appointment.notes ?? "Ek not yok."}
-                    </p>
+                    {appointment.notes ? (
+                      <p className="mt-2 text-sm text-muted-foreground">{appointment.notes}</p>
+                    ) : null}
                   </div>
                 ))
               ) : (
-                <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Yaklaşan randevu yok.
+                <div className="rounded-2xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
+                  {getAppointmentEmptyMessage("upcoming")}
                 </div>
               )}
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="gap-1.5">
-              <CardTitle>Geçmiş</CardTitle>
-              <CardDescription>Tamamlanan veya kapanan randevular burada kalır.</CardDescription>
+            <CardHeader className="gap-1 px-5 py-5">
+              <CardTitle>Geçmiş randevular</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {customer.pastAppointments.length ? (
                 customer.pastAppointments.map((appointment) => (
-                  <div key={appointment.id} className="rounded-3xl border border-border p-4">
-                    <div className="flex flex-wrap items-center gap-2">
+                  <div key={appointment.id} className="rounded-2xl border border-border px-4 py-3">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <p className="min-w-0 text-sm font-medium text-foreground">
+                        {formatAppointmentDateLong(appointment.appointmentDate)} ·{" "}
+                        {appointment.appointmentTime}
+                      </p>
                       <Badge
                         variant="outline"
                         className={cn(
@@ -270,18 +293,14 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                         {APPOINTMENT_STATUS_LABELS[appointment.status]}
                       </Badge>
                     </div>
-                    <p className="mt-3 text-sm font-medium text-foreground">
-                      {formatAppointmentDateLong(appointment.appointmentDate)} ·{" "}
-                      {appointment.appointmentTime}
-                    </p>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      {appointment.notes ?? "Ek not yok."}
-                    </p>
+                    {appointment.notes ? (
+                      <p className="mt-2 text-sm text-muted-foreground">{appointment.notes}</p>
+                    ) : null}
                   </div>
                 ))
               ) : (
-                <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Geçmiş randevu yok.
+                <div className="rounded-2xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
+                  {getAppointmentEmptyMessage("past")}
                 </div>
               )}
             </CardContent>

@@ -181,7 +181,7 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - Liste araması `full_name`, `display_name`, `phone`, `email` alanları üzerinde çalışır.
 - Staff müşteri listesi current runtime’da kompakt link kartlarıyla çalışır; kart üstünde isim ve kısa iletişim bilgisi, alt satırda tek consent badge, `Sıradaki randevu` özeti ve görünür `Detaya git` aksiyonu yer alır (`src/app/ops/staff/musteriler/page.tsx`).
 - Staff müşteri listesi current runtime’da tek consent badge gösterir; bu badge yalnız güncel tattoo onayını `tattoo_form_consent` + `OPS_TATTOO_CONSENT_VERSION` üzerinden hesaplar ve copy’de bunu açıkça `Dövme onayı` olarak yazar. Piercing onayı listede ayrı badge olarak yer almaz; piercing görünürlüğü customer detail seviyesindedir (`src/lib/ops/customers.ts`, `src/app/ops/staff/musteriler/page.tsx`).
-- Detay yüzeyi profil, onay durumu, yaklaşan/geçmiş randevular ve tek güncel staff notunu birlikte gösterir.
+- Detay yüzeyi current runtime’da müşteri kimliğini ve kısa iletişim bilgisini fold üstünde verir; onaylar daha kompakt satırlarda sürüm + kayıt tarihiyle, profil hazır bilgisi ise küçük durum satırıyla özetlenir. Yaklaşan/geçmiş randevular ve tek güncel staff notu aynı yüzeyde kalır (`src/app/ops/staff/musteriler/[userId]/page.tsx`).
 - `customer_notes.user_id` unique kalır; not upsert edilir, boş not gönderilirse kayıt temizlenir (`src/app/ops/musteriler/actions.ts`, `src/lib/ops/customers.ts`).
 
 ## 7) Audit Foundation
