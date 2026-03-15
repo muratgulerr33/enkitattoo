@@ -1,6 +1,4 @@
-import Link from "next/link";
 import { OpsProfileForm } from "@/components/ops/ops-profile-form";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -12,42 +10,9 @@ import {
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import { getUserWorkspaceOverview } from "@/lib/ops/user-workspace";
 
-function getFormShortcutState(
-  latestTattooForm: {
-    status: "draft" | "submitted";
-  } | null
-): {
-  statusLabel: string;
-  description: string;
-  actionLabel: string | null;
-} {
-  if (!latestTattooForm) {
-    return {
-      statusLabel: "Henüz detay yok",
-      actionLabel: null,
-      description: "Randevu öncesi paylaşmak istediğin dövme detaylarını daha sonra bu alandan ekleyebilirsin.",
-    };
-  }
-
-  if (latestTattooForm.status === "draft") {
-    return {
-      statusLabel: "Taslak hazır",
-      actionLabel: "Taslağı sürdür",
-      description: "Kaydettiğin dövme detaylarını burada gözden geçirip sürdürmeye devam edebilirsin.",
-    };
-  }
-
-  return {
-    statusLabel: "Detaylar kayıtlı",
-    actionLabel: "Detayları güncelle",
-    description: "Kaydettiğin dövme detaylarını gözden geçirip gerektiğinde güncelleyebilirsin.",
-  };
-}
-
 export default async function OpsUserProfilePage() {
   const sessionUser = await requireOpsSessionArea("user");
   const overview = await getUserWorkspaceOverview(sessionUser.id);
-  const formShortcut = getFormShortcutState(overview.latestTattooForm);
 
   return (
     <div className="ops-page-shell">
@@ -81,26 +46,6 @@ export default async function OpsUserProfilePage() {
           />
         </CardContent>
       </Card>
-
-      {overview.isProfileComplete ? (
-        <Card className="border-border bg-surface-1/70">
-          <CardContent className="flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            <div className="space-y-1">
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                {formShortcut.statusLabel}
-              </p>
-              <p className="text-base font-semibold text-foreground">Dövme detayları</p>
-              <p className="text-sm text-muted-foreground">{formShortcut.description}</p>
-            </div>
-
-            {formShortcut.actionLabel ? (
-              <Button asChild variant="outline" className="w-full sm:w-auto">
-                <Link href="/ops/user/form">{formShortcut.actionLabel}</Link>
-              </Button>
-            ) : null}
-          </CardContent>
-        </Card>
-      ) : null}
     </div>
   );
 }

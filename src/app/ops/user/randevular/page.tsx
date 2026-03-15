@@ -42,33 +42,6 @@ function getStatusBadgeClassName(status: keyof typeof APPOINTMENT_STATUS_LABELS)
   return "border-amber-500/20 bg-amber-500/10 text-amber-700";
 }
 
-function ReadinessRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-background px-3.5 py-3">
-      <p className="text-sm font-medium text-foreground">{label}</p>
-      <p className="text-sm text-muted-foreground">{value}</p>
-    </div>
-  );
-}
-
-function getTattooDetailsActionLabel(status: "draft" | "submitted" | null): string {
-  if (status === "submitted") {
-    return "Detayları güncelle";
-  }
-
-  if (status === "draft") {
-    return "Taslağı sürdür";
-  }
-
-  return "Detayları ekle";
-}
-
 function AppointmentCard({
   status,
   source,
@@ -127,12 +100,8 @@ export default async function OpsUserAppointmentsPage() {
   const isReadyForAppointments = isUserReadyForAppointments(overview);
   const hasUpcomingAppointments = appointmentLists.upcoming.length > 0;
   const needsProfile = !overview.isProfileComplete;
-  const needsTattooDetails = !overview.isTattooFormSubmitted;
   const showPrerequisiteCard = !hasUpcomingAppointments && !isReadyForAppointments;
   const showCreateCard = !hasUpcomingAppointments && isReadyForAppointments;
-  const tattooDetailsActionLabel = getTattooDetailsActionLabel(
-    overview.latestTattooForm?.status ?? null
-  );
 
   return (
     <div className="ops-page-shell">
@@ -143,39 +112,15 @@ export default async function OpsUserAppointmentsPage() {
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
                 Randevu alanı
               </p>
-              <p className="text-lg font-semibold text-foreground">
-                {needsProfile ? "Profil bilgilerin eksik" : "Dövme detayları eksik"}
-              </p>
+              <p className="text-lg font-semibold text-foreground">Profil bilgilerin eksik</p>
               <p className="text-sm text-muted-foreground">
-                {needsProfile
-                  ? "Ad soyad ve telefon bilgini kaydetmeden randevu talebi açılamaz."
-                  : "Randevu öncesi paylaşmak istediğin dövme detaylarını bu editörde ekleyip güncelleyebilirsin."}
+                Ad soyad ve telefon bilgini kaydetmeden randevu talebi açılamaz.
               </p>
             </div>
 
-            <div className="flex flex-col gap-2 sm:flex-row">
-              {needsProfile ? (
-                <Button asChild size="cta" className="w-full sm:w-auto">
-                  <Link href="/ops/user/profil">Profili düzenle</Link>
-                </Button>
-              ) : null}
-              {needsTattooDetails && !needsProfile ? (
-                <Button asChild variant="outline" className="w-full sm:w-auto">
-                  <Link href="/ops/user/form">{tattooDetailsActionLabel}</Link>
-                </Button>
-              ) : null}
-            </div>
-
-            <div className="grid gap-2">
-              <ReadinessRow
-                label="Profil"
-                value={overview.isProfileComplete ? "Hazır" : "Eksik"}
-              />
-              <ReadinessRow
-                label="Dövme detayları"
-                value={overview.isTattooFormSubmitted ? "Hazır" : "Eksik"}
-              />
-            </div>
+            <Button asChild size="cta" className="w-full sm:w-auto">
+              <Link href="/ops/user/profil">Profili düzenle</Link>
+            </Button>
           </CardContent>
         </Card>
       ) : null}
@@ -187,7 +132,7 @@ export default async function OpsUserAppointmentsPage() {
               <div className="space-y-1">
                 <CardTitle>Yeni randevu</CardTitle>
                 <CardDescription>
-                  Profilin ve dövme detayların kayıtlı. Tarih ve saat seçerek yeni talebini açabilirsin.
+                  Profilin kayıtlı. Tarih ve saat seçerek yeni talebini açabilirsin.
                 </CardDescription>
               </div>
               <Badge className="rounded-full">Hazır</Badge>

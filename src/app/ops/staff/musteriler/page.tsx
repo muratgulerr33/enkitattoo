@@ -14,7 +14,6 @@ import {
   getCustomerLabel,
   listCustomers,
   type CustomerConsentStatus,
-  type CustomerFormStatus,
 } from "@/lib/ops/customers";
 import { cn } from "@/lib/utils";
 
@@ -24,32 +23,8 @@ type PageProps = {
   }>;
 };
 
-function getFormStatusLabel(status: CustomerFormStatus): string {
-  if (status === "submitted") {
-    return "Form tamamlandı";
-  }
-
-  if (status === "draft") {
-    return "Form taslak";
-  }
-
-  return "Form yok";
-}
-
 function getConsentStatusLabel(status: CustomerConsentStatus): string {
   return status === "accepted" ? "Onay kayıtlı" : "Onay yok";
-}
-
-function getFormBadgeClassName(status: CustomerFormStatus): string {
-  if (status === "submitted") {
-    return "border-emerald-500/20 bg-emerald-500/10 text-emerald-700";
-  }
-
-  if (status === "draft") {
-    return "border-amber-500/20 bg-amber-500/10 text-amber-700";
-  }
-
-  return "border-border bg-muted/40 text-foreground";
 }
 
 function getConsentBadgeClassName(status: CustomerConsentStatus): string {
@@ -137,12 +112,6 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                   </div>
 
                   <div className="mt-3 flex flex-wrap gap-2">
-                    <Badge
-                      variant="outline"
-                      className={cn("rounded-full border", getFormBadgeClassName(customer.formStatus))}
-                    >
-                      {getFormStatusLabel(customer.formStatus)}
-                    </Badge>
                     <Badge
                       variant="outline"
                       className={cn(

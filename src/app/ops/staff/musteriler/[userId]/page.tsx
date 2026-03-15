@@ -26,30 +26,6 @@ type PageProps = {
   }>;
 };
 
-function getFormStatusLabel(status: "draft" | "submitted" | null): string {
-  if (status === "submitted") {
-    return "Tamamlandı";
-  }
-
-  if (status === "draft") {
-    return "Taslak";
-  }
-
-  return "Yok";
-}
-
-function getFormStatusClassName(status: "draft" | "submitted" | null): string {
-  if (status === "submitted") {
-    return "border-emerald-500/20 bg-emerald-500/10 text-emerald-700";
-  }
-
-  if (status === "draft") {
-    return "border-amber-500/20 bg-amber-500/10 text-amber-700";
-  }
-
-  return "border-border bg-muted/40 text-foreground";
-}
-
 function getAppointmentStatusClassName(
   status: "scheduled" | "completed" | "cancelled" | "no_show"
 ): string {
@@ -93,7 +69,6 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
     notFound();
   }
 
-  const latestForm = customer.workspace.latestTattooForm;
   const latestTattooConsentAcceptedAt = formatAcceptanceDate(
     customer.workspace.latestTattooConsent?.acceptedAt ?? null
   );
@@ -157,23 +132,9 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         <Card>
           <CardHeader className="gap-1.5">
             <CardTitle>Durum</CardTitle>
-            <CardDescription>Form ve onay durumu birlikte izlenir.</CardDescription>
+            <CardDescription>Onay ve profil durumu birlikte izlenir.</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 sm:grid-cols-4">
-            <div className="rounded-2xl border border-border p-4">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Form
-              </p>
-              <Badge
-                variant="outline"
-                className={cn(
-                  "mt-3 rounded-full border",
-                  getFormStatusClassName(latestForm?.status ?? null)
-                )}
-              >
-                {getFormStatusLabel(latestForm?.status ?? null)}
-              </Badge>
-            </div>
+          <CardContent className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-2xl border border-border p-4">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Dövme onayı
@@ -226,48 +187,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:gap-6">
         <div className="flex flex-col gap-5 sm:gap-6">
-          <Card className="order-2 xl:order-1">
-            <CardHeader className="gap-1.5">
-              <CardTitle>Form özeti</CardTitle>
-              <CardDescription>Son aktif kayıt görüntülenir.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {latestForm ? (
-                <>
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Bölge
-                    </p>
-                    <p className="mt-2 text-sm text-foreground">
-                      {latestForm.placement ?? "Kayıt yok"}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Boyut
-                    </p>
-                    <p className="mt-2 text-sm text-foreground">
-                      {latestForm.sizeNotes ?? "Kayıt yok"}
-                    </p>
-                  </div>
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Tasarım notu
-                    </p>
-                    <p className="mt-2 text-sm text-foreground">
-                      {latestForm.designNotes ?? "Kayıt yok"}
-                    </p>
-                  </div>
-                </>
-              ) : (
-                <div className="rounded-3xl border border-dashed border-border p-6 text-sm text-muted-foreground">
-                  Tattoo formu henüz yok.
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="order-1 xl:order-2">
+          <Card>
             <CardHeader className="gap-1.5">
               <CardTitle>Staff notu</CardTitle>
               <CardDescription>Kısa ve güncel not alanı</CardDescription>

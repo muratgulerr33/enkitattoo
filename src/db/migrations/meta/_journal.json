@@ -43,6 +43,13 @@
       "when": 1773162334013,
       "tag": "0005_add_customer_workspace",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1773591827274,
+      "tag": "0006_elite_ikaris",
+      "breakpoints": true
     }
   ]
 }

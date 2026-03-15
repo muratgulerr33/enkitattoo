@@ -10,7 +10,6 @@ import { getDb } from "@/db";
 import {
   consentAcceptances,
   customerNotes,
-  tattooForms,
   userProfiles,
   userRoles,
   users,
@@ -29,7 +28,6 @@ import {
   type UserWorkspaceOverview,
 } from "./user-workspace";
 
-export type CustomerFormStatus = "none" | "draft" | "submitted";
 export type CustomerConsentStatus = "none" | "accepted";
 
 export type CustomerUpcomingAppointment = {
@@ -44,7 +42,6 @@ export type CustomerListItem = {
   phone: string | null;
   fullName: string | null;
   displayName: string | null;
-  formStatus: CustomerFormStatus;
   consentStatus: CustomerConsentStatus;
   nextAppointment: CustomerUpcomingAppointment | null;
 };
@@ -123,14 +120,6 @@ function toCustomerNote(row: CustomerNoteRow | undefined): CustomerNoteRecord | 
     ),
     updatedAt: row.updatedAt,
   };
-}
-
-function getFormStatus(status: "draft" | "submitted" | null | undefined): CustomerFormStatus {
-  if (status === "draft" || status === "submitted") {
-    return status;
-  }
-
-  return "none";
 }
 
 function getConsentStatus(hasAcceptedConsent: boolean): CustomerConsentStatus {
@@ -222,14 +211,6 @@ export async function listCustomers(searchQuery?: string | null): Promise<Custom
       phone: users.phone,
       fullName: userProfiles.fullName,
       displayName: userProfiles.displayName,
-      formStatus: sql<"draft" | "submitted" | null>`(
-        select ${tattooForms.status}
-        from ${tattooForms}
-        where ${tattooForms.userId} = ${users.id}
-          and ${tattooForms.isCurrent} = true
-        order by ${tattooForms.snapshotVersion} desc
-        limit 1
-      )`,
       hasAcceptedConsent: sql<boolean>`exists(
         select 1
         from ${consentAcceptances}
@@ -257,7 +238,6 @@ export async function listCustomers(searchQuery?: string | null): Promise<Custom
     phone: row.phone,
     fullName: row.fullName,
     displayName: row.displayName,
-    formStatus: getFormStatus(row.formStatus),
     consentStatus: getConsentStatus(Boolean(row.hasAcceptedConsent)),
     nextAppointment: nextAppointmentMap.get(row.userId) ?? null,
   }));

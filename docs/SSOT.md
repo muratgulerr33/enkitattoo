@@ -120,7 +120,6 @@ Notlar:
 - `users`
 - `user_profiles`
 - `user_roles`
-- `tattoo_forms`
 - `consent_acceptances`
 - `appointments`
 - `cash_entries`
@@ -132,16 +131,14 @@ Notlar:
 - `/ops/user/onaylar` dövme ve piercing belgelerinin başlık/kısa açıklama bilgisini `src/content/legal/*.md` ve `src/content/ops/legal/*.md` kaynaklarından dolaylı olarak okur; tam metin approval reader ve public legal route tarafından aynı markdown kaynağından beslenir (`src/lib/legal/legal-content.ts`, `src/app/ops/user/onaylar/page.tsx`, `src/app/ops/user/onaylar/[documentId]/page.tsx`).
 - User primary nav label seti current runtime’da desktop ve mobile için `Onaylar`, `Randevular`, `Profil` olarak tanımlıdır (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 - `/ops/user/profil` profil bilgilerini `users` + `user_profiles` üzerinde günceller.
-- `/ops/user/form` snapshot mantığı ile çalışan ayrı route’dur; her kayıt teknik olarak yeni sürüm üretir ve current runtime’da primary nav item değildir. User-facing tarafta route `dövme detayları editörü` diliyle sunulur; üst copy, helper blokları ve kayıt aksiyonları `detay` terminolojisini kullanır (`src/lib/ops/user-workspace.ts`, `src/lib/ops/navigation.ts`, `src/app/ops/user/form/page.tsx`, `src/components/ops/ops-tattoo-form.tsx`).
 - Onay kayıtları `consent_acceptances` tablosunda belge tipi + sürüm bazında tekilleşir.
 - Güncel dövme onayı sürümü `2026-03-v1`, güncel piercing onayı sürümü de `2026-03-v1` olarak sabittir (`src/lib/ops/user-workspace.ts`).
 - `/ops/user/onaylar/[documentId]` ops içi focused approval reader route’udur; tattoo ve piercing için ana sayfa scroll’u + belge sonu marker’ı ile scroll-gated tek checkbox + save akışı sunar. Reader gövdesi aynı markdown kaynağının sanitize edilmiş sürümüdür; `Sitede kullanılacak ...` ve `Kısa ekran özeti` gibi iç kullanım başlıkları user-facing ops yüzeyine taşınmaz (`src/lib/legal/legal-content.ts`, `src/app/ops/user/onaylar/[documentId]/page.tsx`, `src/components/ops/ops-approval-reader.tsx`).
 - Approval submit action mevcut `consent_acceptances` omurgasını reuse eder; tattoo `acceptCurrentConsent()`, piercing `acceptCurrentPiercingConsent()` yoluyla kaydolur ve audit `consent.accepted` kaydı korunur (`src/app/ops/user/actions.ts`, `src/lib/ops/user-workspace.ts`).
-- Randevu readiness mantığı yalnız profil + dövme formu üzerinden çalışır; `consent_acceptances` bu hesaplamaya dahil edilmez (`src/lib/ops/user-workspace.ts`).
-- `/ops/user/profil` sayfası profil hazır olduktan sonra dövme detaylarını status kartı olarak gösterir; `/ops/user/form` route’una CTA yalnız mevcut taslak veya kayıtlı detay varsa görünür. Empty state kartı bilgi verir ama zorlayıcı funnel CTA üretmez (`src/app/ops/user/profil/page.tsx`, `src/lib/ops/user-workspace.ts`).
+- Randevu readiness mantığı current runtime’da yalnız profil üzerinden çalışır; `consent_acceptances` bu hesaplamaya dahil edilmez (`src/lib/ops/user-workspace.ts`).
+- `/ops/user/profil` sayfası current runtime’da yalnız profil bilgilerini gösterir ve günceller; user lane içinde ayrı dövme detay yüzeyi veya buna giden CTA yaşamaz (`src/app/ops/user/profil/page.tsx`, `src/lib/ops/user-workspace.ts`).
 - `/ops/user/randevular` sayfası yaklaşan randevuyu `appointmentLists.upcoming` içinden hesaplar; yaklaşan kayıt varsa bu listeyi ana yüzey olarak gösterir. Prerequisite veya yeni talep kartı yalnız yaklaşan randevu yoksa görünür (`src/lib/ops/appointments.ts`, `src/app/ops/user/randevular/page.tsx`).
-- Piercing için runtime’da dövme tarafındaki gibi kanıtlı bir form/readiness omurgası görünmez; user hazırlık hesabı dövme formu etrafında kuruludur (`src/lib/ops/user-workspace.ts`).
-- `/ops/user/form` route’u user-facing tarafta `dövme detayları editörü` gibi sunulur; profil ve randevular CTA’larıyla aynı semantik aileyi paylaşır. Başlık, helper metinleri ve kayıt geri bildirimi `düzenle / ekle / sürdür / güncelle / kaydet` dilindedir. Teknik snapshot omurgası içeride yaşamaya devam eder; route kaldırılmamış, yeniden adlandırılmamış veya nav’a geri alınmamıştır (`src/app/ops/user/form/page.tsx`, `src/components/ops/ops-tattoo-form.tsx`, `src/app/ops/user/actions.ts`, `src/app/ops/user/profil/page.tsx`, `src/app/ops/user/randevular/page.tsx`, `src/lib/ops/user-workspace.ts`).
+- `/ops/user/form` current runtime’da user route setinin parçası değildir; user lane içinde bu path’e giden CTA, helper veya readiness dependency kalmamıştır. `tattoo_forms` runtime omurgası kaldırılmıştır (`src/app/ops/user/profil/page.tsx`, `src/app/ops/user/randevular/page.tsx`, `src/lib/ops/user-workspace.ts`, `src/app/ops/user/actions.ts`).
 - Staff customer detail tattoo ve piercing onaylarını `workspace.latestTattooConsent`, `workspace.latestPiercingConsent`, `hasCurrentTattooConsent`, `hasCurrentPiercingConsent` üstünden sürüm + onay tarihi ile özetler (`src/lib/ops/user-workspace.ts`, `src/app/ops/staff/musteriler/[userId]/page.tsx`).
 
 UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde tutulur; burada yalnız runtime ve teknik kaynak gerçekleri yazılır.
@@ -176,8 +173,8 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - Staff hızlı müşteri oluşturma akışı `users` + `user_profiles` + `user_roles` üzerinde aktif `user` hesabı açar; bu kayıt staff müşteri listesi ve staff randevu müşteri seçeneklerine dahil olur (`src/app/ops/musteriler/actions.ts`, `src/lib/ops/customers.ts`, `src/lib/ops/appointments.ts`).
 - Liste yalnız `user` rolündeki aktif hesapları gösterir; staff-only hesaplar listeye dahil edilmez (`src/lib/ops/customers.ts`).
 - Liste araması `full_name`, `display_name`, `phone`, `email` alanları üzerinde çalışır.
-- Staff müşteri listesi form durumu yanında tek bir consent badge gösterir; current runtime’da bu badge yalnız güncel tattoo onayını `tattoo_form_consent` + `OPS_TATTOO_CONSENT_VERSION` üzerinden hesaplar. Piercing onayı listede ayrı badge olarak yer almaz; piercing görünürlüğü customer detail seviyesindedir (`src/lib/ops/customers.ts`, `src/app/ops/staff/musteriler/page.tsx`).
-- Detay yüzeyi profil, form, onay durumu, yaklaşan/geçmiş randevular ve tek güncel staff notunu birlikte gösterir.
+- Staff müşteri listesi current runtime’da tek consent badge gösterir; bu badge yalnız güncel tattoo onayını `tattoo_form_consent` + `OPS_TATTOO_CONSENT_VERSION` üzerinden hesaplar. Piercing onayı listede ayrı badge olarak yer almaz; piercing görünürlüğü customer detail seviyesindedir (`src/lib/ops/customers.ts`, `src/app/ops/staff/musteriler/page.tsx`).
+- Detay yüzeyi profil, onay durumu, yaklaşan/geçmiş randevular ve tek güncel staff notunu birlikte gösterir.
 - `customer_notes.user_id` unique kalır; not upsert edilir, boş not gönderilirse kayıt temizlenir (`src/app/ops/musteriler/actions.ts`, `src/lib/ops/customers.ts`).
 
 ## 7) Audit Foundation
@@ -189,8 +186,6 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 ### Kanıtlı action seti
 
 - `profile.updated`
-- `tattoo_form.saved`
-- `tattoo_form.submitted`
 - `consent.accepted`
 - `appointment.created`
 - `appointment.status_updated`
