@@ -14,7 +14,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 |---|---|---|
 | App shell | `src/components/app/app-shell.tsx` | `app-container`, `app-mobile-header-offset`, `app-safe-bottom` zinciri korunur |
 | Mobile header ve drawer | `src/components/app/mobile-header.tsx` | route listesi ve locale-aware navigation tek elde kalır |
-| Footer ve iletişim | `src/components/app/site-footer.tsx`, `src/app/[locale]/(app)/iletisim/page.tsx` | ikinci NAP/link kaynağı açılmaz |
+| Footer ve iletişim | `src/components/app/site-footer.tsx`, `src/app/[locale]/(app)/iletisim/page.tsx`, `src/lib/legal/legal-registry.ts` | ikinci NAP/link kaynağı açılmaz; footer hukuki linkleri registry üzerinden beslenir |
 | Hub kartı | `src/components/hub/hub-card.tsx` | medya oranı ve text taşma zinciri korunur |
 | Galeri grid | `src/app/[locale]/(app)/galeri-tasarim/gallery-grid.tsx` | query-param ve viewer davranışı bozulmaz |
 | Piercing yüzeyleri | `src/components/piercing/*` | lookup/data/layout birlikte ele alınır |
@@ -27,6 +27,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Top-level nav kaynağı tek yerde kalır; ikinci nav kaynağı açılmaz.
 - Mobil drawer footer CTA alanı hesap açma ve giriş akışına hizmet eder; WhatsApp burada birincil footer CTA değildir (`src/components/app/mobile-header.tsx`).
 - Footer ve iletişim yüzeyi business bilgilerini component içine gömmez; `src/lib/site-info.ts` ve `src/lib/site/links.ts` kullanılır.
+- Footer hukuki linkleri locale-aware kalır; label seti `KVKK Aydınlatma Metni`, `Gizlilik Politikası`, `Çerez Politikası`, `Dövme Sözleşmesi`, `Piercing Sözleşmesi` olarak görünür ve `src/lib/legal/legal-registry.ts` içinden beslenir.
 - Çevrilebilir public copy `messages/*.json` veya ilgili content namespace içinden gelir.
 
 ## 4) `/ops` UI Contract
@@ -83,9 +84,11 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - User lane top-level hedefleri `Onaylar`, `Randevular`, `Formum`, `Profil` olarak görünür. Kullanıcı login/register sonrası `Onaylar` alanına düşer.
 - `Onaylar` user lane içinde bağımsız, sakin, read-only bilgi merkezidir; form veya randevu alt adımı gibi kurgulanmaz.
 - `Onaylar` form ve randevu alanlarından ayrı durur; belge adı, durum, sürüm ve hesap kaydı bilgisini kısa kartlarla gösterir; süreç özeti, placeholder etiketleri ve yönlendirici anlatı açmaz.
+- `Onaylar` kartları gerçek markdown kaynaklarından gelen belge adı ve kısa açıklama ile beslenir; tam metin okuması public legal route’lara gider.
 - User next-step mantığı yalnız gerçek eksik hazırlık adımlarını işaret eder; `Onaylar` alanı formu tamamlayınca açılan zorunlu kapı gibi yazılmaz.
 - User randevuları: müşteri hazır değilse yeni randevu formu yerine eksik profile/form adımına yönlendiren baskın CTA görünür; hazırsa yeni randevu formu fold üstünde ana yüzey olur.
-- Bu repo sürümünde `Onaylar` sayfası bilgi merkezi ve read-only durum yüzeyidir. Tek checkbox submit/save, hesap kaydı write akışı, admin müşteri görünürlüğü genişletmesi ve legal markdown binding sonraki PR kapsamıdır.
+- Public legal sayfalar ve `/ops/user/onaylar` aynı markdown kaynak ailesini kullanır (`src/content/legal/*.md`, `src/content/ops/legal/*.md`); içerik ikinci kez hardcode edilmez.
+- Bu repo sürümünde `Onaylar` sayfası bilgi merkezi ve read-only durum yüzeyidir. Tek checkbox submit/save, hesap kaydı write akışı ve admin müşteri görünürlüğü genişletmesi sonraki PR kapsamıdır.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 
 ## 5) Kanıtlı Known Issues ve Polish Backlog

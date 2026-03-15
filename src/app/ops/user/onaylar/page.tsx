@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -7,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
+import { listApprovalLegalDocuments } from "@/lib/legal/legal-content";
 import {
   getUserWorkspaceOverview,
   OPS_TATTOO_CONSENT_VERSION,
@@ -40,8 +43,15 @@ function ApprovalDetailRow({
 
 export default async function OpsUserApprovalsPage() {
   const sessionUser = await requireOpsSessionArea("user");
-  const overview = await getUserWorkspaceOverview(sessionUser.id);
+  const [overview, approvalDocuments] = await Promise.all([
+    getUserWorkspaceOverview(sessionUser.id),
+    listApprovalLegalDocuments(),
+  ]);
   const tattooAcceptedAt = formatAcceptanceDate(overview.latestConsent?.acceptedAt ?? null);
+  const tattooDocument = approvalDocuments.find((document) => document.approvalKind === "tattoo");
+  const piercingDocument = approvalDocuments.find(
+    (document) => document.approvalKind === "piercing",
+  );
 
   return (
     <div className="ops-page-shell">
@@ -57,8 +67,12 @@ export default async function OpsUserApprovalsPage() {
             <CardHeader className="gap-2">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1">
-                  <CardTitle className="text-base">Dövme onayı</CardTitle>
-                  <CardDescription>Güncel dövme belgesi durumu</CardDescription>
+                  <CardTitle className="text-base">
+                    {tattooDocument?.label ?? "Dövme Sözleşmesi"}
+                  </CardTitle>
+                  <CardDescription>
+                    {tattooDocument?.summary ?? "Dövme belgesi bilgisi bu alanda görünür."}
+                  </CardDescription>
                 </div>
                 <Badge
                   variant={overview.hasCurrentConsent ? "default" : "outline"}
@@ -69,13 +83,21 @@ export default async function OpsUserApprovalsPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <ApprovalDetailRow label="Belge" value="Dövme onayı" />
+              <ApprovalDetailRow
+                label="Belge"
+                value={tattooDocument?.label ?? "Dövme Sözleşmesi"}
+              />
               <ApprovalDetailRow label="Durum" value={overview.hasCurrentConsent ? "Kayıtlı" : "Kayıt yok"} />
               <ApprovalDetailRow label="Sürüm" value={OPS_TATTOO_CONSENT_VERSION} />
               <ApprovalDetailRow
                 label="Hesap kaydı"
                 value={tattooAcceptedAt ?? "Güncel kayıt yok"}
               />
+              {tattooDocument ? (
+                <Button asChild variant="outline" className="w-full sm:w-auto">
+                  <Link href={tattooDocument.publicPath}>Metni oku</Link>
+                </Button>
+              ) : null}
             </CardContent>
           </Card>
 
@@ -83,8 +105,13 @@ export default async function OpsUserApprovalsPage() {
             <CardHeader className="gap-2">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1">
-                  <CardTitle className="text-base">Piercing onayı</CardTitle>
-                  <CardDescription>Hesap bağlı piercing belgesi durumu</CardDescription>
+                  <CardTitle className="text-base">
+                    {piercingDocument?.label ?? "Piercing Sözleşmesi"}
+                  </CardTitle>
+                  <CardDescription>
+                    {piercingDocument?.summary ??
+                      "Piercing belgesi bilgisi bu alanda görünür."}
+                  </CardDescription>
                 </div>
                 <Badge variant="outline" className="rounded-full">
                   Kayıt yok
@@ -92,13 +119,18 @@ export default async function OpsUserApprovalsPage() {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <ApprovalDetailRow label="Belge" value="Piercing onayı" />
+              <ApprovalDetailRow
+                label="Belge"
+                value={piercingDocument?.label ?? "Piercing Sözleşmesi"}
+              />
               <ApprovalDetailRow label="Durum" value="Kayıt yok" />
               <ApprovalDetailRow label="Sürüm" value="Henüz tanımlı değil" />
               <ApprovalDetailRow label="Hesap kaydı" value="Bu hesapta kayıt görünmüyor" />
-              <p className="text-sm text-muted-foreground">
-                Gerekli belge stüdyoda ayrıca paylaşılır.
-              </p>
+              {piercingDocument ? (
+                <Button asChild variant="outline" className="w-full sm:w-auto">
+                  <Link href={piercingDocument.publicPath}>Metni oku</Link>
+                </Button>
+              ) : null}
             </CardContent>
           </Card>
         </CardContent>

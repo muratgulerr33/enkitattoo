@@ -2,6 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { FOOTER_LEGAL_LINKS } from "@/lib/legal/legal-registry";
 import {
   FOOTER_QUICK_LINKS,
   GOOGLE_MAPS_BUSINESS_URL,
@@ -59,6 +60,26 @@ export function SiteFooter() {
                   <span className="truncate">{t(labelKey)}</span>
                 </Link>
               ))}
+            </div>
+
+            <div className="space-y-2 pt-2">
+              <p className="text-sm font-medium text-foreground">Hukuki</p>
+              <div
+                aria-label="Hukuki bağlantılar"
+                className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1"
+              >
+                {FOOTER_LEGAL_LINKS.map(({ label, href }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    aria-label={label}
+                    title={label}
+                    className={cn(textActionClass, "min-w-0 max-w-full justify-start")}
+                  >
+                    <span className="truncate">{label}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
           </section>
 
