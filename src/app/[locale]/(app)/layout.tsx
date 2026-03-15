@@ -1,8 +1,7 @@
 import { AppShell } from "@/components/app/app-shell";
 import { locales } from "@/i18n/routing";
-import { getLocaleOrderFromAcceptLanguage } from "@/lib/i18n/locale-order";
+import { DEFAULT_LOCALE_ORDER } from "@/lib/i18n/locale-order";
 import { NextIntlClientProvider } from "next-intl";
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getMessages, setRequestLocale } from "next-intl/server";
 
@@ -21,8 +20,6 @@ export default async function AppLayout({
 
   setRequestLocale(locale);
   const messages = await getMessages();
-  const requestHeaders = await headers();
-  const initialLocaleOrder = getLocaleOrderFromAcceptLanguage(requestHeaders.get("accept-language"));
 
   return (
     <NextIntlClientProvider
@@ -30,7 +27,7 @@ export default async function AppLayout({
       messages={messages}
       timeZone="Europe/Istanbul"
     >
-      <AppShell initialLocaleOrder={initialLocaleOrder}>{children}</AppShell>
+      <AppShell initialLocaleOrder={DEFAULT_LOCALE_ORDER}>{children}</AppShell>
     </NextIntlClientProvider>
   );
 }

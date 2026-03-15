@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { BreadcrumbListJsonLd } from "@/components/seo/breadcrumb-list-jsonld";
 import { LegalMarkdown } from "@/components/legal/legal-markdown";
 import { getLegalDocumentBySlug } from "@/lib/legal/legal-content";
-import { LEGAL_DOCUMENTS } from "@/lib/legal/legal-registry";
 import { getRouteContent, hasNoIndex } from "@/lib/route-content";
 
 type PageProps = {
@@ -12,11 +11,7 @@ type PageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return LEGAL_DOCUMENTS.map((document) => ({
-    slug: document.publicPath.split("/").pop()!,
-  }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
