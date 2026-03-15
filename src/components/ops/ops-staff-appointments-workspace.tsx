@@ -548,9 +548,13 @@ export function OpsStaffAppointmentsWorkspace({
   }
 
   return (
-    <div className="ops-page-shell xl:space-y-4" data-testid="appointments-workspace" data-view-mode={viewMode}>
+    <div
+      className="ops-page-shell -mb-[calc(env(safe-area-inset-bottom)+5.5rem)] md:mb-0 xl:space-y-4"
+      data-testid="appointments-workspace"
+      data-view-mode={viewMode}
+    >
       <Card
-        className="-mx-4 -mt-3 overflow-hidden rounded-none border-x-0 border-t-0 shadow-none sm:-mx-6 sm:-mt-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm"
+        className="-mx-4 -mt-3 gap-0 overflow-hidden rounded-none border-x-0 border-t-0 py-0 shadow-none sm:-mx-6 sm:-mt-4 md:gap-6 md:py-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm xl:py-5"
         data-testid="appointments-month-card"
       >
         <CardHeader className="border-b px-1.5 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-4">
