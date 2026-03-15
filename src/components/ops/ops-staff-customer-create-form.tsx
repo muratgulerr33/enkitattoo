@@ -64,10 +64,10 @@ export function OpsStaffCustomerCreateForm() {
       </div>
 
       <Collapsible open={noteOpen} onOpenChange={setNoteOpen} className="border-t border-border pt-3">
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-medium text-foreground">Kısa not</p>
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <p className="min-w-0 text-sm font-medium text-foreground">Kısa not</p>
 
-          <CollapsibleTrigger asChild>
+          <CollapsibleTrigger asChild className="h-auto w-auto min-h-0 shrink-0 py-0 hover:no-underline">
             <Button
               type="button"
               variant="ghost"

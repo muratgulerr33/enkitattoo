@@ -234,10 +234,10 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
       )}
 
       <Collapsible open={noteOpen} onOpenChange={setNoteOpen} className="border-t border-border pt-3">
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-medium text-foreground">Not</p>
+        <div className="flex min-w-0 items-center justify-between gap-3">
+          <p className="min-w-0 text-sm font-medium text-foreground">Not</p>
 
-          <CollapsibleTrigger asChild>
+          <CollapsibleTrigger asChild className="h-auto w-auto min-h-0 shrink-0 py-0 hover:no-underline">
             <Button type="button" variant="ghost" size="xs" className="rounded-full px-2 text-muted-foreground">
               {noteOpen ? "Kapat" : "Ekle"}
               <ChevronDown
