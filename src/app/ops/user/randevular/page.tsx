@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Clock3 } from "lucide-react";
+import { Clock3 } from "lucide-react";
 import { OpsUserAppointmentCreateForm } from "@/components/ops/ops-user-appointment-create-form";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,7 +21,6 @@ import {
 } from "@/lib/ops/appointment-copy";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import {
-  getUserWorkspaceNextStep,
   getUserWorkspaceOverview,
   isUserReadyForAppointments,
 } from "@/lib/ops/user-workspace";
@@ -56,6 +55,14 @@ function ReadinessRow({
       <p className="text-sm text-muted-foreground">{value}</p>
     </div>
   );
+}
+
+function getTattooDetailsActionLabel(status: "draft" | "submitted" | null): string {
+  if (status === "draft") {
+    return "Taslağı sürdür";
+  }
+
+  return "Detayları ekle";
 }
 
 function AppointmentCard({
@@ -113,28 +120,47 @@ export default async function OpsUserAppointmentsPage() {
     getUserWorkspaceOverview(sessionUser.id),
     listUserAppointments(sessionUser.id),
   ]);
-  const nextStep = getUserWorkspaceNextStep(overview);
   const isReadyForAppointments = isUserReadyForAppointments(overview);
+  const hasUpcomingAppointments = appointmentLists.upcoming.length > 0;
+  const needsProfile = !overview.isProfileComplete;
+  const needsTattooDetails = !overview.isTattooFormSubmitted;
+  const showPrerequisiteCard = !hasUpcomingAppointments && !isReadyForAppointments;
+  const showCreateCard = !hasUpcomingAppointments && isReadyForAppointments;
+  const tattooDetailsActionLabel = getTattooDetailsActionLabel(
+    overview.latestTattooForm?.status ?? null
+  );
 
   return (
     <div className="ops-page-shell">
-      {!isReadyForAppointments ? (
+      {showPrerequisiteCard ? (
         <Card className="border-border bg-surface-1/70">
           <CardContent className="space-y-4 px-5 py-5 sm:px-6">
             <div className="space-y-1">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                Randevu için gerekli
+                Randevu alanı
               </p>
-              <p className="text-lg font-semibold text-foreground">{nextStep.title}</p>
-              <p className="text-sm text-muted-foreground">{nextStep.description}</p>
+              <p className="text-lg font-semibold text-foreground">
+                {needsProfile ? "Profil bilgilerin eksik" : "Dövme detayları eksik"}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                {needsProfile
+                  ? "Ad soyad ve telefon bilgini kaydetmeden randevu talebi açılamaz."
+                  : "Randevu öncesi paylaşmak istediğin dövme detaylarını buradan ekleyip tamamlayabilirsin."}
+              </p>
             </div>
 
-            <Button asChild size="cta" className="w-full sm:w-auto">
-              <Link href={nextStep.href}>
-                {nextStep.actionLabel}
-                <ArrowRight className="size-4" aria-hidden />
-              </Link>
-            </Button>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              {needsProfile ? (
+                <Button asChild size="cta" className="w-full sm:w-auto">
+                  <Link href="/ops/user/profil">Profili düzenle</Link>
+                </Button>
+              ) : null}
+              {needsTattooDetails && !needsProfile ? (
+                <Button asChild variant="outline" className="w-full sm:w-auto">
+                  <Link href="/ops/user/form">{tattooDetailsActionLabel}</Link>
+                </Button>
+              ) : null}
+            </div>
 
             <div className="grid gap-2">
               <ReadinessRow
@@ -142,20 +168,22 @@ export default async function OpsUserAppointmentsPage() {
                 value={overview.isProfileComplete ? "Hazır" : "Eksik"}
               />
               <ReadinessRow
-                label="Dövme formu"
-                value={overview.isTattooFormSubmitted ? "Tamamlandı" : "Bekliyor"}
+                label="Dövme detayları"
+                value={overview.isTattooFormSubmitted ? "Hazır" : "Eksik"}
               />
             </div>
           </CardContent>
         </Card>
-      ) : (
+      ) : null}
+
+      {showCreateCard ? (
         <Card className="overflow-hidden">
           <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="space-y-1">
                 <CardTitle>Yeni randevu</CardTitle>
                 <CardDescription>
-                  Profil ve dövme formu hazır. Tarih ve saat seçerek yeni talebini açabilirsin.
+                  Profilin ve dövme detayların kayıtlı. Tarih ve saat seçerek yeni talebini açabilirsin.
                 </CardDescription>
               </div>
               <Badge className="rounded-full">Hazır</Badge>
@@ -165,13 +193,17 @@ export default async function OpsUserAppointmentsPage() {
             <OpsUserAppointmentCreateForm defaultDate={getTodayDateValue()} />
           </CardContent>
         </Card>
-      )}
+      ) : null}
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] xl:gap-5">
         <Card className="overflow-hidden">
           <CardHeader className="gap-2 px-5 pt-5 pb-3 sm:px-6">
             <CardTitle>Yaklaşan randevular</CardTitle>
-            <CardDescription>Aktif kayıtların burada görünür.</CardDescription>
+            <CardDescription>
+              {hasUpcomingAppointments
+                ? "Planlı randevu kayıtların burada görünür."
+                : "Aktif kayıtların burada görünür."}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 px-5 pb-5 sm:px-6">
             {appointmentLists.upcoming.length ? (

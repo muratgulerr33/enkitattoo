@@ -25,9 +25,9 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
     <form action={formAction} className="space-y-4">
       <div className="space-y-3">
         <div className="space-y-1">
-          <p className="text-sm font-medium text-foreground">Gerekli alanlar</p>
+          <p className="text-sm font-medium text-foreground">Önce bunları ekle</p>
           <p className="text-sm text-muted-foreground">
-            Formu tamamlamak için bu üç alan gerekli.
+            Randevu talebi açmadan önce bu üç detayı paylaş.
           </p>
         </div>
 
@@ -148,10 +148,10 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
           {pending ? (
             <>
               <LoaderCircle className="size-4 animate-spin" aria-hidden />
-              Gönderiliyor
+              Tamamlanıyor
             </>
           ) : (
-            "Formu tamamla"
+            "Detayları tamamla"
           )}
         </Button>
 
@@ -170,7 +170,7 @@ export function OpsTattooForm({ latestTattooForm }: OpsTattooFormProps) {
               Kaydediliyor
             </>
           ) : (
-            "Taslak kaydet"
+            "Taslak olarak kaydet"
           )}
         </Button>
       </div>

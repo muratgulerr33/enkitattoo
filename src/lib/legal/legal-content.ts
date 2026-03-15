@@ -20,6 +20,57 @@ function removeFirstHeading(markdown: string): string {
   return markdown.replace(/^#\s+.+?(?:\r?\n){1,2}/, "").trim();
 }
 
+function normalizeHeadingText(value: string): string {
+  return value.replace(/\s+/g, " ").trim().toLocaleLowerCase("tr-TR");
+}
+
+function shouldOmitOpsApprovalHeading(headingText: string): boolean {
+  const normalized = normalizeHeadingText(headingText);
+
+  return (
+    normalized === "kısa ekran özeti" ||
+    normalized.startsWith("sitede kullanılacak ")
+  );
+}
+
+function stripMarkdownSections(
+  markdown: string,
+  shouldStripHeading: (headingText: string) => boolean
+): string {
+  const lines = markdown.replace(/\r\n?/g, "\n").split("\n");
+  const keptLines: string[] = [];
+  let skippedHeadingLevel: number | null = null;
+
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+    const headingMatch = trimmedLine.match(/^(#{1,6})\s+(.+)$/);
+
+    if (headingMatch) {
+      const headingLevel = headingMatch[1].length;
+      const headingText = headingMatch[2].trim();
+
+      if (skippedHeadingLevel !== null) {
+        if (headingLevel <= skippedHeadingLevel) {
+          skippedHeadingLevel = null;
+        } else {
+          continue;
+        }
+      }
+
+      if (shouldStripHeading(headingText)) {
+        skippedHeadingLevel = headingLevel;
+        continue;
+      }
+    } else if (skippedHeadingLevel !== null) {
+      continue;
+    }
+
+    keptLines.push(line);
+  }
+
+  return keptLines.join("\n").trim().replace(/\n{3,}/g, "\n\n");
+}
+
 function extractMetadataLines(markdown: string): Record<string, string> {
   const entries = markdown
     .split(/\r?\n/)
@@ -106,4 +157,11 @@ export async function listPublicLegalDocuments(): Promise<LegalDocument[]> {
 
 export async function listApprovalLegalDocuments(): Promise<LegalDocument[]> {
   return Promise.all(APPROVAL_LEGAL_DOCUMENT_IDS.map((id) => readLegalDocument(id)));
+}
+
+export function getOpsApprovalReaderMarkdown(markdown: string): string {
+  return stripMarkdownSections(
+    removeFirstHeading(markdown),
+    shouldOmitOpsApprovalHeading,
+  );
 }

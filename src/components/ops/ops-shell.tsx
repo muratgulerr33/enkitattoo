@@ -153,7 +153,10 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
       </main>
 
       <nav className="safe-pb-ops-nav fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/95 px-3 pt-2.5 backdrop-blur supports-[backdrop-filter]:bg-background/80 md:hidden">
-        <div className="mx-auto grid max-w-6xl grid-cols-4 gap-1.5">
+        <div
+          className="mx-auto grid max-w-6xl gap-1.5"
+          style={{ gridTemplateColumns: `repeat(${navItems.length}, minmax(0, 1fr))` }}
+        >
           {navItems.map((item) => (
             <OpsNavLink
               key={item.href}

@@ -1,8 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import {
+  acceptCurrentConsent,
+  acceptCurrentPiercingConsent,
   createTattooFormSnapshot,
   type SaveTattooFormInput,
   updateUserWorkspaceProfile,
@@ -12,6 +15,8 @@ export type OpsFormActionState = {
   error: string | null;
   success: string | null;
 };
+
+type ApprovalDocumentId = "dovme-sozlesmesi" | "piercing-sozlesmesi";
 
 function emptyToNull(value: FormDataEntryValue | null, maxLength: number): string | null {
   if (typeof value !== "string") {
@@ -40,6 +45,21 @@ function revalidateUserWorkspacePaths() {
   revalidatePath("/ops/user/profil");
   revalidatePath("/ops/user/form");
   revalidatePath("/ops/user/randevular");
+}
+
+async function getApprovalRequestMetadata(): Promise<{
+  ipAddress: string | null;
+  userAgent: string | null;
+}> {
+  const requestHeaders = await headers();
+  const forwardedFor = requestHeaders.get("x-forwarded-for");
+  const realIp = requestHeaders.get("x-real-ip");
+  const userAgent = requestHeaders.get("user-agent");
+
+  return {
+    ipAddress: forwardedFor?.split(",")[0]?.trim() || realIp?.trim() || null,
+    userAgent: userAgent?.trim() || null,
+  };
 }
 
 export async function updateUserProfileAction(
@@ -128,14 +148,14 @@ export async function saveTattooFormAction(
 
     if (!hasAnyValue) {
       return {
-        error: "Formda en az bir alan doldurun.",
+        error: "En az bir detay girin.",
         success: null,
       };
     }
 
     if (intent === "submit" && (!input.placement || !input.sizeNotes || !input.designNotes)) {
       return {
-        error: "Formu tamamlamak için bölge, boyut ve tasarım notu gerekli.",
+        error: "Detayları tamamlamak için bölge, boyut ve tasarım notu gerekli.",
         success: null,
       };
     }
@@ -145,11 +165,62 @@ export async function saveTattooFormAction(
 
     return {
       error: null,
-      success: intent === "submit" ? "Form tamamlandı." : "Taslak kaydedildi.",
+      success: intent === "submit" ? "Detaylar tamamlandı." : "Taslak kaydedildi.",
     };
   } catch (error) {
     return {
-      error: error instanceof Error ? error.message : "Form kaydedilemedi.",
+      error: error instanceof Error ? error.message : "Detaylar kaydedilemedi.",
+      success: null,
+    };
+  }
+}
+
+export async function saveTattooApprovalAction(
+  _previousState: OpsFormActionState,
+  formData: FormData
+): Promise<OpsFormActionState> {
+  try {
+    const sessionUser = await requireOpsSessionArea("user");
+    const documentId = formData.get("documentId");
+    const accepted = formData.get("accepted");
+
+    if (documentId !== "dovme-sozlesmesi" && documentId !== "piercing-sozlesmesi") {
+      return {
+        error: "Bu belge için hesap onayı açılamadı.",
+        success: null,
+      };
+    }
+
+    if (accepted !== "on") {
+      return {
+        error: "Onayı kaydetmek için kutuyu işaretleyin.",
+        success: null,
+      };
+    }
+
+    const metadata = await getApprovalRequestMetadata();
+    const approvalDocumentId = documentId as ApprovalDocumentId;
+    const isTattooDocument = approvalDocumentId === "dovme-sozlesmesi";
+    const { created } = isTattooDocument
+      ? await acceptCurrentConsent(sessionUser.id, metadata)
+      : await acceptCurrentPiercingConsent(sessionUser.id, metadata);
+    const approvalLabel = isTattooDocument ? "Dövme onayın" : "Piercing onayın";
+
+    revalidateUserWorkspacePaths();
+    revalidatePath("/ops/user/onaylar/dovme-sozlesmesi");
+    revalidatePath("/ops/user/onaylar/piercing-sozlesmesi");
+    revalidatePath("/ops/staff/musteriler");
+    revalidatePath(`/ops/staff/musteriler/${sessionUser.id}`);
+
+    return {
+      error: null,
+      success: created
+        ? `${approvalLabel} hesabına kaydedildi.`
+        : `Bu sürüm için kayıtlı ${isTattooDocument ? "dövme" : "piercing"} onayın zaten var.`,
+    };
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Onay kaydedilemedi.",
       success: null,
     };
   }

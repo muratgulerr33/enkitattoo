@@ -11,6 +11,8 @@ import { writeAuditLog } from "./audit";
 
 export const OPS_TATTOO_CONSENT_DOCUMENT_TYPE = "tattoo_form_consent";
 export const OPS_TATTOO_CONSENT_VERSION = "2026-03-v1";
+export const OPS_PIERCING_CONSENT_DOCUMENT_TYPE = "piercing_form_consent";
+export const OPS_PIERCING_CONSENT_VERSION = "2026-03-v1";
 
 export type UserWorkspaceProfile = {
   email: string | null;
@@ -47,9 +49,13 @@ export type ConsentAcceptanceRecord = {
 export type UserWorkspaceOverview = {
   profile: UserWorkspaceProfile;
   latestTattooForm: TattooFormSnapshot | null;
+  latestTattooConsent: ConsentAcceptanceRecord | null;
+  latestPiercingConsent: ConsentAcceptanceRecord | null;
   latestConsent: ConsentAcceptanceRecord | null;
   isProfileComplete: boolean;
   isTattooFormSubmitted: boolean;
+  hasCurrentTattooConsent: boolean;
+  hasCurrentPiercingConsent: boolean;
   hasCurrentConsent: boolean;
 };
 
@@ -86,6 +92,21 @@ export type SaveTattooFormInput = {
 type ConsentMetadata = {
   ipAddress: string | null;
   userAgent: string | null;
+};
+
+type ConsentDefinition = {
+  documentType: string;
+  documentVersion: string;
+};
+
+const TATTOO_CONSENT_DEFINITION: ConsentDefinition = {
+  documentType: OPS_TATTOO_CONSENT_DOCUMENT_TYPE,
+  documentVersion: OPS_TATTOO_CONSENT_VERSION,
+};
+
+const PIERCING_CONSENT_DEFINITION: ConsentDefinition = {
+  documentType: OPS_PIERCING_CONSENT_DOCUMENT_TYPE,
+  documentVersion: OPS_PIERCING_CONSENT_VERSION,
 };
 
 function getChangedFields(
@@ -159,23 +180,29 @@ export function getUserWorkspaceNextStep(
 }
 
 export async function getUserWorkspaceOverview(userId: number): Promise<UserWorkspaceOverview> {
-  const [profile, latestTattooForm, latestConsent] = await Promise.all([
+  const [profile, latestTattooForm, latestTattooConsent, latestPiercingConsent] = await Promise.all([
     getUserWorkspaceProfile(userId),
     getLatestTattooForm(userId),
     getCurrentConsentAcceptance(userId),
+    getCurrentPiercingConsentAcceptance(userId),
   ]);
 
   const isProfileComplete = isUserProfileComplete(profile);
   const isTattooFormSubmitted = isSubmittedTattooForm(latestTattooForm);
-  const hasCurrentConsent = Boolean(latestConsent?.accepted);
+  const hasCurrentTattooConsent = Boolean(latestTattooConsent?.accepted);
+  const hasCurrentPiercingConsent = Boolean(latestPiercingConsent?.accepted);
 
   return {
     profile,
     latestTattooForm,
-    latestConsent,
+    latestTattooConsent,
+    latestPiercingConsent,
+    latestConsent: latestTattooConsent,
     isProfileComplete,
     isTattooFormSubmitted,
-    hasCurrentConsent,
+    hasCurrentTattooConsent,
+    hasCurrentPiercingConsent,
+    hasCurrentConsent: hasCurrentTattooConsent,
   };
 }
 
@@ -397,8 +424,9 @@ export async function createTattooFormSnapshot(
   });
 }
 
-export async function getCurrentConsentAcceptance(
-  userId: number
+async function getCurrentConsentAcceptanceByDefinition(
+  userId: number,
+  definition: ConsentDefinition
 ): Promise<ConsentAcceptanceRecord | null> {
   const db = getDb();
   const rows = await db
@@ -415,8 +443,8 @@ export async function getCurrentConsentAcceptance(
     .where(
       and(
         eq(consentAcceptances.userId, userId),
-        eq(consentAcceptances.documentType, OPS_TATTOO_CONSENT_DOCUMENT_TYPE),
-        eq(consentAcceptances.documentVersion, OPS_TATTOO_CONSENT_VERSION)
+        eq(consentAcceptances.documentType, definition.documentType),
+        eq(consentAcceptances.documentVersion, definition.documentVersion)
       )
     )
     .orderBy(desc(consentAcceptances.acceptedAt))
@@ -425,8 +453,21 @@ export async function getCurrentConsentAcceptance(
   return rows[0] ?? null;
 }
 
-export async function acceptCurrentConsent(
+export async function getCurrentConsentAcceptance(
+  userId: number
+): Promise<ConsentAcceptanceRecord | null> {
+  return getCurrentConsentAcceptanceByDefinition(userId, TATTOO_CONSENT_DEFINITION);
+}
+
+export async function getCurrentPiercingConsentAcceptance(
+  userId: number
+): Promise<ConsentAcceptanceRecord | null> {
+  return getCurrentConsentAcceptanceByDefinition(userId, PIERCING_CONSENT_DEFINITION);
+}
+
+async function acceptConsent(
   userId: number,
+  definition: ConsentDefinition,
   metadata: ConsentMetadata
 ): Promise<{ record: ConsentAcceptanceRecord; created: boolean }> {
   const db = getDb();
@@ -445,8 +486,8 @@ export async function acceptCurrentConsent(
       .where(
         and(
           eq(consentAcceptances.userId, userId),
-          eq(consentAcceptances.documentType, OPS_TATTOO_CONSENT_DOCUMENT_TYPE),
-          eq(consentAcceptances.documentVersion, OPS_TATTOO_CONSENT_VERSION)
+          eq(consentAcceptances.documentType, definition.documentType),
+          eq(consentAcceptances.documentVersion, definition.documentVersion)
         )
       )
       .orderBy(desc(consentAcceptances.acceptedAt))
@@ -466,8 +507,8 @@ export async function acceptCurrentConsent(
       .insert(consentAcceptances)
       .values({
         userId,
-        documentType: OPS_TATTOO_CONSENT_DOCUMENT_TYPE,
-        documentVersion: OPS_TATTOO_CONSENT_VERSION,
+        documentType: definition.documentType,
+        documentVersion: definition.documentVersion,
         accepted: true,
         acceptedAt: now,
         ipAddress: metadata.ipAddress,
@@ -528,8 +569,8 @@ export async function acceptCurrentConsent(
       .where(
         and(
           eq(consentAcceptances.userId, userId),
-          eq(consentAcceptances.documentType, OPS_TATTOO_CONSENT_DOCUMENT_TYPE),
-          eq(consentAcceptances.documentVersion, OPS_TATTOO_CONSENT_VERSION)
+          eq(consentAcceptances.documentType, definition.documentType),
+          eq(consentAcceptances.documentVersion, definition.documentVersion)
         )
       )
       .orderBy(desc(consentAcceptances.acceptedAt))
@@ -546,4 +587,18 @@ export async function acceptCurrentConsent(
       created: false,
     };
   });
+}
+
+export async function acceptCurrentConsent(
+  userId: number,
+  metadata: ConsentMetadata
+): Promise<{ record: ConsentAcceptanceRecord; created: boolean }> {
+  return acceptConsent(userId, TATTOO_CONSENT_DEFINITION, metadata);
+}
+
+export async function acceptCurrentPiercingConsent(
+  userId: number,
+  metadata: ConsentMetadata
+): Promise<{ record: ConsentAcceptanceRecord; created: boolean }> {
+  return acceptConsent(userId, PIERCING_CONSENT_DEFINITION, metadata);
 }

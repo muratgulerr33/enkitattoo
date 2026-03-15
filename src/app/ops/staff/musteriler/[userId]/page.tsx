@@ -15,6 +15,7 @@ import {
 } from "@/lib/ops/appointments";
 import { getCustomerDetail } from "@/lib/ops/customers";
 import {
+  OPS_PIERCING_CONSENT_VERSION,
   OPS_TATTOO_CONSENT_VERSION,
 } from "@/lib/ops/user-workspace";
 import { cn } from "@/lib/utils";
@@ -67,6 +68,17 @@ function getAppointmentStatusClassName(
   return "border-amber-500/20 bg-amber-500/10 text-amber-700";
 }
 
+function formatAcceptanceDate(value: Date | null): string | null {
+  if (!value) {
+    return null;
+  }
+
+  return new Intl.DateTimeFormat("tr-TR", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(value);
+}
+
 export default async function OpsStaffCustomerDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const customerUserId = Number(resolvedParams.userId);
@@ -82,6 +94,12 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
   }
 
   const latestForm = customer.workspace.latestTattooForm;
+  const latestTattooConsentAcceptedAt = formatAcceptanceDate(
+    customer.workspace.latestTattooConsent?.acceptedAt ?? null
+  );
+  const latestPiercingConsentAcceptedAt = formatAcceptanceDate(
+    customer.workspace.latestPiercingConsent?.acceptedAt ?? null
+  );
 
   return (
     <div className="ops-page-shell">
@@ -141,7 +159,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
             <CardTitle>Durum</CardTitle>
             <CardDescription>Form ve onay durumu birlikte izlenir.</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 sm:grid-cols-3">
+          <CardContent className="grid gap-3 sm:grid-cols-4">
             <div className="rounded-2xl border border-border p-4">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Form
@@ -158,12 +176,41 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
             </div>
             <div className="rounded-2xl border border-border p-4">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Onay
+                Dövme onayı
               </p>
-              <p className="mt-3 text-sm font-medium text-foreground">
-                {customer.workspace.hasCurrentConsent ? "Güncel sürüm onaylandı" : "Yok"}
+              <Badge
+                variant={customer.workspace.hasCurrentTattooConsent ? "default" : "outline"}
+                className="mt-3 rounded-full"
+              >
+                {customer.workspace.hasCurrentTattooConsent ? "Hesaba işlendi" : "Kayıt yok"}
+              </Badge>
+              <div className="mt-3 space-y-1 text-sm text-muted-foreground">
+                <p>Sürüm {OPS_TATTOO_CONSENT_VERSION}</p>
+                <p>
+                  {latestTattooConsentAcceptedAt
+                    ? `Onay tarihi ${latestTattooConsentAcceptedAt}`
+                    : "Bu sürüm için kayıt görünmüyor."}
+                </p>
+              </div>
+            </div>
+            <div className="rounded-2xl border border-border p-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Piercing onayı
               </p>
-              <p className="mt-1 text-xs text-muted-foreground">Sürüm {OPS_TATTOO_CONSENT_VERSION}</p>
+              <Badge
+                variant={customer.workspace.hasCurrentPiercingConsent ? "default" : "outline"}
+                className="mt-3 rounded-full"
+              >
+                {customer.workspace.hasCurrentPiercingConsent ? "Hesaba işlendi" : "Kayıt yok"}
+              </Badge>
+              <div className="mt-3 space-y-1 text-sm text-muted-foreground">
+                <p>Sürüm {OPS_PIERCING_CONSENT_VERSION}</p>
+                <p>
+                  {latestPiercingConsentAcceptedAt
+                    ? `Onay tarihi ${latestPiercingConsentAcceptedAt}`
+                    : "Bu sürüm için kayıt görünmüyor."}
+                </p>
+              </div>
             </div>
             <div className="rounded-2xl border border-border p-4">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">

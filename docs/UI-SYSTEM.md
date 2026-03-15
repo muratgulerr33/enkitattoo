@@ -56,6 +56,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - İlk gerçek iş bloğu fold üstüne mümkün olduğunca yakın gelmelidir.
 - Mobil alt navigasyon `safe-pb-ops-nav` ve `safe-pb-ops-shell` ile çalışır; etiketler tam okunur kalır.
 - Staff mobile nav etiketi seti `Kasa`, `Randevu`, `Müşteri`, `Profil` olarak tam görünür (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
+- User mobile nav etiketi seti `Onaylar`, `Randevular`, `Profil` olarak tam görünür; kolon yapısı item sayısına göre akar (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 
 ### Tek iş odağı
 
@@ -81,15 +82,43 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
 - Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez.
 - Müşteri detayı: profil, form, onay durumu, randevu ve staff notu aynı yüzeyde olabilir; fakat iç model terimleri kullanıcı copy’sine sızmamalıdır.
-- User lane top-level hedefleri `Onaylar`, `Randevular`, `Formum`, `Profil` olarak görünür. Kullanıcı login/register sonrası `Onaylar` alanına düşer.
-- `Onaylar` user lane içinde bağımsız, sakin, read-only bilgi merkezidir; form veya randevu alt adımı gibi kurgulanmaz.
-- `Onaylar` form ve randevu alanlarından ayrı durur; belge adı, durum, sürüm ve hesap kaydı bilgisini kısa kartlarla gösterir; süreç özeti, placeholder etiketleri ve yönlendirici anlatı açmaz.
-- `Onaylar` kartları gerçek markdown kaynaklarından gelen belge adı ve kısa açıklama ile beslenir; tam metin okuması public legal route’lara gider.
-- User next-step mantığı yalnız gerçek eksik hazırlık adımlarını işaret eder; `Onaylar` alanı formu tamamlayınca açılan zorunlu kapı gibi yazılmaz.
-- User randevuları: müşteri hazır değilse yeni randevu formu yerine eksik profile/form adımına yönlendiren baskın CTA görünür; hazırsa yeni randevu formu fold üstünde ana yüzey olur.
 - Public legal sayfalar ve `/ops/user/onaylar` aynı markdown kaynak ailesini kullanır (`src/content/legal/*.md`, `src/content/ops/legal/*.md`); içerik ikinci kez hardcode edilmez.
-- Bu repo sürümünde `Onaylar` sayfası bilgi merkezi ve read-only durum yüzeyidir. Tek checkbox submit/save, hesap kaydı write akışı ve admin müşteri görünürlüğü genişletmesi sonraki PR kapsamıdır.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
+
+### User lane karar matrisi
+
+#### Lock kararlar
+
+- Kullanıcı login/register sonrası `Onaylar` alanına düşer.
+- User lane primary top-level hedefleri `Onaylar`, `Randevular`, `Profil` olarak sabittir.
+- `/ops/user/form` route’u yaşamaya devam eder, fakat primary nav item değildir; contextual/secondary yüzey olarak açılır.
+- `Onaylar` user lane içinde bağımsız alandır; form veya randevu alt adımı gibi kurgulanmamalıdır.
+- User lane kullanıcıyı lineer `profil -> form -> onay -> randevu` kontratına zorlamamalıdır.
+- Onaylar kullanıcı hesabına bağlanır ve staff müşteri detayında görünür. Bu lock karar current runtime’da uygulanmıştır; ancak staff müşteri listesi onay badge’i hâlâ tattoo current consent odaklıdır.
+
+#### Current runtime
+
+- User primary nav desktop ve mobile’da `Onaylar`, `Randevular`, `Profil` setiyle görünür; `/ops/user/form` route’u primary nav dışında kalır (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
+- `/ops/user/onaylar` current runtime’da tattoo ve piercing belgelerini özet kartlarla gösterir; `Metni oku` public legal route’a değil ops içi focused approval reader’a gider.
+- Ops approval reader aynı markdown kaynağını kullanır; tattoo ve piercing için scroll sonuna inmeden tek checkbox ve kayıt CTA’sı açılmaz. Reader gövdesi ops yüzeyinde sanitize edilir; `Sitede kullanılacak ...` ve `Kısa ekran özeti` gibi iç kullanım başlıkları kullanıcıya gösterilmez. Current runtime iç scroll yerine ana sayfa scroll’u ve belge sonu marker’ı ile gating uygular.
+- `/ops/user/profil` profil tamamlandıktan sonra dövme detaylarına yalnız secondary CTA verir; CTA mevcut detay durumuna göre `Detayları ekle`, `Taslağı sürdür`, `Detayları güncelle` gibi dürüst copy kullanır. `/ops/user/randevular` aynı route’u yalnız gerektiğinde contextual CTA olarak gösterir.
+- `/ops/user/form` route’u yaşamaya devam eder; user-facing tarafta ise top-level sekme gibi değil, profil ve randevular içinden açılan `dövme detayları editörü` yüzeyi gibi davranır. Teknik snapshot omurgası korunur ama kullanıcıya legacy form gibi sunulmaz.
+- `/ops/user/randevular` current runtime’da aktif yaklaşan randevu varsa bunu sayfanın ana yüzeyi yapar; prerequisite veya yeni talep yüzeyi yalnız yaklaşan randevu yoksa görünür.
+- Tattoo ve piercing onayı kaydedildiğinde `/ops/user/onaylar` kartları kısa kullanıcı özeti gösterir; staff customer detail aynı onayları sürüm ve onay tarihiyle görünür tutar.
+- Staff müşteri listesi current runtime’da form durumu ile birlikte yalnız güncel tattoo onay badge’ini gösterir; customer detail ise tattoo ve piercing onaylarını ayrı bloklarda özetler.
+- Public legal page, public site shell içinde açılır; ops shell devamlılığı taşımaz.
+
+#### Current inconsistency
+
+- Readiness mantığı tattoo-form merkezlidir. Bu yüzden piercing kullanıcı yolu user lane IA içinde eşit görünür değildir ve dövme akışı tarafından gölgelenir.
+- `/ops/user/form` route’u user-facing olarak `dövme detayları editörü` çizgisine çekilmiştir; buna rağmen tek kartlı eski form kompozisyonundan tamamen kopmuş sayılmaz ve üst hiyerarşi polish’i ayrı tur gerektirir.
+- Public legal page belge-odaklı özel yüzey değildir; mevcut durumda public site shell içinde yaşar ve belge odağını dağıtan site-level bağlamı taşır.
+- Public legal page ilk `#` başlık dışındaki markdown gövdesini aynen render eder. Ops approval reader bu markdown’ın user-facing sanitize edilmiş sürümünü gösterse de public legal route tam gövdeyi göstermeye devam eder. Repo içindeki kanıtlı iç kullanım başlık örnekleri `Sitede kullanılacak zorunlu onay metni` ve `Kısa ekran özeti`dir.
+
+#### Karar gerekli / open IA question
+
+- Piercing için user lane readiness ve hazırlık dili tattoo-form merkezli yapıdan nasıl ayrılacak? Yeni akış uydurulmadan ayrı IA kararı gerekir.
+- Hukuki terminolojide `sözleşme`, `onay`, `beyan`, `bilgilendirilmiş onam` çizgisinden hangisi ürünün ana dili olacak? İçerik kaynağı, public title, ops kart dili ve ilerideki checkbox metni tek terminoloji altında lock edilmelidir.
 
 ## 5) Kanıtlı Known Issues ve Polish Backlog
 
@@ -98,9 +127,8 @@ Bu bölüm çözüldü listesi değildir; repo içindeki mevcut durumun kısa ka
 - `OpsShell` üst alanı sakin tutulur; buna rağmen bazı dense workspace yüzeylerinde kart yoğunluğu veya secondary copy yeni polish turlarında daha da azaltılabilir (`src/components/ops/ops-shell.tsx`, `src/app/ops/staff/*.tsx`, `src/app/ops/user/*.tsx`).
 - Kasa ekranı artık hızlı kayıt merkezlidir; mobilde form fold üstünde daha nettir, desktop’ta summary rail daha sakin destek yüzeyi gibi davranır. Yine de spacing, micro-copy ve micro-motion tarafında ince polish alanı kalır (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`).
 - Müşteri ve user workspace yüzeylerinde kart yoğunluğu hâlâ yüksektir; ürün dili temizlenmiş olsa da bilgi hiyerarşisi sonraki polish turlarında sadeleştirilebilir (`src/app/ops/staff/musteriler/[userId]/page.tsx`, `src/app/ops/user/profil/page.tsx`, `src/app/ops/user/form/page.tsx`).
+- Aktif bir hydration mismatch hatası current runtime kodundan doğrulanamaz; archive notları vardır ama canlı bir bug kanıtı olmadan kesin hüküm yazılmaz.
 - Repo içinde görülen `middleware` -> `proxy` build uyarısı ayrı bakım konusudur; mevcut UI polish bunu çözülmüş varsaymaz.
-
-Repo içinden doğrulanamayan “render’da Türkçe karakter bozuluyor” türü görsel raporlar burada kesin hüküm olarak yazılmaz; kaynak copy’nin mevcut hali tek başına bu görsel sonucu kanıtlamaz.
 
 ## 6) Shared UI Foundations
 
