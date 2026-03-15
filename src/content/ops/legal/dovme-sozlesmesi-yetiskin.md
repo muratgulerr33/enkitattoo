@@ -1,6 +1,6 @@
 # Enki Tattoo Studio — Dövme Sözleşmesi
 
-**Açıklama:** Bu sözleşme, dövme işlemi öncesi bilgilendirme, risk beyanı ve onay metnidir.  
+**Açıklama:** Bu sözleşme, dövme işlemi öncesi bilgilendirme, beyan ve onay metnidir.  
 **Kapsam:** 18 yaş ve üzeri müşteriler için dövme uygulaması  
 **İşletme:** Enki Tattoo Studio  
 **Adres:** İnönü Mah., 1404. Sk. No: 17 D:E, 33130 Yenişehir / Mersin  

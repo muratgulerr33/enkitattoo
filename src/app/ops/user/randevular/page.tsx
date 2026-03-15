@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { Clock3 } from "lucide-react";
 import { OpsUserAppointmentCreateForm } from "@/components/ops/ops-user-appointment-create-form";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -128,14 +128,11 @@ export default async function OpsUserAppointmentsPage() {
       {showCreateCard ? (
         <Card className="overflow-hidden">
           <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div className="space-y-1">
-                <CardTitle>Yeni randevu</CardTitle>
-                <CardDescription>
-                  Profilin hazır. Uygun gün ve saati seç.
-                </CardDescription>
-              </div>
-              <Badge className="rounded-full">Hazır</Badge>
+            <div className="space-y-1">
+              <CardTitle>Yeni randevu</CardTitle>
+              <CardDescription>
+                Uygun gün ve saati seçerek randevu oluşturabilirsiniz.
+              </CardDescription>
             </div>
           </CardHeader>
           <CardContent className="px-4 pb-4 sm:px-5 sm:pb-5">
@@ -148,11 +145,7 @@ export default async function OpsUserAppointmentsPage() {
         <Card className="overflow-hidden">
           <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
             <CardTitle>Yaklaşan randevular</CardTitle>
-            <CardDescription>
-              {hasUpcomingAppointments
-                ? "Planlı randevu kayıtların burada görünür."
-                : "Aktif kayıtların burada görünür."}
-            </CardDescription>
+            <CardDescription>Aktif randevularınızı buradan görüntüleyebilirsiniz.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2.5 px-4 pb-4 sm:px-5 sm:pb-5">
             {appointmentLists.upcoming.length ? (
@@ -178,7 +171,7 @@ export default async function OpsUserAppointmentsPage() {
         <Card className="overflow-hidden">
           <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
             <CardTitle>Geçmiş</CardTitle>
-            <CardDescription>Tamamlanan veya kapanan kayıtlar burada kalır.</CardDescription>
+            <CardDescription>Geçmiş randevularınız burada görünür.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2.5 px-4 pb-4 sm:px-5 sm:pb-5">
             {appointmentLists.past.length ? (

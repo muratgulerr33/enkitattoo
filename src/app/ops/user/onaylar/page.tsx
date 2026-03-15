@@ -40,7 +40,7 @@ function buildTattooStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: stri
 
   return {
     badgeLabel: "Bekliyor",
-    summary: "Belgeyi açıp onay verirsin.",
+    summary: "Belgeyi açıp onay verebilirsiniz.",
     detail: null,
   };
 }
@@ -62,7 +62,7 @@ function buildPiercingStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: st
 
   return {
     badgeLabel: "Bekliyor",
-    summary: "Belgeyi açıp onay verirsin.",
+    summary: "Belgeyi açıp onay verebilirsiniz.",
     detail: null,
   };
 }
@@ -91,7 +91,7 @@ export default async function OpsUserApprovalsPage() {
         <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
           <div className="space-y-1">
             <CardTitle>Onaylar</CardTitle>
-            <CardDescription>Belgelerini burada açıp takip edersin.</CardDescription>
+            <CardDescription>Belgelerinizi buradan açıp onay verebilirsiniz.</CardDescription>
           </div>
         </CardHeader>
         <CardContent className="grid gap-3 px-4 pb-4 sm:px-5 sm:pb-5 lg:grid-cols-2">

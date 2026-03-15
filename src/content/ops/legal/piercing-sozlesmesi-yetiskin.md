@@ -1,6 +1,6 @@
 # Enki Tattoo Studio — Piercing Sözleşmesi
 
-**Açıklama:** Bu sözleşme, piercing işlemi öncesi bilgilendirme, risk beyanı ve onay metnidir.  
+**Açıklama:** Bu sözleşme, piercing işlemi öncesi bilgilendirme, beyan ve onay metnidir.  
 **Kapsam:** 18 yaş ve üzeri müşteriler için piercing uygulaması  
 **İşletme:** Enki Tattoo Studio  
 **Adres:** İnönü Mah., 1404. Sk. No: 17 D:E, 33130 Yenişehir / Mersin  
