@@ -15,6 +15,7 @@ import {
   getCustomerLabel,
   listCustomers,
   type CustomerConsentStatus,
+  type CustomerSearchMatchField,
 } from "@/lib/ops/customers";
 import { cn } from "@/lib/utils";
 
@@ -34,10 +35,36 @@ function getConsentBadgeClassName(status: CustomerConsentStatus): string {
     : "border-border bg-muted/35 text-muted-foreground";
 }
 
+function getCustomerResultsTitle(query: string): string {
+  return query ? "Arama sonuçları" : "Müşteriler";
+}
+
+function getCustomerResultsDescription(query: string, count: number): string {
+  if (query) {
+    return count
+      ? `"${query}" için ${count} sonuç bulundu.`
+      : `"${query}" için sonuç bulunamadı.`;
+  }
+
+  return count ? `${count} müşteri bulundu.` : "Aramaya uygun müşteri bulunamadı.";
+}
+
+function getSearchMatchCopy(field: CustomerSearchMatchField): string {
+  switch (field) {
+    case "phone":
+      return "Telefon ile eşleşti";
+    case "email":
+      return "E-posta ile eşleşti";
+    case "name":
+      return "İsim ile eşleşti";
+  }
+}
+
 export default async function OpsStaffCustomersPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const query = params.q?.trim() ?? "";
   const customers = await listCustomers(query);
+  const isSearchActive = query.length > 0;
 
   return (
     <div className="ops-page-shell">
@@ -79,32 +106,57 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
 
       <Card className="gap-4">
         <CardHeader className="gap-1">
-          <CardTitle>Müşteriler</CardTitle>
-          <CardDescription>
-            {customers.length
-              ? `${customers.length} müşteri bulundu.`
-              : "Aramaya uygun müşteri bulunamadı."}
-          </CardDescription>
+          <CardTitle>{getCustomerResultsTitle(query)}</CardTitle>
+          <CardDescription>{getCustomerResultsDescription(query, customers.length)}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           {customers.length ? (
             customers.map((customer) => {
               const nextAppointmentText = formatCustomerAppointmentShort(customer.nextAppointment);
+              const searchMatchField = customer.searchMatch?.field ?? null;
 
               return (
                 <Link
                   key={customer.userId}
                   href={`/ops/staff/musteriler/${customer.userId}`}
-                  className="group block rounded-2xl border border-border/80 bg-card px-4 py-3.5 transition-[border-color,background-color,box-shadow] hover:border-foreground/15 hover:bg-muted/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className={cn(
+                    "group block rounded-2xl border px-4 py-3.5 transition-[border-color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                    isSearchActive
+                      ? "border-foreground/10 bg-muted/10 hover:border-foreground/20 hover:bg-muted/15"
+                      : "border-border/80 bg-card hover:border-foreground/15 hover:bg-muted/10"
+                  )}
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 space-y-1.5">
                       <p className="text-base font-semibold text-foreground">
                         {getCustomerLabel(customer)}
                       </p>
-                      <div className="space-y-0.5 text-sm text-muted-foreground">
-                        <p>{customer.phone ?? "Telefon yok"}</p>
-                        <p>{customer.email ?? "E-posta yok"}</p>
+                      {isSearchActive && searchMatchField ? (
+                        <p className="text-xs font-medium text-foreground/75">
+                          {getSearchMatchCopy(searchMatchField)}
+                        </p>
+                      ) : null}
+                      <div className="space-y-0.5 text-sm">
+                        <p
+                          className={cn(
+                            "break-words",
+                            searchMatchField === "phone"
+                              ? "font-medium text-foreground"
+                              : "text-muted-foreground"
+                          )}
+                        >
+                          {customer.phone ?? "Telefon yok"}
+                        </p>
+                        <p
+                          className={cn(
+                            "break-words",
+                            searchMatchField === "email"
+                              ? "font-medium text-foreground"
+                              : "text-muted-foreground"
+                          )}
+                        >
+                          {customer.email ?? "E-posta yok"}
+                        </p>
                       </div>
                     </div>
 
@@ -139,7 +191,9 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
             })
           ) : (
             <div className="rounded-2xl border border-dashed border-border p-5 text-sm text-muted-foreground">
-              Eşleşen müşteri yok. Yukarıdan yeni müşteri ekleyin veya arama kelimesini sadeleştirin.
+              {isSearchActive
+                ? `"${query}" için eşleşen müşteri yok. Yukarıdan yeni müşteri ekleyin veya arama kelimesini sadeleştirin.`
+                : "Henüz müşteri yok. Yukarıdan yeni müşteri ekleyin."}
             </div>
           )}
         </CardContent>

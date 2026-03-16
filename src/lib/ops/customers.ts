@@ -44,6 +44,13 @@ export type CustomerListItem = {
   displayName: string | null;
   consentStatus: CustomerConsentStatus;
   nextAppointment: CustomerUpcomingAppointment | null;
+  searchMatch: CustomerSearchMatch | null;
+};
+
+export type CustomerSearchMatchField = "name" | "phone" | "email";
+
+export type CustomerSearchMatch = {
+  field: CustomerSearchMatchField;
 };
 
 export type CustomerNoteRecord = {
@@ -124,6 +131,48 @@ function toCustomerNote(row: CustomerNoteRow | undefined): CustomerNoteRecord | 
 
 function getConsentStatus(hasAcceptedConsent: boolean): CustomerConsentStatus {
   return hasAcceptedConsent ? "accepted" : "none";
+}
+
+function normalizeCustomerSearchValue(value: string | null | undefined): string {
+  return value?.trim().toLocaleLowerCase("tr-TR") ?? "";
+}
+
+function customerFieldMatches(value: string | null | undefined, query: string): boolean {
+  const normalizedValue = normalizeCustomerSearchValue(value);
+
+  if (!normalizedValue) {
+    return false;
+  }
+
+  return normalizedValue.includes(normalizeCustomerSearchValue(query));
+}
+
+function getCustomerSearchMatch(
+  customer: Pick<CustomerListItem, "email" | "phone" | "fullName" | "displayName">,
+  query: string | null | undefined
+): CustomerSearchMatch | null {
+  const trimmedQuery = query?.trim();
+
+  if (!trimmedQuery) {
+    return null;
+  }
+
+  if (customerFieldMatches(customer.phone, trimmedQuery)) {
+    return { field: "phone" };
+  }
+
+  if (customerFieldMatches(customer.email, trimmedQuery)) {
+    return { field: "email" };
+  }
+
+  if (
+    customerFieldMatches(customer.displayName, trimmedQuery) ||
+    customerFieldMatches(customer.fullName, trimmedQuery)
+  ) {
+    return { field: "name" };
+  }
+
+  return null;
 }
 
 function isUpcomingScheduledAppointment(record: AppointmentRecord): boolean {
@@ -240,6 +289,7 @@ export async function listCustomers(searchQuery?: string | null): Promise<Custom
     displayName: row.displayName,
     consentStatus: getConsentStatus(Boolean(row.hasAcceptedConsent)),
     nextAppointment: nextAppointmentMap.get(row.userId) ?? null,
+    searchMatch: getCustomerSearchMatch(row, query),
   }));
 }
 

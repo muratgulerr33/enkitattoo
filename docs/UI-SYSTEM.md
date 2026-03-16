@@ -82,8 +82,8 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Staff randevu FAB görünürlük kuralı sabittir: root month view görünür, day agenda görünür, detail gizli, create/edit gizli.
 - Staff randevu FAB, grid veya sheet listesinin üstüne veri örtecek şekilde bırakılmaz; mobile’da içerik alt padding’i ve safe area birlikte düşünülür.
 - Staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
-- Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez. Hızlı create kartı ana akışta `Ad soyad` + `Telefon` alanlarını önde tutar, `Kısa not` disclosure olarak secondary açılır. Staff disclosure row pattern’i mobile-safe kalır ve x-overflow üretmez.
-- Müşteri detayı: ilk taramada müşteri kimliği, kısa iletişim bilgisi, onay durumu, yaklaşan randevu ve staff notu okunmalıdır. Temel bilgi büyük iç kartlara bölünmez; profil hazır bilgisi pasif büyük kutu gibi davranmaz; onaylar sürüm ve tarih satırıyla daha sakin özetlenir.
+- Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez. Hızlı create kartı ana akışta `Ad soyad` + `Telefon` alanlarını önde tutar, `Not` disclosure olarak secondary açılır. Staff disclosure row pattern’i mobile-safe kalır ve x-overflow üretmez.
+- Müşteri detayı: ilk taramada müşteri kimliği, kısa iletişim bilgisi, onay durumu, yaklaşan randevu ve staff notu okunmalıdır. Temel bilgi büyük iç kartlara bölünmez; profil hazır bilgisi pasif büyük kutu gibi davranmaz; onaylar kartı, staff notu ve randevu blokları daha sakin, kompakt bilgi hiyerarşisiyle okunur; onaylar sürüm ve tarih satırıyla özetlenir.
 - Prefixsiz public legal sayfalar ve `/ops/user/onaylar` aynı markdown kaynak ailesini kullanır (`src/content/legal/*.md`, `src/content/ops/legal/*.md`); içerik ikinci kez hardcode edilmez.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 
@@ -108,9 +108,10 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `/ops/user/form` current runtime’da user surface olarak yaşamaz; bu path’e giden CTA, helper veya readiness bağı kalmamıştır.
 - Tattoo ve piercing onayı kaydedildiğinde `/ops/user/onaylar` kartları kısa kullanıcı özeti gösterir; staff customer detail aynı onayları sürüm ve onay tarihiyle görünür tutar.
 - Ops mobile shell current runtime’da `min-h-viewport` + fixed bottom nav zinciriyle çalışır; alt nav viewport’a sabit kalır ve staff shell’de native tab bar hissini korur.
-- Staff müşteri listesi current runtime’da daha kompakt tarama ritmiyle çalışır; kart içinde güçlü isim, kısa iletişim bilgisi, tek satırlık `Sıradaki randevu` özeti ve daha görünür `Detaya git` aksiyonu yer alır.
+- Staff müşteri listesi current runtime’da daha kompakt tarama ritmiyle çalışır; boş durumda `Müşteriler`, arama aktifken `Arama sonuçları` başlığı ve sonuç sayısı copy’si görünür. Kart içinde güçlü isim, kısa iletişim bilgisi, arama aktifken isim/telefon/e-posta eşleşmesini anlatan hafif ipucu, tek satırlık `Sıradaki randevu` özeti ve daha görünür `Detaya git` aksiyonu yer alır.
 - Staff müşteri listesi current runtime’da yalnız güncel tattoo onay badge’ini gösterir; badge copy’si bunu açıkça `Dövme onayı` olarak yazar. Customer detail ise tattoo ve piercing onaylarını ayrı bloklarda özetler.
-- Staff kasa ve staff müşteri create disclosure row’ları current runtime’da mobile-safe’dir; `Not / Ekle / Kapat` ve `Kısa not / Not ekle / Kapat` satırları yatay taşma üretmez.
+- Staff müşteri detail current runtime’da bilgi yoğunluğunu yükseltmeden çalışır; onaylar kartı, tek güncel staff notu ve yaklaşan/geçmiş randevu blokları sakinleşmiş copy ve kompakt spacing ile aynı ekranda kalır.
+- Staff kasa ve staff müşteri create disclosure row’ları current runtime’da mobile-safe’dir; `Not / Ekle / Kapat` satırları yatay taşma üretmez.
 - Staff randevular current runtime’da mobile month root’u shell hack’iyle değil, workspace kendi dikey budget’ını yöneterek screen-first calendar surface gibi gösterir; gerçek cihaz viewport’unda ilk açılışta page vertical scroll üretmez. Bu kontrat shell bottom nav anchoring fix’inden ayrıdır.
 - Prefixsiz public legal page, public site shell içinde açılır; ops shell devamlılığı taşımaz.
 

@@ -65,7 +65,9 @@ export function OpsStaffCustomerCreateForm() {
 
       <Collapsible open={noteOpen} onOpenChange={setNoteOpen} className="border-t border-border pt-3">
         <div className="flex min-w-0 items-center justify-between gap-3">
-          <p className="min-w-0 text-sm font-medium text-foreground">Kısa not</p>
+          <p id="customer-note-label" className="min-w-0 text-sm font-medium text-foreground">
+            Not
+          </p>
 
           <CollapsibleTrigger asChild className="h-auto w-auto min-h-0 shrink-0 py-0 hover:no-underline">
             <Button
@@ -75,7 +77,7 @@ export function OpsStaffCustomerCreateForm() {
               className="rounded-full px-2 text-muted-foreground"
               disabled={pending}
             >
-              {noteOpen ? "Kapat" : "Not ekle"}
+              {noteOpen ? "Kapat" : "Ekle"}
               <ChevronDown
                 className={cn("size-4 transition-transform", noteOpen && "rotate-180")}
                 aria-hidden
@@ -86,19 +88,17 @@ export function OpsStaffCustomerCreateForm() {
 
         {noteOpen ? (
           <CollapsibleContent className="pt-2.5 pb-0">
-            <div className="space-y-1.5">
-              <Label htmlFor="note">Kısa not</Label>
-              <Textarea
-                id="note"
-                name="note"
-                rows={2}
-                value={noteValue}
-                onChange={(event) => setNoteValue(event.target.value)}
-                placeholder="Kısa not"
-                className="min-h-[72px] rounded-xl"
-                disabled={pending}
-              />
-            </div>
+            <Textarea
+              id="note"
+              name="note"
+              aria-labelledby="customer-note-label"
+              rows={2}
+              value={noteValue}
+              onChange={(event) => setNoteValue(event.target.value)}
+              placeholder="Kısa not"
+              className="min-h-[72px] rounded-xl"
+              disabled={pending}
+            />
           </CollapsibleContent>
         ) : (
           <input type="hidden" name="note" value={noteValue} />
