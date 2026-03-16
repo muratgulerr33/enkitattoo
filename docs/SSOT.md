@@ -166,8 +166,9 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - `cash_entries` randevudan bağımsızdır; zorunlu appointment FK yoktur (`src/db/schema/cashbook.ts`).
 - `entry_type` seti `income` / `expense` ile sınırlıdır.
 - `amount_cents` pozitif integer olarak saklanır.
-- Staff kasa yüzeyi hızlı kayıt + defter mantığıyla çalışır; ana akış yön seçimi, kısa preset etiket, tutar ve kayıt submit zinciridir (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`).
-- Kasa presetleri UI seviyesindedir; mevcut payload içinde `note` alanını hızlandırır, schema veya action contract genişletmez (`src/lib/ops/cashbook-copy.ts`, `src/app/ops/kasa/actions.ts`).
+- Staff kasa yüzeyi hızlı kayıt + defter mantığıyla çalışır; ana akış yön seçimi, ödeme tipi seçimi, kısa kategori etiketi, tutar ve kayıt submit zinciridir (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`).
+- Kasa kayıtları current runtime’da `entry_type` yanında ayrı `payment_method` boyutu da taşır; quick entry ve manage dialog bu alanı `cash`, `card`, `bank_transfer`, `other` enum setiyle yazar ve defter/gün özeti bunu görünür kılar (`src/db/schema/cashbook.ts`, `src/lib/ops/cashbook.ts`, `src/app/ops/kasa/actions.ts`).
+- Kasa presetleri UI seviyesindedir; mevcut payload içinde `note` alanını hızlandırır, ayrı kategori kolonu açmaz (`src/lib/ops/cashbook-copy.ts`, `src/app/ops/kasa/actions.ts`).
 - Staff kasa note disclosure row’u current runtime’da mobile-safe’tir; `Not ekle` / `Kapat` satırı yatay taşma üretmez (`src/components/ops/ops-cash-entry-form.tsx`).
 - Soft delete alanları `deleted_at` ve `deleted_by_user_id`’dir.
 - Artist yalnız bugünün kasasına kayıt açabilir.

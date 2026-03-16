@@ -3,6 +3,7 @@ import { alias } from "drizzle-orm/pg-core";
 import { getDb } from "@/db";
 import {
   cashEntries,
+  type CashEntryPaymentMethod,
   type CashEntryType,
   userProfiles,
   users,
@@ -17,6 +18,7 @@ export type CashEntryRecord = {
   id: number;
   entryDate: string;
   entryType: CashEntryType;
+  paymentMethod: CashEntryPaymentMethod;
   amountCents: number;
   note: string | null;
   createdByUserId: number;
@@ -35,11 +37,13 @@ export type CashEntrySummary = {
   expenseCents: number;
   netCents: number;
   entryCount: number;
+  paymentMethodTotals: Record<CashEntryPaymentMethod, number>;
 };
 
 export type CreateCashEntryInput = {
   entryDate: string;
   entryType: CashEntryType;
+  paymentMethod: CashEntryPaymentMethod;
   amountCents: number;
   note: string | null;
   actorUserId: number;
@@ -49,6 +53,7 @@ export type UpdateCashEntryInput = {
   entryId: number;
   entryDate: string;
   entryType: CashEntryType;
+  paymentMethod: CashEntryPaymentMethod;
   amountCents: number;
   note: string | null;
   actorUserId: number;
@@ -72,6 +77,7 @@ type CashEntryRow = {
   id: number;
   entryDate: string;
   entryType: CashEntryType;
+  paymentMethod: CashEntryPaymentMethod;
   amountCents: number;
   note: string | null;
   createdByUserId: number;
@@ -95,6 +101,7 @@ type CashEntryMutationRecord = {
   id: number;
   entryDate: string;
   entryType: CashEntryType;
+  paymentMethod: CashEntryPaymentMethod;
   amountCents: number;
   note: string | null;
 };
@@ -158,6 +165,7 @@ function toCashEntryRecord(row: CashEntryRow): CashEntryRecord {
     id: row.id,
     entryDate: row.entryDate,
     entryType: row.entryType,
+    paymentMethod: row.paymentMethod,
     amountCents: row.amountCents,
     note: row.note,
     createdByUserId: row.createdByUserId,
@@ -194,8 +202,16 @@ function toCashEntryRecord(row: CashEntryRow): CashEntryRecord {
 export function summarizeCashEntries(entries: CashEntryRecord[]): CashEntrySummary {
   let incomeCents = 0;
   let expenseCents = 0;
+  const paymentMethodTotals: Record<CashEntryPaymentMethod, number> = {
+    cash: 0,
+    card: 0,
+    bank_transfer: 0,
+    other: 0,
+  };
 
   for (const entry of entries) {
+    paymentMethodTotals[entry.paymentMethod] += entry.amountCents;
+
     if (entry.entryType === "income") {
       incomeCents += entry.amountCents;
       continue;
@@ -209,6 +225,7 @@ export function summarizeCashEntries(entries: CashEntryRecord[]): CashEntrySumma
     expenseCents,
     netCents: incomeCents - expenseCents,
     entryCount: entries.length,
+    paymentMethodTotals,
   };
 }
 
@@ -278,6 +295,18 @@ export function toCashEntryType(value: string): CashEntryType {
   return assertCashEntryType(value);
 }
 
+function assertCashEntryPaymentMethod(value: string): CashEntryPaymentMethod {
+  if (value === "cash" || value === "card" || value === "bank_transfer" || value === "other") {
+    return value;
+  }
+
+  throw new Error("Ödeme tipi geçerli değil.");
+}
+
+export function toCashEntryPaymentMethod(value: string): CashEntryPaymentMethod {
+  return assertCashEntryPaymentMethod(value);
+}
+
 async function listActiveCashEntriesForDate(entryDate: string): Promise<CashEntryRecord[]> {
   const db = getDb();
   const createdByUsers = alias(users, "cash_created_by_users");
@@ -292,6 +321,7 @@ async function listActiveCashEntriesForDate(entryDate: string): Promise<CashEntr
       id: cashEntries.id,
       entryDate: cashEntries.entryDate,
       entryType: cashEntries.entryType,
+      paymentMethod: cashEntries.paymentMethod,
       amountCents: cashEntries.amountCents,
       note: cashEntries.note,
       createdByUserId: cashEntries.createdByUserId,
@@ -332,6 +362,7 @@ async function getActiveCashEntry(
       id: cashEntries.id,
       entryDate: cashEntries.entryDate,
       entryType: cashEntries.entryType,
+      paymentMethod: cashEntries.paymentMethod,
       amountCents: cashEntries.amountCents,
       note: cashEntries.note,
     })
@@ -377,6 +408,7 @@ export async function createCashEntry(input: CreateCashEntryInput): Promise<Cash
       .values({
         entryDate: assertCashDateValue(input.entryDate),
         entryType: assertCashEntryType(input.entryType),
+        paymentMethod: assertCashEntryPaymentMethod(input.paymentMethod),
         amountCents: assertPositiveAmountCents(input.amountCents),
         note: input.note,
         createdByUserId: input.actorUserId,
@@ -385,6 +417,7 @@ export async function createCashEntry(input: CreateCashEntryInput): Promise<Cash
         id: cashEntries.id,
         entryDate: cashEntries.entryDate,
         entryType: cashEntries.entryType,
+        paymentMethod: cashEntries.paymentMethod,
         amountCents: cashEntries.amountCents,
         note: cashEntries.note,
       });
@@ -404,6 +437,7 @@ export async function createCashEntry(input: CreateCashEntryInput): Promise<Cash
         payload: {
           entryDate: inserted.entryDate,
           entryType: inserted.entryType,
+          paymentMethod: inserted.paymentMethod,
           amountCents: inserted.amountCents,
           hasNote: Boolean(inserted.note),
         },
@@ -430,6 +464,7 @@ export async function updateCashEntry(input: UpdateCashEntryInput): Promise<Cash
       .set({
         entryDate: assertCashDateValue(input.entryDate),
         entryType: assertCashEntryType(input.entryType),
+        paymentMethod: assertCashEntryPaymentMethod(input.paymentMethod),
         amountCents: assertPositiveAmountCents(input.amountCents),
         note: input.note,
         updatedByUserId: input.actorUserId,
@@ -440,6 +475,7 @@ export async function updateCashEntry(input: UpdateCashEntryInput): Promise<Cash
         id: cashEntries.id,
         entryDate: cashEntries.entryDate,
         entryType: cashEntries.entryType,
+        paymentMethod: cashEntries.paymentMethod,
         amountCents: cashEntries.amountCents,
         note: cashEntries.note,
       });
@@ -460,11 +496,13 @@ export async function updateCashEntry(input: UpdateCashEntryInput): Promise<Cash
           changedFields: [
             current.entryDate !== updated.entryDate ? "entryDate" : null,
             current.entryType !== updated.entryType ? "entryType" : null,
+            current.paymentMethod !== updated.paymentMethod ? "paymentMethod" : null,
             current.amountCents !== updated.amountCents ? "amountCents" : null,
             current.note !== updated.note ? "note" : null,
           ].filter((value): value is string => Boolean(value)),
           entryDate: updated.entryDate,
           entryType: updated.entryType,
+          paymentMethod: updated.paymentMethod,
           amountCents: updated.amountCents,
           hasNote: Boolean(updated.note),
         },
@@ -501,6 +539,7 @@ export async function softDeleteCashEntry(
         id: cashEntries.id,
         entryDate: cashEntries.entryDate,
         entryType: cashEntries.entryType,
+        paymentMethod: cashEntries.paymentMethod,
         amountCents: cashEntries.amountCents,
         note: cashEntries.note,
       });
@@ -520,6 +559,7 @@ export async function softDeleteCashEntry(
         payload: {
           entryDate: current.entryDate,
           entryType: current.entryType,
+          paymentMethod: current.paymentMethod,
           amountCents: current.amountCents,
           hasNote: Boolean(current.note),
         },

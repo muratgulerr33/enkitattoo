@@ -7,6 +7,22 @@ export const CASH_ENTRY_TYPE_LABELS: Record<CashEntryTypeValue, string> = {
   expense: "Gider",
 };
 
+export const CASH_ENTRY_PAYMENT_METHOD_VALUES = [
+  "cash",
+  "card",
+  "bank_transfer",
+  "other",
+] as const;
+
+export type CashEntryPaymentMethodValue = (typeof CASH_ENTRY_PAYMENT_METHOD_VALUES)[number];
+
+export const CASH_ENTRY_PAYMENT_METHOD_LABELS: Record<CashEntryPaymentMethodValue, string> = {
+  cash: "Nakit",
+  card: "Kart",
+  bank_transfer: "Havale / EFT",
+  other: "Diğer",
+};
+
 export type CashEntryPreset = {
   key: string;
   label: string;

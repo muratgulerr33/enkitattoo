@@ -68,7 +68,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 
 ### Ekran bazlı öncelik kuralları
 
-- Kasa: hızlı kayıt birincil yüzeydir; kompakt `Gelir / Gider` kontrolü, kısa preset etiketleri, tutar ve `Kaydı ekle` akışı öne çıkar. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
+- Kasa: hızlı kayıt birincil yüzeydir; kompakt `Gelir / Gider` kontrolü, net ödeme tipi seçimi, kısa kategori etiketleri, tutar ve `Kaydı ekle` akışı öne çıkar. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
 - Randevular: ilk görünür ana yüzey aylık takvimdir; mobile ve tablet month root, shell safe padding dışında kalan genişliği mümkün olduğunca kullanır ve dar ortalı kart gibi durmaz.
 - Staff month overview sessiz kalır; hücre içinde yalnız gün numarası, kategorik occupancy decoration ve seçili state görünür.
 - Staff month root içinde exact count rakamı gösterilmez; doluluk bilgisi küçük ikinci numeral yerine decoration tabanlı marker ile verilir.

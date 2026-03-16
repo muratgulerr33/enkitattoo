@@ -19,7 +19,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { CASH_ENTRY_TYPE_LABELS, CASH_ENTRY_TYPE_VALUES } from "@/lib/ops/cashbook-copy";
+import {
+  CASH_ENTRY_PAYMENT_METHOD_LABELS,
+  CASH_ENTRY_PAYMENT_METHOD_VALUES,
+  CASH_ENTRY_TYPE_LABELS,
+  CASH_ENTRY_TYPE_VALUES,
+} from "@/lib/ops/cashbook-copy";
 
 const INITIAL_STATE: OpsCashEntryActionState = {
   error: null,
@@ -33,6 +38,7 @@ type OpsCashEntryManageDialogProps = {
   entryId: number;
   entryDate: string;
   entryType: "income" | "expense";
+  paymentMethod: "cash" | "card" | "bank_transfer" | "other";
   amountInput: string;
   note: string | null;
   createdByName: string;
@@ -45,6 +51,7 @@ export function OpsCashEntryManageDialog({
   entryId,
   entryDate,
   entryType,
+  paymentMethod,
   amountInput,
   note,
   createdByName,
@@ -100,7 +107,7 @@ export function OpsCashEntryManageDialog({
               />
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor={`entryType-${entryId}`}>İşlem türü</Label>
                 <select
@@ -114,6 +121,24 @@ export function OpsCashEntryManageDialog({
                   {CASH_ENTRY_TYPE_VALUES.map((value) => (
                     <option key={value} value={value}>
                       {CASH_ENTRY_TYPE_LABELS[value]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor={`paymentMethod-${entryId}`}>Ödeme tipi</Label>
+                <select
+                  id={`paymentMethod-${entryId}`}
+                  name="paymentMethod"
+                  defaultValue={paymentMethod}
+                  className={selectClassName}
+                  disabled={updatePending || deletePending}
+                  required
+                >
+                  {CASH_ENTRY_PAYMENT_METHOD_VALUES.map((value) => (
+                    <option key={value} value={value}>
+                      {CASH_ENTRY_PAYMENT_METHOD_LABELS[value]}
                     </option>
                   ))}
                 </select>

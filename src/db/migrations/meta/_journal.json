@@ -50,6 +50,13 @@
       "when": 1773591827274,
       "tag": "0006_elite_ikaris",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1773679920396,
+      "tag": "0007_redundant_vindicator",
+      "breakpoints": true
     }
   ]
 }
