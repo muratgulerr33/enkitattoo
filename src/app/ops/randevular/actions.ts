@@ -9,6 +9,7 @@ import {
   updateAppointment,
   updateAppointmentStatus,
 } from "@/lib/ops/appointments";
+import { createCustomerRecord } from "@/lib/ops/customers";
 import {
   APPOINTMENT_STATUS_VALUES,
   type AppointmentStatus,
@@ -19,7 +20,18 @@ export type OpsAppointmentActionState = {
   success: string | null;
 };
 
+export type OpsAppointmentCustomerCreateActionState = {
+  error: string | null;
+  success: string | null;
+  createdCustomer: {
+    id: number;
+    label: string;
+    email: string | null;
+  } | null;
+};
+
 const INITIAL_ERROR_MESSAGE = "İşlem tamamlanamadı.";
+const INITIAL_CREATE_CUSTOMER_ERROR_MESSAGE = "Müşteri oluşturulamadı.";
 
 function toNullableText(value: FormDataEntryValue | null, maxLength: number): string | null {
   if (typeof value !== "string") {
@@ -67,8 +79,67 @@ function toRequiredString(value: FormDataEntryValue | null, message: string): st
   return normalized;
 }
 
+function toRequiredText(
+  value: FormDataEntryValue | null,
+  message: string,
+  maxLength: number
+): string {
+  const normalized = toRequiredString(value, message);
+
+  if (normalized.length > maxLength) {
+    throw new Error("Girdiler beklenenden uzun. Lütfen kısaltın.");
+  }
+
+  return normalized;
+}
+
+function toOptionalString(value: FormDataEntryValue | null, maxLength: number): string | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const normalized = value.trim();
+
+  if (!normalized) {
+    return null;
+  }
+
+  if (normalized.length > maxLength) {
+    throw new Error("Girdiler beklenenden uzun. Lütfen kısaltın.");
+  }
+
+  return normalized;
+}
+
+function isPhoneValid(phone: string): boolean {
+  return /^[0-9+\s()\-]{7,32}$/.test(phone);
+}
+
+function toOptionalEmail(value: FormDataEntryValue | null): string | null {
+  const normalized = toOptionalString(value, 320);
+
+  if (!normalized) {
+    return null;
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) {
+    throw new Error("E-posta bilgisini kontrol edin.");
+  }
+
+  return normalized.toLocaleLowerCase("en-US");
+}
+
 function isAppointmentStatus(value: string): value is AppointmentStatus {
   return APPOINTMENT_STATUS_VALUES.includes(value as AppointmentStatus);
+}
+
+function isUniqueConflict(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: string }).code === "23505"
+  );
 }
 
 function revalidateAppointmentPaths() {
@@ -106,6 +177,61 @@ export async function createStaffAppointmentAction(
     return {
       error: error instanceof Error ? error.message : INITIAL_ERROR_MESSAGE,
       success: null,
+    };
+  }
+}
+
+export async function createStaffAppointmentCustomerAction(
+  _previousState: OpsAppointmentCustomerCreateActionState,
+  formData: FormData
+): Promise<OpsAppointmentCustomerCreateActionState> {
+  try {
+    await requireOpsSessionArea("staff");
+    const fullName = toRequiredText(formData.get("fullName"), "Ad soyad gerekli.", 160);
+    const phone = toRequiredText(formData.get("phone"), "Telefon gerekli.", 32);
+    const email = toOptionalEmail(formData.get("email"));
+
+    if (!isPhoneValid(phone)) {
+      return {
+        error: "Telefon bilgisini daha sade yazın.",
+        success: null,
+        createdCustomer: null,
+      };
+    }
+
+    const customer = await createCustomerRecord({
+      email,
+      passwordHash: null,
+      phone,
+      fullName,
+    });
+
+    revalidatePath("/ops/staff/musteriler");
+    revalidatePath(`/ops/staff/musteriler/${customer.userId}`);
+    revalidatePath("/ops/staff/randevular");
+
+    return {
+      error: null,
+      success: "Müşteri seçildi.",
+      createdCustomer: {
+        id: customer.userId,
+        label: customer.displayName ?? customer.fullName ?? customer.email ?? `Kullanıcı #${customer.userId}`,
+        email: customer.email,
+      },
+    };
+  } catch (error) {
+    if (isUniqueConflict(error)) {
+      return {
+        error: "Bu e-posta ile kayıtlı bir müşteri zaten var.",
+        success: null,
+        createdCustomer: null,
+      };
+    }
+
+    return {
+      error: error instanceof Error ? error.message : INITIAL_CREATE_CUSTOMER_ERROR_MESSAGE,
+      success: null,
+      createdCustomer: null,
     };
   }
 }

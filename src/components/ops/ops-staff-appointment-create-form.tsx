@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState, useTransition } from "react";
 import { CalendarDays, Clock3, LoaderCircle } from "lucide-react";
 import {
   createStaffAppointmentAction,
+  createStaffAppointmentCustomerAction,
   type OpsAppointmentActionState,
+  type OpsAppointmentCustomerCreateActionState,
   updateStaffAppointmentAction,
 } from "@/app/ops/randevular/actions";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,12 @@ const INITIAL_STATE: OpsAppointmentActionState = {
   success: null,
 };
 
+const INITIAL_CUSTOMER_CREATE_STATE: OpsAppointmentCustomerCreateActionState = {
+  error: null,
+  success: null,
+  createdCustomer: null,
+};
+
 const selectClassName =
   "border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50";
 
@@ -29,6 +36,11 @@ type StaffAppointmentCreateFormProps = {
     label: string;
     email: string | null;
   }>;
+  onCustomerCreated?: (customer: {
+    id: number;
+    label: string;
+    email: string | null;
+  }) => void;
   defaultDate: string;
   defaultTime: string;
   defaultCustomerUserId?: number;
@@ -42,6 +54,7 @@ type StaffAppointmentCreateFormProps = {
 
 export function OpsStaffAppointmentCreateForm({
   customerOptions,
+  onCustomerCreated,
   defaultDate,
   defaultTime,
   defaultCustomerUserId,
@@ -54,7 +67,18 @@ export function OpsStaffAppointmentCreateForm({
 }: StaffAppointmentCreateFormProps) {
   const action = mode === "edit" ? updateStaffAppointmentAction : createStaffAppointmentAction;
   const [state, formAction, pending] = useActionState(action, INITIAL_STATE);
-  const isDisabled = pending;
+  const [inlineCustomerOpen, setInlineCustomerOpen] = useState(customerOptions.length === 0);
+  const [inlineCustomerState, setInlineCustomerState] = useState(INITIAL_CUSTOMER_CREATE_STATE);
+  const [inlineCustomerForm, setInlineCustomerForm] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+  });
+  const [selectedCustomerUserId, setSelectedCustomerUserId] = useState(
+    (defaultCustomerUserId ?? customerOptions[0]?.id)?.toString() ?? ""
+  );
+  const [createCustomerPending, startCreateCustomerTransition] = useTransition();
+  const isDisabled = pending || createCustomerPending;
 
   useEffect(() => {
     if (state.success) {
@@ -62,18 +86,33 @@ export function OpsStaffAppointmentCreateForm({
     }
   }, [onSuccess, state.success]);
 
-  if (!customerOptions.length) {
-    return (
-      <div className="space-y-3">
-        <div className="rounded-2xl border border-border bg-background/80 p-4 text-sm">
-          <p className="font-medium text-foreground">Seçilebilir müşteri yok.</p>
-        </div>
+  async function handleInlineCustomerCreate() {
+    const formData = new FormData();
+    formData.set("fullName", inlineCustomerForm.fullName);
+    formData.set("phone", inlineCustomerForm.phone);
+    formData.set("email", inlineCustomerForm.email);
 
-        <Button asChild size="cta" className="w-full sm:w-auto">
-          <Link href="/ops/staff/musteriler#yeni-musteri">Müşteri oluştur</Link>
-        </Button>
-      </div>
-    );
+    startCreateCustomerTransition(async () => {
+      const result = await createStaffAppointmentCustomerAction(
+        INITIAL_CUSTOMER_CREATE_STATE,
+        formData
+      );
+
+      setInlineCustomerState(result);
+
+      if (!result.createdCustomer) {
+        return;
+      }
+
+      onCustomerCreated?.(result.createdCustomer);
+      setSelectedCustomerUserId(result.createdCustomer.id.toString());
+      setInlineCustomerForm({
+        fullName: "",
+        phone: "",
+        email: "",
+      });
+      setInlineCustomerOpen(false);
+    });
   }
 
   return (
@@ -153,21 +192,141 @@ export function OpsStaffAppointmentCreateForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="customerUserId">Müşteri</Label>
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="customerUserId">Müşteri</Label>
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              className="rounded-full px-2 text-muted-foreground"
+              disabled={isDisabled}
+              onClick={() => {
+                setInlineCustomerOpen((current) => !current);
+                setInlineCustomerState(INITIAL_CUSTOMER_CREATE_STATE);
+              }}
+            >
+              {inlineCustomerOpen ? "Kapat" : "Yeni müşteri"}
+            </Button>
+          </div>
           <select
             id="customerUserId"
             name="customerUserId"
-            defaultValue={(defaultCustomerUserId ?? customerOptions[0]?.id)?.toString() ?? ""}
+            value={selectedCustomerUserId}
             className={cn(selectClassName, "h-10 rounded-xl")}
             disabled={isDisabled}
+            onChange={(event) => setSelectedCustomerUserId(event.target.value)}
             required
           >
-            {customerOptions.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.email ? `${option.label} · ${option.email}` : option.label}
-              </option>
-            ))}
+            {customerOptions.length ? (
+              customerOptions.map((option) => (
+                <option key={option.id} value={option.id}>
+                  {option.email ? `${option.label} · ${option.email}` : option.label}
+                </option>
+              ))
+            ) : (
+              <option value="">Önce müşteri oluşturun</option>
+            )}
           </select>
+          {inlineCustomerState.success && !inlineCustomerOpen ? (
+            <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+              {inlineCustomerState.success}
+            </p>
+          ) : null}
+
+          {inlineCustomerOpen ? (
+            <div
+              className="rounded-2xl border border-border bg-surface-1/45 p-3.5"
+              onKeyDown={(event) => {
+                if (event.key !== "Enter" || isDisabled) {
+                  return;
+                }
+
+                event.preventDefault();
+                void handleInlineCustomerCreate();
+              }}
+            >
+              <p className="text-sm font-medium text-foreground">Hızlı müşteri</p>
+
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <div className="space-y-1.5 sm:col-span-2">
+                  <Label htmlFor="inlineCustomerFullName">Ad soyad</Label>
+                  <Input
+                    id="inlineCustomerFullName"
+                    value={inlineCustomerForm.fullName}
+                    onChange={(event) =>
+                      setInlineCustomerForm((current) => ({
+                        ...current,
+                        fullName: event.target.value,
+                      }))
+                    }
+                    className="h-10 rounded-xl"
+                    disabled={isDisabled}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="inlineCustomerPhone">Telefon</Label>
+                  <Input
+                    id="inlineCustomerPhone"
+                    type="tel"
+                    inputMode="tel"
+                    placeholder="05xx xxx xx xx"
+                    value={inlineCustomerForm.phone}
+                    onChange={(event) =>
+                      setInlineCustomerForm((current) => ({
+                        ...current,
+                        phone: event.target.value,
+                      }))
+                    }
+                    className="h-10 rounded-xl"
+                    disabled={isDisabled}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="inlineCustomerEmail">E-posta</Label>
+                  <Input
+                    id="inlineCustomerEmail"
+                    type="email"
+                    inputMode="email"
+                    placeholder="ornek@mail.com"
+                    value={inlineCustomerForm.email}
+                    onChange={(event) =>
+                      setInlineCustomerForm((current) => ({
+                        ...current,
+                        email: event.target.value,
+                      }))
+                    }
+                    className="h-10 rounded-xl"
+                    disabled={isDisabled}
+                  />
+                </div>
+              </div>
+
+              {inlineCustomerState.error ? (
+                <p className="mt-3 rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                  {inlineCustomerState.error}
+                </p>
+              ) : null}
+
+              <Button
+                type="button"
+                size="cta"
+                className="mt-3 w-full sm:w-auto"
+                disabled={isDisabled}
+                onClick={handleInlineCustomerCreate}
+              >
+                {createCustomerPending ? (
+                  <>
+                    <LoaderCircle className="size-4 animate-spin" aria-hidden />
+                    Oluşturuluyor
+                  </>
+                ) : (
+                  "Müşteri oluştur"
+                )}
+              </Button>
+            </div>
+          ) : null}
         </div>
 
         <div className="space-y-2">

@@ -86,6 +86,15 @@ type OpsStaffAppointmentsWorkspaceProps = {
   customerOptions: AppointmentCustomerOption[];
 };
 
+function sortCustomerOptions(options: AppointmentCustomerOption[]): AppointmentCustomerOption[] {
+  return [...options].sort((left, right) => {
+    const leftValue = left.email ? `${left.label} ${left.email}` : left.label;
+    const rightValue = right.email ? `${right.label} ${right.email}` : right.label;
+
+    return leftValue.localeCompare(rightValue, "tr");
+  });
+}
+
 function toMinutes(timeValue: string): number {
   const [hours, minutes] = timeValue.split(":").map(Number);
   return hours * 60 + minutes;
@@ -223,12 +232,14 @@ function AppointmentFormSheet({
   dayAppointments,
   onOpenChange,
   createMode,
+  onCustomerCreated,
 }: {
   formState: FormState | null;
   customerOptions: AppointmentCustomerOption[];
   dayAppointments: StaffAppointmentView[];
   onOpenChange: (open: boolean) => void;
   createMode: boolean;
+  onCustomerCreated: (customer: AppointmentCustomerOption) => void;
 }) {
   const open = formState !== null;
 
@@ -286,6 +297,7 @@ function AppointmentFormSheet({
               appointmentId={appointmentId}
               mode={formState.mode}
               customerOptions={customerOptions}
+              onCustomerCreated={onCustomerCreated}
               defaultDate={defaultDate}
               defaultTime={defaultTime}
               defaultCustomerUserId={defaultCustomerUserId}
@@ -452,6 +464,9 @@ export function OpsStaffAppointmentsWorkspace({
   appointments,
   customerOptions,
 }: OpsStaffAppointmentsWorkspaceProps) {
+  const [availableCustomerOptions, setAvailableCustomerOptions] = useState(() =>
+    sortCustomerOptions(customerOptions)
+  );
   const [selectedDay, setSelectedDay] = useState<string | null>(initialSelectedDay);
   const [viewMode, setViewMode] = useState<ViewMode>("root");
   const [activeAppointmentId, setActiveAppointmentId] = useState<number | null>(null);
@@ -772,10 +787,16 @@ export function OpsStaffAppointmentsWorkspace({
 
       <AppointmentFormSheet
         formState={viewMode === "create" || viewMode === "edit" ? formState : null}
-        customerOptions={customerOptions}
+        customerOptions={availableCustomerOptions}
         dayAppointments={formState?.mode === "create" && selectedDay ? selectedDayAppointments : []}
         onOpenChange={handleFormOpenChange}
         createMode={viewMode === "create"}
+        onCustomerCreated={(customer) => {
+          setAvailableCustomerOptions((current) => {
+            const withoutDuplicate = current.filter((option) => option.id !== customer.id);
+            return sortCustomerOptions([...withoutDuplicate, customer]);
+          });
+        }}
       />
     </div>
   );
