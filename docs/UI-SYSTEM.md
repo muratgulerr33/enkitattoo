@@ -82,7 +82,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Staff randevu FAB görünürlük kuralı sabittir: root month view görünür, day agenda görünür, detail gizli, create/edit gizli.
 - Staff randevu FAB, grid veya sheet listesinin üstüne veri örtecek şekilde bırakılmaz; mobile’da içerik alt padding’i ve safe area birlikte düşünülür.
 - Staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
-- Staff randevu create formunda birincil iş randevu açmaktır; müşteri seçimi aynı form içinde kalır ve `Yeni müşteri` secondary aksiyonu küçük inline `Hızlı müşteri` alanını açar.
+- Staff randevu create formunda birincil iş randevu açmaktır; müşteri alanı `Mevcut müşteri` ve `Yeni müşteri` seçimleriyle net ayrılır. `Yeni müşteri` seçimi aynı form içinde küçük inline `Hızlı müşteri` alanını açar.
 - Staff randevu içi inline müşteri oluşturma alanı mobile-first kompakt kalır; `Ad soyad`, `Telefon`, opsiyonel `E-posta` alanlarıyla çalışır, başarıda yeni müşteri otomatik seçilir, tarih/saat/not bağlamı korunur.
 - Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez. Hızlı create kartı ana akışta `Ad soyad` + `Telefon` alanlarını önde tutar, `Not` disclosure olarak secondary açılır. Staff disclosure row pattern’i mobile-safe kalır ve x-overflow üretmez.
 - Müşteri detayı: ilk taramada müşteri kimliği, kısa iletişim bilgisi, onay durumu, yaklaşan randevu ve staff notu okunmalıdır. Temel bilgi büyük iç kartlara bölünmez; profil hazır bilgisi pasif büyük kutu gibi davranmaz; onaylar kartı, staff notu ve randevu blokları daha sakin, kompakt bilgi hiyerarşisiyle okunur; onaylar sürüm ve tarih satırıyla özetlenir.

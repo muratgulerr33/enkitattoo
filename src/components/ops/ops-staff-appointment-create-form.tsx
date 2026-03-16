@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState, useTransition } from "react";
-import { CalendarDays, Clock3, LoaderCircle } from "lucide-react";
+import { CalendarDays, ChevronDown, Clock3, LoaderCircle, UserPlus, Users } from "lucide-react";
 import {
   createStaffAppointmentAction,
   createStaffAppointmentCustomerAction,
@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { formatAppointmentDateLong } from "@/lib/ops/appointment-calendar";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,8 @@ type StaffAppointmentCreateFormProps = {
   dateMode?: "context" | "editable";
 };
 
+type CustomerMode = "existing" | "new";
+
 export function OpsStaffAppointmentCreateForm({
   customerOptions,
   onCustomerCreated,
@@ -67,7 +70,9 @@ export function OpsStaffAppointmentCreateForm({
 }: StaffAppointmentCreateFormProps) {
   const action = mode === "edit" ? updateStaffAppointmentAction : createStaffAppointmentAction;
   const [state, formAction, pending] = useActionState(action, INITIAL_STATE);
-  const [inlineCustomerOpen, setInlineCustomerOpen] = useState(customerOptions.length === 0);
+  const [customerMode, setCustomerMode] = useState<CustomerMode>(
+    customerOptions.length ? "existing" : "new"
+  );
   const [inlineCustomerState, setInlineCustomerState] = useState(INITIAL_CUSTOMER_CREATE_STATE);
   const [inlineCustomerForm, setInlineCustomerForm] = useState({
     fullName: "",
@@ -79,12 +84,26 @@ export function OpsStaffAppointmentCreateForm({
   );
   const [createCustomerPending, startCreateCustomerTransition] = useTransition();
   const isDisabled = pending || createCustomerPending;
+  const selectedCustomer =
+    customerOptions.find((option) => option.id.toString() === selectedCustomerUserId) ?? null;
+  const isExistingMode = customerMode === "existing";
 
   useEffect(() => {
     if (state.success) {
       onSuccess?.();
     }
   }, [onSuccess, state.success]);
+
+  useEffect(() => {
+    if (!customerOptions.length) {
+      setCustomerMode("new");
+      return;
+    }
+
+    if (!selectedCustomerUserId) {
+      setSelectedCustomerUserId(customerOptions[0]?.id?.toString() ?? "");
+    }
+  }, [customerOptions, selectedCustomerUserId]);
 
   async function handleInlineCustomerCreate() {
     const formData = new FormData();
@@ -111,7 +130,7 @@ export function OpsStaffAppointmentCreateForm({
         phone: "",
         email: "",
       });
-      setInlineCustomerOpen(false);
+      setCustomerMode("existing");
     });
   }
 
@@ -191,49 +210,91 @@ export function OpsStaffAppointmentCreateForm({
           ) : null}
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="customerUserId">Müşteri</Label>
-            <Button
-              type="button"
-              variant="ghost"
-              size="xs"
-              className="rounded-full px-2 text-muted-foreground"
-              disabled={isDisabled}
-              onClick={() => {
-                setInlineCustomerOpen((current) => !current);
-                setInlineCustomerState(INITIAL_CUSTOMER_CREATE_STATE);
-              }}
-            >
-              {inlineCustomerOpen ? "Kapat" : "Yeni müşteri"}
-            </Button>
-          </div>
-          <select
-            id="customerUserId"
-            name="customerUserId"
-            value={selectedCustomerUserId}
-            className={cn(selectClassName, "h-10 rounded-xl")}
-            disabled={isDisabled}
-            onChange={(event) => setSelectedCustomerUserId(event.target.value)}
-            required
-          >
-            {customerOptions.length ? (
-              customerOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.email ? `${option.label} · ${option.email}` : option.label}
-                </option>
-              ))
-            ) : (
-              <option value="">Önce müşteri oluşturun</option>
-            )}
-          </select>
-          {inlineCustomerState.success && !inlineCustomerOpen ? (
-            <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
-              {inlineCustomerState.success}
-            </p>
-          ) : null}
+        <div className="space-y-3">
+          <Label>Müşteri</Label>
 
-          {inlineCustomerOpen ? (
+          <Tabs
+            value={customerMode}
+            onValueChange={(value) => {
+              setCustomerMode(value as CustomerMode);
+              setInlineCustomerState((current) =>
+                current.success ? current : { ...current, error: null }
+              );
+            }}
+            className="gap-3"
+          >
+            <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-surface-1/60 p-1">
+              <TabsTrigger
+                value="existing"
+                disabled={!customerOptions.length || isDisabled}
+                className="min-h-10 rounded-xl px-3"
+              >
+                <Users className="size-4" aria-hidden />
+                Mevcut müşteri
+              </TabsTrigger>
+              <TabsTrigger
+                value="new"
+                disabled={isDisabled}
+                className="min-h-10 rounded-xl px-3"
+              >
+                <UserPlus className="size-4" aria-hidden />
+                Yeni müşteri
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          {isExistingMode ? (
+            <div className="rounded-2xl border border-border bg-surface-1/45 p-3.5">
+              <div className="rounded-xl border border-border/80 bg-background/85 px-3.5 py-3">
+                <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  Seçili müşteri
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  {selectedCustomer?.label ?? "Müşteri seçin"}
+                </p>
+                <p className="mt-0.5 break-words text-sm text-muted-foreground">
+                  {selectedCustomer
+                    ? (selectedCustomer.email ?? "E-posta yok.")
+                    : "Kayıtlı müşteri listesinden seçim yapın."}
+                </p>
+              </div>
+
+              <div className="relative mt-3 rounded-xl border border-border bg-background">
+                <select
+                  id="customerUserId"
+                  name="customerUserId"
+                  value={selectedCustomerUserId}
+                  className={cn(
+                    selectClassName,
+                    "h-11 rounded-xl border-0 bg-transparent pr-10 shadow-none focus-visible:ring-0"
+                  )}
+                  disabled={isDisabled}
+                  onChange={(event) => setSelectedCustomerUserId(event.target.value)}
+                  required
+                >
+                  {customerOptions.length ? (
+                    customerOptions.map((option) => (
+                      <option key={option.id} value={option.id}>
+                        {option.email ? `${option.label} · ${option.email}` : option.label}
+                      </option>
+                    ))
+                  ) : (
+                    <option value="">Önce müşteri oluşturun</option>
+                  )}
+                </select>
+                <ChevronDown
+                  className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden
+                />
+              </div>
+
+              {inlineCustomerState.success ? (
+                <p className="mt-3 rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+                  {inlineCustomerState.success}
+                </p>
+              ) : null}
+            </div>
+          ) : (
             <div
               className="rounded-2xl border border-border bg-surface-1/45 p-3.5"
               onKeyDown={(event) => {
@@ -245,7 +306,10 @@ export function OpsStaffAppointmentCreateForm({
                 void handleInlineCustomerCreate();
               }}
             >
-              <p className="text-sm font-medium text-foreground">Hızlı müşteri</p>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-foreground">Hızlı müşteri</p>
+                <p className="text-xs text-muted-foreground">Randevu akışından çıkmadan ekleyin.</p>
+              </div>
 
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 <div className="space-y-1.5 sm:col-span-2">
@@ -259,7 +323,7 @@ export function OpsStaffAppointmentCreateForm({
                         fullName: event.target.value,
                       }))
                     }
-                    className="h-10 rounded-xl"
+                    className="h-10 rounded-xl bg-background"
                     disabled={isDisabled}
                   />
                 </div>
@@ -278,7 +342,7 @@ export function OpsStaffAppointmentCreateForm({
                         phone: event.target.value,
                       }))
                     }
-                    className="h-10 rounded-xl"
+                    className="h-10 rounded-xl bg-background"
                     disabled={isDisabled}
                   />
                 </div>
@@ -297,7 +361,7 @@ export function OpsStaffAppointmentCreateForm({
                         email: event.target.value,
                       }))
                     }
-                    className="h-10 rounded-xl"
+                    className="h-10 rounded-xl bg-background"
                     disabled={isDisabled}
                   />
                 </div>
@@ -326,7 +390,7 @@ export function OpsStaffAppointmentCreateForm({
                 )}
               </Button>
             </div>
-          ) : null}
+          )}
         </div>
 
         <div className="space-y-2">
