@@ -45,6 +45,14 @@ export type AppointmentCustomerOption = {
   email: string | null;
 };
 
+export type AppointmentSummary = {
+  totalCount: number;
+  scheduledCount: number;
+  completedCount: number;
+  cancelledCount: number;
+  noShowCount: number;
+};
+
 export type CreateAppointmentInput = {
   customerUserId: number;
   appointmentDate: string;
@@ -493,6 +501,63 @@ export async function listAppointmentsForMonth(monthValue: string): Promise<Appo
 
 export async function listAppointmentsForDay(dayValue: string): Promise<AppointmentRecord[]> {
   return loadAppointmentRecords(eq(appointments.appointmentDate, assertDateValue(dayValue)));
+}
+
+export async function listAppointmentsForDateRange(
+  startDateValue: string,
+  endDateValue: string
+): Promise<AppointmentRecord[]> {
+  const startDate = assertDateValue(startDateValue);
+  const endDate = assertDateValue(endDateValue);
+
+  if (startDate > endDate) {
+    throw new Error("Tarih aralığı geçerli değil.");
+  }
+
+  return loadAppointmentRecords(
+    and(
+      gte(appointments.appointmentDate, startDate),
+      lte(appointments.appointmentDate, endDate)
+    )
+  );
+}
+
+export async function listAllAppointments(): Promise<AppointmentRecord[]> {
+  return loadAppointmentRecords();
+}
+
+export function summarizeAppointments(records: AppointmentRecord[]): AppointmentSummary {
+  let scheduledCount = 0;
+  let completedCount = 0;
+  let cancelledCount = 0;
+  let noShowCount = 0;
+
+  for (const record of records) {
+    if (record.status === "scheduled") {
+      scheduledCount += 1;
+      continue;
+    }
+
+    if (record.status === "completed") {
+      completedCount += 1;
+      continue;
+    }
+
+    if (record.status === "cancelled") {
+      cancelledCount += 1;
+      continue;
+    }
+
+    noShowCount += 1;
+  }
+
+  return {
+    totalCount: records.length,
+    scheduledCount,
+    completedCount,
+    cancelledCount,
+    noShowCount,
+  };
 }
 
 export async function listUserAppointments(customerUserId: number): Promise<{

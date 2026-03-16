@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -7,11 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
-import {
-  CASH_ENTRY_PAYMENT_METHOD_LABELS,
-  CASH_ENTRY_PAYMENT_METHOD_VALUES,
-  CASH_ENTRY_TYPE_LABELS,
-} from "@/lib/ops/cashbook-copy";
+import { CASH_ENTRY_TYPE_LABELS } from "@/lib/ops/cashbook-copy";
 import {
   canManageCashHistory,
   formatCashAmount,
@@ -49,19 +46,6 @@ function getAmountClassName(entryType: CashEntryRecord["entryType"]): string {
   return "text-amber-700";
 }
 
-function getPaymentMethodBadgeClassName(paymentMethod: CashEntryRecord["paymentMethod"]): string {
-  switch (paymentMethod) {
-    case "cash":
-      return "border-emerald-500/20 bg-emerald-500/10 text-emerald-700";
-    case "card":
-      return "border-sky-500/20 bg-sky-500/10 text-sky-700";
-    case "bank_transfer":
-      return "border-amber-500/20 bg-amber-500/10 text-amber-700";
-    case "other":
-      return "border-border bg-muted/45 text-muted-foreground";
-  }
-}
-
 function getNetClassName(netCents: number): string {
   if (netCents > 0) {
     return "text-emerald-700";
@@ -76,28 +60,6 @@ function getNetClassName(netCents: number): string {
 
 function getEntryTitle(entry: CashEntryRecord): string {
   return entry.note?.trim() || `${CASH_ENTRY_TYPE_LABELS[entry.entryType]} kaydı`;
-}
-
-function PaymentMethodSummary({
-  summary,
-}: {
-  summary: CashEntrySummary;
-}) {
-  return (
-    <div className="space-y-2 border-t border-border pt-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        Ödeme tipi
-      </p>
-      <div className="grid gap-1.5 text-xs text-muted-foreground">
-        {CASH_ENTRY_PAYMENT_METHOD_VALUES.map((value) => (
-          <div key={value} className="flex items-center justify-between gap-3">
-            <span>{CASH_ENTRY_PAYMENT_METHOD_LABELS[value]}</span>
-            <span className="font-numbers">{formatCashAmount(summary.paymentMethodTotals[value])}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
 }
 
 function SummaryRows({
@@ -155,7 +117,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
           <CardHeader className="gap-1 border-b pb-4">
             <p className="text-xs text-muted-foreground">{selectedDateLabel}</p>
             <CardTitle className="text-base sm:text-lg">Hızlı kayıt</CardTitle>
-            <CardDescription>Yön, ödeme tipi ve tutarı seçin.</CardDescription>
+            <CardDescription>İşlem, kategori ve tutarı girin.</CardDescription>
           </CardHeader>
 
           <CardContent className="pt-4">
@@ -176,19 +138,24 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                     {isSelectedDateToday ? "Bugünün kasası açık." : "Seçili gün defteri açık."}
                   </CardDescription>
                 </div>
-                {canManageHistoryEntries ? (
-                  <form action="/ops/staff/kasa" className="grid shrink-0 gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
-                    <input
-                      type="date"
-                      name="date"
-                      defaultValue={cashbook.selectedDate}
-                      className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 rounded-lg border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
-                    />
-                    <Button type="submit" variant="outline" size="sm" className="rounded-lg">
-                      Defteri göster
-                    </Button>
-                  </form>
-                ) : null}
+                <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+                  <Button asChild variant="outline" size="sm" className="rounded-lg">
+                    <Link href="/ops/staff/raporlar">Raporlar</Link>
+                  </Button>
+                  {canManageHistoryEntries ? (
+                    <form action="/ops/staff/kasa" className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+                      <input
+                        type="date"
+                        name="date"
+                        defaultValue={cashbook.selectedDate}
+                        className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 rounded-lg border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+                      />
+                      <Button type="submit" variant="outline" size="sm" className="rounded-lg">
+                        Defteri göster
+                      </Button>
+                    </form>
+                  ) : null}
+                </div>
               </div>
             </CardHeader>
 
@@ -202,11 +169,8 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                     dateLabel={selectedDateLabel}
                     summary={cashbook.selectedSummary}
                   />
-                  <PaymentMethodSummary summary={cashbook.selectedSummary} />
                 </div>
-              ) : (
-                <PaymentMethodSummary summary={cashbook.todaySummary} />
-              )}
+              ) : null}
 
               {!canManageHistoryEntries ? (
                 <p className="border-t border-border pt-3 text-xs text-muted-foreground">
@@ -216,17 +180,6 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader className="gap-1 pb-3">
-              <CardTitle className="text-sm">Raporlar</CardTitle>
-              <CardDescription>Ödeme tipi kırılımları için giriş noktası burada açılacak.</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="rounded-2xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground">
-                Gelir, gider ve ödeme tipi kırılımlı raporlar bu alandan açılacak.
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
 
@@ -253,14 +206,6 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                         <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium uppercase tracking-wide">
                           <span className={cn(getEntryTypeBadgeClassName(entry.entryType))}>
                             {entryTypeLabel}
-                          </span>
-                          <span
-                            className={cn(
-                              "inline-flex items-center rounded-full border px-2 py-0.5 normal-case tracking-normal",
-                              getPaymentMethodBadgeClassName(entry.paymentMethod)
-                            )}
-                          >
-                            {CASH_ENTRY_PAYMENT_METHOD_LABELS[entry.paymentMethod]}
                           </span>
                           {entry.entryDate !== todayDate ? (
                             <span className="text-[11px] text-muted-foreground">Geçmiş kayıt</span>
@@ -292,7 +237,6 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                               entryId={entry.id}
                               entryDate={entry.entryDate}
                               entryType={entry.entryType}
-                              paymentMethod={entry.paymentMethod}
                               amountInput={formatCashAmountInput(entry.amountCents)}
                               note={entry.note}
                               createdByName={entry.createdByName}

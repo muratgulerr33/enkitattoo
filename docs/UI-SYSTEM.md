@@ -68,7 +68,8 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 
 ### Ekran bazlı öncelik kuralları
 
-- Kasa: hızlı kayıt birincil yüzeydir; kompakt `Gelir / Gider` kontrolü, net ödeme tipi seçimi, kısa kategori etiketleri, tutar ve `Kaydı ekle` akışı öne çıkar. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
+- Kasa: hızlı kayıt birincil yüzeydir; kompakt `Gelir / Gider` kontrolü, kısa kategori etiketleri, tutar ve `Kaydı ekle` akışı öne çıkar. Current runtime kullanıcı yüzeyinde cash-only çalışır; ödeme tipi görünmez. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır. `Raporlar` erişimi küçük secondary link olarak kasa yüzeyinden açılır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
+- Raporlar: mobile-first sakin bloklar halinde taranır; ağır dashboard veya grafik hissi yoktur. Admin günlük, haftalık ve seçili tarih aralığı için kasa + randevu özetleri ile randevu listesini görür; artist yalnız bugün, bu hafta ve tüm randevuların read-only listesini görür.
 - Randevular: ilk görünür ana yüzey aylık takvimdir; mobile ve tablet month root, shell safe padding dışında kalan genişliği mümkün olduğunca kullanır ve dar ortalı kart gibi durmaz.
 - Staff month overview sessiz kalır; hücre içinde yalnız gün numarası, kategorik occupancy decoration ve seçili state görünür.
 - Staff month root içinde exact count rakamı gösterilmez; doluluk bilgisi küçük ikinci numeral yerine decoration tabanlı marker ile verilir.
@@ -127,7 +128,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 Bu bölüm çözüldü listesi değildir; repo içindeki mevcut durumun kısa kaydıdır.
 
 - `OpsShell` üst alanı sakin tutulur; buna rağmen bazı dense workspace yüzeylerinde kart yoğunluğu veya secondary copy yeni polish turlarında daha da azaltılabilir (`src/components/ops/ops-shell.tsx`, `src/app/ops/staff/*.tsx`, `src/app/ops/user/*.tsx`).
-- Kasa ekranı artık hızlı kayıt merkezlidir; mobilde form fold üstünde daha nettir, desktop’ta summary rail daha sakin destek yüzeyi gibi davranır. Yine de içerik yoğunluğu, spacing ve micro-copy tarafında polish alanı kalır (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`).
+- Kasa ekranı artık hızlı kayıt merkezlidir; mobilde form fold üstünde daha nettir, desktop’ta summary rail daha sakin destek yüzeyi gibi davranır. `Raporlar` girişinin ve yeni rapor sayfasının ilk versiyonu açılmış olsa da içerik yoğunluğu, spacing ve micro-copy tarafında yeni polish alanı kalır (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`, `src/app/ops/staff/raporlar/page.tsx`).
 - Bazı user workspace yüzeylerinde kart yoğunluğu hâlâ yüksektir; ürün dili temizlenmiş olsa da bilgi hiyerarşisi sonraki polish turlarında sadeleştirilebilir (`src/app/ops/user/randevular/page.tsx`).
 - Aktif bir hydration mismatch hatası current runtime kodundan doğrulanamaz; archive notları vardır ama canlı bir bug kanıtı olmadan kesin hüküm yazılmaz.
 - Repo içinde görülen `middleware` -> `proxy` build uyarısı ayrı bakım konusudur; mevcut UI polish bunu çözülmüş varsaymaz.

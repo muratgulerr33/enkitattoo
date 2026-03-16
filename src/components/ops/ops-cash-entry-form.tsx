@@ -7,12 +7,9 @@ import {
   type OpsCashEntryActionState,
 } from "@/app/ops/kasa/actions";
 import {
-  CASH_ENTRY_PAYMENT_METHOD_LABELS,
-  CASH_ENTRY_PAYMENT_METHOD_VALUES,
   CASH_ENTRY_PRESETS,
   CASH_ENTRY_TYPE_VALUES,
   type CashEntryPreset,
-  type CashEntryPaymentMethodValue,
   type CashEntryTypeValue,
 } from "@/lib/ops/cashbook-copy";
 import { Button } from "@/components/ui/button";
@@ -47,7 +44,6 @@ type OpsCashEntryFormProps = {
 export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFormProps) {
   const [state, formAction, pending] = useActionState(createCashEntryAction, INITIAL_STATE);
   const [entryType, setEntryType] = useState<CashEntryTypeValue>("income");
-  const [paymentMethod, setPaymentMethod] = useState<CashEntryPaymentMethodValue>("cash");
   const [selectedPresetKey, setSelectedPresetKey] = useState<string | null>(null);
   const [amountValue, setAmountValue] = useState("");
   const [noteValue, setNoteValue] = useState("");
@@ -107,7 +103,6 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
   return (
     <form action={formAction} className="space-y-3.5">
       <input type="hidden" name="entryType" value={entryType} />
-      <input type="hidden" name="paymentMethod" value={paymentMethod} />
 
       {canChooseDate ? null : <input type="hidden" name="entryDate" value={entryDateValue} />}
 
@@ -135,38 +130,6 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
                 )}
               >
                 {value === "income" ? "Gelir" : "Gider"}
-              </Button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Ödeme tipi
-        </p>
-
-        <div className="grid grid-cols-2 gap-2">
-          {CASH_ENTRY_PAYMENT_METHOD_VALUES.map((value) => {
-            const isActive = value === paymentMethod;
-
-            return (
-              <Button
-                key={value}
-                type="button"
-                variant="outline"
-                size="sm"
-                aria-pressed={isActive}
-                disabled={pending}
-                onClick={() => setPaymentMethod(value)}
-                className={cn(
-                  "h-10 rounded-xl px-3 text-sm",
-                  isActive
-                    ? "border-foreground bg-foreground text-background hover:bg-foreground"
-                    : "border-border bg-background text-muted-foreground hover:text-foreground"
-                )}
-              >
-                {CASH_ENTRY_PAYMENT_METHOD_LABELS[value]}
               </Button>
             );
           })}

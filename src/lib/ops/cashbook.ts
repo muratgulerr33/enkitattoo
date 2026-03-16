@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, gte, isNull, lte } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { getDb } from "@/db";
 import {
@@ -349,6 +349,68 @@ async function listActiveCashEntriesForDate(entryDate: string): Promise<CashEntr
     .leftJoin(deletedByProfiles, eq(deletedByProfiles.userId, deletedByUsers.id))
     .where(and(eq(cashEntries.entryDate, entryDate), isNull(cashEntries.deletedAt)))
     .orderBy(desc(cashEntries.createdAt), desc(cashEntries.id));
+
+  return rows.map(toCashEntryRecord);
+}
+
+export async function listActiveCashEntriesForDateRange(
+  startDateValue: string,
+  endDateValue: string
+): Promise<CashEntryRecord[]> {
+  const startDate = assertCashDateValue(startDateValue);
+  const endDate = assertCashDateValue(endDateValue);
+
+  if (startDate > endDate) {
+    throw new Error("Tarih aralığı geçerli değil.");
+  }
+
+  const db = getDb();
+  const createdByUsers = alias(users, "cash_created_by_range_users");
+  const createdByProfiles = alias(userProfiles, "cash_created_by_range_profiles");
+  const updatedByUsers = alias(users, "cash_updated_by_range_users");
+  const updatedByProfiles = alias(userProfiles, "cash_updated_by_range_profiles");
+  const deletedByUsers = alias(users, "cash_deleted_by_range_users");
+  const deletedByProfiles = alias(userProfiles, "cash_deleted_by_range_profiles");
+
+  const rows = await db
+    .select({
+      id: cashEntries.id,
+      entryDate: cashEntries.entryDate,
+      entryType: cashEntries.entryType,
+      paymentMethod: cashEntries.paymentMethod,
+      amountCents: cashEntries.amountCents,
+      note: cashEntries.note,
+      createdByUserId: cashEntries.createdByUserId,
+      createdByEmail: createdByUsers.email,
+      createdByFullName: createdByProfiles.fullName,
+      createdByDisplayName: createdByProfiles.displayName,
+      updatedByUserId: cashEntries.updatedByUserId,
+      updatedByEmail: updatedByUsers.email,
+      updatedByFullName: updatedByProfiles.fullName,
+      updatedByDisplayName: updatedByProfiles.displayName,
+      deletedAt: cashEntries.deletedAt,
+      deletedByUserId: cashEntries.deletedByUserId,
+      deletedByEmail: deletedByUsers.email,
+      deletedByFullName: deletedByProfiles.fullName,
+      deletedByDisplayName: deletedByProfiles.displayName,
+      createdAt: cashEntries.createdAt,
+      updatedAt: cashEntries.updatedAt,
+    })
+    .from(cashEntries)
+    .innerJoin(createdByUsers, eq(createdByUsers.id, cashEntries.createdByUserId))
+    .leftJoin(createdByProfiles, eq(createdByProfiles.userId, createdByUsers.id))
+    .leftJoin(updatedByUsers, eq(updatedByUsers.id, cashEntries.updatedByUserId))
+    .leftJoin(updatedByProfiles, eq(updatedByProfiles.userId, updatedByUsers.id))
+    .leftJoin(deletedByUsers, eq(deletedByUsers.id, cashEntries.deletedByUserId))
+    .leftJoin(deletedByProfiles, eq(deletedByProfiles.userId, deletedByUsers.id))
+    .where(
+      and(
+        gte(cashEntries.entryDate, startDate),
+        lte(cashEntries.entryDate, endDate),
+        isNull(cashEntries.deletedAt)
+      )
+    )
+    .orderBy(desc(cashEntries.entryDate), desc(cashEntries.createdAt), desc(cashEntries.id));
 
   return rows.map(toCashEntryRecord);
 }

@@ -8,7 +8,6 @@ import {
   createCashEntry,
   getTodayCashDateValue,
   parseCashAmountToCents,
-  toCashEntryPaymentMethod,
   softDeleteCashEntry,
   toCashEntryType,
   updateCashEntry,
@@ -93,9 +92,7 @@ export async function createCashEntryAction(
       entryType: toCashEntryType(
         toRequiredString(formData.get("entryType"), "İşlem türü gerekli.")
       ),
-      paymentMethod: toCashEntryPaymentMethod(
-        toRequiredString(formData.get("paymentMethod"), "Ödeme tipi gerekli.")
-      ),
+      paymentMethod: "cash",
       amountCents: parseCashAmountToCents(
         toRequiredString(formData.get("amount"), "Tutar gerekli.")
       ),
@@ -137,9 +134,7 @@ export async function updateCashEntryAction(
       entryType: toCashEntryType(
         toRequiredString(formData.get("entryType"), "İşlem türü gerekli.")
       ),
-      paymentMethod: toCashEntryPaymentMethod(
-        toRequiredString(formData.get("paymentMethod"), "Ödeme tipi gerekli.")
-      ),
+      paymentMethod: "cash",
       amountCents: parseCashAmountToCents(
         toRequiredString(formData.get("amount"), "Tutar gerekli.")
       ),
