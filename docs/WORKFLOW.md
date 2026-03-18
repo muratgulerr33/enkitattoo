@@ -11,6 +11,9 @@ Bu dosya repo içindeki çalışma kitabıdır. Görev sırası, kalite kapılar
 - Doğrulanamayan şeyi `UNKNOWN` olarak işaretle.
 - Değişiklik yapmadan önce canonical kaynağı bul.
 - Aynı bilgiyi ikinci yerde üretmek yerine asıl evine referans ver.
+- Her iddiayı önce `current runtime` veya `planned roadmap` olarak sınıflandır.
+- Planned roadmap hedefini aktif route/action/runtime gibi yazma.
+- Root `AGENTS.md` kısa giriş guardrail’idir; yaşayan detayları aktif docs ve kod taşır.
 
 ## 2) Doküman Rolleri
 
@@ -32,11 +35,12 @@ Kural:
 
 1. `main` durumunu ve worktree farkını kontrol et.
 2. Hedef dosyaları ve ilgili canonical kaynağı oku.
-3. Kod, schema, route ve action yüzeylerinden kanıt topla.
-4. Etkilenecek docs ve generated dosyaları önceden eşleştir.
-5. Uygulamayı yap.
-6. İlgili kalite kapılarını çalıştır.
-7. Diff’i, docs rol ayrımını ve `UNKNOWN` sınırını son kez kontrol et.
+3. Hedef cümlenin `current runtime` mı `planned roadmap` mı olduğuna karar ver.
+4. Kod, schema, route ve action yüzeylerinden kanıt topla.
+5. Etkilenecek docs ve generated dosyaları önceden eşleştir.
+6. Uygulamayı yap.
+7. İlgili kalite kapılarını çalıştır.
+8. Diff’i, docs rol ayrımını ve `UNKNOWN` sınırını son kez kontrol et.
 
 ## 4) Temel Kalite Kapıları
 
@@ -80,13 +84,14 @@ Notlar:
 
 Adımlar:
 
-1. Çelişki varsa kodu esas al.
-2. Tekrarlanan bilgiyi kısalt; bilgi kaybı yaratma.
-3. Kullanıcıya dönük copy örneklerinde gerçek Türkçe karakter kullan.
-4. Repo içinden doğrulanmayan iddiayı yazma.
-5. Gerekiyorsa açıkça `UNKNOWN` bırak.
+1. Bilgiyi önce `current runtime` veya `planned roadmap` olarak sınıflandır.
+2. Çelişki varsa kodu esas al.
+3. Tekrarlanan bilgiyi kısalt; bilgi kaybı yaratma.
+4. Kullanıcıya dönük copy örneklerinde gerçek Türkçe karakter kullan.
+5. Repo içinden doğrulanmayan iddiayı yazma.
+6. Gerekiyorsa açıkça `UNKNOWN` bırak.
 
-Zorunlu komut yoktur; fakat en azından hedef diff ve hedef grep kontrolü yapılır.
+Zorunlu build yoktur; fakat en az `git diff --check`, hedef diff, hedef grep ve `git status -sb` kontrolü yapılır.
 
 ## 7) Kısa Task-type Reçeteleri
 
@@ -130,13 +135,14 @@ Zorunlu komut yoktur; fakat en azından hedef diff ve hedef grep kontrolü yapı
 | UI kontratı | `npm run check:no-palette`, `npm run build` | mobile/tablet/desktop, copy, taşma | `UI-SYSTEM` |
 | DB schema / migration | `npm run db:generate`, `npm run build` | migration SQL, env beklentisi | `SSOT`, bazen `OPS` |
 | Ops auth / guard | `npm run lint`, `npm run build` | `/ops` redirect, staff/user guard, bootstrap/login | `SSOT`, bazen `OPS` |
-| Docs-only | hedef diff ve grep | rol ayrımı, tekrar, `UNKNOWN` | ilgili aktif docs |
+| Docs-only | `git diff --check`, hedef diff, hedef grep, `git status -sb` | rol ayrımı, tekrar, `UNKNOWN`, runtime/roadmap ayrımı | ilgili aktif docs |
 
 ## 9) Hata Önleme
 
 - Generated dosyayı elle düzenleme.
 - Artifact veya local output’u canonical source sanma.
 - `next build` sonrası `tsconfig.json` içine eklenen `.next/dev/types/**/*.ts` include’ını canonical sanma; commit’e alma.
+- `NEXT_DIST_DIR` gibi makine-local preview izlerini repo standardı gibi yazma veya commit’e alma.
 - Public route ile internal route’u karıştırma.
 - Bir tablo veya route davranışını yalnız eski dokümana bakarak yazma.
 - Kullanıcıya dönük copy ile iç sistem notunu karıştırma.

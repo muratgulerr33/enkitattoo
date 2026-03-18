@@ -4,6 +4,8 @@ Bu dosya repo içinden doğrulanabilen çalışma runbook’unu tutar. Reverse p
 
 Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya komut, env, local DB, bootstrap ve smoke-check akışına odaklanır.
 
+Current runtime ile planned roadmap burada da ayrıdır: unified walk-in / service session workspace, cashbook automation ve document packet / signature akışları repo içine inmediği sürece smoke-check runtime’ı sayılmaz.
+
 ## 1) Repo-İçi Runtime Özeti
 
 - Local dev: `npm run dev` -> `3002`
@@ -13,6 +15,7 @@ Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya k
 - Route-content generator: `python3 scripts/generate-route-content.py`
 - DB migration generate: `npm run db:generate`
 - Ops bootstrap user: `npm run ops:bootstrap-user`
+- Bugünkü ops runtime lock: combined consent, appointment-first staff randevu V2, appointment-linked `service_intakes`, manuel kasa defteri
 
 ## 2) Env ve Girdi Yüzeyi
 
@@ -57,9 +60,11 @@ Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya k
 - Script tabanlı default port `3002`’dir.
 - İzole preview örneklerinde önce `3012`, gerekirse `3013` kullanılır.
 - `3004` kullanılmaz.
+- `next.config.ts` opsiyonel `NEXT_DIST_DIR` env override’ını destekler; bu değer local preview kolaylığıdır, canonical repo ayarı değildir.
 - `NEXT_DIST_DIR=.next-...` türü makineye özel preview ayarları commit’e alınmaz.
-- `next build` bazı makinelerde `tsconfig.json` içine `.next/dev/types/**/*.ts` include’ı ekleyebilir; bu machine-local noise’tur ve commit’e alınmaz.
+- `next build` bazı makinelerde `tsconfig.json` içine `.next/dev/types/**/*.ts` include’ı ekleyebilir; canonical include current runtime’da `.next/types/**/*.ts` satırıdır. `.next/dev/types/**/*.ts` machine-local noise’tur ve commit’e alınmaz.
 - `next-env.d.ts` yalnız gerçek source değişikliği varsa dokunulur; local type-path oynamaları canonical kabul edilmez.
+- `docs/output/` ve `artifacts/` build/audit çıktısı olabilir; runtime source-of-truth değildir.
 
 ## 5) Generator ve Migration İlişkisi
 

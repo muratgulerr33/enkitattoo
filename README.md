@@ -22,7 +22,7 @@ npm run check:all
 - Operasyon yüzeyi: locale ağacından ayrılan `/ops`
 - Veri katmanı: PostgreSQL + Drizzle (`src/db/*`, `drizzle.config.ts`)
 - Ops kimlik doğrulama: yerel e-posta/şifre + imzalı oturum çerezi
-- Aktif ops omurgası: kullanıcı/profil/rol, dövme formu, açık onay, randevu, kasa, müşteri notu, audit kayıtları
+- Aktif ops omurgası: kullanıcı/profil/rol, combined consent, appointment-first staff randevu akışı, appointment-linked `service_intakes` foundation, kasa, müşteri notu, audit kayıtları
 
 ## Yüzeyler
 
@@ -38,6 +38,8 @@ Canonical public route seti ve SEO sahipliği `docs/SSOT.md` içindedir. Public 
 - Oturum yoksa giriş noktası `/ops/giris` olur.
 
 Ops route, yetki, tablo ve audit sözleşmesi `docs/SSOT.md` içindedir. Local çalışma, bootstrap, smoke-check ve preview pratiği `docs/OPS.md` ile `docs/WORKFLOW.md` içindedir.
+
+Current runtime ile planned roadmap ayrı tutulur. Unified service session / walk-in workspace, cashbook automation, document packet + print + 2-signature ve rollout polish sonraki PR hedefleridir; repo içinde doğrulanmış current runtime gibi okunmaz.
 
 ## Dokümanlar
 

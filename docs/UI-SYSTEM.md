@@ -7,6 +7,9 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Public web shell’i `src/components/app/*` etrafında yaşar.
 - `/ops` shell’i ayrı bir yüzeydir; public `AppShell` sözleşmesine dahil değildir.
 - Component veya sayfa değişikliği yapılırken önce bu dosya, sonra ilgili canonical component okunur.
+- Bu dosya yalnız current runtime visible behavior’ı yazar; implement edilmemiş roadmap ekranları ayrı ve açıkça `planned roadmap` diye işaretlenir.
+- Current runtime ops lock PR-A foundation ile sınırlıdır: appointment-first staff randevu V2, user lane `Onaylar / Randevular / Profil`, customer detail `İşlem özeti` ve manuel kasa yüzeyi.
+- Unified service session / walk-in workspace, cashbook automation ve document packet / print / signature akışları current UI kontratı değildir.
 
 ## 2) Public UI Ownership Matrix
 
@@ -70,6 +73,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 
 - Kasa: hızlı kayıt birincil yüzeydir; kompakt `Gelir / Gider` kontrolü, kısa kategori etiketleri, tutar ve `Kaydı ekle` akışı öne çıkar. Current runtime kullanıcı yüzeyinde cash-only çalışır; ödeme tipi görünmez. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır. `Raporlar` erişimi küçük secondary link olarak kasa yüzeyinden açılır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
 - Raporlar: mobile-first sakin bloklar halinde taranır; ağır dashboard veya grafik hissi yoktur. Admin günlük, haftalık ve seçili tarih aralığı için kasa + randevu özetleri ile randevu listesini görür; artist yalnız bugün, bu hafta ve tüm randevuların read-only listesini görür.
+- Cashbook automation roadmaptır; current runtime kasa ekranı manuel kayıt, özet ve defter yönetimi kontratını korur.
 - Randevular: ilk görünür ana yüzey aylık takvimdir; mobile ve tablet month root, shell safe padding dışında kalan genişliği mümkün olduğunca kullanır ve dar ortalı kart gibi durmaz.
 - Staff month overview sessiz kalır; hücre içinde yalnız gün numarası, kategorik occupancy decoration ve seçili state görünür.
 - Staff month root içinde exact count rakamı gösterilmez; doluluk bilgisi küçük ikinci numeral yerine decoration tabanlı marker ile verilir.
@@ -83,6 +87,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Staff randevu FAB görünürlük kuralı sabittir: root month view görünür, day agenda görünür, detail gizli, create/edit gizli.
 - Staff randevu FAB, grid veya sheet listesinin üstüne veri örtecek şekilde bırakılmaz; mobile’da içerik alt padding’i ve safe area birlikte düşünülür.
 - Staff appointments V2 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
+- Current runtime IA appointment-first kalır; unified walk-in / service session workspace görünür route veya tab olarak henüz yazılmaz.
 - Staff randevu create formunda birincil iş randevu açmaktır; müşteri alanı `Mevcut müşteri` ve `Yeni müşteri` seçimleriyle net ayrılır. `Yeni müşteri` seçimi aynı form içinde küçük inline `Hızlı müşteri` alanını açar.
 - Staff randevu içi inline müşteri oluşturma alanı mobile-first kompakt kalır; `Ad soyad`, `Telefon`, opsiyonel `E-posta` alanlarıyla çalışır, başarıda yeni müşteri otomatik seçilir, tarih/saat/işlem tipi/tutar/not bağlamı korunur.
 - Inline `Yeni müşteri` akışı aynı sheet içinde kalır; redirect etmez, kullanıcıya `NEXT_REDIRECT` veya ham teknik hata stringi göstermez. Başarısızlıkta kısa ve insan-okunur alan/işlem hatası görünür.
