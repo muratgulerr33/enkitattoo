@@ -23,7 +23,7 @@ function formatAcceptanceDate(value: Date | null): string | null {
   }).format(value);
 }
 
-function buildTattooStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: string | null): {
+function buildConsentStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: string | null): {
   badgeLabel: string;
   summary: string;
   detail: string | null;
@@ -31,7 +31,7 @@ function buildTattooStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: stri
   if (hasCurrentConsent) {
     return {
       badgeLabel: "Tamamlandı",
-      summary: "Dövme onayın tamamlandı.",
+      summary: "Sözleşme onayın tamamlandı.",
       detail: acceptedAtLabel
         ? `${acceptedAtLabel} tarihinde kaydedildi.`
         : "İstersen metni yeniden inceleyebilirsin.",
@@ -40,29 +40,7 @@ function buildTattooStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: stri
 
   return {
     badgeLabel: "Bekliyor",
-    summary: "Belgeyi açıp onay verebilirsiniz.",
-    detail: null,
-  };
-}
-
-function buildPiercingStatusCopy(hasCurrentConsent: boolean, acceptedAtLabel: string | null): {
-  badgeLabel: string;
-  summary: string;
-  detail: string | null;
-} {
-  if (hasCurrentConsent) {
-    return {
-      badgeLabel: "Tamamlandı",
-      summary: "Piercing onayın tamamlandı.",
-      detail: acceptedAtLabel
-        ? `${acceptedAtLabel} tarihinde kaydedildi.`
-        : "İstersen metni yeniden inceleyebilirsin.",
-    };
-  }
-
-  return {
-    badgeLabel: "Bekliyor",
-    summary: "Belgeyi açıp onay verebilirsiniz.",
+    summary: "Sözleşmeyi açıp onay verebilirsiniz.",
     detail: null,
   };
 }
@@ -73,17 +51,9 @@ export default async function OpsUserApprovalsPage() {
     getUserWorkspaceOverview(sessionUser.id),
     listApprovalLegalDocuments(),
   ]);
-  const tattooAcceptedAt = formatAcceptanceDate(overview.latestTattooConsent?.acceptedAt ?? null);
-  const piercingAcceptedAt = formatAcceptanceDate(overview.latestPiercingConsent?.acceptedAt ?? null);
-  const tattooDocument = approvalDocuments.find((document) => document.approvalKind === "tattoo");
-  const piercingDocument = approvalDocuments.find(
-    (document) => document.approvalKind === "piercing",
-  );
-  const tattooStatus = buildTattooStatusCopy(overview.hasCurrentTattooConsent, tattooAcceptedAt);
-  const piercingStatus = buildPiercingStatusCopy(
-    overview.hasCurrentPiercingConsent,
-    piercingAcceptedAt,
-  );
+  const approvalDocument = approvalDocuments[0] ?? null;
+  const acceptedAt = formatAcceptanceDate(overview.latestConsent?.acceptedAt ?? null);
+  const approvalStatus = buildConsentStatusCopy(overview.hasCurrentConsent, acceptedAt);
 
   return (
     <div className="ops-page-shell">
@@ -91,74 +61,39 @@ export default async function OpsUserApprovalsPage() {
         <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
           <div className="space-y-1">
             <CardTitle>Onaylar</CardTitle>
-            <CardDescription>Belgelerinizi buradan açıp onay verebilirsiniz.</CardDescription>
+            <CardDescription>Sözleşmenizi buradan açıp onay verebilirsiniz.</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="grid gap-3 px-4 pb-4 sm:px-5 sm:pb-5 lg:grid-cols-2">
+        <CardContent className="px-4 pb-4 sm:px-5 sm:pb-5">
           <Card className="border-border bg-surface-1/55">
             <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="space-y-1">
                   <CardTitle className="text-base">
-                    {tattooDocument?.label ?? "Dövme Sözleşmesi"}
+                    {approvalDocument?.label ?? "Dövme ve Piercing Sözleşmesi"}
                   </CardTitle>
                   <CardDescription>
-                    {tattooDocument?.summary ?? "Dövme belgesi bilgisi bu alanda görünür."}
+                    {approvalDocument?.summary ?? "Sözleşme bilgisi bu alanda görünür."}
                   </CardDescription>
                 </div>
                 <Badge
-                  variant={overview.hasCurrentTattooConsent ? "default" : "outline"}
+                  variant={overview.hasCurrentConsent ? "default" : "outline"}
                   className="rounded-full"
                 >
-                  {tattooStatus.badgeLabel}
+                  {approvalStatus.badgeLabel}
                 </Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-2.5 px-4 pb-4">
               <div className="space-y-1 text-sm">
-                <p className="font-medium text-foreground">{tattooStatus.summary}</p>
-                {tattooStatus.detail ? (
-                  <p className="text-muted-foreground">{tattooStatus.detail}</p>
+                <p className="font-medium text-foreground">{approvalStatus.summary}</p>
+                {approvalStatus.detail ? (
+                  <p className="text-muted-foreground">{approvalStatus.detail}</p>
                 ) : null}
               </div>
-              {tattooDocument ? (
+              {approvalDocument ? (
                 <Button asChild variant="outline" className="w-full rounded-xl sm:w-auto">
-                  <Link href={`/ops/user/onaylar/${tattooDocument.id}`}>Belgeyi aç</Link>
-                </Button>
-              ) : null}
-            </CardContent>
-          </Card>
-
-          <Card className="border-border bg-surface-1/55">
-            <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="space-y-1">
-                  <CardTitle className="text-base">
-                    {piercingDocument?.label ?? "Piercing Sözleşmesi"}
-                  </CardTitle>
-                  <CardDescription>
-                    {piercingDocument?.summary ??
-                      "Piercing belgesi bilgisi bu alanda görünür."}
-                  </CardDescription>
-                </div>
-                <Badge
-                  variant={overview.hasCurrentPiercingConsent ? "default" : "outline"}
-                  className="rounded-full"
-                >
-                  {piercingStatus.badgeLabel}
-                </Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-2.5 px-4 pb-4">
-              <div className="space-y-1 text-sm">
-                <p className="font-medium text-foreground">{piercingStatus.summary}</p>
-                {piercingStatus.detail ? (
-                  <p className="text-muted-foreground">{piercingStatus.detail}</p>
-                ) : null}
-              </div>
-              {piercingDocument ? (
-                <Button asChild variant="outline" className="w-full rounded-xl sm:w-auto">
-                  <Link href={`/ops/user/onaylar/${piercingDocument.id}`}>Belgeyi aç</Link>
+                  <Link href={`/ops/user/onaylar/${approvalDocument.id}`}>Sözleşmeyi aç</Link>
                 </Button>
               ) : null}
             </CardContent>

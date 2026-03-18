@@ -7,10 +7,8 @@ import {
 } from "@/db/schema";
 import { writeAuditLog } from "./audit";
 
-export const OPS_TATTOO_CONSENT_DOCUMENT_TYPE = "tattoo_form_consent";
-export const OPS_TATTOO_CONSENT_VERSION = "2026-03-v1";
-export const OPS_PIERCING_CONSENT_DOCUMENT_TYPE = "piercing_form_consent";
-export const OPS_PIERCING_CONSENT_VERSION = "2026-03-v1";
+export const OPS_TATTOO_PIERCING_CONSENT_DOCUMENT_TYPE = "tattoo_piercing_consent";
+export const OPS_TATTOO_PIERCING_CONSENT_VERSION = "2026-03-combined-v1";
 
 export type UserWorkspaceProfile = {
   email: string | null;
@@ -31,12 +29,8 @@ export type ConsentAcceptanceRecord = {
 
 export type UserWorkspaceOverview = {
   profile: UserWorkspaceProfile;
-  latestTattooConsent: ConsentAcceptanceRecord | null;
-  latestPiercingConsent: ConsentAcceptanceRecord | null;
   latestConsent: ConsentAcceptanceRecord | null;
   isProfileComplete: boolean;
-  hasCurrentTattooConsent: boolean;
-  hasCurrentPiercingConsent: boolean;
   hasCurrentConsent: boolean;
 };
 
@@ -68,14 +62,9 @@ type ConsentDefinition = {
   documentVersion: string;
 };
 
-const TATTOO_CONSENT_DEFINITION: ConsentDefinition = {
-  documentType: OPS_TATTOO_CONSENT_DOCUMENT_TYPE,
-  documentVersion: OPS_TATTOO_CONSENT_VERSION,
-};
-
-const PIERCING_CONSENT_DEFINITION: ConsentDefinition = {
-  documentType: OPS_PIERCING_CONSENT_DOCUMENT_TYPE,
-  documentVersion: OPS_PIERCING_CONSENT_VERSION,
+const CURRENT_CONSENT_DEFINITION: ConsentDefinition = {
+  documentType: OPS_TATTOO_PIERCING_CONSENT_DOCUMENT_TYPE,
+  documentVersion: OPS_TATTOO_PIERCING_CONSENT_VERSION,
 };
 
 function getChangedFields(
@@ -123,25 +112,19 @@ export function getUserWorkspaceNextStep(
 }
 
 export async function getUserWorkspaceOverview(userId: number): Promise<UserWorkspaceOverview> {
-  const [profile, latestTattooConsent, latestPiercingConsent] = await Promise.all([
+  const [profile, latestConsent] = await Promise.all([
     getUserWorkspaceProfile(userId),
-    getCurrentConsentAcceptance(userId),
-    getCurrentPiercingConsentAcceptance(userId),
+    getCurrentCombinedConsentAcceptance(userId),
   ]);
 
   const isProfileComplete = isUserProfileComplete(profile);
-  const hasCurrentTattooConsent = Boolean(latestTattooConsent?.accepted);
-  const hasCurrentPiercingConsent = Boolean(latestPiercingConsent?.accepted);
+  const hasCurrentConsent = Boolean(latestConsent?.accepted);
 
   return {
     profile,
-    latestTattooConsent,
-    latestPiercingConsent,
-    latestConsent: latestTattooConsent,
+    latestConsent,
     isProfileComplete,
-    hasCurrentTattooConsent,
-    hasCurrentPiercingConsent,
-    hasCurrentConsent: hasCurrentTattooConsent,
+    hasCurrentConsent,
   };
 }
 
@@ -278,16 +261,10 @@ async function getCurrentConsentAcceptanceByDefinition(
   return rows[0] ?? null;
 }
 
-export async function getCurrentConsentAcceptance(
+export async function getCurrentCombinedConsentAcceptance(
   userId: number
 ): Promise<ConsentAcceptanceRecord | null> {
-  return getCurrentConsentAcceptanceByDefinition(userId, TATTOO_CONSENT_DEFINITION);
-}
-
-export async function getCurrentPiercingConsentAcceptance(
-  userId: number
-): Promise<ConsentAcceptanceRecord | null> {
-  return getCurrentConsentAcceptanceByDefinition(userId, PIERCING_CONSENT_DEFINITION);
+  return getCurrentConsentAcceptanceByDefinition(userId, CURRENT_CONSENT_DEFINITION);
 }
 
 async function acceptConsent(
@@ -414,16 +391,9 @@ async function acceptConsent(
   });
 }
 
-export async function acceptCurrentConsent(
+export async function acceptCurrentCombinedConsent(
   userId: number,
   metadata: ConsentMetadata
 ): Promise<{ record: ConsentAcceptanceRecord; created: boolean }> {
-  return acceptConsent(userId, TATTOO_CONSENT_DEFINITION, metadata);
-}
-
-export async function acceptCurrentPiercingConsent(
-  userId: number,
-  metadata: ConsentMetadata
-): Promise<{ record: ConsentAcceptanceRecord; created: boolean }> {
-  return acceptConsent(userId, PIERCING_CONSENT_DEFINITION, metadata);
+  return acceptConsent(userId, CURRENT_CONSENT_DEFINITION, metadata);
 }

@@ -2,18 +2,26 @@ export type LegalDocumentId =
   | "kvkk-aydinlatma-metni"
   | "gizlilik-politikasi"
   | "cerez-politikasi"
-  | "dovme-sozlesmesi"
-  | "piercing-sozlesmesi";
-
-export type ApprovalDocumentKind = "tattoo" | "piercing";
+  | "dovme-ve-piercing-sozlesmesi";
 
 export type LegalDocumentDefinition = {
   id: LegalDocumentId;
   label: string;
   publicPath: string;
   sourcePath: string;
-  approvalKind?: ApprovalDocumentKind;
 };
+
+export const COMBINED_APPROVAL_LEGAL_DOCUMENT_ID = "dovme-ve-piercing-sozlesmesi" as const;
+
+export const LEGACY_APPROVAL_LEGAL_DOCUMENT_IDS = [
+  "dovme-sozlesmesi",
+  "piercing-sozlesmesi",
+] as const;
+
+export const LEGAL_DOCUMENT_SLUG_REDIRECTS = {
+  "dovme-sozlesmesi": COMBINED_APPROVAL_LEGAL_DOCUMENT_ID,
+  "piercing-sozlesmesi": COMBINED_APPROVAL_LEGAL_DOCUMENT_ID,
+} as const;
 
 export const LEGAL_DOCUMENTS: readonly LegalDocumentDefinition[] = [
   {
@@ -35,18 +43,10 @@ export const LEGAL_DOCUMENTS: readonly LegalDocumentDefinition[] = [
     sourcePath: "src/content/legal/cerez-politikasi.md",
   },
   {
-    id: "dovme-sozlesmesi",
-    label: "Dövme Sözleşmesi",
-    publicPath: "/dovme-sozlesmesi",
-    sourcePath: "src/content/ops/legal/dovme-sozlesmesi-yetiskin.md",
-    approvalKind: "tattoo",
-  },
-  {
-    id: "piercing-sozlesmesi",
-    label: "Piercing Sözleşmesi",
-    publicPath: "/piercing-sozlesmesi",
-    sourcePath: "src/content/ops/legal/piercing-sozlesmesi-yetiskin.md",
-    approvalKind: "piercing",
+    id: COMBINED_APPROVAL_LEGAL_DOCUMENT_ID,
+    label: "Dövme ve Piercing Sözleşmesi",
+    publicPath: "/dovme-ve-piercing-sozlesmesi",
+    sourcePath: "src/content/ops/legal/dovme-ve-piercing-sozlesmesi.md",
   },
 ] as const;
 
@@ -60,7 +60,4 @@ export const FOOTER_LEGAL_LINKS: ReadonlyArray<{ label: string; href: string }> 
     href: publicPath,
   }));
 
-export const APPROVAL_LEGAL_DOCUMENT_IDS: readonly LegalDocumentId[] = [
-  "dovme-sozlesmesi",
-  "piercing-sozlesmesi",
-] as const;
+export const APPROVAL_LEGAL_DOCUMENT_IDS = [COMBINED_APPROVAL_LEGAL_DOCUMENT_ID] as const;

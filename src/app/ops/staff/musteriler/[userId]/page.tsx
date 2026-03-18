@@ -14,8 +14,7 @@ import {
 } from "@/lib/ops/appointments";
 import { getCustomerDetail } from "@/lib/ops/customers";
 import {
-  OPS_PIERCING_CONSENT_VERSION,
-  OPS_TATTOO_CONSENT_VERSION,
+  OPS_TATTOO_PIERCING_CONSENT_VERSION,
 } from "@/lib/ops/user-workspace";
 import { cn } from "@/lib/utils";
 
@@ -84,11 +83,8 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
     notFound();
   }
 
-  const latestTattooConsentAcceptedAt = formatAcceptanceDate(
-    customer.workspace.latestTattooConsent?.acceptedAt ?? null
-  );
-  const latestPiercingConsentAcceptedAt = formatAcceptanceDate(
-    customer.workspace.latestPiercingConsent?.acceptedAt ?? null
+  const latestConsentAcceptedAt = formatAcceptanceDate(
+    customer.workspace.latestConsent?.acceptedAt ?? null
   );
   const customerLabel =
     customer.fullName ?? customer.displayName ?? customer.email ?? "İsimsiz müşteri";
@@ -162,39 +158,22 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
             <div className="rounded-2xl border border-border px-4 py-3">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-foreground">Dövme onayı</p>
+                  <p className="text-sm font-medium text-foreground">
+                    Dövme ve piercing sözleşmesi
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    Sürüm {OPS_TATTOO_CONSENT_VERSION}
+                    Sürüm {OPS_TATTOO_PIERCING_CONSENT_VERSION}
                   </p>
                 </div>
                 <Badge
-                  variant={customer.workspace.hasCurrentTattooConsent ? "default" : "outline"}
+                  variant={customer.workspace.hasCurrentConsent ? "default" : "outline"}
                   className="rounded-full"
                 >
-                  {customer.workspace.hasCurrentTattooConsent ? "Kayıtlı" : "Kayıt yok"}
+                  {customer.workspace.hasCurrentConsent ? "Kayıtlı" : "Kayıt yok"}
                 </Badge>
               </div>
               <p className="mt-2 text-sm text-muted-foreground">
-                {getConsentSummary(latestTattooConsentAcceptedAt)}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-border px-4 py-3">
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-foreground">Piercing onayı</p>
-                  <p className="text-xs text-muted-foreground">
-                    Sürüm {OPS_PIERCING_CONSENT_VERSION}
-                  </p>
-                </div>
-                <Badge
-                  variant={customer.workspace.hasCurrentPiercingConsent ? "default" : "outline"}
-                  className="rounded-full"
-                >
-                  {customer.workspace.hasCurrentPiercingConsent ? "Kayıtlı" : "Kayıt yok"}
-                </Badge>
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {getConsentSummary(latestPiercingConsentAcceptedAt)}
+                {getConsentSummary(latestConsentAcceptedAt)}
               </p>
             </div>
             <div className="flex items-center justify-between gap-3 rounded-2xl bg-muted/35 px-4 py-3">

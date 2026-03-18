@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +12,8 @@ import {
 import { OpsApprovalReader } from "@/components/ops/ops-approval-reader";
 import {
   APPROVAL_LEGAL_DOCUMENT_IDS,
-  type LegalDocumentId,
+  COMBINED_APPROVAL_LEGAL_DOCUMENT_ID,
+  LEGACY_APPROVAL_LEGAL_DOCUMENT_IDS,
 } from "@/lib/legal/legal-registry";
 import {
   getLegalDocumentById,
@@ -30,7 +31,15 @@ type PageProps = {
 };
 
 function isApprovalDocumentId(value: string): value is (typeof APPROVAL_LEGAL_DOCUMENT_IDS)[number] {
-  return APPROVAL_LEGAL_DOCUMENT_IDS.includes(value as LegalDocumentId);
+  return value === COMBINED_APPROVAL_LEGAL_DOCUMENT_ID;
+}
+
+function isLegacyApprovalDocumentId(
+  value: string
+): value is (typeof LEGACY_APPROVAL_LEGAL_DOCUMENT_IDS)[number] {
+  return LEGACY_APPROVAL_LEGAL_DOCUMENT_IDS.includes(
+    value as (typeof LEGACY_APPROVAL_LEGAL_DOCUMENT_IDS)[number],
+  );
 }
 
 function formatAcceptanceDate(value: Date | null): string | null {
@@ -47,6 +56,10 @@ function formatAcceptanceDate(value: Date | null): string | null {
 export default async function OpsUserApprovalDocumentPage({ params }: PageProps) {
   const { documentId } = await params;
 
+  if (isLegacyApprovalDocumentId(documentId)) {
+    permanentRedirect(`/ops/user/onaylar/${COMBINED_APPROVAL_LEGAL_DOCUMENT_ID}`);
+  }
+
   if (!isApprovalDocumentId(documentId)) {
     notFound();
   }
@@ -57,13 +70,8 @@ export default async function OpsUserApprovalDocumentPage({ params }: PageProps)
     getUserWorkspaceOverview(sessionUser.id),
   ]);
 
-  const isTattooDocument = document.approvalKind === "tattoo";
-  const approvalRecorded = isTattooDocument
-    ? overview.hasCurrentTattooConsent
-    : overview.hasCurrentPiercingConsent;
-  const latestApproval = isTattooDocument
-    ? overview.latestTattooConsent
-    : overview.latestPiercingConsent;
+  const approvalRecorded = overview.hasCurrentConsent;
+  const latestApproval = overview.latestConsent;
   const cleanedMarkdown = getOpsApprovalReaderMarkdown(document.markdown);
   const acceptedAtLabel = formatAcceptanceDate(latestApproval?.acceptedAt ?? null);
 
@@ -94,7 +102,7 @@ export default async function OpsUserApprovalDocumentPage({ params }: PageProps)
           <OpsApprovalReader
             documentId={documentId}
             markdown={cleanedMarkdown}
-            approvalEnabled={Boolean(document.approvalKind)}
+            approvalEnabled
             approvalRecorded={approvalRecorded}
             approvalRecordedAtLabel={acceptedAtLabel}
             documentAnchorId="approval-document-top"

@@ -26,7 +26,7 @@ type PageProps = {
 };
 
 function getConsentStatusLabel(status: CustomerConsentStatus): string {
-  return status === "accepted" ? "Dövme onayı kayıtlı" : "Dövme onayı yok";
+  return status === "accepted" ? "Sözleşme onayı kayıtlı" : "Sözleşme onayı yok";
 }
 
 function getConsentBadgeClassName(status: CustomerConsentStatus): string {

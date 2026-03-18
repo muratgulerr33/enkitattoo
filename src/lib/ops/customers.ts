@@ -24,7 +24,8 @@ import {
 } from "./appointments";
 import {
   getUserWorkspaceOverview,
-  OPS_TATTOO_CONSENT_VERSION,
+  OPS_TATTOO_PIERCING_CONSENT_DOCUMENT_TYPE,
+  OPS_TATTOO_PIERCING_CONSENT_VERSION,
   type UserWorkspaceOverview,
 } from "./user-workspace";
 
@@ -264,8 +265,8 @@ export async function listCustomers(searchQuery?: string | null): Promise<Custom
         select 1
         from ${consentAcceptances}
         where ${consentAcceptances.userId} = ${users.id}
-          and ${consentAcceptances.documentType} = 'tattoo_form_consent'
-          and ${consentAcceptances.documentVersion} = ${OPS_TATTOO_CONSENT_VERSION}
+          and ${consentAcceptances.documentType} = ${OPS_TATTOO_PIERCING_CONSENT_DOCUMENT_TYPE}
+          and ${consentAcceptances.documentVersion} = ${OPS_TATTOO_PIERCING_CONSENT_VERSION}
           and ${consentAcceptances.accepted} = true
       )`,
     })

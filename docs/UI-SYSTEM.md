@@ -27,7 +27,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Top-level nav kaynağı tek yerde kalır; ikinci nav kaynağı açılmaz.
 - Mobil drawer footer CTA alanı hesap açma ve giriş akışına hizmet eder; `Kullanıcı hesabı` utility bloğu tek kısa yardımcı satır taşır ve kaldırılmış form akışına referans vermez (`src/components/app/mobile-header.tsx`, `messages/*.json`).
 - Footer ve iletişim yüzeyi business bilgilerini component içine gömmez; `src/lib/site-info.ts` ve `src/lib/site/links.ts` kullanılır.
-- Footer bilgilendirme linkleri locale-aware kalır; bölüm başlığı `Bilgilendirme` olarak görünür ve mobilde daha sıkı grid ritmiyle taranır. Link seti `KVKK Aydınlatma Metni`, `Gizlilik Politikası`, `Çerez Politikası`, `Dövme Sözleşmesi`, `Piercing Sözleşmesi` olarak kalır ve `src/lib/legal/legal-registry.ts` içinden beslenir.
+- Footer bilgilendirme linkleri locale-aware kalır; bölüm başlığı `Bilgilendirme` olarak görünür ve mobilde daha sıkı grid ritmiyle taranır. Link seti `KVKK Aydınlatma Metni`, `Gizlilik Politikası`, `Çerez Politikası`, `Dövme ve Piercing Sözleşmesi` olarak `src/lib/legal/legal-registry.ts` içinden beslenir.
 - Çevrilebilir public copy `messages/*.json` veya ilgili content namespace içinden gelir.
 
 ## 4) `/ops` UI Contract
@@ -98,21 +98,21 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - User lane primary top-level hedefleri `Onaylar`, `Randevular`, `Profil` olarak sabittir.
 - `Onaylar` user lane içinde bağımsız alandır; başka bir user yüzeyinin alt adımı gibi kurgulanmamalıdır.
 - User lane kullanıcıyı lineer `profil -> onay -> randevu` kontratına zorlamamalıdır.
-- Onaylar kullanıcı hesabına bağlanır ve staff müşteri detayında görünür. Bu lock karar current runtime’da uygulanmıştır; ancak staff müşteri listesi onay badge’i hâlâ tattoo current consent odaklıdır.
+- Onaylar kullanıcı hesabına bağlanır ve staff müşteri detayında görünür. Bu lock karar current runtime’da uygulanmıştır; staff müşteri listesi badge’i de aynı combined current consent üstünden hesaplanır.
 
 #### Current runtime
 
 - User primary nav desktop ve mobile’da `Onaylar`, `Randevular`, `Profil` setiyle görünür; user lane içinde ayrı dövme detay route’u veya tab’ı bulunmaz (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
-- `/ops/user/onaylar` current runtime’da tattoo ve piercing belgelerini özet kartlarla gösterir; üst açıklama ve pending kart özeti sizli-resmi dille konuşur, `Metni oku` prefixsiz public legal route’a değil ops içi focused approval reader’a gider.
+- `/ops/user/onaylar` current runtime’da tek combined sözleşme kartı gösterir; üst açıklama ve pending kart özeti sizli-resmi dille konuşur, `Sözleşmeyi aç` aksiyonu prefixsiz public legal route’a değil ops içi focused approval reader’a gider.
 - `/ops/user/onaylar`, `/ops/user/randevular` ve `/ops/user/profil` current runtime’da mobile-first daha sıkı card padding, daha kısa yardımcı metin ve tek net aksiyon hiyerarşisiyle çalışır; aynı işi tekrar eden ikinci CTA açılmaz.
-- Ops approval reader aynı markdown kaynağını kullanır; tattoo ve piercing için scroll sonuna inmeden tek checkbox ve kayıt CTA’sı açılmaz. Reader gövdesi ops yüzeyinde sanitize edilir; `Sitede kullanılacak ...` ve `Kısa ekran özeti` gibi iç kullanım başlıkları kullanıcıya gösterilmez. Current runtime iç scroll yerine ana sayfa scroll’u ve belge sonu marker’ı ile gating uygular; pending state tek kısa durum bloğu taşır.
+- Ops approval reader aynı markdown kaynağını kullanır; combined sözleşme için scroll sonuna inmeden tek checkbox ve kayıt CTA’sı açılmaz. Reader gövdesi ops yüzeyinde sanitize edilir; `Sitede kullanılacak ...` ve `Kısa ekran özeti` gibi iç kullanım başlıkları kullanıcıya gösterilmez. Current runtime iç scroll yerine ana sayfa scroll’u ve belge sonu marker’ı ile gating uygular; pending state tek kısa durum bloğu taşır.
 - `/ops/user/profil` current runtime’da yalnız profil alanıdır; başlık + tek kısa açıklama + form ritmiyle çalışır, status badge veya helper kutu taşımaz.
 - `/ops/user/randevular` current runtime’da aktif yaklaşan randevu varsa bunu sayfanın ana yüzeyi yapar; liste açıklamaları sizli-resmi dille yazılır. Prerequisite veya yeni talep yüzeyi yalnız yaklaşan randevu yoksa görünür; create kartı badge taşımaz ve `Uygun gün ve saati seçerek randevu oluşturabilirsiniz.` açıklamasıyla açılır. Prerequisite mantığı yalnız profil eksiğine bakar; ayrı dövme detay prerequisite’i yoktur.
 - `/ops/user/form` current runtime’da user surface olarak yaşamaz; bu path’e giden CTA, helper veya readiness bağı kalmamıştır.
-- Tattoo ve piercing onayı kaydedildiğinde `/ops/user/onaylar` kartları kısa kullanıcı özeti gösterir; staff customer detail aynı onayları sürüm ve onay tarihiyle görünür tutar.
+- Combined sözleşme onayı kaydedildiğinde `/ops/user/onaylar` kartı kısa kullanıcı özeti gösterir; staff customer detail aynı onayı sürüm ve onay tarihiyle görünür tutar.
 - Ops mobile shell current runtime’da `min-h-viewport` + fixed bottom nav zinciriyle çalışır; alt nav viewport’a sabit kalır ve staff shell’de native tab bar hissini korur.
 - Staff müşteri listesi current runtime’da daha kompakt tarama ritmiyle çalışır; boş durumda `Müşteriler`, arama aktifken `Arama sonuçları` başlığı ve sonuç sayısı copy’si görünür. Kart içinde güçlü isim, kısa iletişim bilgisi, arama aktifken isim/telefon/e-posta eşleşmesini anlatan hafif ipucu, tek satırlık `Sıradaki randevu` özeti ve daha görünür `Detaya git` aksiyonu yer alır.
-- Staff müşteri listesi current runtime’da yalnız güncel tattoo onay badge’ini gösterir; badge copy’si bunu açıkça `Dövme onayı` olarak yazar. Customer detail ise tattoo ve piercing onaylarını ayrı bloklarda özetler.
+- Staff müşteri listesi current runtime’da yalnız güncel combined sözleşme onay badge’ini gösterir; badge copy’si bunu `Sözleşme onayı` olarak yazar. Customer detail aynı onayı tek blokta özetler.
 - Staff müşteri detail current runtime’da bilgi yoğunluğunu yükseltmeden çalışır; onaylar kartı, tek güncel staff notu ve yaklaşan/geçmiş randevu blokları sakinleşmiş copy ve kompakt spacing ile aynı ekranda kalır.
 - Staff kasa ve staff müşteri create disclosure row’ları current runtime’da mobile-safe’dir; `Not / Ekle / Kapat` satırları yatay taşma üretmez.
 - Staff randevular current runtime’da mobile month root’u shell hack’iyle değil, workspace kendi dikey budget’ını yöneterek screen-first calendar surface gibi gösterir; gerçek cihaz viewport’unda ilk açılışta page vertical scroll üretmez. Bu kontrat shell bottom nav anchoring fix’inden ayrıdır.
@@ -121,7 +121,6 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 #### Current inconsistency
 
 - Prefixsiz public legal page belge-odaklı özel yüzey değildir; mevcut durumda public site shell içinde yaşar ve belge odağını dağıtan site-level bağlamı taşır.
-- Prefixsiz public legal page ilk `#` başlık dışındaki markdown gövdesini aynen render eder. Ops approval reader bu markdown’ın user-facing sanitize edilmiş sürümünü gösterse de public legal route tam gövdeyi göstermeye devam eder. Repo içindeki kanıtlı iç kullanım başlık örnekleri `Sitede kullanılacak zorunlu onay metni` ve `Kısa ekran özeti`dir.
 
 ## 5) Kanıtlı Known Issues ve Polish Backlog
 

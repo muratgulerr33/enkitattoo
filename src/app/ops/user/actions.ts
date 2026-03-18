@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
+import { COMBINED_APPROVAL_LEGAL_DOCUMENT_ID } from "@/lib/legal/legal-registry";
 import {
-  acceptCurrentConsent,
-  acceptCurrentPiercingConsent,
+  acceptCurrentCombinedConsent,
   updateUserWorkspaceProfile,
 } from "@/lib/ops/user-workspace";
 
@@ -14,7 +14,7 @@ export type OpsFormActionState = {
   success: string | null;
 };
 
-type ApprovalDocumentId = "dovme-sozlesmesi" | "piercing-sozlesmesi";
+type ApprovalDocumentId = typeof COMBINED_APPROVAL_LEGAL_DOCUMENT_ID;
 
 function emptyToNull(value: FormDataEntryValue | null, maxLength: number): string | null {
   if (typeof value !== "string") {
@@ -110,7 +110,7 @@ export async function updateUserProfileAction(
   }
 }
 
-export async function saveTattooApprovalAction(
+export async function saveConsentApprovalAction(
   _previousState: OpsFormActionState,
   formData: FormData
 ): Promise<OpsFormActionState> {
@@ -119,7 +119,7 @@ export async function saveTattooApprovalAction(
     const documentId = formData.get("documentId");
     const accepted = formData.get("accepted");
 
-    if (documentId !== "dovme-sozlesmesi" && documentId !== "piercing-sozlesmesi") {
+    if (documentId !== COMBINED_APPROVAL_LEGAL_DOCUMENT_ID) {
       return {
         error: "Bu belge için hesap onayı açılamadı.",
         success: null,
@@ -135,23 +135,18 @@ export async function saveTattooApprovalAction(
 
     const metadata = await getApprovalRequestMetadata();
     const approvalDocumentId = documentId as ApprovalDocumentId;
-    const isTattooDocument = approvalDocumentId === "dovme-sozlesmesi";
-    const { created } = isTattooDocument
-      ? await acceptCurrentConsent(sessionUser.id, metadata)
-      : await acceptCurrentPiercingConsent(sessionUser.id, metadata);
-    const approvalLabel = isTattooDocument ? "Dövme onayın" : "Piercing onayın";
+    const { created } = await acceptCurrentCombinedConsent(sessionUser.id, metadata);
 
     revalidateUserWorkspacePaths();
-    revalidatePath("/ops/user/onaylar/dovme-sozlesmesi");
-    revalidatePath("/ops/user/onaylar/piercing-sozlesmesi");
+    revalidatePath(`/ops/user/onaylar/${approvalDocumentId}`);
     revalidatePath("/ops/staff/musteriler");
     revalidatePath(`/ops/staff/musteriler/${sessionUser.id}`);
 
     return {
       error: null,
       success: created
-        ? `${approvalLabel} hesabına kaydedildi.`
-        : `Bu sürüm için kayıtlı ${isTattooDocument ? "dövme" : "piercing"} onayın zaten var.`,
+        ? "Sözleşme onayın hesabına kaydedildi."
+        : "Bu sürüm için kayıtlı sözleşme onayın zaten var.",
     };
   } catch (error) {
     return {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CircleCheckBig, LoaderCircle } from "lucide-react";
 import {
-  saveTattooApprovalAction,
+  saveConsentApprovalAction,
   type OpsFormActionState,
 } from "@/app/ops/user/actions";
 import { LegalMarkdown } from "@/components/legal/legal-markdown";
@@ -36,7 +36,7 @@ export function OpsApprovalReader({
   documentAnchorId,
 }: OpsApprovalReaderProps) {
   const router = useRouter();
-  const [state, formAction, pending] = useActionState(saveTattooApprovalAction, INITIAL_STATE);
+  const [state, formAction, pending] = useActionState(saveConsentApprovalAction, INITIAL_STATE);
   const endMarkerRef = useRef<HTMLDivElement>(null);
   const [hasReachedEnd, setHasReachedEnd] = useState(approvalRecorded || !approvalEnabled);
   const [isChecked, setIsChecked] = useState(false);
@@ -135,7 +135,7 @@ export function OpsApprovalReader({
                 htmlFor={`approval-${documentId}`}
                 className={!hasReachedEnd || pending ? "cursor-not-allowed opacity-65" : "cursor-pointer"}
               >
-                Okudum, anladım ve onaylıyorum.
+                Okudum, anladım ve sözleşmeyi onaylıyorum.
               </Label>
             </div>
 

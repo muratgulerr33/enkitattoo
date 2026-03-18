@@ -1,6 +1,6 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import { locales, routing } from "@/i18n/routing";
-import { getLegalDocumentBySlug } from "@/lib/legal/legal-content";
+import { getCanonicalLegalDocumentSlug } from "@/lib/legal/legal-content";
 
 type PageProps = {
   params: Promise<{
@@ -20,11 +20,11 @@ function buildLocalizedLegalPath(locale: string, slug: string): string {
 
 export default async function LegacyLegalDocumentRedirectPage({ params }: PageProps) {
   const { locale, slug } = await params;
-  const document = await getLegalDocumentBySlug(slug);
+  const canonicalSlug = getCanonicalLegalDocumentSlug(slug);
 
-  if (!document) {
+  if (!canonicalSlug) {
     notFound();
   }
 
-  permanentRedirect(buildLocalizedLegalPath(locale, document.id));
+  permanentRedirect(buildLocalizedLegalPath(locale, canonicalSlug));
 }

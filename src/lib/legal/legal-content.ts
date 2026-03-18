@@ -5,6 +5,7 @@ import {
   APPROVAL_LEGAL_DOCUMENT_IDS,
   LEGAL_DOCUMENTS,
   LEGAL_DOCUMENTS_BY_ID,
+  LEGAL_DOCUMENT_SLUG_REDIRECTS,
   type LegalDocumentDefinition,
   type LegalDocumentId,
 } from "./legal-registry";
@@ -24,7 +25,7 @@ function normalizeHeadingText(value: string): string {
   return value.replace(/\s+/g, " ").trim().toLocaleLowerCase("tr-TR");
 }
 
-function shouldOmitOpsApprovalHeading(headingText: string): boolean {
+function shouldOmitInternalLegalHeading(headingText: string): boolean {
   const normalized = normalizeHeadingText(headingText);
 
   return (
@@ -141,8 +142,23 @@ export async function getLegalDocumentById(id: LegalDocumentId): Promise<LegalDo
   return readLegalDocument(id);
 }
 
+function getLegalDocumentDefinitionBySlug(slug: string): LegalDocumentDefinition | null {
+  return LEGAL_DOCUMENTS.find((document) => document.publicPath === `/${slug}`) ?? null;
+}
+
+export function getCanonicalLegalDocumentSlug(slug: string): string | null {
+  const redirectedSlug =
+    LEGAL_DOCUMENT_SLUG_REDIRECTS[slug as keyof typeof LEGAL_DOCUMENT_SLUG_REDIRECTS];
+
+  if (redirectedSlug) {
+    return redirectedSlug;
+  }
+
+  return getLegalDocumentDefinitionBySlug(slug)?.publicPath.slice(1) ?? null;
+}
+
 export async function getLegalDocumentBySlug(slug: string): Promise<LegalDocument | null> {
-  const definition = LEGAL_DOCUMENTS.find((document) => document.publicPath.endsWith(`/${slug}`));
+  const definition = getLegalDocumentDefinitionBySlug(slug);
 
   if (!definition) {
     return null;
@@ -162,6 +178,13 @@ export async function listApprovalLegalDocuments(): Promise<LegalDocument[]> {
 export function getOpsApprovalReaderMarkdown(markdown: string): string {
   return stripMarkdownSections(
     removeFirstHeading(markdown),
-    shouldOmitOpsApprovalHeading,
+    shouldOmitInternalLegalHeading,
+  );
+}
+
+export function getPublicLegalMarkdown(markdown: string): string {
+  return stripMarkdownSections(
+    removeFirstHeading(markdown),
+    shouldOmitInternalLegalHeading,
   );
 }
