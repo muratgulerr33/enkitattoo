@@ -82,11 +82,20 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Desktop staff randevu yüzeyi mobilin büyütülmüş hali gibi kalmaz; root takvim alanı daha geniş kullanılır, day/create katmanları sağ panel veya floating panel hissine yaklaşır, detail tek odaklı ayrı katman olarak okunur.
 - Staff randevu FAB görünürlük kuralı sabittir: root month view görünür, day agenda görünür, detail gizli, create/edit gizli.
 - Staff randevu FAB, grid veya sheet listesinin üstüne veri örtecek şekilde bırakılmaz; mobile’da içerik alt padding’i ve safe area birlikte düşünülür.
-- Staff v1 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
+- Staff appointments V2 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
 - Staff randevu create formunda birincil iş randevu açmaktır; müşteri alanı `Mevcut müşteri` ve `Yeni müşteri` seçimleriyle net ayrılır. `Yeni müşteri` seçimi aynı form içinde küçük inline `Hızlı müşteri` alanını açar.
-- Staff randevu içi inline müşteri oluşturma alanı mobile-first kompakt kalır; `Ad soyad`, `Telefon`, opsiyonel `E-posta` alanlarıyla çalışır, başarıda yeni müşteri otomatik seçilir, tarih/saat/not bağlamı korunur.
+- Staff randevu içi inline müşteri oluşturma alanı mobile-first kompakt kalır; `Ad soyad`, `Telefon`, opsiyonel `E-posta` alanlarıyla çalışır, başarıda yeni müşteri otomatik seçilir, tarih/saat/işlem tipi/tutar/not bağlamı korunur.
+- Inline `Yeni müşteri` akışı aynı sheet içinde kalır; redirect etmez, kullanıcıya `NEXT_REDIRECT` veya ham teknik hata stringi göstermez. Başarısızlıkta kısa ve insan-okunur alan/işlem hatası görünür.
+- Staff randevu detail sheet read-first davranır; müşteri + tarih/saat bloğunun hemen altında read-only `İşlem özeti` görünür. Bu özet minimum olarak `İşlem tipi`, `Toplam`, `Alınan`, `Kalan` alanlarını taşır.
+- Staff randevu edit sheet form-first kalır ama bağlı `İşlem özeti`ni formun üstünde read-only gösterir; kullanıcı düzenleyemediği veriyi görür, gizli kontrat oluşmaz.
+- Appointment detail ve edit sheet aynı varlık için aynı summary kontratını taşır; summary alan adları customer detail `İşlem özeti` kartıyla uyumlu kalır.
+- Staff randevu delete confirm browser `confirm()` ile değil, app-level dialog ile açılır; `Vazgeç` güvenli default, destructive aksiyon açık metinle görünür kalır.
+- Detail sheet içinden başarılı delete sonrası seçili appointment temizlenir ve workspace yeniden day drawer’a zıplamaz; kullanıcı yeni seçim yapana kadar yüzey stabil kalır.
+- Appointment detail içindeki destructive action feedback temiz ve kısa kalır; kullanıcıya teknik DB hata metni gösterilmez.
+- Staff randevu empty-state copy’leri kısa ve doğal Türkçe ile kalır; kırık, yarım veya placeholder metin bırakılmaz.
 - Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez. Hızlı create kartı ana akışta `Ad soyad` + `Telefon` alanlarını önde tutar, `Not` disclosure olarak secondary açılır. Staff disclosure row pattern’i mobile-safe kalır ve x-overflow üretmez.
 - Müşteri detayı: ilk taramada müşteri kimliği, kısa iletişim bilgisi, onay durumu, yaklaşan randevu ve staff notu okunmalıdır. Temel bilgi büyük iç kartlara bölünmez; profil hazır bilgisi pasif büyük kutu gibi davranmaz; onaylar kartı, staff notu ve randevu blokları daha sakin, kompakt bilgi hiyerarşisiyle okunur; onaylar sürüm ve tarih satırıyla özetlenir.
+- Staff müşteri detail `İşlem özeti` kartı müşteri bazlı latest service intake kaydını gösterir; bu kart randevu detail sheet’in devamı değil, müşteri zaman çizgisinin son özetidir.
 - Prefixsiz public legal sayfalar ve `/ops/user/onaylar` aynı markdown kaynak ailesini kullanır (`src/content/legal/*.md`, `src/content/ops/legal/*.md`); içerik ikinci kez hardcode edilmez.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 

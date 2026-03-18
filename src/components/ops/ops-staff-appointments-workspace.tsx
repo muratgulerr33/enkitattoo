@@ -35,6 +35,14 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   buildMonthCalendar,
   formatAppointmentDateLong,
   getCurrentTimeValue,
@@ -57,6 +65,13 @@ type AppointmentCustomerOption = {
   email: string | null;
 };
 
+type StaffAppointmentServiceSummary = {
+  id: number;
+  serviceType: "tattoo" | "piercing";
+  totalAmountCents: number;
+  collectedAmountCents: number;
+};
+
 type StaffAppointmentView = {
   id: number;
   customerUserId: number;
@@ -65,6 +80,7 @@ type StaffAppointmentView = {
   appointmentDate: string;
   appointmentTime: string;
   notes: string | null;
+  serviceSummary: StaffAppointmentServiceSummary | null;
 };
 
 type FormState =
@@ -142,6 +158,22 @@ function getAppointmentCountLabel(appointmentCount: number): string {
   }
 
   return `${appointmentCount} kayıt`;
+}
+
+function formatMoney(cents: number): string {
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+    maximumFractionDigits: 2,
+  }).format(cents / 100);
+}
+
+function getServiceTypeLabel(value: StaffAppointmentServiceSummary["serviceType"]): string {
+  return value === "piercing" ? "Piercing" : "Dövme";
+}
+
+function getRemainingAmountCents(serviceSummary: StaffAppointmentServiceSummary): number {
+  return Math.max(0, serviceSummary.totalAmountCents - serviceSummary.collectedAmountCents);
 }
 
 function getMonthCellOccupancyLabel(appointmentCount: number): string {
@@ -226,6 +258,66 @@ function AppointmentFab({
   );
 }
 
+function AppointmentServiceSummarySection({
+  serviceSummary,
+  emptyMessage,
+}: {
+  serviceSummary: StaffAppointmentServiceSummary | null;
+  emptyMessage: string;
+}) {
+  return (
+    <section className="rounded-[1.7rem] border border-border bg-card p-4">
+      <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+        İşlem özeti
+      </p>
+
+      {serviceSummary ? (
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-2xl border border-border px-4 py-3">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              İşlem tipi
+            </p>
+            <p className="mt-1 text-sm font-medium text-foreground">
+              {getServiceTypeLabel(serviceSummary.serviceType)}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border px-4 py-3">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Toplam
+            </p>
+            <p className="mt-1 text-sm font-medium text-foreground">
+              {formatMoney(serviceSummary.totalAmountCents)}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border px-4 py-3">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Alınan
+            </p>
+            <p className="mt-1 text-sm font-medium text-foreground">
+              {formatMoney(serviceSummary.collectedAmountCents)}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border px-4 py-3">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Kalan
+            </p>
+            <p className="mt-1 text-sm font-medium text-foreground">
+              {formatMoney(getRemainingAmountCents(serviceSummary))}
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-3 rounded-2xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
+          {emptyMessage}
+        </div>
+      )}
+    </section>
+  );
+}
+
 function AppointmentFormSheet({
   formState,
   customerOptions,
@@ -293,6 +385,15 @@ function AppointmentFormSheet({
           </SheetHeader>
 
           <div className="overflow-y-auto px-5 py-5 sm:px-6">
+            {formState.mode === "edit" ? (
+              <div className="mb-4">
+                <AppointmentServiceSummarySection
+                  serviceSummary={formState.appointment.serviceSummary}
+                  emptyMessage="Bağlı işlem kaydı yok."
+                />
+              </div>
+            ) : null}
+
             <OpsStaffAppointmentCreateForm
               appointmentId={appointmentId}
               mode={formState.mode}
@@ -330,12 +431,20 @@ function AppointmentDetailSheet({
     deleteStaffAppointmentAction,
     INITIAL_ACTION_STATE
   );
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     if (deleteState.success) {
+      setDeleteDialogOpen(false);
       onDeleted();
     }
   }, [deleteState.success, onDeleted]);
+
+  useEffect(() => {
+    if (!open) {
+      setDeleteDialogOpen(false);
+    }
+  }, [open]);
 
   if (!appointment) {
     return null;
@@ -392,6 +501,11 @@ function AppointmentDetailSheet({
               </div>
             </section>
 
+            <AppointmentServiceSummarySection
+              serviceSummary={appointment.serviceSummary}
+              emptyMessage="Bağlı işlem kaydı yok."
+            />
+
             <section className="rounded-[1.7rem] border border-border bg-card p-4">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
                 Not
@@ -420,22 +534,14 @@ function AppointmentDetailSheet({
                 Düzenle
               </Button>
 
-              <form
-                action={deleteAction}
-                className="w-full sm:flex-1"
-                onSubmit={(event) => {
-                  if (!window.confirm("Bu randevuyu silmek istiyor musunuz?")) {
-                    event.preventDefault();
-                  }
-                }}
-              >
-                <input type="hidden" name="appointmentId" value={appointment.id} />
+              <div className="w-full sm:flex-1">
                 <Button
-                  type="submit"
+                  type="button"
                   variant="destructive"
                   size="cta"
                   className="w-full"
                   disabled={deletePending}
+                  onClick={() => setDeleteDialogOpen(true)}
                 >
                   {deletePending ? (
                     <>
@@ -449,11 +555,64 @@ function AppointmentDetailSheet({
                     </>
                   )}
                 </Button>
-              </form>
+              </div>
             </div>
           </div>
         </div>
       </SheetContent>
+
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Randevuyu sil</DialogTitle>
+            <DialogDescription>
+              Bu randevu silinecek. Bağlı işlem kaydı yalnız bu randevu akışına aitse birlikte
+              kaldırılır.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="rounded-2xl border border-border bg-surface-1/45 px-4 py-3">
+            <p className="text-sm font-medium text-foreground">{appointment.customerName}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {formatAppointmentDateLong(appointment.appointmentDate)} · {appointment.appointmentTime}
+            </p>
+          </div>
+
+          {deleteState.error ? (
+            <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+              {deleteState.error}
+            </p>
+          ) : null}
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+              disabled={deletePending}
+            >
+              Vazgeç
+            </Button>
+
+            <form action={deleteAction}>
+              <input type="hidden" name="appointmentId" value={appointment.id} />
+              <Button type="submit" variant="destructive" disabled={deletePending}>
+                {deletePending ? (
+                  <>
+                    <LoaderCircle className="size-4 animate-spin" aria-hidden />
+                    Siliniyor
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="size-4" aria-hidden />
+                    Randevuyu sil
+                  </>
+                )}
+              </Button>
+            </form>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Sheet>
   );
 }
@@ -544,7 +703,9 @@ export function OpsStaffAppointmentsWorkspace({
 
   function handleDeleteComplete() {
     setActiveAppointmentId(null);
-    setViewMode("day");
+    setFormState(null);
+    setReturnToDayAfterForm(false);
+    setViewMode("root");
   }
 
   function startCreateForDay(day: string, fromDaySheet: boolean) {
@@ -761,7 +922,7 @@ export function OpsStaffAppointmentsWorkspace({
                 </div>
               ) : (
                 <div className="rounded-[1.45rem] border border-dashed border-border px-4 py-3 text-sm text-foreground">
-                  Bu gün boş.
+                  Bugün için randevu yok.
                 </div>
               )}
 
@@ -778,6 +939,7 @@ export function OpsStaffAppointmentsWorkspace({
       </Sheet>
 
       <AppointmentDetailSheet
+        key={activeAppointment?.id ?? "empty"}
         appointment={activeAppointment}
         open={viewMode === "detail" && activeAppointment !== null}
         onOpenChange={handleDetailOpenChange}

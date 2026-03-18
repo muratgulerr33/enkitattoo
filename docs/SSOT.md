@@ -125,6 +125,7 @@ Notlar:
 - `user_roles`
 - `consent_acceptances`
 - `appointments`
+- `service_intakes`
 - `cash_entries`
 - `customer_notes`
 - `audit_logs`
@@ -157,9 +158,15 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - `createStaffAppointmentAction` staff guard’ı ile korunur; bu akış hem `admin` hem `artist` için açıktır (`src/app/ops/randevular/actions.ts`, `src/lib/ops/auth/guards.ts`).
 - Staff create sırasında `source`, rol bazında `admin` veya `artist` olarak seçilir (`src/lib/ops/appointments.ts`).
 - Staff create current runtime’da müşteri seçimi aynı sheet içinde kalır; müşteri alanı `Mevcut müşteri` ve `Yeni müşteri` seçimleriyle ayrılır. `Yeni müşteri` seçimi küçük inline create alanı açar ve bu alan mevcut müşteri oluşturma omurgasını reuse eder (`src/components/ops/ops-staff-appointment-create-form.tsx`, `src/app/ops/randevular/actions.ts`, `src/lib/ops/customers.ts`).
-- Staff randevu içi inline müşteri create alanı `Ad soyad`, `Telefon`, opsiyonel `E-posta` ile çalışır; başarıda yeni müşteri otomatik seçilir ve randevu formundaki tarih/saat/not state’i korunur (`src/components/ops/ops-staff-appointment-create-form.tsx`, `src/components/ops/ops-staff-appointments-workspace.tsx`).
+- Staff randevu içi inline müşteri create alanı `Ad soyad`, `Telefon`, opsiyonel `E-posta` ile çalışır; başarıda yeni müşteri otomatik seçilir ve randevu formundaki tarih/saat/işlem tipi/tutar/not bağlamı korunur (`src/components/ops/ops-staff-appointment-create-form.tsx`, `src/components/ops/ops-staff-appointments-workspace.tsx`).
+- Staff randevu içi inline müşteri create kontratı typed state üstünden çalışır; bu akış redirect atmaz, kullanıcı yüzeyine `NEXT_REDIRECT` veya ham teknik hata stringi sızdırmaz. Oturum veya rol uygun değilse kullanıcıya insan-okunur hata döner ve sheet bağlamı korunur (`src/app/ops/randevular/actions.ts`, `src/lib/ops/auth/guards.ts`, `src/components/ops/ops-staff-appointment-create-form.tsx`).
 - Staff appointments V2 görünür akışı month-first root -> day sheet -> detail sheet -> create/edit sheet zinciridir; month cell içinde exact count yerine decoration tabanlı occupancy kullanılır. UI ritmi `docs/UI-SYSTEM.md` içinde yaşar (`src/app/ops/staff/randevular/page.tsx`, `src/components/ops/ops-staff-appointments-workspace.tsx`).
 - Staff appointments current runtime’da mobile month root’u shell hack’iyle değil, workspace kendi dikey budget’ını yöneterek screen-first calendar surface gibi kurar; gerçek cihaz viewport’unda ilk açılışta page vertical scroll üretmez. Bu davranış shell bottom nav anchoring kontratından ayrıdır (`src/components/ops/ops-staff-appointments-workspace.tsx`, `src/components/ops/ops-shell.tsx`).
+- Staff create action current runtime’da tek transaction zinciriyle appointment kaydı açar, ardından `flowType = appointment` `service_intake` kaydı üretir ve bunu yeni appointment’a bağlar. Success copy bu yüzden `Randevu ve işlem kaydı açıldı.` olarak kalır (`src/app/ops/randevular/actions.ts`, `src/lib/ops/service-intakes.ts`).
+- Staff appointments detail surface’i bağlı `service_intake` özetini doğrudan appointment bağlamında gösterir. Bu veri `/ops/staff/randevular` server page içinde `listLatestServiceIntakesByAppointmentIds()` ile toplanır ve detail/edit sheet’e read-only summary olarak geçilir (`src/app/ops/staff/randevular/page.tsx`, `src/lib/ops/service-intakes.ts`, `src/components/ops/ops-staff-appointments-workspace.tsx`).
+- Staff appointment edit current runtime’da yalnız appointment satırını değil, bağlı `flowType = appointment` `service_intake` kaydının müşteri, tarih, saat ve not alanlarını da senkron tutar (`src/lib/ops/appointments.ts`, `src/app/ops/randevular/actions.ts`).
+- Staff appointment delete current runtime’da transaction içindedir. Bağlı `flowType = appointment` `service_intake` kayıtları appointment ile birlikte silinir; appointment’a yanlışlıkla bağlanmış non-appointment kayıtlar varsa link güvenli şekilde detach edilir. Delete sonrası `/ops/staff/randevular`, `/ops/staff/musteriler` ve ilgili müşteri detail yüzeyleri revalidate edilir (`src/lib/ops/appointments.ts`, `src/app/ops/randevular/actions.ts`).
+- Staff appointment delete UI current runtime’da native browser confirm kullanmaz; confirm aynı workspace içinde app-level dialog olarak açılır. Başarılı delete sonrası detail sheet kapanır, seçili appointment temizlenir ve day drawer kendiliğinden yeniden açılmaz (`src/components/ops/ops-staff-appointments-workspace.tsx`).
 - Repo içinde admin’e özel create engeli görünmez. Canlı ortamda farklı bir admin create davranışı raporlanıyorsa, bu repo içinden doğrulanamaz ve `UNKNOWN` kabul edilir.
 
 ### Cashbook
@@ -194,6 +201,7 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - Staff müşteri listesi current runtime’da kompakt link kartlarıyla çalışır; boş durumda müşteri listesi, arama aktifken `Arama sonuçları` başlığı ve sonuç sayısı copy’si görünür. Kart üstünde isim ve kısa iletişim bilgisi, arama aktifken isim/telefon/e-posta eşleşmesini anlatan hafif ipucu, alt satırda tek consent badge, `Sıradaki randevu` özeti ve görünür `Detaya git` aksiyonu yer alır (`src/app/ops/staff/musteriler/page.tsx`).
 - Staff müşteri listesi current runtime’da tek consent badge gösterir; bu badge yalnız güncel combined sözleşme onayını `tattoo_piercing_consent` + `OPS_TATTOO_PIERCING_CONSENT_VERSION` üzerinden hesaplar ve copy’de bunu `Sözleşme onayı` olarak yazar (`src/lib/ops/customers.ts`, `src/app/ops/staff/musteriler/page.tsx`).
 - Detay yüzeyi current runtime’da müşteri kimliğini ve kısa iletişim bilgisini fold üstünde verir; onaylar kartı tek combined sözleşme bloğunu sürüm + kayıt tarihiyle daha kompakt özetler, profil hazır bilgisi küçük durum satırı olarak kalır, tek güncel staff notu ile yaklaşan/geçmiş randevu blokları sakinleşmiş bilgi hiyerarşisiyle aynı yüzeyde okunur (`src/app/ops/staff/musteriler/[userId]/page.tsx`).
+- Staff müşteri detail `İşlem özeti` kartı doğrudan `getCustomerDetail(userId)` içindeki `latestServiceIntake` alanından beslenir; bu alan `getLatestServiceIntakeForCustomer(userId)` ile aynı `customerUserId` üzerinden okunur. Kartın kaynağı appointment detail sheet değil, müşteri bazlı latest intake sorgusudur (`src/lib/ops/customers.ts`, `src/lib/ops/service-intakes.ts`, `src/app/ops/staff/musteriler/[userId]/page.tsx`).
 - `customer_notes.user_id` unique kalır; not upsert edilir, boş not gönderilirse kayıt temizlenir (`src/app/ops/musteriler/actions.ts`, `src/lib/ops/customers.ts`).
 
 ## 7) Audit Foundation
@@ -207,13 +215,20 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - `profile.updated`
 - `consent.accepted`
 - `appointment.created`
+- `appointment.updated`
 - `appointment.status_updated`
+- `appointment.deleted`
 - `cash_entry.created`
 - `cash_entry.updated`
 - `cash_entry.soft_deleted`
 - `customer_note.saved`
 - `ops_auth.logged_in`
 - `ops_auth.logged_out`
+- `service_intake.created`
+- `service_intake.appointment_attached`
+- `service_intake.appointment_synced`
+- `service_intake.deleted`
+- `service_intake.appointment_detached`
 
 ### Audit notları
 

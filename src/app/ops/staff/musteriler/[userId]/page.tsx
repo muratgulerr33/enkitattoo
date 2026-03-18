@@ -12,7 +12,7 @@ import { APPOINTMENT_STATUS_LABELS } from "@/lib/ops/appointment-copy";
 import {
   formatAppointmentDateLong,
 } from "@/lib/ops/appointments";
-import { getCustomerDetail } from "@/lib/ops/customers";
+import { getCustomerDetail, getCustomerLabel } from "@/lib/ops/customers";
 import {
   OPS_TATTOO_PIERCING_CONSENT_VERSION,
 } from "@/lib/ops/user-workspace";
@@ -69,6 +69,18 @@ function getAppointmentEmptyMessage(section: "upcoming" | "past"): string {
   return section === "upcoming" ? "Yaklaşan kayıt yok." : "Geçmiş kayıt yok.";
 }
 
+function formatMoney(cents: number): string {
+  return new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: "TRY",
+    maximumFractionDigits: 2,
+  }).format(cents / 100);
+}
+
+function getServiceTypeLabel(value: string): string {
+  return value === "piercing" ? "Piercing" : "Dövme";
+}
+
 export default async function OpsStaffCustomerDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const customerUserId = Number(resolvedParams.userId);
@@ -86,8 +98,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
   const latestConsentAcceptedAt = formatAcceptanceDate(
     customer.workspace.latestConsent?.acceptedAt ?? null
   );
-  const customerLabel =
-    customer.fullName ?? customer.displayName ?? customer.email ?? "İsimsiz müşteri";
+  const customerLabel = getCustomerLabel(customer);
   const contactLine = getCustomerContactLine(customer);
 
   return (
@@ -185,6 +196,70 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader className="gap-1 px-5 py-5">
+          <CardTitle>İşlem özeti</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          {customer.latestServiceIntake ? (
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+              <div className="rounded-2xl border border-border px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  İşlem tipi
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  {getServiceTypeLabel(customer.latestServiceIntake.serviceType)}
+                </p>
+              </div>
+
+         <div className="rounded-2xl border border-border px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Tarih
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  {formatAppointmentDateLong(customer.latestServiceIntake.scheduledDate)}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-border px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Saat
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  {customer.latestServiceIntake.scheduledTime}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-border px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Toplam
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  {formatMoney(customer.latestServiceIntake.totalAmountCents)}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-border px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Alınan / Kalan
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  {formatMoney(customer.latestServiceIntake.collectedAmountCents)} /{" "}
+                  {formatMoney(
+                    customer.latestServiceIntake.totalAmountCents -
+                      customer.latestServiceIntake.collectedAmountCents
+                  )}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
+              Henüz işlem kaydı yok.
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:gap-6">
         <div className="flex flex-col gap-5 sm:gap-6">

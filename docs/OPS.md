@@ -75,6 +75,9 @@ Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya k
 | Repo-side kalite | `npm run lint`, `npm run build`, gerekirse `npm run check:all` | temel kapılar geçer |
 | Route-content değiştiyse | generator sonrası ilgili route + `/sitemap.xml` + `/robots.txt` | canonical/noindex etkisi mantıklı kalır |
 | Ops auth | `/ops`, `/ops/giris`, `/ops/staff/kasa`, `/ops/user/randevular` | session ve role göre doğru redirect |
+| Staff randevular V2 | `/ops/staff/randevular` create/edit/delete zinciri | detail, edit ve müşteri detail `İşlem özeti` kontratı bozulmaz |
+| Inline müşteri create | randevu create sheet içindeki `Yeni müşteri` akışı | redirect olmaz, `NEXT_REDIRECT` sızmaz, yeni müşteri seçili kalır, outer form bağlamı korunur |
+| Appointment delete | detail sheet içindeki `Sil` aksiyonu | app-level confirm açılır, SQL error yok, stale reopen veya stale summary kalmaz |
 | Locale bypass | `/ops` ailesi | locale rewrite katmanına girmez |
 | Default locale | `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/artistler`, `/iletisim` | prefixsiz `tr` açılır |
 | Prefixli locale | `/en`, `/en/kesfet`, `/en/piercing` | 404 olmaz, message load kırılmaz |

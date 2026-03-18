@@ -17,6 +17,17 @@ export type OpsSessionUser = {
   roles: UserRole[];
 };
 
+export type OpsSessionAreaAccessResult =
+  | {
+      ok: true;
+      user: OpsSessionUser;
+    }
+  | {
+      ok: false;
+      reason: "unauthenticated" | "unauthorized";
+      redirectPath: string;
+    };
+
 function toSessionUser(user: Awaited<ReturnType<typeof findOpsUserById>>): OpsSessionUser | null {
   if (!user || !user.isActive) {
     return null;
@@ -53,29 +64,63 @@ export async function getOpsSessionUser(): Promise<OpsSessionUser | null> {
 }
 
 export async function requireOpsSessionArea(area: "staff" | "user"): Promise<OpsSessionUser> {
+  const access = await getOpsSessionAreaAccess(area);
+
+  if (!access.ok) {
+    redirect(access.redirectPath);
+  }
+
+  return access.user;
+}
+
+export async function getOpsSessionAreaAccess(
+  area: "staff" | "user"
+): Promise<OpsSessionAreaAccessResult> {
   const sessionUser = await getOpsSessionUser();
 
   if (!sessionUser) {
-    redirect(OPS_LOGIN_PATH);
+    return {
+      ok: false,
+      reason: "unauthenticated",
+      redirectPath: OPS_LOGIN_PATH,
+    };
   }
 
   if (area === "staff") {
     if (!hasStaffRole(sessionUser.roles)) {
-      redirect(getOpsHomePath(sessionUser.roles));
+      return {
+        ok: false,
+        reason: "unauthorized",
+        redirectPath: getOpsHomePath(sessionUser.roles),
+      };
     }
 
-    return sessionUser;
+    return {
+      ok: true,
+      user: sessionUser,
+    };
   }
 
   if (hasStaffRole(sessionUser.roles)) {
-    redirect(OPS_STAFF_HOME_PATH);
+    return {
+      ok: false,
+      reason: "unauthorized",
+      redirectPath: OPS_STAFF_HOME_PATH,
+    };
   }
 
   if (!hasUserRole(sessionUser.roles)) {
-    redirect(OPS_LOGIN_PATH);
+    return {
+      ok: false,
+      reason: "unauthenticated",
+      redirectPath: OPS_LOGIN_PATH,
+    };
   }
 
-  return sessionUser;
+  return {
+    ok: true,
+    user: sessionUser,
+  };
 }
 
 export async function redirectFromOpsEntry() {

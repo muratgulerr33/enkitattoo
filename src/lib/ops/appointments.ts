@@ -14,6 +14,7 @@ import {
   appointments,
   type AppointmentSource,
   type AppointmentStatus,
+  serviceIntakes,
   userProfiles,
   userRoles,
   users,
@@ -68,6 +69,12 @@ export type UpdateAppointmentInput = {
   appointmentDate: string;
   appointmentTime: string;
   notes: string | null;
+  actorUserId: number;
+};
+
+export type UpdateAppointmentResult = {
+  appointment: AppointmentRecord;
+  previousCustomerUserId: number;
 };
 
 export type UpdateAppointmentStatusInput = {
@@ -78,6 +85,14 @@ export type UpdateAppointmentStatusInput = {
 
 export type DeleteAppointmentInput = {
   appointmentId: number;
+  actorUserId: number;
+};
+
+export type DeleteAppointmentResult = {
+  appointmentId: number;
+  customerUserId: number;
+  deletedAppointmentServiceIntakeCount: number;
+  detachedServiceIntakeCount: number;
 };
 
 type AppointmentRow = {
@@ -677,7 +692,9 @@ export async function createAppointment(input: CreateAppointmentInput): Promise<
   }
 }
 
-export async function updateAppointment(input: UpdateAppointmentInput): Promise<AppointmentRecord> {
+export async function updateAppointment(
+  input: UpdateAppointmentInput
+): Promise<UpdateAppointmentResult> {
   const current = await findAppointmentRowById(input.appointmentId);
   const customerUserId = input.customerUserId;
   const appointmentDate = assertDateValue(input.appointmentDate);
@@ -692,41 +709,108 @@ export async function updateAppointment(input: UpdateAppointmentInput): Promise<
 
   try {
     const db = getDb();
-    const updatedRows = await db
-      .update(appointments)
-      .set({
-        customerUserId,
-        appointmentDate,
-        appointmentTime,
-        notes,
-        updatedAt: new Date(),
-      })
-      .where(eq(appointments.id, input.appointmentId))
-      .returning({
-        id: appointments.id,
-        customerUserId: appointments.customerUserId,
-        appointmentDate: appointments.appointmentDate,
-        appointmentTime: appointments.appointmentTime,
-        status: appointments.status,
-        source: appointments.source,
-        notes: appointments.notes,
-        createdByUserId: appointments.createdByUserId,
-        createdAt: appointments.createdAt,
-        updatedAt: appointments.updatedAt,
-      });
+    const updated = await db.transaction(async (tx) => {
+      const now = new Date();
+      const updatedRows = await tx
+        .update(appointments)
+        .set({
+          customerUserId,
+          appointmentDate,
+          appointmentTime,
+          notes,
+          updatedAt: now,
+        })
+        .where(eq(appointments.id, input.appointmentId))
+        .returning({
+          id: appointments.id,
+          customerUserId: appointments.customerUserId,
+          appointmentDate: appointments.appointmentDate,
+          appointmentTime: appointments.appointmentTime,
+          status: appointments.status,
+          source: appointments.source,
+          notes: appointments.notes,
+          createdByUserId: appointments.createdByUserId,
+          createdAt: appointments.createdAt,
+          updatedAt: appointments.updatedAt,
+        });
 
-    const updated = updatedRows[0];
+      const updatedRecord = updatedRows[0];
 
-    if (!updated) {
-      throw new Error("Randevu güncellenemedi.");
-    }
+      if (!updatedRecord) {
+        throw new Error("Randevu güncellenemedi.");
+      }
+
+      const syncedServiceIntakes = await tx
+        .update(serviceIntakes)
+        .set({
+          customerUserId,
+          scheduledDate: appointmentDate,
+          scheduledTime: appointmentTime,
+          notes,
+          updatedByUserId: input.actorUserId,
+          updatedAt: now,
+        })
+        .where(
+          and(
+            eq(serviceIntakes.appointmentId, input.appointmentId),
+            eq(serviceIntakes.flowType, "appointment")
+          )
+        )
+        .returning({
+          id: serviceIntakes.id,
+        });
+
+      for (const serviceIntake of syncedServiceIntakes) {
+        await writeAuditLog(
+          {
+            actorUserId: input.actorUserId,
+            action: "service_intake.appointment_synced",
+            entityType: "service_intake",
+            entityId: serviceIntake.id,
+            payload: {
+              appointmentId: input.appointmentId,
+              customerUserId,
+              scheduledDate: appointmentDate,
+              scheduledTime: appointmentTime,
+              hasNotes: Boolean(notes),
+            },
+          },
+          tx
+        );
+      }
+
+      await writeAuditLog(
+        {
+          actorUserId: input.actorUserId,
+          action: "appointment.updated",
+          entityType: "appointment",
+          entityId: updatedRecord.id,
+          payload: {
+            previousCustomerUserId: current.customerUserId,
+            nextCustomerUserId: updatedRecord.customerUserId,
+            previousAppointmentDate: current.appointmentDate,
+            nextAppointmentDate: updatedRecord.appointmentDate,
+            previousAppointmentTime: current.appointmentTime,
+            nextAppointmentTime: updatedRecord.appointmentTime,
+            previousHasNotes: Boolean(current.notes),
+            nextHasNotes: Boolean(updatedRecord.notes),
+          },
+        },
+        tx
+      );
+
+      return updatedRecord;
+    });
 
     const presentations = await getUserPresentationMap([
       updated.customerUserId,
       updated.createdByUserId,
     ]);
 
-    return toAppointmentRecord(updated, presentations);
+    return {
+      appointment: toAppointmentRecord(updated, presentations),
+      previousCustomerUserId: current.customerUserId,
+    };
   } catch (error) {
     if (isUniqueConflict(error)) {
       throw new Error(APPOINTMENT_SLOT_CONFLICT_MESSAGE);
@@ -813,14 +897,121 @@ export async function updateAppointmentStatus(
   }
 }
 
-export async function deleteAppointment(input: DeleteAppointmentInput): Promise<void> {
+export async function deleteAppointment(
+  input: DeleteAppointmentInput
+): Promise<DeleteAppointmentResult> {
   const db = getDb();
-  const deletedRows = await db
-    .delete(appointments)
-    .where(eq(appointments.id, input.appointmentId))
-    .returning({ id: appointments.id });
+  const current = await findAppointmentRowById(input.appointmentId);
 
-  if (!deletedRows[0]) {
-    throw new Error("Randevu bulunamadı.");
-  }
+  return db.transaction(async (tx) => {
+    const now = new Date();
+    const linkedServiceIntakeRows = await tx
+      .select({
+        id: serviceIntakes.id,
+        flowType: serviceIntakes.flowType,
+      })
+      .from(serviceIntakes)
+      .where(eq(serviceIntakes.appointmentId, input.appointmentId));
+
+    const appointmentServiceIntakeIds = linkedServiceIntakeRows
+      .filter((serviceIntake) => serviceIntake.flowType === "appointment")
+      .map((serviceIntake) => serviceIntake.id);
+    const detachedServiceIntakeIds = linkedServiceIntakeRows
+      .filter((serviceIntake) => serviceIntake.flowType !== "appointment")
+      .map((serviceIntake) => serviceIntake.id);
+
+    const deletedServiceIntakes = appointmentServiceIntakeIds.length
+      ? await tx
+          .delete(serviceIntakes)
+          .where(inArray(serviceIntakes.id, appointmentServiceIntakeIds))
+          .returning({
+            id: serviceIntakes.id,
+          })
+      : [];
+
+    const detachedServiceIntakes = detachedServiceIntakeIds.length
+      ? await tx
+          .update(serviceIntakes)
+          .set({
+            appointmentId: null,
+            updatedByUserId: input.actorUserId,
+            updatedAt: now,
+          })
+          .where(inArray(serviceIntakes.id, detachedServiceIntakeIds))
+          .returning({
+            id: serviceIntakes.id,
+          })
+      : [];
+
+    const deletedRows = await tx
+      .delete(appointments)
+      .where(eq(appointments.id, input.appointmentId))
+      .returning({
+        id: appointments.id,
+        customerUserId: appointments.customerUserId,
+      });
+
+    const deletedAppointment = deletedRows[0];
+
+    if (!deletedAppointment) {
+      throw new Error("Randevu bulunamadı.");
+    }
+
+    for (const serviceIntake of deletedServiceIntakes) {
+      await writeAuditLog(
+        {
+          actorUserId: input.actorUserId,
+          action: "service_intake.deleted",
+          entityType: "service_intake",
+          entityId: serviceIntake.id,
+          payload: {
+            appointmentId: input.appointmentId,
+            reason: "appointment_deleted",
+          },
+        },
+        tx
+      );
+    }
+
+    for (const serviceIntake of detachedServiceIntakes) {
+      await writeAuditLog(
+        {
+          actorUserId: input.actorUserId,
+          action: "service_intake.appointment_detached",
+          entityType: "service_intake",
+          entityId: serviceIntake.id,
+          payload: {
+            previousAppointmentId: input.appointmentId,
+            reason: "appointment_deleted",
+          },
+        },
+        tx
+      );
+    }
+
+    await writeAuditLog(
+      {
+        actorUserId: input.actorUserId,
+        action: "appointment.deleted",
+        entityType: "appointment",
+        entityId: deletedAppointment.id,
+        payload: {
+          customerUserId: current.customerUserId,
+          appointmentDate: current.appointmentDate,
+          appointmentTime: current.appointmentTime,
+          status: current.status,
+          deletedAppointmentServiceIntakeCount: deletedServiceIntakes.length,
+          detachedServiceIntakeCount: detachedServiceIntakes.length,
+        },
+      },
+      tx
+    );
+
+    return {
+      appointmentId: deletedAppointment.id,
+      customerUserId: deletedAppointment.customerUserId,
+      deletedAppointmentServiceIntakeCount: deletedServiceIntakes.length,
+      detachedServiceIntakeCount: detachedServiceIntakes.length,
+    };
+  });
 }

@@ -17,6 +17,10 @@ import {
 import { writeAuditLog } from "./audit";
 import type { AppointmentRecord } from "./appointments";
 import {
+  getLatestServiceIntakeForCustomer,
+  type ServiceIntakeRecord,
+} from "./service-intakes";
+import {
   formatAppointmentDateLong,
   getCurrentTimeValue,
   getTodayDateValue,
@@ -70,6 +74,7 @@ export type CustomerDetail = {
   displayName: string | null;
   note: CustomerNoteRecord | null;
   workspace: UserWorkspaceOverview;
+  latestServiceIntake: ServiceIntakeRecord | null;
   upcomingAppointments: AppointmentRecord[];
   pastAppointments: AppointmentRecord[];
 };
@@ -386,16 +391,18 @@ export async function getCustomerDetail(userId: number): Promise<CustomerDetail 
     return null;
   }
 
-  const [workspace, appointmentsList, note] = await Promise.all([
+  const [workspace, appointmentsList, note, latestServiceIntake] = await Promise.all([
     getUserWorkspaceOverview(userId),
     listUserAppointments(userId),
     getCustomerNote(userId),
+    getLatestServiceIntakeForCustomer(userId),
   ]);
 
   return {
     ...customer,
     note,
     workspace,
+    latestServiceIntake,
     upcomingAppointments: appointmentsList.upcoming,
     pastAppointments: appointmentsList.past,
   };

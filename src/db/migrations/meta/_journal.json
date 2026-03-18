@@ -57,6 +57,13 @@
       "when": 1773679920396,
       "tag": "0007_redundant_vindicator",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1773847986699,
+      "tag": "0008_red_wrecker",
+      "breakpoints": true
     }
   ]
 }

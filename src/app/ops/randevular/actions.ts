@@ -1,8 +1,12 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import {
+  getOpsSessionAreaAccess,
+  requireOpsSessionArea,
+} from "@/lib/ops/auth/guards";
+import {
+  APPOINTMENT_SLOT_CONFLICT_MESSAGE,
   createAppointment,
   deleteAppointment,
   getSourceForStaffRoles,
@@ -11,8 +15,14 @@ import {
 } from "@/lib/ops/appointments";
 import { createCustomerRecord } from "@/lib/ops/customers";
 import {
+  attachServiceIntakeAppointment,
+  createServiceIntake,
+} from "@/lib/ops/service-intakes";
+import {
   APPOINTMENT_STATUS_VALUES,
+  SERVICE_INTAKE_SERVICE_TYPE_VALUES,
   type AppointmentStatus,
+  type ServiceIntakeServiceType,
 } from "@/db/schema";
 
 export type OpsAppointmentActionState = {
@@ -32,6 +42,37 @@ export type OpsAppointmentCustomerCreateActionState = {
 
 const INITIAL_ERROR_MESSAGE = "İşlem tamamlanamadı.";
 const INITIAL_CREATE_CUSTOMER_ERROR_MESSAGE = "Müşteri oluşturulamadı.";
+const INLINE_CUSTOMER_AUTH_ERROR_MESSAGE =
+  "Oturum süreniz doldu. Sayfayı yenileyip yeniden giriş yapın.";
+const INLINE_CUSTOMER_ROLE_ERROR_MESSAGE = "Bu işlem için personel hesabı gerekli.";
+const DELETE_ERROR_MESSAGE = "Randevu silinemedi. Biraz sonra tekrar deneyin.";
+
+const SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES = new Set([
+  "Metin alanı çok uzun. Lütfen kısaltın.",
+  "Girdiler beklenenden uzun. Lütfen kısaltın.",
+  "Müşteri seçin.",
+  "Tarih seçin.",
+  "Saat seçin.",
+  "Durum seçin.",
+  "Durum seçimi geçerli değil.",
+  "İşlem tipi seçin.",
+  "İşlem tipi geçerli değil.",
+  "Toplam tutarı girin.",
+  "Alınan tutarı girin.",
+  "Alınan tutar toplam tutardan büyük olamaz.",
+  "Randevu bulunamadı.",
+  APPOINTMENT_SLOT_CONFLICT_MESSAGE,
+]);
+
+const SAFE_INLINE_CUSTOMER_ERROR_MESSAGES = new Set([
+  "Ad soyad gerekli.",
+  "Telefon gerekli.",
+  "Telefon bilgisini daha sade yazın.",
+  "E-posta bilgisini kontrol edin.",
+  "Girdiler beklenenden uzun. Lütfen kısaltın.",
+  INLINE_CUSTOMER_AUTH_ERROR_MESSAGE,
+  INLINE_CUSTOMER_ROLE_ERROR_MESSAGE,
+]);
 
 function toNullableText(value: FormDataEntryValue | null, maxLength: number): string | null {
   if (typeof value !== "string") {
@@ -133,6 +174,34 @@ function isAppointmentStatus(value: string): value is AppointmentStatus {
   return APPOINTMENT_STATUS_VALUES.includes(value as AppointmentStatus);
 }
 
+function isServiceIntakeServiceType(value: string): value is ServiceIntakeServiceType {
+  return SERVICE_INTAKE_SERVICE_TYPE_VALUES.includes(value as ServiceIntakeServiceType);
+}
+
+function toAmountCents(
+  value: FormDataEntryValue | null,
+  message: string,
+  options?: { allowZero?: boolean }
+): number {
+  const normalized = toRequiredString(value, message).replace(",", ".");
+
+  if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) {
+    throw new Error(message);
+  }
+
+  const parsed = Number(normalized);
+
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    throw new Error(message);
+  }
+
+  if (!options?.allowZero && parsed === 0) {
+    throw new Error(message);
+  }
+
+  return Math.round(parsed * 100);
+}
+
 function isUniqueConflict(error: unknown): boolean {
   return (
     typeof error === "object" &&
@@ -147,6 +216,30 @@ function revalidateAppointmentPaths() {
   revalidatePath("/ops/user/randevular");
 }
 
+function revalidateStaffCustomerPaths(userIds: number[]) {
+  revalidatePath("/ops/staff/musteriler");
+
+  for (const userId of new Set(userIds)) {
+    if (!Number.isInteger(userId) || userId <= 0) {
+      continue;
+    }
+
+    revalidatePath(`/ops/staff/musteriler/${userId}`);
+  }
+}
+
+function getSafeActionErrorMessage(
+  error: unknown,
+  fallbackMessage: string,
+  allowedMessages: Set<string>
+): string {
+  if (error instanceof Error && allowedMessages.has(error.message)) {
+    return error.message;
+  }
+
+  return fallbackMessage;
+}
+
 export async function createStaffAppointmentAction(
   _previousState: OpsAppointmentActionState,
   formData: FormData
@@ -156,9 +249,30 @@ export async function createStaffAppointmentAction(
     const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Müşteri seçin.");
     const appointmentDate = toRequiredString(formData.get("appointmentDate"), "Tarih seçin.");
     const appointmentTime = toRequiredString(formData.get("appointmentTime"), "Saat seçin.");
+    const rawServiceType = toRequiredString(formData.get("serviceType"), "İşlem tipi seçin.");
+    const totalAmountCents = toAmountCents(formData.get("totalAmount"), "Toplam tutarı girin.");
+    const collectedAmountCents = toAmountCents(
+      formData.get("collectedAmount"),
+      "Alınan tutarı girin.",
+      { allowZero: true }
+    );
     const notes = toNullableText(formData.get("notes"), 1200);
 
-    await createAppointment({
+    if (!isServiceIntakeServiceType(rawServiceType)) {
+      return {
+        error: "İşlem tipi geçerli değil.",
+        success: null,
+      };
+    }
+
+    if (collectedAmountCents > totalAmountCents) {
+      return {
+        error: "Alınan tutar toplam tutardan büyük olamaz.",
+        success: null,
+      };
+    }
+
+    const appointment = await createAppointment({
       customerUserId,
       appointmentDate,
       appointmentTime,
@@ -167,15 +281,39 @@ export async function createStaffAppointmentAction(
       createdByUserId: sessionUser.id,
     });
 
+    const serviceIntake = await createServiceIntake({
+      customerUserId,
+      flowType: "appointment",
+      serviceType: rawServiceType,
+      scheduledDate: appointmentDate,
+      scheduledTime: appointmentTime,
+      totalAmountCents,
+      collectedAmountCents,
+      notes,
+      createdByUserId: sessionUser.id,
+    });
+
+    await attachServiceIntakeAppointment({
+      serviceIntakeId: serviceIntake.id,
+      appointmentId: appointment.id,
+      updatedByUserId: sessionUser.id,
+    });
+
     revalidateAppointmentPaths();
+    revalidatePath("/ops/staff/musteriler");
+    revalidatePath(`/ops/staff/musteriler/${customerUserId}`);
 
     return {
       error: null,
-      success: "Randevu açıldı.",
+      success: "Randevu ve işlem kaydı açıldı.",
     };
   } catch (error) {
     return {
-      error: error instanceof Error ? error.message : INITIAL_ERROR_MESSAGE,
+      error: getSafeActionErrorMessage(
+        error,
+        INITIAL_ERROR_MESSAGE,
+        SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES
+      ),
       success: null,
     };
   }
@@ -186,7 +324,19 @@ export async function createStaffAppointmentCustomerAction(
   formData: FormData
 ): Promise<OpsAppointmentCustomerCreateActionState> {
   try {
-    await requireOpsSessionArea("staff");
+    const access = await getOpsSessionAreaAccess("staff");
+
+    if (!access.ok) {
+      return {
+        error:
+          access.reason === "unauthenticated"
+            ? INLINE_CUSTOMER_AUTH_ERROR_MESSAGE
+            : INLINE_CUSTOMER_ROLE_ERROR_MESSAGE,
+        success: null,
+        createdCustomer: null,
+      };
+    }
+
     const fullName = toRequiredText(formData.get("fullName"), "Ad soyad gerekli.", 160);
     const phone = toRequiredText(formData.get("phone"), "Telefon gerekli.", 32);
     const email = toOptionalEmail(formData.get("email"));
@@ -229,7 +379,11 @@ export async function createStaffAppointmentCustomerAction(
     }
 
     return {
-      error: error instanceof Error ? error.message : INITIAL_CREATE_CUSTOMER_ERROR_MESSAGE,
+      error: getSafeActionErrorMessage(
+        error,
+        INITIAL_CREATE_CUSTOMER_ERROR_MESSAGE,
+        SAFE_INLINE_CUSTOMER_ERROR_MESSAGES
+      ),
       success: null,
       createdCustomer: null,
     };
@@ -263,7 +417,11 @@ export async function createUserAppointmentAction(
     };
   } catch (error) {
     return {
-      error: error instanceof Error ? error.message : INITIAL_ERROR_MESSAGE,
+      error: getSafeActionErrorMessage(
+        error,
+        INITIAL_ERROR_MESSAGE,
+        SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES
+      ),
       success: null,
     };
   }
@@ -302,7 +460,11 @@ export async function updateAppointmentStatusAction(
     };
   } catch (error) {
     return {
-      error: error instanceof Error ? error.message : INITIAL_ERROR_MESSAGE,
+      error: getSafeActionErrorMessage(
+        error,
+        INITIAL_ERROR_MESSAGE,
+        SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES
+      ),
       success: null,
     };
   }
@@ -313,7 +475,7 @@ export async function updateStaffAppointmentAction(
   formData: FormData
 ): Promise<OpsAppointmentActionState> {
   try {
-    await requireOpsSessionArea("staff");
+    const sessionUser = await requireOpsSessionArea("staff");
     const appointmentId = toRequiredNumber(
       formData.get("appointmentId"),
       "Randevu bulunamadı."
@@ -323,15 +485,20 @@ export async function updateStaffAppointmentAction(
     const appointmentTime = toRequiredString(formData.get("appointmentTime"), "Saat seçin.");
     const notes = toNullableText(formData.get("notes"), 1200);
 
-    await updateAppointment({
+    const result = await updateAppointment({
       appointmentId,
       customerUserId,
       appointmentDate,
       appointmentTime,
       notes,
+      actorUserId: sessionUser.id,
     });
 
     revalidateAppointmentPaths();
+    revalidateStaffCustomerPaths([
+      result.previousCustomerUserId,
+      result.appointment.customerUserId,
+    ]);
 
     return {
       error: null,
@@ -339,7 +506,11 @@ export async function updateStaffAppointmentAction(
     };
   } catch (error) {
     return {
-      error: error instanceof Error ? error.message : INITIAL_ERROR_MESSAGE,
+      error: getSafeActionErrorMessage(
+        error,
+        INITIAL_ERROR_MESSAGE,
+        SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES
+      ),
       success: null,
     };
   }
@@ -350,17 +521,19 @@ export async function deleteStaffAppointmentAction(
   formData: FormData
 ): Promise<OpsAppointmentActionState> {
   try {
-    await requireOpsSessionArea("staff");
+    const sessionUser = await requireOpsSessionArea("staff");
     const appointmentId = toRequiredNumber(
       formData.get("appointmentId"),
       "Randevu bulunamadı."
     );
 
-    await deleteAppointment({
+    const deleted = await deleteAppointment({
       appointmentId,
+      actorUserId: sessionUser.id,
     });
 
     revalidateAppointmentPaths();
+    revalidateStaffCustomerPaths([deleted.customerUserId]);
 
     return {
       error: null,
@@ -368,7 +541,11 @@ export async function deleteStaffAppointmentAction(
     };
   } catch (error) {
     return {
-      error: error instanceof Error ? error.message : INITIAL_ERROR_MESSAGE,
+      error: getSafeActionErrorMessage(
+        error,
+        DELETE_ERROR_MESSAGE,
+        SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES
+      ),
       success: null,
     };
   }

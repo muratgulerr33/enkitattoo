@@ -7,6 +7,7 @@ import {
   listCustomerOptions,
   parseMonthValue,
 } from "@/lib/ops/appointments";
+import { listLatestServiceIntakesByAppointmentIds } from "@/lib/ops/service-intakes";
 
 type PageProps = {
   searchParams: Promise<{
@@ -22,8 +23,19 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
     listAppointmentsForMonth(monthValue),
     listCustomerOptions(),
   ]);
-  const scheduledAppointments = monthAppointments
-    .filter((appointment) => appointment.status === "scheduled")
+  const scheduledMonthAppointments = monthAppointments.filter(
+    (appointment) => appointment.status === "scheduled"
+  );
+  const linkedServiceIntakes = await listLatestServiceIntakesByAppointmentIds(
+    scheduledMonthAppointments.map((appointment) => appointment.id)
+  );
+  const serviceIntakesByAppointmentId = new Map(
+    linkedServiceIntakes
+      .filter((serviceIntake) => serviceIntake.appointmentId !== null)
+      .map((serviceIntake) => [serviceIntake.appointmentId as number, serviceIntake])
+  );
+
+  const scheduledAppointments = scheduledMonthAppointments
     .map((appointment) => ({
       id: appointment.id,
       customerUserId: appointment.customerUserId,
@@ -32,6 +44,20 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
       appointmentDate: appointment.appointmentDate,
       appointmentTime: appointment.appointmentTime,
       notes: appointment.notes,
+      serviceSummary: (() => {
+        const serviceIntake = serviceIntakesByAppointmentId.get(appointment.id);
+
+        if (!serviceIntake) {
+          return null;
+        }
+
+        return {
+          id: serviceIntake.id,
+          serviceType: serviceIntake.serviceType,
+          totalAmountCents: serviceIntake.totalAmountCents,
+          collectedAmountCents: serviceIntake.collectedAmountCents,
+        };
+      })(),
     }));
 
   const initialSelectedDay =

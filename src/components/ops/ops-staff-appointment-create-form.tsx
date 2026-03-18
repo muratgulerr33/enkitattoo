@@ -29,7 +29,7 @@ const INITIAL_CUSTOMER_CREATE_STATE: OpsAppointmentCustomerCreateActionState = {
 };
 
 const selectClassName =
-  "border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50";
+  "border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full appearance-none rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50";
 
 type StaffAppointmentCreateFormProps = {
   customerOptions: Array<{
@@ -112,10 +112,20 @@ export function OpsStaffAppointmentCreateForm({
     formData.set("email", inlineCustomerForm.email);
 
     startCreateCustomerTransition(async () => {
-      const result = await createStaffAppointmentCustomerAction(
-        INITIAL_CUSTOMER_CREATE_STATE,
-        formData
-      );
+      let result: OpsAppointmentCustomerCreateActionState;
+
+      try {
+        result = await createStaffAppointmentCustomerAction(
+          INITIAL_CUSTOMER_CREATE_STATE,
+          formData
+        );
+      } catch {
+        result = {
+          error: "Müşteri oluşturulamadı.",
+          success: null,
+          createdCustomer: null,
+        };
+      }
 
       setInlineCustomerState(result);
 
@@ -209,6 +219,68 @@ export function OpsStaffAppointmentCreateForm({
             </div>
           ) : null}
         </div>
+
+        {mode === "create" ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2 sm:col-span-2">
+              <Label htmlFor="serviceType">İşlem tipi</Label>
+              <div className="relative rounded-xl border border-border bg-background">
+                <select
+                  id="serviceType"
+              name="serviceType"
+                  defaultValue="tattoo"
+                  className={cn(
+                    selectClassName,
+                    "h-11 rounded-xl border-0 bg-transparent pr-10 shadow-none focus-visible:ring-0"
+                  )}
+                  disabled={isDisabled}
+                  required
+                >
+                  <option value="tattoo">Dövme</option>
+                  <option value="piercing">Piercing</option>
+                </select>
+                <ChevronDown
+                  className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="totalAmount">Toplam tutar (TL)</Label>
+              <Input
+                id="totalAmount"
+                name="totalAmount"
+                type="number"
+                inputMode="decimal"
+                min="0"
+               step="0.01"
+                placeholder="9000"
+                className="h-11 rounded-xl bg-background"
+                disabled={isDisabled}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="collectedAmount">Alınan tutar (TL)</Label>
+              <Input
+                id="collectedAmount"
+                name="collectedAmount"
+                type="number"
+                inputMode="decimal"
+                min="0"
+                step="0.01"
+                defaultValue="0"
+                placeholder="4000"
+                className="h-11 rounded-xl bg-background"
+                disabled={isDisabled}
+                required
+              />
+              <p className="text-xs text-muted-foreground">Kapora veya ilk tahsilatı yazın.</p>
+            </div>
+          </div>
+        ) : null}
 
         <div className="space-y-3">
           <Label>Müşteri</Label>
