@@ -33,21 +33,21 @@ export function OpsStaffCustomerCreateForm() {
   const [noteValue, setNoteValue] = useState("");
 
   return (
-    <form action={formAction} className="space-y-3">
-      <div className="grid gap-3 sm:grid-cols-2">
-        <div className="space-y-1.5 sm:col-span-2">
+    <form action={formAction} className="space-y-2.5">
+      <div className="grid gap-2.5">
+        <div className="space-y-1.5">
           <Label htmlFor="fullName">Ad soyad</Label>
           <Input
             id="fullName"
             name="fullName"
             autoComplete="name"
-            className="h-10 rounded-xl"
+            className="h-9 rounded-xl bg-background"
             disabled={pending}
             required
           />
         </div>
 
-        <div className="space-y-1.5 sm:col-span-2">
+        <div className="space-y-1.5">
           <Label htmlFor="phone">Telefon</Label>
           <Input
             id="phone"
@@ -56,14 +56,14 @@ export function OpsStaffCustomerCreateForm() {
             autoComplete="tel"
             inputMode="tel"
             placeholder="05xx xxx xx xx"
-            className="h-10 rounded-xl"
+            className="h-9 rounded-xl bg-background"
             disabled={pending}
             required
           />
         </div>
       </div>
 
-      <Collapsible open={noteOpen} onOpenChange={setNoteOpen} className="border-t border-border pt-3">
+      <Collapsible open={noteOpen} onOpenChange={setNoteOpen} className="border-t border-border/80 pt-2.5">
         <div className="flex min-w-0 items-center justify-between gap-3">
           <p id="customer-note-label" className="min-w-0 text-sm font-medium text-foreground">
             Not
@@ -87,7 +87,7 @@ export function OpsStaffCustomerCreateForm() {
         </div>
 
         {noteOpen ? (
-          <CollapsibleContent className="pt-2.5 pb-0">
+          <CollapsibleContent className="pt-2 pb-0">
             <Textarea
               id="note"
               name="note"
@@ -96,7 +96,7 @@ export function OpsStaffCustomerCreateForm() {
               value={noteValue}
               onChange={(event) => setNoteValue(event.target.value)}
               placeholder="Kısa not"
-              className="min-h-[72px] rounded-xl"
+              className="min-h-[64px] rounded-xl bg-background"
               disabled={pending}
             />
           </CollapsibleContent>
@@ -117,8 +117,8 @@ export function OpsStaffCustomerCreateForm() {
         </p>
       ) : null}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-        <Button type="submit" size="cta" className="w-full sm:w-auto" disabled={pending}>
+      <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+        <Button type="submit" size="sm" className="w-full rounded-xl sm:w-auto" disabled={pending}>
           {pending ? (
             <>
               <LoaderCircle className="size-4 animate-spin" aria-hidden />
@@ -131,10 +131,10 @@ export function OpsStaffCustomerCreateForm() {
 
         {state.createdCustomerId ? (
           <>
-            <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
+            <Button asChild variant="outline" size="sm" className="w-full rounded-xl sm:w-auto">
               <Link href="/ops/staff/randevular">İşlemde kullan</Link>
             </Button>
-            <Button asChild variant="ghost" size="sm" className="w-full sm:w-auto">
+            <Button asChild variant="ghost" size="sm" className="w-full rounded-xl sm:w-auto">
               <Link href={`/ops/staff/musteriler/${state.createdCustomerId}`}>Detaya git</Link>
             </Button>
           </>

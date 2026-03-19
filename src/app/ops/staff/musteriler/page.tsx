@@ -49,7 +49,7 @@ function getSearchMatchCopy(field: CustomerSearchMatchField): string {
 }
 
 function getNextSessionLabel(nextAppointmentText: string | null): string {
-  return nextAppointmentText ?? "Planlı işlem yok.";
+  return nextAppointmentText ?? "Plan yok.";
 }
 
 export default async function OpsStaffCustomersPage({ searchParams }: PageProps) {
@@ -60,20 +60,20 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
 
   return (
     <div className="ops-page-shell">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.3fr)_minmax(21rem,0.7fr)] xl:items-start xl:gap-5">
-        <Card className="gap-3 border-foreground/12 bg-card xl:min-h-[10rem]">
+      <div className="grid gap-3.5 xl:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)] xl:items-start xl:gap-4">
+        <Card className="gap-2.5 border-foreground/12 bg-card shadow-[0_10px_24px_rgba(15,23,42,0.04)] xl:min-h-[9.4rem]">
           <CardHeader className="gap-1">
             <CardTitle>Müşteri ara</CardTitle>
-            <CardDescription>Önce arayın. Kayıt yoksa hızlı müşteri oluşturun.</CardDescription>
+            <CardDescription>Önce arayın. Kayıt yoksa hızlı müşteri ekleyin.</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-0">
             <form action="/ops/staff/musteriler" className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
               <Input
                 name="q"
                 defaultValue={query}
                 placeholder="İsim, telefon veya e-posta"
                 autoComplete="off"
-                className="h-10 rounded-xl"
+                className="h-10 rounded-xl bg-background"
               />
               <button
                 type="submit"
@@ -85,12 +85,12 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
           </CardContent>
         </Card>
 
-        <Card id="yeni-musteri" className="gap-4 border-border/60 bg-surface-1/25 xl:min-h-[10rem]">
+        <Card id="yeni-musteri" className="gap-3 border-border/55 bg-surface-1/18 xl:min-h-[9.4rem]">
           <CardHeader className="gap-1">
             <CardTitle>Hızlı müşteri</CardTitle>
-            <CardDescription>Yeni müşteriyi kısa bilgilerle ekleyin.</CardDescription>
+            <CardDescription>Kayıt yoksa kısa bilgilerle ekleyin.</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-0">
             <OpsStaffCustomerCreateForm />
           </CardContent>
         </Card>
@@ -101,7 +101,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
           <CardTitle>{getCustomerResultsTitle(query)}</CardTitle>
           <CardDescription>{getCustomerResultsDescription(query, customers.length)}</CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-3 xl:grid-cols-2 xl:gap-4">
+        <CardContent className="grid gap-2.5 xl:grid-cols-2 xl:gap-3">
           {customers.length ? (
             customers.map((customer) => {
               const nextAppointmentText = formatCustomerAppointmentShort(customer.nextAppointment);
@@ -112,26 +112,26 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                   key={customer.userId}
                   href={`/ops/staff/musteriler/${customer.userId}`}
                   className={cn(
-                    "group flex h-full min-h-[9.5rem] flex-col justify-between rounded-[1.6rem] border px-4 py-3.5 transition-[transform,border-color,background-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.995]",
+                    "group flex h-full min-h-[8.2rem] flex-col justify-between rounded-[1.45rem] border px-3.5 py-3 transition-[transform,border-color,background-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.995]",
                     isSearchActive
                       ? "border-foreground/10 bg-muted/10 hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-muted/15 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)]"
                       : "border-border/80 bg-card hover:-translate-y-0.5 hover:border-foreground/15 hover:bg-surface-1/40 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)]"
                   )}
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0 space-y-2">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 space-y-1.5">
                       <div className="space-y-1">
                         <p className="text-base font-semibold text-foreground">
                           {getCustomerLabel(customer)}
                         </p>
                         {isSearchActive && searchMatchField ? (
-                          <p className="text-xs font-medium text-foreground/75">
+                          <p className="text-[11px] font-medium text-foreground/72">
                             {getSearchMatchCopy(searchMatchField)}
                           </p>
                         ) : null}
                       </div>
 
-                      <div className="space-y-1 text-sm">
+                      <div className="space-y-0.5 text-sm">
                         <p
                           className={cn(
                             "break-words",
@@ -155,21 +155,21 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                       </div>
                     </div>
 
-                    <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-2xl border border-foreground/10 bg-surface-1/65 text-foreground/55 transition-[transform,border-color,background-color,color,box-shadow] duration-150 group-hover:translate-x-0.5 group-hover:border-foreground/18 group-hover:bg-background group-hover:text-foreground group-hover:shadow-sm">
+                    <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-xl border border-transparent bg-transparent text-foreground/42 transition-[transform,color,background-color] duration-150 group-hover:translate-x-0.5 group-hover:bg-surface-1/75 group-hover:text-foreground/72">
                       <ChevronRight
-                        className="size-4"
+                        className="size-3.5"
                         aria-hidden
                       />
                     </span>
                   </div>
 
-                  <div className="mt-3 rounded-[1.2rem] bg-surface-1/45 px-3 py-2.5">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  <div className="mt-2.5 rounded-[1.05rem] bg-surface-1/38 px-3 py-2">
+                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                       Sıradaki işlem
                     </p>
                     <p
                       className={cn(
-                        "mt-1 line-clamp-2 text-sm leading-5",
+                        "mt-1 line-clamp-2 text-[13px] leading-5 sm:text-sm",
                         nextAppointmentText ? "font-medium text-foreground" : "text-muted-foreground/90"
                       )}
                     >
