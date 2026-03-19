@@ -13,6 +13,7 @@ import {
   type UserRole,
 } from "@/db/schema";
 import { writeAuditLog } from "./audit";
+import { formatOpsMoneyDisplay } from "./money";
 
 export const CASHBOOK_DATE_LOCK_MESSAGE =
   "Artist yalnız bugün için kasa kaydı açabilir.";
@@ -263,11 +264,7 @@ export function summarizeCashEntries(entries: CashEntryRecord[]): CashEntrySumma
 }
 
 export function formatCashAmount(amountCents: number): string {
-  return new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency: "TRY",
-    minimumFractionDigits: 2,
-  }).format(amountCents / 100);
+  return formatOpsMoneyDisplay(amountCents);
 }
 
 export function formatCashAmountInput(amountCents: number): string {

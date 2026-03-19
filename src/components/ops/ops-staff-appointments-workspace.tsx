@@ -46,6 +46,7 @@ import {
   getTodayDateValue,
   shiftMonthValue,
 } from "@/lib/ops/appointment-calendar";
+import { formatOpsMoneyDisplay } from "@/lib/ops/money";
 import { cn } from "@/lib/utils";
 
 const WEEKDAY_LABELS = ["Pzt", "Sal", "Çar", "Per", "Cum", "Cmt", "Paz"] as const;
@@ -178,14 +179,6 @@ function getAppointmentCountLabel(appointmentCount: number): string {
   return `${appointmentCount} işlem`;
 }
 
-function formatMoney(cents: number): string {
-  return new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency: "TRY",
-    maximumFractionDigits: 2,
-  }).format(cents / 100);
-}
-
 function getServiceTypeLabel(value: StaffServiceSummary["serviceType"]): string {
   return value === "piercing" ? "Piercing" : "Dövme";
 }
@@ -302,7 +295,7 @@ function AppointmentServiceSummarySection({
               Toplam
             </p>
             <p className="mt-1 text-sm font-medium text-foreground">
-              {formatMoney(serviceSummary.totalAmountCents)}
+              {formatOpsMoneyDisplay(serviceSummary.totalAmountCents)}
             </p>
           </div>
 
@@ -311,7 +304,7 @@ function AppointmentServiceSummarySection({
               Alınan
             </p>
             <p className="mt-1 text-sm font-medium text-foreground">
-              {formatMoney(serviceSummary.collectedAmountCents)}
+              {formatOpsMoneyDisplay(serviceSummary.collectedAmountCents)}
             </p>
           </div>
 
@@ -320,7 +313,7 @@ function AppointmentServiceSummarySection({
               Kalan
             </p>
             <p className="mt-1 text-sm font-medium text-foreground">
-              {formatMoney(getRemainingAmountCents(serviceSummary))}
+              {formatOpsMoneyDisplay(getRemainingAmountCents(serviceSummary))}
             </p>
           </div>
         </div>

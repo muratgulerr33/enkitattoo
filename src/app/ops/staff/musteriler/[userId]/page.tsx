@@ -11,6 +11,7 @@ import { OpsCustomerNoteForm } from "@/components/ops/ops-customer-note-form";
 import { APPOINTMENT_STATUS_LABELS } from "@/lib/ops/appointment-copy";
 import { formatAppointmentDateLong } from "@/lib/ops/appointments";
 import { getCustomerDetail, getCustomerLabel } from "@/lib/ops/customers";
+import { formatOpsMoneyDisplay } from "@/lib/ops/money";
 import { cn } from "@/lib/utils";
 
 type PageProps = {
@@ -47,14 +48,6 @@ function getCustomerContactLine(customer: {
 
 function getAppointmentEmptyMessage(section: "upcoming" | "past"): string {
   return section === "upcoming" ? "Yaklaşan kayıt yok." : "Geçmiş kayıt yok.";
-}
-
-function formatMoney(cents: number): string {
-  return new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency: "TRY",
-    maximumFractionDigits: 2,
-  }).format(cents / 100);
 }
 
 function getServiceTypeLabel(value: string): string {
@@ -154,13 +147,6 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 {getFieldValue(customer.email)}
               </p>
             </div>
-
-            <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-surface-1/55 px-4 py-3 sm:col-span-2">
-              <p className="text-sm text-muted-foreground">Profil durumu</p>
-              <p className="text-sm font-medium text-foreground">
-                {customer.workspace.isProfileComplete ? "Hazır" : "Eksik"}
-              </p>
-            </div>
           </CardContent>
         </Card>
 
@@ -190,7 +176,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                       Toplam
                     </p>
                     <p className="mt-1 text-sm font-medium text-foreground">
-                      {formatMoney(latestServiceIntake.totalAmountCents)}
+                      {formatOpsMoneyDisplay(latestServiceIntake.totalAmountCents)}
                     </p>
                   </div>
 
@@ -199,7 +185,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                       Alınan
                     </p>
                     <p className="mt-1 text-sm font-medium text-foreground">
-                      {formatMoney(latestServiceIntake.collectedAmountCents)}
+                      {formatOpsMoneyDisplay(latestServiceIntake.collectedAmountCents)}
                     </p>
                   </div>
 
@@ -208,7 +194,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                       Kalan
                     </p>
                     <p className="mt-1 text-sm font-medium text-foreground">
-                      {formatMoney(latestServiceRemainingAmountCents)}
+                      {formatOpsMoneyDisplay(latestServiceRemainingAmountCents)}
                     </p>
                   </div>
                 </div>
@@ -225,7 +211,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
       <div className="grid gap-5 xl:grid-cols-[minmax(340px,0.76fr)_minmax(0,1.24fr)] xl:gap-6">
         <Card>
           <CardHeader className="gap-1 px-5 py-5">
-            <CardTitle>Staff notu</CardTitle>
+            <CardTitle>Artist notu</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 pt-0">
             {customer.note ? (

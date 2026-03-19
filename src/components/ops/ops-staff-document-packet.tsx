@@ -6,6 +6,7 @@ import { ArrowLeft, Printer } from "lucide-react";
 import { LegalMarkdown } from "@/components/legal/legal-markdown";
 import { Button } from "@/components/ui/button";
 import type { StaffDocumentPacket } from "@/lib/ops/document-packets";
+import { formatOpsMoneyDisplay } from "@/lib/ops/money";
 import { cn } from "@/lib/utils";
 
 type OpsStaffDocumentPacketProps = {
@@ -16,14 +17,6 @@ const COPY_LABELS = {
   1: ["Müşteri nüshası"] as const,
   2: ["Müşteri nüshası", "Stüdyo nüshası"] as const,
 } satisfies Record<1 | 2, readonly string[]>;
-
-function formatMoney(amountCents: number): string {
-  return new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency: "TRY",
-    maximumFractionDigits: 2,
-  }).format(amountCents / 100);
-}
 
 function formatDate(value: Date): string {
   return new Intl.DateTimeFormat("tr-TR", {
@@ -147,14 +140,14 @@ function ContractCopy({
               <div className="flex items-end justify-between gap-4 border-b border-border pb-1.5">
                 <span className="text-muted-foreground">Toplam Tutar</span>
                 <span className="text-right font-medium text-foreground">
-                  {formatMoney(packet.totalAmountCents)}
+                  {formatOpsMoneyDisplay(packet.totalAmountCents)}
                 </span>
               </div>
 
               <div className="flex items-end justify-between gap-4 border-b border-border pb-1.5">
                 <span className="text-muted-foreground">Alınan Kapora</span>
                 <span className="text-right font-medium text-foreground">
-                  {formatMoney(packet.collectedAmountCents)}
+                  {formatOpsMoneyDisplay(packet.collectedAmountCents)}
                 </span>
               </div>
             </section>

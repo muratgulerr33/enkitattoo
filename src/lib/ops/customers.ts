@@ -20,7 +20,6 @@ import {
   type ServiceIntakeRecord,
 } from "./service-intakes";
 import {
-  formatAppointmentDateLong,
   getCurrentTimeValue,
   getTodayDateValue,
   listUserAppointments,
@@ -107,7 +106,19 @@ export function formatCustomerAppointmentShort(
     return null;
   }
 
-  return `${formatAppointmentDateLong(appointment.appointmentDate)} · ${appointment.appointmentTime}`;
+  const [year, month, day] = appointment.appointmentDate.split("-").map(Number);
+  const formatter = new Intl.DateTimeFormat("tr-TR", {
+    day: "numeric",
+    month: "long",
+    weekday: "long",
+  });
+  const parts = formatter.formatToParts(new Date(year, month - 1, day));
+  const dayLabel = parts.find((part) => part.type === "day")?.value;
+  const monthLabel = parts.find((part) => part.type === "month")?.value;
+  const weekdayLabel = parts.find((part) => part.type === "weekday")?.value;
+  const dateLabel = [dayLabel, monthLabel, weekdayLabel].filter(Boolean).join(" ");
+
+  return `${dateLabel} · ${appointment.appointmentTime}`;
 }
 
 function toCustomerNote(row: CustomerNoteRow | undefined): CustomerNoteRecord | null {

@@ -13,7 +13,6 @@ import {
   formatCustomerAppointmentShort,
   getCustomerLabel,
   listCustomers,
-  type CustomerSearchMatchField,
 } from "@/lib/ops/customers";
 import { cn } from "@/lib/utils";
 
@@ -37,19 +36,8 @@ function getCustomerResultsDescription(query: string, count: number): string {
   return count ? `${count} müşteri bulundu.` : "Henüz müşteri yok.";
 }
 
-function getSearchMatchCopy(field: CustomerSearchMatchField): string {
-  switch (field) {
-    case "phone":
-      return "Telefon ile eşleşti";
-    case "email":
-      return "E-posta ile eşleşti";
-    case "name":
-      return "İsim ile eşleşti";
-  }
-}
-
 function getNextSessionLabel(nextAppointmentText: string | null): string {
-  return nextAppointmentText ?? "Plan yok.";
+  return nextAppointmentText ?? "Yaklaşan randevu yok";
 }
 
 export default async function OpsStaffCustomersPage({ searchParams }: PageProps) {
@@ -105,54 +93,35 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
           {customers.length ? (
             customers.map((customer) => {
               const nextAppointmentText = formatCustomerAppointmentShort(customer.nextAppointment);
-              const searchMatchField = customer.searchMatch?.field ?? null;
+              const nextSessionLabel = getNextSessionLabel(nextAppointmentText);
 
               return (
                 <Link
                   key={customer.userId}
                   href={`/ops/staff/musteriler/${customer.userId}`}
                   className={cn(
-                    "group flex h-full min-h-[8.2rem] flex-col justify-between rounded-[1.45rem] border px-3.5 py-3 transition-[transform,border-color,background-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.995]",
+                    "group flex h-full min-h-[7.8rem] flex-col justify-center rounded-[1.45rem] border px-3.5 py-3 transition-[transform,border-color,background-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.995]",
                     isSearchActive
                       ? "border-foreground/10 bg-muted/10 hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-muted/15 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)]"
                       : "border-border/80 bg-card hover:-translate-y-0.5 hover:border-foreground/15 hover:bg-surface-1/40 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)]"
                   )}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0 space-y-1.5">
-                      <div className="space-y-1">
-                        <p className="text-base font-semibold text-foreground">
-                          {getCustomerLabel(customer)}
-                        </p>
-                        {isSearchActive && searchMatchField ? (
-                          <p className="text-[11px] font-medium text-foreground/72">
-                            {getSearchMatchCopy(searchMatchField)}
-                          </p>
-                        ) : null}
-                      </div>
-
-                      <div className="space-y-0.5 text-sm">
-                        <p
-                          className={cn(
-                            "break-words",
-                            searchMatchField === "phone"
-                              ? "font-medium text-foreground"
-                              : "text-foreground/80"
-                          )}
-                        >
-                          {customer.phone ?? "Telefon eklenmedi"}
-                        </p>
-                        <p
-                          className={cn(
-                            "break-words",
-                            searchMatchField === "email"
-                              ? "font-medium text-foreground"
-                              : "text-muted-foreground"
-                          )}
-                        >
-                          {customer.email ?? "E-posta eklenmedi"}
-                        </p>
-                      </div>
+                    <div className="min-w-0 space-y-1">
+                      <p className="truncate text-base font-semibold text-foreground">
+                        {getCustomerLabel(customer)}
+                      </p>
+                      <p className="truncate text-sm text-foreground/80">
+                        {customer.phone ?? "Telefon eklenmedi"}
+                      </p>
+                      <p
+                        className={cn(
+                          "truncate text-sm",
+                          nextAppointmentText ? "font-medium text-foreground" : "text-muted-foreground"
+                        )}
+                      >
+                        {nextSessionLabel}
+                      </p>
                     </div>
 
                     <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-xl border border-transparent bg-transparent text-foreground/42 transition-[transform,color,background-color] duration-150 group-hover:translate-x-0.5 group-hover:bg-surface-1/75 group-hover:text-foreground/72">
@@ -161,20 +130,6 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                         aria-hidden
                       />
                     </span>
-                  </div>
-
-                  <div className="mt-2.5 rounded-[1.05rem] bg-surface-1/38 px-3 py-2">
-                    <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                      Sıradaki işlem
-                    </p>
-                    <p
-                      className={cn(
-                        "mt-1 line-clamp-2 text-[13px] leading-5 sm:text-sm",
-                        nextAppointmentText ? "font-medium text-foreground" : "text-muted-foreground/90"
-                      )}
-                    >
-                      {getNextSessionLabel(nextAppointmentText)}
-                    </p>
                   </div>
                 </Link>
               );
