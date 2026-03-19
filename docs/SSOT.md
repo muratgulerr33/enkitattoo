@@ -205,7 +205,8 @@ UI kontratı, IA gerilimleri ve open question’lar `docs/UI-SYSTEM.md` içinde 
 - Artist yalnız bugünün kasasına kayıt açabilir.
 - Geçmiş kayıt düzenleme ve soft delete yalnız admin’e açıktır; ayrıca system-generated cash entry’ler read-only kalır ve manage dialog yalnız manuel kayıtlar için görünür (`src/lib/ops/cashbook.ts`, `src/app/ops/kasa/actions.ts`, `src/app/ops/staff/kasa/page.tsx`).
 - `/ops/staff/kasa` current runtime’da küçük secondary `Raporlar` girişini taşır; mobile bottom nav’a ayrı item eklenmez (`src/app/ops/staff/kasa/page.tsx`, `src/lib/ops/navigation.ts`).
-- Staff kasa current runtime’da ana operasyon merkezi gibi değil, yardımcı / son kontrol yüzeyi gibi okunur. Görünür defter satırları `Gelir/Gider -> işlem tipi -> tutar -> kısa destekleyici bilgi` sırasını öne çıkarır; sistem üretimi, işlem id ve admin/saat meta bilgisi görünür listede baskın durmaz (`src/app/ops/staff/kasa/page.tsx`).
+- Staff kasa current runtime’da ana operasyon merkezi gibi değil, yardımcı / son kontrol yüzeyi gibi okunur. Görünür defter satırları `Gelir/Gider -> işlem tipi -> tutar -> kısa destekleyici bilgi` sırasını öne çıkarır; sistem üretimi satırlarda kart üstü destek meta insan odaklı kısa tarih/saat ile kalır, `işlem #...` ve `otomatik` gibi teknik etiketler görünür listede yer almaz (`src/app/ops/staff/kasa/page.tsx`).
+- `/ops/staff/profil` current runtime’da kısa hesap/erişim özeti ve tek kısa orientation copy’si taşıyan yardımcı yüzeydir; top-level nav’ı ikinci kez CTA listesi gibi tekrar etmez ve dashboard/placeholder hissi veren büyük yön blokları açmaz (`src/app/ops/staff/profil/page.tsx`).
 
 ### Reports
 

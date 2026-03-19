@@ -78,14 +78,14 @@ export function OpsCashEntryManageDialog({
           <DialogHeader className="space-y-2 text-left">
             <DialogTitle>Manuel kasa kaydı</DialogTitle>
             <DialogDescription>
-              Yalnız manuel satırlar burada yönetilir.
+              Yalnız manuel satırlar burada düzenlenir.
             </DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-3 rounded-2xl border border-border bg-surface-1 p-4 text-sm text-muted-foreground">
-            <p>Oluşturan: {createdByName}</p>
-            <p>Oluşturma: {createdAtLabel}</p>
-            <p>Son güncelleme: {updatedByName ? `${updatedByName} · ${updatedAtLabel}` : updatedAtLabel}</p>
+            <p>Kaydı açan: {createdByName}</p>
+            <p>İlk kayıt: {createdAtLabel}</p>
+            <p>Son değişiklik: {updatedByName ? `${updatedByName} · ${updatedAtLabel}` : updatedAtLabel}</p>
           </div>
 
           <form action={updateAction} className="space-y-4">

@@ -1,5 +1,3 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,17 +23,6 @@ function formatRoleLabel(role: Awaited<ReturnType<typeof requireOpsSessionArea>>
   return "Kullanıcı";
 }
 
-const QUICK_LINKS = [
-  {
-    href: "/ops/staff/randevular",
-    label: "İşlemler",
-  },
-  {
-    href: "/ops/staff/musteriler",
-    label: "Müşteriler",
-  },
-] as const;
-
 export default async function OpsStaffProfilePage() {
   const sessionUser = await requireOpsSessionArea("staff");
   const displayName = getDisplayName(sessionUser);
@@ -43,58 +30,67 @@ export default async function OpsStaffProfilePage() {
 
   return (
     <div className="ops-page-shell">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.22fr)_minmax(300px,0.78fr)] xl:gap-5">
-        <Card>
-          <CardHeader className="gap-2 border-b pb-4">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] xl:items-start xl:gap-6">
+        <Card className="overflow-hidden">
+          <CardHeader className="gap-3 border-b pb-4">
             <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-              Aktif hesap
+              Profil
             </p>
             <CardTitle className="text-lg">{displayName}</CardTitle>
-            <CardDescription>Kısa hesap özeti.</CardDescription>
+            <CardDescription>Hesap ve erişim özeti.</CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-3 pt-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                E-posta
-              </p>
-              <p className="mt-1 break-words text-sm font-medium text-foreground">
-                {sessionUser.email ?? "Belirtilmemiş"}
-              </p>
+          <CardContent className="space-y-4 pt-4">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  E-posta
+                </p>
+                <p className="mt-1 break-words text-sm font-medium text-foreground">
+                  {sessionUser.email ?? "Belirtilmemiş"}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Rol
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">{roleSummary}</p>
+              </div>
             </div>
 
-            <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3">
+            <div className="rounded-2xl border border-border bg-surface-1/45 px-4 py-4">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Rol
+                Çalışma ritmi
               </p>
-              <p className="mt-1 text-sm font-medium text-foreground">{roleSummary}</p>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3 sm:col-span-2">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Kullanım notu
-              </p>
-              <p className="mt-1 text-sm text-foreground/80">
-                Ana akış işlemlerden başlar.
-              </p>
+              <div className="mt-2 space-y-2 text-sm text-foreground/80">
+                <p>Günün ana akışı işlemler yüzeyinden yürür.</p>
+                <p>Müşteriler ve kasa gerektiğinde açılan yardımcı alanlar olarak kalır.</p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="gap-1.5">
+        <Card className="border-border/80 bg-surface-1/45 xl:sticky xl:top-24">
+          <CardHeader className="gap-1.5 border-b pb-4">
             <CardTitle>Bugün</CardTitle>
-            <CardDescription>Ana işi açın.</CardDescription>
+            <CardDescription>Kısa yön.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              İşlem akışı ana yüzeydir. Müşteri listesi gerektiğinde açılır.
-            </p>
+            <div className="rounded-2xl border border-border/80 bg-background/75 px-4 py-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Ana yüzey
+              </p>
+              <p className="mt-1 text-sm text-foreground">İşlemler çalışma alanıdır.</p>
+            </div>
 
-            {QUICK_LINKS.map((item) => (
-              <Button key={item.href} asChild variant={item.href.includes("/randevular") ? "default" : "outline"} size="cta" className="w-full">
-                <Link href={item.href}>{item.label}</Link>
-              </Button>
-            ))}
+            <div className="rounded-2xl border border-border/80 bg-background/75 px-4 py-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Yardımcı alanlar
+              </p>
+              <p className="mt-1 text-sm text-foreground/80">
+                Kasa son kontrol içindir. Profil hesap bilgilerini kısa tutar.
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
