@@ -80,7 +80,7 @@ Current runtime ile planned roadmap burada da ayrıdır: staff visible top-level
 | Repo-side kalite | `npm run lint`, `npm run build`, gerekirse `npm run check:all` | temel kapılar geçer |
 | Route-content değiştiyse | generator sonrası ilgili route + `/sitemap.xml` + `/robots.txt` | canonical/noindex etkisi mantıklı kalır |
 | Ops auth | `/ops`, `/ops/giris`, `/ops/staff/randevular`, `/ops/user/randevular` | session ve role göre doğru redirect |
-| Staff işlemler workspace | `/ops/staff/randevular` month root + selected day workspace | appointment create/edit/delete korunur, walk-in create/edit çalışır, `Alınan tutar` boş/0 kabul edilir, visible source badge/selector görünmez, detail/edit ve müşteri detail `İşlem özeti` kontratı bozulmaz |
+| Staff işlemler workspace | `/ops/staff/randevular` month root + selected day workspace | appointment create/edit/delete korunur, walk-in create/edit çalışır, `Alınan tutar` boş/0 kabul edilir, selected-day workspace root takvimin hemen altında inline/fold üstü okunur, visible source badge/selector görünmez, detail/edit ve müşteri detail `İşlem özeti` kontratı bozulmaz |
 | Staff packet preview | `/ops/staff/belgeler/[serviceIntakeId]` | appointment ve walk-in detail içinden doğru `serviceIntakeId` ile açılır, tek sayfa A4 sözleşmesi görünür, legal maddeler continuous 1..7 numaralanır, yalnız gerekli alanlar basılır ve 1/2 kopya seçimi render sayısını değiştirir |
 | Inline müşteri create | işlem create sheet içindeki `Yeni müşteri` akışı | redirect olmaz, `NEXT_REDIRECT` sızmaz, yeni müşteri seçili kalır, outer form bağlamı korunur |
 | Unified day order | aynı gün ve saatte appointment + walk-in kaydı | sıra deterministic kalır; appointment önce, walk-in sonra görünür |
@@ -90,7 +90,7 @@ Current runtime ile planned roadmap burada da ayrıdır: staff visible top-level
 | Automated cashbook delta | collected artır / azalt | artış yeni income, azalış yeni expense `service_adjustment` satırı üretir |
 | Manual cash exception | `/ops/staff/kasa` manuel giriş formu | manuel gider / düzeltme kaydı hâlâ açılır; kasa yardımcı/son kontrol yüzeyi olarak kalır |
 | System cash read-only | service-source kasa satırı | manage dialog görünmez, update/delete app-level olarak açık olmaz |
-| Staff top-level polish | `/ops/staff/kasa`, `/ops/staff/musteriler`, `/ops/staff/profil` | mobile/desktop yatay overflow üretmez; müşteri kartları primary action gibi okunur; mobil profil kısa ve bitmiş yardımcı yüzey gibi görünür; kasa header ve defter satırları sakin görünür, visible ledger meta `işlem #...` veya `otomatik` göstermez |
+| Staff top-level polish | `/ops/staff/kasa`, `/ops/staff/musteriler`, `/ops/staff/profil` | mobile/desktop yatay overflow üretmez; müşteri arama ana akış, hızlı create secondary kalır ve kartlar primary action gibi okunur; mobil profil kısa ve bitmiş yardımcı yüzey gibi görünür, nav’ı CTA olarak tekrar etmez; kasa header ve defter satırları sakin görünür, visible ledger meta `işlem #...` veya `otomatik` göstermez |
 | Appointment delete | detail sheet içindeki `Sil` aksiyonu | app-level confirm açılır, SQL error yok, stale reopen veya stale summary kalmaz |
 | Appointment delete guard | linked intake üzerinde aktif tahsilat izi olan appointment | delete bloklanır, önce kasa düzeltmesi gerektiğini anlatan kısa hata döner |
 | Packet print chrome | packet preview route browser print | `Geri` / `Yazdır` / `1 kopya - 2 kopya` barı print’e girmez, seçilen sözleşme sayısı A4 portrait olarak ayrılır |
@@ -139,6 +139,7 @@ Script davranışı:
 - Migration generate unutulursa schema ile migration ayrışır.
 - Bootstrap/env eksik kalırsa ops login çalışmaz.
 - Ops copy ve shell polish borçları ayrı bir ürün kalitesi konusu olarak açık kalır; bu dosya bunları çözülmüş varsaymaz.
+- `middleware` -> `proxy` build warning’i current runtime’da çözülmüş varsayılmaz; `src/middleware.ts` locale rewrite/bypass/header zinciri ile `src/i18n/routing.ts` + `next-intl` entegrasyonu hassas olduğu için migration ertelenmiştir. Öncelik çalışan local/prod locale davranışını korumaktır.
 - PR-B sonrası bloklamayan follow-up notları ayrıdır: `Alınan tutar` input yazım ergonomisi ile toast feedback sistemi bu runbook içinde current runtime tamamlanmış işi sayılmaz.
 
 ## 10) UNKNOWN

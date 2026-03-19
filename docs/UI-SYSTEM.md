@@ -75,6 +75,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Raporlar: mobile-first sakin bloklar halinde taranır; ağır dashboard veya grafik hissi yoktur. Admin günlük, haftalık ve seçili tarih aralığı için kasa + randevu özetleri ile randevu listesini görür; artist yalnız bugün, bu hafta ve tüm randevuların read-only listesini görür.
 - Kasa otomasyonu current runtime’ın parçasıdır; visible yüzeyde kasa ana başlangıç ekranı değil, otomatik hareketleri kontrol eden ve gerektiğinde manuel gider / düzeltme girilen yardımcı yüzey gibi davranır.
 - İşlemler: ilk görünür ana yüzey aylık takvimdir; mobile ve tablet month root, shell safe padding dışında kalan genişliği mümkün olduğunca kullanır ve dar ortalı kart gibi durmaz.
+- Selected-day workspace current runtime’da root takvimin hemen altında inline/fold üstü okunur; mobile ve desktop hiyerarşisi `month root -> selected day workspace -> detail/create-edit katmanları` sırasıyla net kalır.
 - Staff month overview sessiz kalır; hücre içinde yalnız gün numarası, kategorik occupancy decoration ve seçili state görünür.
 - Staff month root içinde exact count rakamı gösterilmez; doluluk bilgisi küçük ikinci numeral yerine decoration tabanlı marker ile verilir.
 - Staff month root current runtime’da source-aware ikinci sinyal göstermez; occupancy dili tek neutral işlem yoğunluğu olarak kalır.
@@ -161,7 +162,7 @@ Bu bölüm çözüldü listesi değildir; repo içindeki mevcut durumun kısa ka
 - Staff service session formunda `Alınan tutar` alanının varsayılan `0,00` yazım ergonomisi ayrı küçük polish turuna bırakılmıştır; current runtime lock yalnız alanın opsiyonel olması ve native validation’a yaslanmaması üzerinedir (`src/components/ops/ops-staff-appointment-create-form.tsx`).
 - Toast feedback sistemi current runtime kontratı değildir; create/edit success ve hata geri bildirimi ayrı follow-up PR’da ele alınacaktır.
 - Aktif bir hydration mismatch hatası current runtime kodundan doğrulanamaz; archive notları vardır ama canlı bir bug kanıtı olmadan kesin hüküm yazılmaz.
-- Repo içinde görülen `middleware` -> `proxy` build uyarısı ayrı bakım konusudur; mevcut UI polish bunu çözülmüş varsaymaz.
+- Repo içinde görülen `middleware` -> `proxy` build uyarısı ayrı bakım konusudur; mevcut runtime’da aktif davranış kaynağı hâlâ `src/middleware.ts` içindeki bypass, internal rewrite header, `x-next-intl-locale`, default locale rewrite ve `/tr` canonical redirect zinciridir. `src/i18n/routing.ts` tarafındaki `localePrefix: 'as-needed'`, `localeDetection: false`, `localeCookie: false` ayarları ve `next-intl` plugin bağı nedeniyle kanıtsız refactor yapılmaz; warning’den büyük risk çalışan locale/translate davranışını bozmak olduğu için bu iş ancak izole keşif + birebir davranış doğrulamasıyla ileride ele alınır.
 
 ## 6) Shared UI Foundations
 
