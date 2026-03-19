@@ -509,10 +509,6 @@ export async function hasActiveCashEntriesForServiceIntakeIds(
   return Boolean(rows[0]);
 }
 
-function getFlowLabel(flowType: ServiceIntakeFlowType): string {
-  return flowType === "walk_in" ? "Walk-in" : "Randevu";
-}
-
 function getServiceLabel(serviceType: ServiceIntakeServiceType): string {
   return serviceType === "piercing" ? "Piercing" : "Dövme";
 }
@@ -528,9 +524,7 @@ function buildServiceIntakeCashEntryNote(
   const eventLabel =
     input.entryReason === "service_collection" ? "tahsilatı" : "düzeltmesi";
 
-  return `${getFlowLabel(input.flowType)} ${eventLabel} · ${getServiceLabel(
-    input.serviceType
-  )} · ${input.scheduledDate} ${input.scheduledTime}`;
+  return `İşlem ${eventLabel} · ${getServiceLabel(input.serviceType)} · ${input.scheduledDate} ${input.scheduledTime}`;
 }
 
 async function insertCashEntryRecord(

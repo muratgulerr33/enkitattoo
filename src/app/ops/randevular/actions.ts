@@ -47,13 +47,12 @@ const INITIAL_CREATE_CUSTOMER_ERROR_MESSAGE = "Müşteri oluşturulamadı.";
 const INLINE_CUSTOMER_AUTH_ERROR_MESSAGE =
   "Oturum süreniz doldu. Sayfayı yenileyip yeniden giriş yapın.";
 const INLINE_CUSTOMER_ROLE_ERROR_MESSAGE = "Bu işlem için personel hesabı gerekli.";
-const DELETE_ERROR_MESSAGE = "Randevu silinemedi. Biraz sonra tekrar deneyin.";
-const WALK_IN_ERROR_MESSAGE = "Walk-in kaydı kaydedilemedi.";
+const DELETE_ERROR_MESSAGE = "İşlem silinemedi. Biraz sonra tekrar deneyin.";
+const WALK_IN_ERROR_MESSAGE = "İşlem kaydı kaydedilemedi.";
 
 const SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES = new Set([
   "Metin alanı çok uzun. Lütfen kısaltın.",
   "Girdiler beklenenden uzun. Lütfen kısaltın.",
-  "Kaynak seçin.",
   "Müşteri seçin.",
   "Seçilen müşteri kullanılamıyor.",
   "Tarih seçin.",
@@ -69,7 +68,7 @@ const SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES = new Set([
   "Alınan tutarı girin.",
   "Alınan tutarı kontrol edin.",
   "Alınan tutar toplam tutardan büyük olamaz.",
-  "Randevu bulunamadı.",
+  "İşlem bulunamadı.",
   "İşlem kaydı bulunamadı.",
   APPOINTMENT_DELETE_WITH_CASH_ENTRIES_MESSAGE,
   APPOINTMENT_SLOT_CONFLICT_MESSAGE,
@@ -421,7 +420,7 @@ export async function createStaffAppointmentAction(
 
     return {
       error: null,
-      success: "Randevu ve işlem kaydı açıldı.",
+      success: "İşlem kaydı açıldı.",
     };
   } catch (error) {
     return {
@@ -474,7 +473,7 @@ export async function createStaffWalkInAction(
 
     return {
       error: null,
-      success: "Walk-in işlem kaydı açıldı.",
+      success: "İşlem kaydı açıldı.",
     };
   } catch (error) {
     return {
@@ -493,7 +492,9 @@ export async function createStaffServiceSessionAction(
   formData: FormData
 ): Promise<OpsAppointmentActionState> {
   try {
-    const source = toRequiredString(formData.get("sessionSource"), "Kaynak seçin.");
+    const sourceValue = formData.get("sessionSource");
+    const source =
+      typeof sourceValue === "string" && sourceValue.trim() ? sourceValue.trim() : "appointment";
 
     if (source === "walk_in") {
       return createStaffWalkInAction(previousState, formData);
@@ -606,7 +607,7 @@ export async function createUserAppointmentAction(
 
     return {
       error: null,
-      success: "Randevu kaydedildi.",
+      success: "İşlem kaydı açıldı.",
     };
   } catch (error) {
     return {
@@ -628,7 +629,7 @@ export async function updateAppointmentStatusAction(
     const sessionUser = await requireOpsSessionArea("staff");
     const appointmentId = toRequiredNumber(
       formData.get("appointmentId"),
-      "Randevu bulunamadı."
+      "İşlem bulunamadı."
     );
     const rawStatus = toRequiredString(formData.get("status"), "Durum seçin.");
 
@@ -671,7 +672,7 @@ export async function updateStaffAppointmentAction(
     const sessionUser = await requireOpsSessionArea("staff");
     const appointmentId = toRequiredNumber(
       formData.get("appointmentId"),
-      "Randevu bulunamadı."
+      "İşlem bulunamadı."
     );
     const {
       customerUserId,
@@ -704,7 +705,7 @@ export async function updateStaffAppointmentAction(
 
     return {
       error: null,
-      success: "Randevu güncellendi.",
+      success: "İşlem güncellendi.",
     };
   } catch (error) {
     return {
@@ -764,7 +765,7 @@ export async function updateStaffWalkInAction(
 
     return {
       error: null,
-      success: "Walk-in işlem kaydı güncellendi.",
+      success: "İşlem güncellendi.",
     };
   } catch (error) {
     return {
@@ -786,7 +787,7 @@ export async function deleteStaffAppointmentAction(
     const sessionUser = await requireOpsSessionArea("staff");
     const appointmentId = toRequiredNumber(
       formData.get("appointmentId"),
-      "Randevu bulunamadı."
+      "İşlem bulunamadı."
     );
 
     const deleted = await deleteAppointment({
@@ -799,7 +800,7 @@ export async function deleteStaffAppointmentAction(
 
     return {
       error: null,
-      success: "Randevu silindi.",
+      success: "İşlem silindi.",
     };
   } catch (error) {
     return {

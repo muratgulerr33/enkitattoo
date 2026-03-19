@@ -61,6 +61,64 @@
   --radius-2xl: calc(var(--radius) + 8px);
 }
 
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+@media print {
+  body {
+    background: #fff !important;
+  }
+
+  .document-packet-screenbar,
+  .document-packet-screen-only {
+    display: none !important;
+  }
+
+  .document-packet-preview {
+    max-width: none !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+
+  .document-packet-copy {
+    width: auto !important;
+    min-height: auto !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    break-after: page;
+    break-inside: avoid;
+    margin: 0 !important;
+  }
+
+  .document-packet-copy:last-child {
+    break-after: auto;
+  }
+
+  .document-packet-sheet {
+    min-height: auto !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+
+  .document-contract-sheet {
+    font-size: 12px !important;
+  }
+
+  .document-contract-body {
+    font-size: 11.25px !important;
+    line-height: 1.42 !important;
+  }
+
+  .document-contract-body > ol,
+  .document-contract-body > p {
+    orphans: 3;
+    widows: 3;
+  }
+}
+
 :root {
   color-scheme: light;
   --radius: 0.625rem;
@@ -399,7 +457,7 @@
   }
 
   .ops-page-shell {
-    @apply space-y-5 sm:space-y-6;
+    @apply space-y-5 pb-2 sm:space-y-6 sm:pb-3 md:pb-0;
   }
 
   .ops-page-header {
@@ -444,7 +502,7 @@
   }
 
   .safe-pb-ops-shell {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 5.5rem);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 6rem);
   }
 
   .safe-pb-ops-nav {

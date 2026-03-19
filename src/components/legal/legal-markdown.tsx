@@ -1,8 +1,10 @@
 import { Fragment } from "react";
+import { cn } from "@/lib/utils";
 
 type MarkdownBlock =
   | { type: "heading"; level: number; text: string }
   | { type: "paragraph"; text: string }
+  | { type: "ordered-list"; items: string[] }
   | { type: "list"; items: string[] }
   | { type: "blockquote"; lines: string[] }
   | { type: "hr" };
@@ -29,6 +31,7 @@ function tokenizeMarkdown(markdown: string): MarkdownBlock[] {
   const blocks: MarkdownBlock[] = [];
   let paragraphLines: string[] = [];
   let listItems: string[] = [];
+  let orderedListItems: string[] = [];
   let quoteLines: string[] = [];
 
   function flushParagraph() {
@@ -52,6 +55,15 @@ function tokenizeMarkdown(markdown: string): MarkdownBlock[] {
     listItems = [];
   }
 
+  function flushOrderedList() {
+    if (!orderedListItems.length) {
+      return;
+    }
+
+    blocks.push({ type: "ordered-list", items: [...orderedListItems] });
+    orderedListItems = [];
+  }
+
   function flushQuote() {
     if (!quoteLines.length) {
       return;
@@ -64,6 +76,7 @@ function tokenizeMarkdown(markdown: string): MarkdownBlock[] {
   function flushAll() {
     flushParagraph();
     flushList();
+    flushOrderedList();
     flushQuote();
   }
 
@@ -71,6 +84,10 @@ function tokenizeMarkdown(markdown: string): MarkdownBlock[] {
     const line = rawLine.trim();
 
     if (!line) {
+      if ((orderedListItems.length || listItems.length) && !paragraphLines.length && !quoteLines.length) {
+        continue;
+      }
+
       flushAll();
       continue;
     }
@@ -96,6 +113,7 @@ function tokenizeMarkdown(markdown: string): MarkdownBlock[] {
     if (quoteMatch) {
       flushParagraph();
       flushList();
+      flushOrderedList();
       quoteLines.push(quoteMatch[1].trim());
       continue;
     }
@@ -103,8 +121,18 @@ function tokenizeMarkdown(markdown: string): MarkdownBlock[] {
     const listMatch = line.match(/^- (.+)$/);
     if (listMatch) {
       flushParagraph();
+      flushOrderedList();
       flushQuote();
       listItems.push(listMatch[1].trim());
+      continue;
+    }
+
+    const orderedListMatch = line.match(/^\d+\.\s+(.+)$/);
+    if (orderedListMatch) {
+      flushParagraph();
+      flushList();
+      flushQuote();
+      orderedListItems.push(orderedListMatch[1].trim());
       continue;
     }
 
@@ -115,6 +143,7 @@ function tokenizeMarkdown(markdown: string): MarkdownBlock[] {
     }
 
     flushList();
+    flushOrderedList();
     flushQuote();
     paragraphLines.push(line);
   }
@@ -124,11 +153,17 @@ function tokenizeMarkdown(markdown: string): MarkdownBlock[] {
   return blocks;
 }
 
-export function LegalMarkdown({ markdown }: { markdown: string }) {
+export function LegalMarkdown({
+  markdown,
+  className,
+}: {
+  markdown: string;
+  className?: string;
+}) {
   const blocks = tokenizeMarkdown(markdown);
 
   return (
-    <div className="space-y-4 text-sm leading-7 text-foreground/90 sm:text-[15px]">
+    <div className={cn("space-y-4 text-sm leading-7 text-foreground/90 sm:text-[15px]", className)}>
       {blocks.map((block, index) => {
         if (block.type === "heading") {
           if (block.level === 2) {
@@ -151,6 +186,19 @@ export function LegalMarkdown({ markdown }: { markdown: string }) {
             <h2 key={index} className="text-xl font-semibold tracking-tight text-foreground">
               {renderInlineMarkdown(block.text)}
             </h2>
+          );
+        }
+
+        if (block.type === "ordered-list") {
+          return (
+            <ol
+              key={index}
+              className="space-y-2 pl-5 text-foreground/85 list-decimal marker:font-medium marker:text-foreground/75"
+            >
+              {block.items.map((item, itemIndex) => (
+                <li key={`${item}-${itemIndex}`}>{renderInlineMarkdown(item)}</li>
+              ))}
+            </ol>
           );
         }
 

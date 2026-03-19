@@ -75,7 +75,9 @@ function getNetClassName(netCents: number): string {
 }
 
 function getEntryTitle(entry: CashEntryRecord): string {
-  return entry.note?.trim() || `${CASH_ENTRY_TYPE_LABELS[entry.entryType]} kaydı`;
+  const normalizedNote = entry.note?.trim().replace(/\b(?:Walk-in|Randevu)\b/g, "İşlem");
+
+  return normalizedNote || `${CASH_ENTRY_TYPE_LABELS[entry.entryType]} kaydı`;
 }
 
 function SummaryRows({
@@ -132,8 +134,10 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
         <Card className="order-1">
           <CardHeader className="gap-1 border-b pb-4">
             <p className="text-xs text-muted-foreground">{selectedDateLabel}</p>
-            <CardTitle className="text-base sm:text-lg">Manuel kayıt</CardTitle>
-            <CardDescription>İstisna, gider veya düzeltme girin.</CardDescription>
+            <CardTitle className="text-base sm:text-lg">Gider / düzeltme</CardTitle>
+            <CardDescription>
+              Otomatik hareketleri kontrol edin; gerekiyorsa manuel gider veya düzeltme girin.
+            </CardDescription>
           </CardHeader>
 
           <CardContent className="pt-4">
@@ -151,7 +155,9 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                 <div className="space-y-1">
                   <CardTitle className="text-sm">Gün özeti</CardTitle>
                   <CardDescription>
-                    {isSelectedDateToday ? "Bugünün kasası açık." : "Seçili gün defteri açık."}
+                    {isSelectedDateToday
+                      ? "Otomatik hareketleri ve manuel düzeltmeleri birlikte görün."
+                      : "Seçili günün hareketlerini burada kontrol edin."}
                   </CardDescription>
                 </div>
                 <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
@@ -190,7 +196,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
 
               {!canManageHistoryEntries ? (
                 <p className="border-t border-border pt-3 text-xs text-muted-foreground">
-                  Artist bugünün defteriyle çalışır.
+                  Artist bugünün hareketleriyle çalışır.
                 </p>
               ) : null}
             </CardContent>

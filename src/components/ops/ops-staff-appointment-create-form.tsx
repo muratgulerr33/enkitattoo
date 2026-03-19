@@ -174,14 +174,7 @@ export function OpsStaffAppointmentCreateForm({
     });
   }
 
-  const createSubmitLabel =
-    sessionSource === "walk_in" ? "Walk-in kaydı aç" : "Randevuyu ekle";
-  const defaultSubmitLabel =
-    mode === "edit"
-      ? sessionSource === "walk_in"
-        ? "Walk-in kaydını güncelle"
-        : "Kaydı güncelle"
-      : createSubmitLabel;
+  const defaultSubmitLabel = mode === "edit" ? "İşlemi güncelle" : "İşlem kaydı aç";
 
   return (
     <form
@@ -201,43 +194,6 @@ export function OpsStaffAppointmentCreateForm({
       ) : null}
 
       <div className={cn("grid gap-4", mode === "create" && "gap-3.5")}>
-        {mode === "create" ? (
-          <div className="space-y-2">
-            <Label>Kaynak</Label>
-            <Tabs
-              value={sessionSource}
-              onValueChange={(value) => setSessionSource(value as SessionSource)}
-              className="gap-3"
-            >
-              <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-surface-1/60 p-1">
-                <TabsTrigger
-                  value="appointment"
-                  disabled={isDisabled}
-                  className="min-h-10 rounded-xl px-3"
-                >
-                  Randevu
-                </TabsTrigger>
-                <TabsTrigger
-                  value="walk_in"
-                  disabled={isDisabled}
-                  className="min-h-10 rounded-xl px-3"
-                >
-                  Walk-in
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-          </div>
-        ) : (
-          <div className="rounded-xl bg-surface-1/55 px-3.5 py-2">
-            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-              Kaynak
-            </p>
-            <p className="mt-1 text-sm font-medium text-foreground">
-              {sessionSource === "walk_in" ? "Walk-in" : "Randevu"}
-            </p>
-          </div>
-        )}
-
         {dateMode === "context" ? (
           <>
             <input type="hidden" name="scheduledDate" value={defaultDate} />

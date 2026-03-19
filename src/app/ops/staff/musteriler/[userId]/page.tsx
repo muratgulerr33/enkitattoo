@@ -81,10 +81,6 @@ function getServiceTypeLabel(value: string): string {
   return value === "piercing" ? "Piercing" : "Dövme";
 }
 
-function getFlowTypeLabel(value: "appointment" | "walk_in"): string {
-  return value === "walk_in" ? "Walk-in" : "Randevu";
-}
-
 export default async function OpsStaffCustomerDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const customerUserId = Number(resolvedParams.userId);
@@ -158,7 +154,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 E-posta
               </p>
-              <p className="mt-1 break-words text-sm font-medium text-foreground">
+              <p className="mt-1 break-words text-sm text-muted-foreground">
                 {customer.email ?? "Kayıt yok"}
               </p>
             </div>
@@ -207,16 +203,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         </CardHeader>
         <CardContent className="pt-0">
           {customer.latestServiceIntake ? (
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
-              <div className="rounded-2xl border border-border px-4 py-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Kaynak
-                </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  {getFlowTypeLabel(customer.latestServiceIntake.flowType)}
-                </p>
-              </div>
-
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
               <div className="rounded-2xl border border-border px-4 py-3">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   İşlem tipi
@@ -303,7 +290,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         <div className="flex flex-col gap-5 sm:gap-6">
           <Card>
             <CardHeader className="gap-1 px-5 py-5">
-              <CardTitle>Yaklaşan randevular</CardTitle>
+              <CardTitle>Yaklaşan işlemler</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {customer.upcomingAppointments.length ? (
@@ -339,7 +326,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
 
           <Card>
             <CardHeader className="gap-1 px-5 py-5">
-              <CardTitle>Geçmiş randevular</CardTitle>
+              <CardTitle>Geçmiş işlemler</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {customer.pastAppointments.length ? (

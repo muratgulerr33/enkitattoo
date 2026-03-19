@@ -8,8 +8,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `/ops` shell’i ayrı bir yüzeydir; public `AppShell` sözleşmesine dahil değildir.
 - Component veya sayfa değişikliği yapılırken önce bu dosya, sonra ilgili canonical component okunur.
 - Bu dosya yalnız current runtime visible behavior’ı yazar; implement edilmemiş roadmap ekranları ayrı ve açıkça `planned roadmap` diye işaretlenir.
-- Current runtime ops lock PR-C ile appointment-first month root + unified staff service session day workspace modeline genişlemiştir: staff randevu V2, selected day içinde appointment + walk-in birleşmesi, user lane `Onaylar / Randevular / Profil`, customer detail `İşlem özeti` ve service-intake event’lerinden otomatik beslenen kasa yüzeyi.
-- Cashbook automation ve document packet / print / signature akışları current UI kontratı değildir.
+- Current runtime ops lock appointment-first teknik omurgayı korurken visible staff ürün modelini tek müşteri + tek işlem diline indirir: staff `İşlemler / Müşteriler / Kasa / Profil`, selected day içinde unified işlem workspace, customer detail `İşlem özeti`, service-intake event’lerinden otomatik beslenen kasa yardımcı yüzeyi ve staff `Belge paketi` operasyon sözleşmesi route’u birlikte doğrulanır.
 
 ## 2) Public UI Ownership Matrix
 
@@ -60,7 +59,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - İlk gerçek iş bloğu fold üstüne mümkün olduğunca yakın gelmelidir.
 - Mobil alt navigasyon `safe-pb-ops-nav` ve `safe-pb-ops-shell` ile çalışır; etiketler tam okunur kalır ve bar viewport’a fixed native tab bar gibi bağlı kalır.
 - User mobile shell fold üstünde daha ekonomik kalır; alt nav ve page-body padding içerikten gereksiz alan çalmaz (`src/components/ops/ops-shell.tsx`).
-- Staff mobile nav etiketi seti `Kasa`, `Randevu`, `Müşteri`, `Profil` olarak tam görünür (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
+- Staff mobile nav etiketi seti `İşlemler`, `Müşteri`, `Kasa`, `Profil` olarak tam görünür (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 - User mobile nav etiketi seti `Onaylar`, `Randevular`, `Profil` olarak tam görünür; kolon yapısı item sayısına göre akar (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 
 ### Tek iş odağı
@@ -73,40 +72,47 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 
 - Kasa: current runtime’da gün özeti ve defter service-intake kaynaklı otomatik hareketleri taşır; hızlı form artık manuel istisna / gider / correction yüzeyidir. `Gelir / Gider` kontrolü, kısa kategori etiketi, tutar ve `Kaydı ekle` akışı manuel kayıt için yaşar; sistem satırları read-only kalır. Yüzey cash-only çalışır; ödeme tipi görünmez. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır. `Raporlar` erişimi küçük secondary link olarak kasa yüzeyinden açılır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
 - Raporlar: mobile-first sakin bloklar halinde taranır; ağır dashboard veya grafik hissi yoktur. Admin günlük, haftalık ve seçili tarih aralığı için kasa + randevu özetleri ile randevu listesini görür; artist yalnız bugün, bu hafta ve tüm randevuların read-only listesini görür.
-- Cashbook automation roadmaptır; current runtime kasa ekranı manuel kayıt, özet ve defter yönetimi kontratını korur.
-- Randevular: ilk görünür ana yüzey aylık takvimdir; mobile ve tablet month root, shell safe padding dışında kalan genişliği mümkün olduğunca kullanır ve dar ortalı kart gibi durmaz.
+- Kasa otomasyonu current runtime’ın parçasıdır; visible yüzeyde kasa ana başlangıç ekranı değil, otomatik hareketleri kontrol eden ve gerektiğinde manuel gider / düzeltme girilen yardımcı yüzey gibi davranır.
+- İşlemler: ilk görünür ana yüzey aylık takvimdir; mobile ve tablet month root, shell safe padding dışında kalan genişliği mümkün olduğunca kullanır ve dar ortalı kart gibi durmaz.
 - Staff month overview sessiz kalır; hücre içinde yalnız gün numarası, kategorik occupancy decoration ve seçili state görünür.
 - Staff month root içinde exact count rakamı gösterilmez; doluluk bilgisi küçük ikinci numeral yerine decoration tabanlı marker ile verilir.
-- Staff month root current runtime’da appointment occupancy marker’ını korur; walk-in olan günlerde ikinci, daha hafif bir sinyal görünür. Bu sinyal ay yüzeyini unified agenda’ya çevirmeden walk-in varlığını hissettirir.
+- Staff month root current runtime’da source-aware ikinci sinyal göstermez; occupancy dili tek neutral işlem yoğunluğu olarak kalır.
 - Staff month occupancy final kontratı sabittir: `low` kısa kapsül, `medium` daha geniş kapsül, `high` en geniş ve daha güçlü kapsüldür; hiçbir seviyede ikinci numeral kullanılmaz.
 - Staff month state kontratı sabittir: `selected` ana dolu bloktur, `today` hafif ama net ikincil işarettir, `occupancy` tarih rakamıyla yarışmayan ayrı secondary decoration ailesidir.
 - Mobile month root screen-first davranır; dış card hissi ve gereksiz inset azaltılır, takvim ana yüzey olarak okunur ve gerçek cihaz viewport’unda ilk açılışta page vertical scroll üretmez.
 - Staff day/detail bağlamı exact count bilgisini taşır; month grid tarama yüzeyi olarak kategorik yoğunluk okutur.
-- Staff randevu katmanları mobilde net ayrılır: month overview -> day agenda sheet -> detail sheet -> create/edit form sheet.
+- Staff işlem katmanları mobilde net ayrılır: month overview -> day agenda sheet -> detail sheet -> create/edit form sheet.
 - Day agenda utility sheet gibi davranır; kısa liste, exact count ve yakın create bağlamı taşır. Detail sheet read-first, create/edit sheet form-first davranır.
-- Desktop staff randevu yüzeyi mobilin büyütülmüş hali gibi kalmaz; root takvim alanı daha geniş kullanılır, day/create katmanları sağ panel veya floating panel hissine yaklaşır, detail tek odaklı ayrı katman olarak okunur.
-- Staff randevu FAB görünürlük kuralı sabittir: root month view görünür, day agenda görünür, detail gizli, create/edit gizli.
-- Staff randevu FAB, grid veya sheet listesinin üstüne veri örtecek şekilde bırakılmaz; mobile’da içerik alt padding’i ve safe area birlikte düşünülür.
-- Staff appointments V2 görünür aksiyonları yeni randevu, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
+- Desktop staff işlemler yüzeyi mobilin büyütülmüş hali gibi kalmaz; root takvim alanı daha geniş kullanılır, day/create katmanları sağ panel veya floating panel hissine yaklaşır, detail tek odaklı ayrı katman olarak okunur.
+- Staff işlem FAB görünürlük kuralı sabittir: root month view görünür, day agenda görünür, detail gizli, create/edit gizli.
+- Staff işlem FAB, grid veya sheet listesinin üstüne veri örtecek şekilde bırakılmaz; mobile’da içerik alt padding’i ve safe area birlikte düşünülür.
+- Staff görünür aksiyonları yeni işlem, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
 - Current runtime IA appointment-first kalır; yeni route veya tab açılmaz. Unified service session workspace aynı `/ops/staff/randevular` yüzeyinde, month root’u bozmadan selected day/detail/create-edit katmanında görünür olur.
-- Staff day agenda current runtime’da appointment ve walk-in kayıtlarını aynı liste içinde gösterir; kaynak farkı küçük ve net badge ile görünür olur, sıra aynı gün/saat içinde deterministic kalır: appointment önce, walk-in sonra.
-- Staff create formu current runtime’da aynı workspace içinde `Kaynak` seçimi taşır; varsayılan `Randevu`, ikinci seçenek `Walk-in`dir. Ortak alanlar müşteri, işlem tipi, tarih, saat, toplam, alınan ve not olarak aynı kalır.
+- Staff day agenda current runtime’da appointment ve walk-in kayıtlarını aynı liste içinde gösterir; visible ürün dili source badge göstermez, sıra aynı gün/saat içinde deterministic kalır.
+- Staff create formu current runtime’da tek visible işlem formudur; source selector görünmez. Ortak alanlar müşteri, işlem tipi, tarih, saat, toplam, alınan ve not olarak aynı kalır.
 - Staff service session formu current runtime’da `noValidate` yaklaşımıyla browser native required tooltip’ine yaslanmaz; boş/bozuk alanlar aynı sheet içinde app-level hata metniyle görünür.
 - Staff service session formunda `Alınan tutar` opsiyoneldir; boş bırakılabilir veya `0` olabilir. Yardımcı copy bunu açıkça opsiyonel anlatır.
 - Staff service session tarafında current runtime PR-C ile `Alınan tutar` değişimleri otomatik kasa satırı üretir; pozitif delta tahsilat, negatif delta düzeltme olarak görünür. `Toplam`, tarih, saat, müşteri ve not değişimi tek başına kasa satırı üretmez.
-- Staff randevu create formunda müşteri alanı `Mevcut müşteri` ve `Yeni müşteri` seçimleriyle net ayrılır. `Yeni müşteri` seçimi aynı form içinde küçük inline `Hızlı müşteri` alanını açar.
-- Staff randevu içi inline müşteri oluşturma alanı mobile-first kompakt kalır; `Ad soyad`, `Telefon`, opsiyonel `E-posta` alanlarıyla çalışır, başarıda yeni müşteri otomatik seçilir, tarih/saat/işlem tipi/tutar/not bağlamı korunur.
+- Staff işlem formunda müşteri alanı `Mevcut müşteri` ve `Yeni müşteri` seçimleriyle net ayrılır. `Yeni müşteri` seçimi aynı form içinde küçük inline `Hızlı müşteri` alanını açar.
+- Staff işlem içi inline müşteri oluşturma alanı mobile-first kompakt kalır; `Ad soyad`, `Telefon`, opsiyonel `E-posta` alanlarıyla çalışır, başarıda yeni müşteri otomatik seçilir, tarih/saat/işlem tipi/tutar/not bağlamı korunur.
 - Inline `Yeni müşteri` akışı aynı sheet içinde kalır; redirect etmez, kullanıcıya `NEXT_REDIRECT` veya ham teknik hata stringi göstermez. Başarısızlıkta kısa ve insan-okunur alan/işlem hatası görünür.
-- Staff detail sheet read-first davranır; müşteri + kaynak + tarih/saat bloğunun hemen altında read-only `İşlem özeti` görünür. Bu özet minimum olarak `İşlem tipi`, `Toplam`, `Alınan`, `Kalan` alanlarını taşır.
-- Staff edit sheet form-first kalır ama üstünde source-aware kısa özet ve read-only `İşlem özeti` gösterir; appointment ve walk-in aynı form omurgasını reuse eder.
+- Staff detail sheet read-first davranır; müşteri + tarih/saat bloğunun hemen altında read-only `İşlem özeti` görünür. Bu özet minimum olarak `İşlem tipi`, `Toplam`, `Alınan`, `Kalan` alanlarını taşır.
+- Staff detail sheet current runtime’da bağlı `serviceIntakeId` varsa görünür `Belge paketi` aksiyonu taşır; bu aksiyon customer detail’e değil packet preview route’una gider ve edit/destructive aksiyonlardan ayrı üst seviye kalır.
+- Staff edit sheet form-first kalır ama üstünde kısa müşteri özeti ve read-only `İşlem özeti` gösterir; appointment ve walk-in aynı form omurgasını reuse eder.
 - Appointment ve walk-in detail/edit sheet aynı summary kontratını taşır; summary alan adları customer detail `İşlem özeti` kartıyla uyumlu kalır.
-- Staff randevu delete confirm browser `confirm()` ile değil, app-level dialog ile açılır; `Vazgeç` güvenli default, destructive aksiyon açık metinle görünür kalır.
+- `/ops/staff/belgeler/[serviceIntakeId]` packet-first değil, sözleşme-first yüzeydir; ops shell nav/header chrome’u bu route’ta görünmez. Üstte yalnız sade `Geri`, `Yazdır` ve `1 kopya / 2 kopya` seçimi kalır; print sırasında bu bar gizlenir.
+- Staff document preview current runtime’da kart-heavy app preview gibi değil, tek sayfa A4 operasyon sözleşmesi gibi görünür: sol üst `Sayı`, sağ üst `Sözleşme tarihi`, ortada `Enki Tattoo Dövme ve Piercing Sözleşmesi` başlığı, gövdede yalnız maddeler ve altta iki kolonlu imza / işlem bilgisi alanları bulunur.
+- Staff document preview seçilen kopya sayısı kadar aynı sözleşmeyi render eder. `2 kopya` seçildiğinde `Müşteri nüshası` ve `Stüdyo nüshası` küçük üst notu korunur; `1 kopya` seçildiğinde yalnız tek sözleşme görünür.
+- Staff document preview’de legal maddeler current runtime’da tek continuous ordered-list olarak akar; her kopyada 1..7 numaralandırması korunur, her satır yeni `1.` gibi kırılmaz.
+- Ops mobile shell ve staff sayfaları current runtime’da fixed bottom nav üstünde daha güvenli alt boşluk taşır; müşteri list/detail, kasa, randevu workspace ve sözleşme preview son içerikleri nav veya screen edge ile çakışmadan okunur.
+- Staff işlem delete confirm browser `confirm()` ile değil, app-level dialog ile açılır; `Vazgeç` güvenli default, destructive aksiyon açık metinle görünür kalır.
 - Detail sheet içinden başarılı delete sonrası seçili appointment temizlenir ve workspace yeniden day drawer’a zıplamaz; kullanıcı yeni seçim yapana kadar yüzey stabil kalır.
-- Appointment detail içindeki destructive action feedback temiz ve kısa kalır; kullanıcıya teknik DB hata metni gösterilmez. Walk-in detail bu PR’da delete açmaz, yalnız edit aksiyonu taşır.
+- İşlem detail içindeki destructive action feedback temiz ve kısa kalır; kullanıcıya teknik DB hata metni gösterilmez. Walk-in detail bu PR’da delete açmaz, yalnız edit aksiyonu taşır.
 - Staff randevu empty-state copy’leri kısa ve doğal Türkçe ile kalır; kırık, yarım veya placeholder metin bırakılmaz.
 - Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez. Hızlı create kartı ana akışta `Ad soyad` + `Telefon` alanlarını önde tutar, `Not` disclosure olarak secondary açılır. Staff disclosure row pattern’i mobile-safe kalır ve x-overflow üretmez.
-- Müşteri detayı: ilk taramada müşteri kimliği, kısa iletişim bilgisi, onay durumu, yaklaşan randevu ve staff notu okunmalıdır. Temel bilgi büyük iç kartlara bölünmez; profil hazır bilgisi pasif büyük kutu gibi davranmaz; onaylar kartı, staff notu ve randevu blokları daha sakin, kompakt bilgi hiyerarşisiyle okunur; onaylar sürüm ve tarih satırıyla özetlenir.
-- Staff müşteri detail `İşlem özeti` kartı müşteri bazlı latest service intake kaydını gösterir; bu kart source-aware `Kaynak` alanı taşır ve randevu detail sheet’in devamı değil, müşteri zaman çizgisinin son özetidir.
+- Müşteri detayı: ilk taramada müşteri kimliği, kısa iletişim bilgisi, onay durumu, yaklaşan işlem ve staff notu okunmalıdır. Temel bilgi büyük iç kartlara bölünmez; profil hazır bilgisi pasif büyük kutu gibi davranmaz; onaylar kartı, staff notu ve işlem blokları daha sakin, kompakt bilgi hiyerarşisiyle okunur; onaylar sürüm ve tarih satırıyla özetlenir.
+- Staff müşteri detail `İşlem özeti` kartı müşteri bazlı latest service intake kaydını gösterir; bu kart `Kaynak` alanı taşımaz ve day/detail workspace’in devamı değil, müşteri zaman çizgisinin son özetidir.
+- Staff müşteri detail current runtime’da belge paketi için primary trigger değildir; yanlış session açmamak için packet aksiyonu bu yüzeyde açılmaz.
 - Staff kasa defterinde system-generated satırlar küçük reason/source badge’i ile ayırt edilir; manage affordance yalnız manuel kayıtlarda görünür. Bu yüzey ikinci bir finans ekranı açmadan aynı listede manual ve automated satırları birlikte okutur.
 - Prefixsiz public legal sayfalar ve `/ops/user/onaylar` aynı markdown kaynak ailesini kullanır (`src/content/legal/*.md`, `src/content/ops/legal/*.md`); içerik ikinci kez hardcode edilmez.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
@@ -132,7 +138,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `/ops/user/form` current runtime’da user surface olarak yaşamaz; bu path’e giden CTA, helper veya readiness bağı kalmamıştır.
 - Combined sözleşme onayı kaydedildiğinde `/ops/user/onaylar` kartı kısa kullanıcı özeti gösterir; staff customer detail aynı onayı sürüm ve onay tarihiyle görünür tutar.
 - Ops mobile shell current runtime’da `min-h-viewport` + fixed bottom nav zinciriyle çalışır; alt nav viewport’a sabit kalır ve staff shell’de native tab bar hissini korur.
-- Staff müşteri listesi current runtime’da daha kompakt tarama ritmiyle çalışır; boş durumda `Müşteriler`, arama aktifken `Arama sonuçları` başlığı ve sonuç sayısı copy’si görünür. Kart içinde güçlü isim, kısa iletişim bilgisi, arama aktifken isim/telefon/e-posta eşleşmesini anlatan hafif ipucu, tek satırlık `Sıradaki randevu` özeti ve daha görünür `Detaya git` aksiyonu yer alır.
+- Staff müşteri listesi current runtime’da daha kompakt tarama ritmiyle çalışır; boş durumda `Müşteriler`, arama aktifken `Arama sonuçları` başlığı ve sonuç sayısı copy’si görünür. Kart içinde güçlü isim, kısa iletişim bilgisi, arama aktifken isim/telefon/e-posta eşleşmesini anlatan hafif ipucu, tek satırlık `Yaklaşan işlem` özeti ve daha görünür `Detaya git` aksiyonu yer alır.
 - Staff müşteri listesi current runtime’da yalnız güncel combined sözleşme onay badge’ini gösterir; badge copy’si bunu `Sözleşme onayı` olarak yazar. Customer detail aynı onayı tek blokta özetler.
 - Staff müşteri detail current runtime’da bilgi yoğunluğunu yükseltmeden çalışır; onaylar kartı, tek güncel staff notu ve yaklaşan/geçmiş randevu blokları sakinleşmiş copy ve kompakt spacing ile aynı ekranda kalır.
 - Staff kasa ve staff müşteri create disclosure row’ları current runtime’da mobile-safe’dir; `Not / Ekle / Kapat` satırları yatay taşma üretmez.

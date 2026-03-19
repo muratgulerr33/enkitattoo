@@ -26,8 +26,8 @@ Bu klasördeki aktif çekirdek beş dosya repo içi yaşayan dokümandır; `docs
 ## Current Runtime ve Planned Roadmap
 
 - Current runtime yalnız repo içinde route, action, schema ve görünür UI ile doğrulanabilen davranıştır.
-- Current runtime lock içinde staff randevu V2 appointment-first çalışır; create zinciri appointment-linked `service_intake` foundation açar, user lane `tattoo_forms` omurgasını kullanmaz ve kasa manuel defter olarak yaşar.
-- Planned roadmap ayrı yazılır: PR-B unified service session / intake workspace ve walk-in girişi, PR-C cashbook automation, PR-D document packet + print + 2-signature, PR-E final polish / rollout / migration cleanup.
+- Current runtime lock içinde staff visible ürün modeli tek müşteri + tek işlem diliyle çalışır; appointment-first month root, selected day içinde unified appointment + walk-in workspace, service-intake delta’larından otomatik kasa ve `serviceIntakeId` bazlı operasyon sözleşmesi preview + browser print akışı doğrulanır.
+- Planned roadmap ayrı yazılır; henüz repo içine inmeyen başlıklar current runtime cümlesi gibi yazılmaz.
 - Implement edilmemiş hedefler current runtime cümlesi gibi yazılmaz; uygun aktif dokümanda açıkça `planned roadmap` etiketiyle tutulur.
 
 ## Dizin Modeli

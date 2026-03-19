@@ -4,7 +4,7 @@ Bu dosya repo içinden doğrulanabilen çalışma runbook’unu tutar. Reverse p
 
 Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya komut, env, local DB, bootstrap ve smoke-check akışına odaklanır.
 
-Current runtime ile planned roadmap burada da ayrıdır: unified staff day workspace ve service-intake event’lerinden otomatik cashbook repo içine inmiştir; document packet / signature akışları repo içine inmediği sürece smoke-check runtime’ı sayılmaz.
+Current runtime ile planned roadmap burada da ayrıdır: unified staff day workspace, service-intake event’lerinden otomatik cashbook ve `serviceIntakeId` bazlı operasyon sözleşmesi + browser print + 1/2 copy akışı repo içine inmiştir; dijital imza / upload / PDF exporter repo içine inmediği sürece runtime sayılmaz.
 
 ## 1) Repo-İçi Runtime Özeti
 
@@ -15,7 +15,7 @@ Current runtime ile planned roadmap burada da ayrıdır: unified staff day works
 - Route-content generator: `python3 scripts/generate-route-content.py`
 - DB migration generate: `npm run db:generate`
 - Ops bootstrap user: `npm run ops:bootstrap-user`
-- Bugünkü ops runtime lock: combined consent, appointment-first month root + unified staff day workspace, appointment/walk-in `service_intakes`, service-intake delta’larından beslenen otomatik kasa defteri
+- Bugünkü ops runtime lock: combined consent, appointment-first teknik omurga üstünde tek visible işlem dili, unified staff day workspace, appointment/walk-in `service_intakes`, service-intake delta’larından beslenen otomatik kasa defteri ve staff operasyon sözleşmesi preview + browser print flow
 
 ## 2) Env ve Girdi Yüzeyi
 
@@ -79,18 +79,21 @@ Current runtime ile planned roadmap burada da ayrıdır: unified staff day works
 |---|---|---|
 | Repo-side kalite | `npm run lint`, `npm run build`, gerekirse `npm run check:all` | temel kapılar geçer |
 | Route-content değiştiyse | generator sonrası ilgili route + `/sitemap.xml` + `/robots.txt` | canonical/noindex etkisi mantıklı kalır |
-| Ops auth | `/ops`, `/ops/giris`, `/ops/staff/kasa`, `/ops/user/randevular` | session ve role göre doğru redirect |
-| Staff randevular V2 | `/ops/staff/randevular` month root + selected day workspace | appointment create/edit/delete korunur, walk-in create/edit çalışır, `Alınan tutar` boş/0 kabul edilir, detail/edit ve müşteri detail `İşlem özeti` kontratı bozulmaz |
+| Ops auth | `/ops`, `/ops/giris`, `/ops/staff/randevular`, `/ops/user/randevular` | session ve role göre doğru redirect |
+| Staff işlemler workspace | `/ops/staff/randevular` month root + selected day workspace | appointment create/edit/delete korunur, walk-in create/edit çalışır, `Alınan tutar` boş/0 kabul edilir, visible source badge/selector görünmez, detail/edit ve müşteri detail `İşlem özeti` kontratı bozulmaz |
+| Staff packet preview | `/ops/staff/belgeler/[serviceIntakeId]` | appointment ve walk-in detail içinden doğru `serviceIntakeId` ile açılır, tek sayfa A4 sözleşmesi görünür, legal maddeler continuous 1..7 numaralanır, yalnız gerekli alanlar basılır ve 1/2 kopya seçimi render sayısını değiştirir |
 | Inline müşteri create | işlem create sheet içindeki `Yeni müşteri` akışı | redirect olmaz, `NEXT_REDIRECT` sızmaz, yeni müşteri seçili kalır, outer form bağlamı korunur |
 | Unified day order | aynı gün ve saatte appointment + walk-in kaydı | sıra deterministic kalır; appointment önce, walk-in sonra görünür |
-| Customer detail latest intake | yeni walk-in sonrası `/ops/staff/musteriler/[userId]` | source-aware `İşlem özeti` doğru latest kaydı gösterir |
-| Month root walk-in signal | walk-in olan gün içeren ay görünümü | appointment-first takvim korunur; walk-in için hafif ikinci sinyal görünür |
+| Customer detail latest intake | yeni walk-in sonrası `/ops/staff/musteriler/[userId]` | source alanı göstermeden `İşlem özeti` doğru latest kaydı gösterir |
+| Month root neutral occupancy | walk-in olan gün içeren ay görünümü | appointment-first teknik omurga korunur; visible takvimde source’a özel ikinci sinyal görünmez |
 | Automated cashbook create | collected > 0 ile appointment veya walk-in create | aynı gün kasa defterinde `service_collection` income satırı oluşur |
 | Automated cashbook delta | collected artır / azalt | artış yeni income, azalış yeni expense `service_adjustment` satırı üretir |
-| Manual cash exception | `/ops/staff/kasa` hızlı kayıt formu | manuel gider / istisna kaydı hâlâ açılır |
+| Manual cash exception | `/ops/staff/kasa` hızlı kayıt formu | manuel gider / düzeltme kaydı hâlâ açılır; kasa yardımcı/son kontrol yüzeyi olarak kalır |
 | System cash read-only | service-source kasa satırı | manage dialog görünmez, update/delete app-level olarak açık olmaz |
 | Appointment delete | detail sheet içindeki `Sil` aksiyonu | app-level confirm açılır, SQL error yok, stale reopen veya stale summary kalmaz |
 | Appointment delete guard | linked intake üzerinde aktif tahsilat izi olan appointment | delete bloklanır, önce kasa düzeltmesi gerektiğini anlatan kısa hata döner |
+| Packet print chrome | packet preview route browser print | `Geri` / `Yazdır` / `1 kopya - 2 kopya` barı print’e girmez, seçilen sözleşme sayısı A4 portrait olarak ayrılır |
+| Mobile ops safe-area | `/ops/staff/musteriler`, `/ops/staff/musteriler/[userId]`, `/ops/staff/kasa`, `/ops/staff/randevular`, `/ops/staff/belgeler/[serviceIntakeId]` | alt içerik fixed bottom nav veya screen edge altında kalmaz; son bloklar görünür ve scroll sonunda güvenli clearance korunur |
 | Locale bypass | `/ops` ailesi | locale rewrite katmanına girmez |
 | Default locale | `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/artistler`, `/iletisim` | prefixsiz `tr` açılır |
 | Prefixli locale | `/en`, `/en/kesfet`, `/en/piercing` | 404 olmaz, message load kırılmaz |

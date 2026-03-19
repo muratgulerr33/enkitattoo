@@ -179,7 +179,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
 
                     <p className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-sm sm:ml-auto">
                       <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                        Sıradaki randevu
+                        Yaklaşan işlem
                       </span>
                       <span className={cn(nextAppointmentText ? "text-foreground" : "text-muted-foreground")}>
                         {nextAppointmentText ?? "Yok"}

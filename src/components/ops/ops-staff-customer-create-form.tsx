@@ -132,7 +132,7 @@ export function OpsStaffCustomerCreateForm() {
         {state.createdCustomerId ? (
           <>
             <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
-              <Link href="/ops/staff/randevular">Randevuda kullan</Link>
+              <Link href="/ops/staff/randevular">İşlemde kullan</Link>
             </Button>
             <Button asChild variant="ghost" size="sm" className="w-full sm:w-auto">
               <Link href={`/ops/staff/musteriler/${state.createdCustomerId}`}>Detaya git</Link>

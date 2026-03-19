@@ -190,10 +190,6 @@ function getServiceTypeLabel(value: StaffServiceSummary["serviceType"]): string 
   return value === "piercing" ? "Piercing" : "Dövme";
 }
 
-function getSourceLabel(source: StaffServiceSessionView["source"]): string {
-  return source === "walk_in" ? "Walk-in" : "Randevu";
-}
-
 function getRemainingAmountCents(serviceSummary: StaffServiceSummary): number {
   return Math.max(0, serviceSummary.totalAmountCents - serviceSummary.collectedAmountCents);
 }
@@ -248,12 +244,6 @@ function getOccupancyMarkerClassName(appointmentCount: number, isSelected: boole
   return isSelected
     ? "h-2.5 w-14 bg-background shadow-[0_2px_14px_rgba(255,255,255,0.2)]"
     : "h-2.5 w-14 bg-foreground shadow-[0_2px_10px_rgba(15,23,42,0.18)]";
-}
-
-function getWalkInMarkerClassName(isSelected: boolean): string {
-  return isSelected
-    ? "size-2.5 border border-background/80 bg-background/70 shadow-[0_1px_8px_rgba(255,255,255,0.16)]"
-    : "size-2.5 border border-foreground/20 bg-amber-500/75 shadow-[0_1px_6px_rgba(217,119,6,0.18)]";
 }
 
 function SheetHandle() {
@@ -427,19 +417,12 @@ function AppointmentFormSheet({
             {formState.mode === "edit" ? (
               <div className="mb-4 space-y-4">
                 <div className="rounded-[1.7rem] border border-border bg-surface-1/55 px-4 py-3">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                        Kaynak
-                      </p>
-                      <p className="mt-1 text-sm font-medium text-foreground">
-                        {getSourceLabel(formState.session.source)}
-                      </p>
-                    </div>
-                    <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
-                      {formState.session.customerName}
-                    </Badge>
-                  </div>
+                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                    Müşteri
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-foreground">
+                    {formState.session.customerName}
+                  </p>
                 </div>
 
                 <AppointmentServiceSummarySection
@@ -515,6 +498,7 @@ function AppointmentDetailSheet({
   }
 
   const canDelete = session.source === "appointment" && session.appointmentId !== null;
+  const canOpenPacket = session.serviceIntakeId !== null;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -555,9 +539,6 @@ function AppointmentDetailSheet({
                     <p className="text-sm text-muted-foreground">{session.customerEmail}</p>
                   ) : null}
                 </div>
-                <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
-                  {getSourceLabel(session.source)}
-                </Badge>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
@@ -592,43 +573,53 @@ function AppointmentDetailSheet({
               </p>
             ) : null}
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button
-                type="button"
-                size="cta"
-                variant="outline"
-                className="w-full sm:flex-1"
-                disabled={deletePending}
-                onClick={() => onEdit(session)}
-              >
-                <PencilLine className="size-4" aria-hidden />
-                Düzenle
-              </Button>
-
-              {canDelete ? (
-                <div className="w-full sm:flex-1">
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="cta"
-                    className="w-full"
-                    disabled={deletePending}
-                    onClick={() => setDeleteDialogOpen(true)}
-                  >
-                    {deletePending ? (
-                      <>
-                        <LoaderCircle className="size-4 animate-spin" aria-hidden />
-                        Siliniyor
-                      </>
-                    ) : (
-                      <>
-                        <Trash2 className="size-4" aria-hidden />
-                        Sil
-                      </>
-                    )}
-                  </Button>
-                </div>
+            <div className="flex flex-col gap-3 border-t border-border pt-3">
+              {canOpenPacket ? (
+                <Button asChild size="cta" className="w-full">
+                  <Link href={`/ops/staff/belgeler/${session.serviceIntakeId}`}>
+                    Belge paketi
+                  </Link>
+                </Button>
               ) : null}
+
+              <div className="flex flex-col gap-3">
+                <Button
+                  type="button"
+                  size="cta"
+                  variant="outline"
+                  className="w-full"
+                  disabled={deletePending}
+                  onClick={() => onEdit(session)}
+                >
+                  <PencilLine className="size-4" aria-hidden />
+                  Düzenle
+                </Button>
+
+                {canDelete ? (
+                  <div className="w-full border-t border-border/60 pt-3">
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="cta"
+                      className="w-full"
+                      disabled={deletePending}
+                      onClick={() => setDeleteDialogOpen(true)}
+                    >
+                      {deletePending ? (
+                        <>
+                          <LoaderCircle className="size-4 animate-spin" aria-hidden />
+                          Siliniyor
+                        </>
+                      ) : (
+                        <>
+                          <Trash2 className="size-4" aria-hidden />
+                          Sil
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
@@ -638,10 +629,9 @@ function AppointmentDetailSheet({
         <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Randevuyu sil</DialogTitle>
+              <DialogTitle>İşlemi sil</DialogTitle>
               <DialogDescription>
-                Bu randevu silinecek. Bağlı işlem kaydı yalnız bu randevu akışına aitse birlikte
-                kaldırılır.
+                Bu işlem silinecek. Bağlı kayıt yalnız bu işlem akışına aitse birlikte kaldırılır.
               </DialogDescription>
             </DialogHeader>
 
@@ -679,7 +669,7 @@ function AppointmentDetailSheet({
                   ) : (
                     <>
                       <Trash2 className="size-4" aria-hidden />
-                      Randevuyu sil
+                      İşlemi sil
                     </>
                   )}
                 </Button>
@@ -712,20 +702,11 @@ export function OpsStaffAppointmentsWorkspace({
   }, [customerOptions]);
 
   const countsByDate = new Map<string, number>();
-  const walkInCountsByDate = new Map<string, number>();
 
   for (const session of sessions) {
-    if (session.source === "appointment") {
-      countsByDate.set(
-        session.scheduledDate,
-        (countsByDate.get(session.scheduledDate) ?? 0) + 1
-      );
-      continue;
-    }
-
-    walkInCountsByDate.set(
+    countsByDate.set(
       session.scheduledDate,
-      (walkInCountsByDate.get(session.scheduledDate) ?? 0) + 1
+      (countsByDate.get(session.scheduledDate) ?? 0) + 1
     );
   }
 
@@ -815,7 +796,7 @@ export function OpsStaffAppointmentsWorkspace({
 
   return (
     <div
-      className="ops-page-shell -mb-[calc(env(safe-area-inset-bottom)+5.5rem)] md:mb-0 xl:space-y-4"
+      className="ops-page-shell -mb-[calc(env(safe-area-inset-bottom)+4.75rem)] md:mb-0 xl:space-y-4"
       data-testid="appointments-workspace"
       data-view-mode={viewMode}
     >
@@ -871,14 +852,11 @@ export function OpsStaffAppointmentsWorkspace({
                   type="button"
                   onClick={() => handleDaySelect(cell.date)}
                   aria-pressed={cell.isSelected}
-                  aria-label={`${cell.dayNumber} ${getMonthCellOccupancyLabel(cell.count)}${
-                    walkInCountsByDate.get(cell.date) ? ", walk-in var" : ""
-                  }`}
+                  aria-label={`${cell.dayNumber} ${getMonthCellOccupancyLabel(cell.count)}`}
                   data-testid={`month-cell-${cell.date}`}
                   data-selected={cell.isSelected ? "true" : "false"}
                   data-today={cell.isToday ? "true" : "false"}
                   data-count={cell.count}
-                  data-walk-in-count={walkInCountsByDate.get(cell.date) ?? 0}
                   data-occupancy={getOccupancyLevel(cell.count)}
                   className={cn(
                     "group relative isolate flex min-h-[5.3rem] w-full flex-col overflow-hidden rounded-[1.25rem] border px-1.5 py-1.5 text-left transition-[transform,background-color,color,border-color,box-shadow] duration-150 hover:bg-muted/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] sm:min-h-28 sm:px-2.5 sm:py-2.5 xl:min-h-[8.75rem] xl:px-4 xl:py-3",
@@ -903,17 +881,6 @@ export function OpsStaffAppointmentsWorkspace({
                     >
                       {cell.dayNumber}
                     </span>
-
-                    {walkInCountsByDate.get(cell.date) ? (
-                      <span
-                        data-testid={`month-cell-walkin-${cell.date}`}
-                        className={cn(
-                          "inline-flex shrink-0 rounded-full",
-                          getWalkInMarkerClassName(cell.isSelected)
-                        )}
-                        aria-hidden
-                      />
-                    ) : null}
                   </div>
 
                   {cell.count ? (
@@ -1009,9 +976,6 @@ export function OpsStaffAppointmentsWorkspace({
                                 {session.customerName}
                               </p>
                               <div className="mt-1 flex flex-wrap gap-2">
-                                <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[11px]">
-                                  {getSourceLabel(session.source)}
-                                </Badge>
                                 {session.serviceSummary ? (
                                   <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[11px]">
                                     {getServiceTypeLabel(session.serviceSummary.serviceType)}

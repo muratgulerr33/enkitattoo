@@ -5,9 +5,9 @@ export default function OpsStaffProfilePage() {
     <OpsPlaceholderPage
       title="Profil"
       description="Hesap bilgilerinizi bu alanda göreceksiniz."
-      nextStep="Şimdilik kasaya dönebilir veya çıkış yapabilirsiniz."
-      primaryHref="/ops/staff/kasa"
-      primaryLabel="Kasaya git"
+      nextStep="Şimdilik işlemlere dönebilir veya çıkış yapabilirsiniz."
+      primaryHref="/ops/staff/randevular"
+      primaryLabel="İşlemlere git"
       secondaryHref="/ops/giris"
       secondaryLabel="Girişe dön"
     />

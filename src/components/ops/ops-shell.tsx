@@ -106,7 +106,13 @@ function formatRoleLabel(role: OpsSessionUser["roles"][number]): string {
 }
 
 export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShellProps) {
+  const pathname = usePathname();
   const roleSummary = sessionUser.roles.map(formatRoleLabel).join(", ");
+  const isStaffDocumentPacketRoute = pathname.startsWith("/ops/staff/belgeler/");
+
+  if (isStaffDocumentPacketRoute) {
+    return <div className="min-h-viewport bg-background text-foreground">{children}</div>;
+  }
 
   return (
     <div className="min-h-viewport bg-background text-foreground">

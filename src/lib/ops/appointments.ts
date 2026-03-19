@@ -27,9 +27,9 @@ import {
   postServiceIntakeCashDelta,
 } from "./cashbook";
 export const APPOINTMENT_SLOT_CONFLICT_MESSAGE =
-  "Aynı tarih ve saat için başka bir randevu zaten kayıtlı.";
+  "Aynı tarih ve saat için başka bir işlem zaten kayıtlı.";
 export const APPOINTMENT_DELETE_WITH_CASH_ENTRIES_MESSAGE =
-  "Tahsilat izi olan randevu silinemez. Önce kasa düzeltmesini çözün.";
+  "Tahsilat izi olan işlem silinemez. Önce kasa düzeltmesini çözün.";
 
 export type AppointmentRecord = {
   id: number;
@@ -382,7 +382,7 @@ async function findAppointmentRowById(appointmentId: number): Promise<Appointmen
   const record = rows[0];
 
   if (!record) {
-    throw new Error("Randevu bulunamadı.");
+    throw new Error("İşlem bulunamadı.");
   }
 
   return record;
@@ -664,7 +664,7 @@ export async function createAppointment(input: CreateAppointmentInput): Promise<
       const insertedRecord = insertedRows[0];
 
       if (!insertedRecord) {
-        throw new Error("Randevu kaydedilemedi.");
+        throw new Error("İşlem kaydedilemedi.");
       }
 
       await writeAuditLog(
@@ -765,7 +765,7 @@ export async function updateAppointment(
       const updatedRecord = updatedRows[0];
 
       if (!updatedRecord) {
-        throw new Error("Randevu güncellenemedi.");
+        throw new Error("İşlem güncellenemedi.");
       }
 
       const syncedServiceIntakes = await tx
@@ -913,7 +913,7 @@ export async function updateAppointmentStatus(
       const updatedRecord = updatedRows[0];
 
       if (!updatedRecord) {
-        throw new Error("Randevu durumu güncellenemedi.");
+        throw new Error("İşlem durumu güncellenemedi.");
       }
 
       await writeAuditLog(
@@ -1015,7 +1015,7 @@ export async function deleteAppointment(
     const deletedAppointment = deletedRows[0];
 
     if (!deletedAppointment) {
-      throw new Error("Randevu bulunamadı.");
+      throw new Error("İşlem bulunamadı.");
     }
 
     for (const serviceIntake of deletedServiceIntakes) {
