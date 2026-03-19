@@ -67,7 +67,7 @@ export function OpsCashEntryManageDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button" variant="ghost" size="xs" className="rounded-full">
+        <Button type="button" variant="ghost" size="xs" className="rounded-full text-muted-foreground">
           <PencilLine className="size-4" aria-hidden />
           Yönet
         </Button>
@@ -76,9 +76,9 @@ export function OpsCashEntryManageDialog({
       <DialogContent className="max-w-xl rounded-3xl p-0">
         <div className="space-y-6 p-6">
           <DialogHeader className="space-y-2 text-left">
-            <DialogTitle>Kasa kaydı</DialogTitle>
+            <DialogTitle>Manuel kasa kaydı</DialogTitle>
             <DialogDescription>
-              Yalnız manuel kayıtlar burada yönetilir. Düzenleme ve kaldırma yalnız yöneticiye açıktır.
+              Yalnız manuel satırlar burada yönetilir.
             </DialogDescription>
           </DialogHeader>
 

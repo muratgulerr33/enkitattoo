@@ -71,7 +71,9 @@ function OpsNavLink({
       aria-current={active ? "page" : undefined}
       className={cn(
         "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border px-3 text-sm font-medium transition-[transform,background-color,color,border-color] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99]",
-        compact ? "min-w-0 flex-1 flex-col gap-0.5 rounded-xl px-1 py-2 text-[10px] leading-none" : "shrink-0",
+        compact
+          ? "min-w-0 flex-1 flex-col gap-1 rounded-xl px-1 py-2 text-[9px] leading-[1.05]"
+          : "shrink-0",
         active
           ? "border-border bg-foreground text-background"
           : "border-border bg-background text-foreground hover:bg-muted/45"
@@ -80,7 +82,9 @@ function OpsNavLink({
       <OpsNavIcon href={href} />
       <span
         className={cn(
-          compact ? "block whitespace-nowrap text-center text-[10px] leading-none" : "truncate"
+          compact
+            ? "block text-center text-[9px] leading-[1.05] tracking-tight sm:text-[10px]"
+            : "truncate"
         )}
       >
         {label}
@@ -116,13 +120,13 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
 
   return (
     <div className="min-h-viewport bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border bg-background/95 supports-[backdrop-filter]:bg-background/82 supports-[backdrop-filter]:backdrop-blur">
-        <div className="app-container flex min-h-12 items-center justify-between gap-2 py-2">
+      <header className="sticky top-0 z-30 border-b border-border/80 bg-background/92 supports-[backdrop-filter]:bg-background/78 supports-[backdrop-filter]:backdrop-blur">
+        <div className="app-container max-w-[92rem] flex min-h-11 items-center justify-between gap-2 py-1.5 sm:py-2">
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+            <p className="truncate text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
               {areaLabel}
             </p>
-            <div className="flex min-w-0 items-baseline gap-2">
+            <div className="flex min-w-0 items-baseline gap-2.5">
               <p className="truncate text-sm font-semibold tracking-tight text-foreground sm:text-[15px]">
                 {getDisplayName(sessionUser)}
               </p>
@@ -145,15 +149,15 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
           </Button>
         </div>
 
-        <div className="app-container hidden gap-2 overflow-x-auto pb-2 md:flex">
+        <div className="app-container max-w-[92rem] hidden gap-2 overflow-x-auto pb-2 md:flex">
           {navItems.map((item) => (
             <OpsNavLink key={item.href} href={item.href} label={item.label} />
           ))}
         </div>
       </header>
 
-      <main className="app-container safe-pb-ops-shell md:pb-10">
-        <div className="app-section space-y-4 py-4 sm:space-y-5 sm:py-5 md:py-8 lg:py-9">
+      <main className="app-container max-w-[92rem] safe-pb-ops-shell md:pb-9">
+        <div className="app-section space-y-4 py-4 sm:space-y-5 sm:py-5 md:py-7 lg:py-8">
           {children}
         </div>
       </main>

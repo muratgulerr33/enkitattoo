@@ -26,7 +26,7 @@ Bu klasördeki aktif çekirdek beş dosya repo içi yaşayan dokümandır; `docs
 ## Current Runtime ve Planned Roadmap
 
 - Current runtime yalnız repo içinde route, action, schema ve görünür UI ile doğrulanabilen davranıştır.
-- Current runtime lock içinde staff visible ürün modeli tek müşteri + tek işlem diliyle çalışır; appointment-first month root, selected day içinde unified appointment + walk-in workspace, service-intake delta’larından otomatik kasa ve `serviceIntakeId` bazlı operasyon sözleşmesi preview + browser print akışı doğrulanır.
+- Current runtime lock içinde staff visible ürün modeli `İşlemler / Müşteriler / Kasa / Profil` setiyle tek müşteri + tek işlem diliyle çalışır; appointment-first month root, selected day içinde unified appointment + walk-in workspace, service-intake delta’larından otomatik kasa ve `serviceIntakeId` bazlı operasyon sözleşmesi preview + browser print akışı doğrulanır. User/deeper runtime tarafında combined consent yaşayabilir ama staff top-level visible contract source/copy/consent badge dili taşımaz.
 - Planned roadmap ayrı yazılır; henüz repo içine inmeyen başlıklar current runtime cümlesi gibi yazılmaz.
 - Implement edilmemiş hedefler current runtime cümlesi gibi yazılmaz; uygun aktif dokümanda açıkça `planned roadmap` etiketiyle tutulur.
 

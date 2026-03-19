@@ -22,7 +22,7 @@ npm run check:all
 - Operasyon yüzeyi: locale ağacından ayrılan `/ops`
 - Veri katmanı: PostgreSQL + Drizzle (`src/db/*`, `drizzle.config.ts`)
 - Ops kimlik doğrulama: yerel e-posta/şifre + imzalı oturum çerezi
-- Aktif ops omurgası: kullanıcı/profil/rol, combined consent, appointment-first teknik omurga üstünde tek visible işlem modeli, unified day workspace, appointment/walk-in `service_intakes`, service-intake delta’larından otomatik kasa, staff sözleşme preview/print route’u, müşteri notu ve audit kayıtları
+- Aktif ops omurgası: kullanıcı/profil/rol, user lane combined consent, appointment-first teknik omurga üstünde source-neutral tek visible işlem modeli, unified day workspace, appointment/walk-in `service_intakes`, service-intake delta’larından otomatik kasa, `serviceIntakeId` bazlı staff sözleşme preview/print route’u, müşteri notu ve audit kayıtları
 
 ## Yüzeyler
 
@@ -39,7 +39,7 @@ Canonical public route seti ve SEO sahipliği `docs/SSOT.md` içindedir. Public 
 
 Ops route, yetki, tablo ve audit sözleşmesi `docs/SSOT.md` içindedir. Local çalışma, bootstrap, smoke-check ve preview pratiği `docs/OPS.md` ile `docs/WORKFLOW.md` içindedir.
 
-Current runtime ile planned roadmap ayrı tutulur. Repo içinde doğrulanan ops runtime; unified staff day workspace, walk-in akışı, service-intake delta’larından otomatik kasa ve `serviceIntakeId` bazlı operasyon sözleşmesi preview + browser print + 1/2 copy akışını içerir. Dijital imza, upload ve PDF exporter repo içinde olmadığı sürece current runtime sayılmaz.
+Current runtime ile planned roadmap ayrı tutulur. Repo içinde doğrulanan ops runtime; staff top-level surfaces için `İşlemler / Müşteriler / Kasa / Profil` setinde source-neutral tek işlem dili, unified staff day workspace, service-intake delta’larından otomatik kasa ve `serviceIntakeId` bazlı operasyon sözleşmesi preview + browser print + 1/2 copy akışını içerir. User/deeper runtime tarafında combined consent kalabilir; staff top-level surfaces bu dijital onay dilini visible badge/kopya olarak taşımaz. Dijital imza, upload ve PDF exporter repo içinde olmadığı sürece current runtime sayılmaz.
 
 ## Dokümanlar
 

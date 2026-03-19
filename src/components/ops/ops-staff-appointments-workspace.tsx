@@ -168,14 +168,14 @@ function compareSessions(
 
 function getAppointmentCountLabel(appointmentCount: number): string {
   if (!appointmentCount) {
-    return "0 kayıt";
+    return "Bugün boş";
   }
 
   if (appointmentCount === 1) {
-    return "1 kayıt";
+    return "1 işlem";
   }
 
-  return `${appointmentCount} kayıt`;
+  return `${appointmentCount} işlem`;
 }
 
 function formatMoney(cents: number): string {
@@ -196,18 +196,18 @@ function getRemainingAmountCents(serviceSummary: StaffServiceSummary): number {
 
 function getMonthCellOccupancyLabel(appointmentCount: number): string {
   if (!appointmentCount) {
-    return "Boş gün";
+    return "İşlem yok";
   }
 
   if (appointmentCount === 1) {
-    return "Dolu gün";
+    return "Hafif yoğunluk";
   }
 
   if (appointmentCount === 2) {
-    return "Orta doluluk";
+    return "Orta yoğunluk";
   }
 
-  return "Yoğun gün";
+  return "Yoğun";
 }
 
 function getOccupancyLevel(appointmentCount: number): "none" | "low" | "medium" | "high" {
@@ -231,19 +231,19 @@ function getOccupancyMarkerClassName(appointmentCount: number, isSelected: boole
 
   if (level === "low") {
     return isSelected
-      ? "h-1.5 w-6 bg-background shadow-[0_1px_10px_rgba(255,255,255,0.16)]"
-      : "h-1.5 w-6 bg-foreground/55";
+      ? "h-1.5 w-6 bg-background shadow-[0_1px_10px_rgba(255,255,255,0.18)]"
+      : "h-1.5 w-6 bg-foreground/42";
   }
 
   if (level === "medium") {
     return isSelected
-      ? "h-2 w-10 bg-background shadow-[0_1px_12px_rgba(255,255,255,0.18)]"
-      : "h-2 w-10 bg-foreground/78 shadow-[0_1px_6px_rgba(15,23,42,0.14)]";
+      ? "h-2 w-10 bg-background shadow-[0_1px_12px_rgba(255,255,255,0.2)]"
+      : "h-2 w-10 bg-foreground/65 shadow-[0_1px_6px_rgba(15,23,42,0.12)]";
   }
 
   return isSelected
-    ? "h-2.5 w-14 bg-background shadow-[0_2px_14px_rgba(255,255,255,0.2)]"
-    : "h-2.5 w-14 bg-foreground shadow-[0_2px_10px_rgba(15,23,42,0.18)]";
+    ? "h-2.5 w-14 bg-background shadow-[0_2px_14px_rgba(255,255,255,0.22)]"
+    : "h-2.5 w-14 bg-foreground/88 shadow-[0_2px_10px_rgba(15,23,42,0.14)]";
 }
 
 function SheetHandle() {
@@ -796,7 +796,7 @@ export function OpsStaffAppointmentsWorkspace({
 
   return (
     <div
-      className="ops-page-shell -mb-[calc(env(safe-area-inset-bottom)+4.75rem)] md:mb-0 xl:space-y-4"
+      className="ops-page-shell relative pb-0 -mb-[calc(env(safe-area-inset-bottom)+4.15rem)] sm:-mb-[calc(env(safe-area-inset-bottom)+4.35rem)] md:mb-0 xl:space-y-5"
       data-testid="appointments-workspace"
       data-view-mode={viewMode}
     >
@@ -804,7 +804,7 @@ export function OpsStaffAppointmentsWorkspace({
         className="-mx-4 -mt-3 gap-0 overflow-hidden rounded-none border-x-0 border-t-0 py-0 shadow-none sm:-mx-6 sm:-mt-4 md:gap-6 md:py-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm xl:py-5"
         data-testid="appointments-month-card"
       >
-        <CardHeader className="border-b px-1.5 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-4">
+        <CardHeader className="border-b px-1.5 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-4 xl:px-7 2xl:px-8">
           <div className="flex items-start justify-between gap-4">
             <CardTitle className="text-base sm:text-lg xl:text-xl">{getMonthLabel(monthValue)}</CardTitle>
 
@@ -835,7 +835,7 @@ export function OpsStaffAppointmentsWorkspace({
           </div>
         </CardHeader>
 
-        <CardContent className="px-1 pt-2 pb-24 sm:px-3 sm:pt-3 sm:pb-28 lg:px-6 lg:pt-4 lg:pb-6">
+        <CardContent className="px-1 pt-2 pb-16 sm:px-3 sm:pt-3 sm:pb-20 lg:px-6 lg:pt-4 lg:pb-5 xl:px-7 2xl:px-8">
           <div
             className="grid grid-cols-7 gap-1 sm:gap-1.5 lg:gap-2.5 xl:gap-3"
             data-testid="appointments-month-grid"
@@ -844,7 +844,7 @@ export function OpsStaffAppointmentsWorkspace({
               cell.kind === "empty" ? (
                 <div
                   key={cell.key}
-                  className="min-h-[5.25rem] rounded-[1.2rem] border border-dashed border-border/60 bg-muted/10 sm:min-h-28 xl:min-h-[8.75rem]"
+                  className="min-h-[5.25rem] rounded-[1.2rem] border border-transparent bg-transparent sm:min-h-28 xl:min-h-[8.75rem]"
                 />
               ) : (
                 <button
@@ -861,9 +861,9 @@ export function OpsStaffAppointmentsWorkspace({
                   className={cn(
                     "group relative isolate flex min-h-[5.3rem] w-full flex-col overflow-hidden rounded-[1.25rem] border px-1.5 py-1.5 text-left transition-[transform,background-color,color,border-color,box-shadow] duration-150 hover:bg-muted/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] sm:min-h-28 sm:px-2.5 sm:py-2.5 xl:min-h-[8.75rem] xl:px-4 xl:py-3",
                     cell.isSelected
-                      ? "border-foreground bg-foreground text-background shadow-[0_10px_30px_rgba(15,23,42,0.22)]"
+                      ? "border-foreground bg-foreground text-background shadow-[0_18px_40px_rgba(15,23,42,0.24)] ring-2 ring-foreground/12"
                       : cell.count
-                        ? "border-foreground/20 bg-surface-1 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.34)]"
+                        ? "border-foreground/18 bg-surface-1 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.34)]"
                         : "border-border/85 bg-card text-foreground"
                   )}
                 >
@@ -875,7 +875,7 @@ export function OpsStaffAppointmentsWorkspace({
                         cell.isToday && cell.isSelected
                           ? "bg-background text-foreground ring-2 ring-background/65 shadow-sm"
                           : cell.isToday
-                            ? "bg-background text-foreground ring-2 ring-foreground/28"
+                            ? "bg-background text-foreground ring-2 ring-foreground/34"
                             : "bg-transparent"
                       )}
                     >
@@ -906,7 +906,7 @@ export function OpsStaffAppointmentsWorkspace({
 
       {showRootFab ? (
         <AppointmentFab
-          className="fixed right-4 bottom-[calc(env(safe-area-inset-bottom)+5.75rem)] z-20 sm:right-5 lg:right-8 md:bottom-6"
+          className="fixed right-4 bottom-[calc(env(safe-area-inset-bottom)+4.4rem)] z-20 shadow-[0_18px_34px_rgba(15,23,42,0.2)] sm:right-5 sm:bottom-[calc(env(safe-area-inset-bottom)+4.55rem)] md:bottom-6 lg:right-[max(2rem,calc((100vw-92rem)/2+2rem))] xl:bottom-7"
           onClick={() => startCreateForDay(rootFabDay, false)}
           testId="appointments-root-fab"
         />
@@ -935,14 +935,12 @@ export function OpsStaffAppointmentsWorkspace({
                 </SheetClose>
               </div>
               {selectedDaySessions.length ? (
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="outline" className="rounded-full">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                  <p className="font-medium text-foreground">
                     {getAppointmentCountLabel(selectedDaySessions.length)}
-                  </Badge>
+                  </p>
                   {recommendedTime ? (
-                    <Badge variant="outline" className="rounded-full">
-                      Yeni {recommendedTime}
-                    </Badge>
+                    <p className="text-muted-foreground">Yeni işlem için {recommendedTime} uygun.</p>
                   ) : null}
                 </div>
               ) : null}
@@ -950,7 +948,7 @@ export function OpsStaffAppointmentsWorkspace({
 
             <div className="relative flex-1 overflow-y-auto px-5 py-3 sm:px-6">
               {selectedDaySessions.length ? (
-                <div className="space-y-2 pb-24">
+                <div className="space-y-2.5 pb-[4.5rem]">
                   {selectedDaySessions.map((session) => (
                     <button
                       key={getSessionKey(session)}
@@ -1005,13 +1003,13 @@ export function OpsStaffAppointmentsWorkspace({
                 </div>
               ) : (
                 <div className="rounded-[1.45rem] border border-dashed border-border px-4 py-3 text-sm text-foreground">
-                  Bugün için işlem yok.
+                  Seçili gün için işlem yok.
                 </div>
               )}
 
               {showDayFab ? (
                 <AppointmentFab
-                  className="absolute right-1 bottom-3 sm:right-2 sm:bottom-4"
+                  className="absolute right-1 bottom-3 shadow-[0_16px_28px_rgba(15,23,42,0.18)] sm:right-2 sm:bottom-3"
                   onClick={() => startCreateForDay(selectedDay as string, true)}
                   testId="appointments-day-fab"
                 />

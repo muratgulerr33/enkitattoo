@@ -457,7 +457,7 @@
   }
 
   .ops-page-shell {
-    @apply space-y-5 pb-2 sm:space-y-6 sm:pb-3 md:pb-0;
+    @apply space-y-5 pb-3 sm:space-y-6 sm:pb-4 md:pb-0;
   }
 
   .ops-page-header {
@@ -502,11 +502,12 @@
   }
 
   .safe-pb-ops-shell {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 6rem);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 6.35rem);
+    scroll-padding-bottom: calc(env(safe-area-inset-bottom) + 6.35rem);
   }
 
   .safe-pb-ops-nav {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 0.9rem);
   }
 
   .safe-pl-edge-12 {

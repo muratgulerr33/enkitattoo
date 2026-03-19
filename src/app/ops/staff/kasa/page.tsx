@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -6,7 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { OpsCashEntryForm } from "@/components/ops/ops-cash-entry-form";
+import { OpsCashEntryManageDialog } from "@/components/ops/ops-cash-entry-manage-dialog";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import {
   CASH_ENTRY_REASON_LABELS,
@@ -19,14 +21,11 @@ import {
   formatCashDateLong,
   formatCashTime,
   getCashbookSnapshot,
-  getTodayCashDateValue,
   isSystemGeneratedCashEntry,
   type CashEntryRecord,
   type CashEntrySummary,
 } from "@/lib/ops/cashbook";
 import { cn } from "@/lib/utils";
-import { OpsCashEntryForm } from "@/components/ops/ops-cash-entry-form";
-import { OpsCashEntryManageDialog } from "@/components/ops/ops-cash-entry-manage-dialog";
 
 type PageProps = {
   searchParams: Promise<{
@@ -36,10 +35,10 @@ type PageProps = {
 
 function getEntryTypeBadgeClassName(entryType: CashEntryRecord["entryType"]): string {
   if (entryType === "income") {
-    return "text-emerald-700";
+    return "text-foreground/70";
   }
 
-  return "text-amber-700";
+  return "text-muted-foreground";
 }
 
 function getAmountClassName(entryType: CashEntryRecord["entryType"]): string {
@@ -52,14 +51,14 @@ function getAmountClassName(entryType: CashEntryRecord["entryType"]): string {
 
 function getEntryReasonClassName(entry: CashEntryRecord): string {
   if (entry.entryReason === "service_collection") {
-    return "text-sky-700";
+    return "border-sky-500/14 bg-sky-500/8 text-foreground/75";
   }
 
   if (entry.entryReason === "service_adjustment") {
-    return "text-violet-700";
+    return "border-amber-500/14 bg-amber-500/8 text-foreground/75";
   }
 
-  return "text-muted-foreground";
+  return "border-border/70 bg-muted/25 text-muted-foreground";
 }
 
 function getNetClassName(netCents: number): string {
@@ -75,9 +74,20 @@ function getNetClassName(netCents: number): string {
 }
 
 function getEntryTitle(entry: CashEntryRecord): string {
-  const normalizedNote = entry.note?.trim().replace(/\b(?:Walk-in|Randevu)\b/g, "İşlem");
+  const normalizedNote = entry.note
+    ?.trim()
+    .replace(/\b(?:Walk-in|Randevu)\b/g, "İşlem")
+    .replace(/\s+/g, " ");
 
-  return normalizedNote || `${CASH_ENTRY_TYPE_LABELS[entry.entryType]} kaydı`;
+  if (normalizedNote) {
+    return normalizedNote;
+  }
+
+  if (entry.entryReason === "manual") {
+    return "Manuel kayıt";
+  }
+
+  return "İşlem";
 }
 
 function SummaryRows({
@@ -110,7 +120,7 @@ function SummaryRows({
           <span className="font-numbers">{formatCashAmount(summary.expenseCents)}</span>
         </div>
         <div className="flex items-center justify-between gap-3">
-          <span>Kayıt</span>
+          <span>Hareket</span>
           <span className="font-numbers">{summary.entryCount}</span>
         </div>
       </div>
@@ -124,55 +134,41 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
   const cashbook = await getCashbookSnapshot(sessionUser.roles, params.date);
   const canManageHistoryEntries = canManageCashHistory(sessionUser.roles);
   const selectedDateLabel = formatCashDateLong(cashbook.selectedDate);
-  const todayDate = getTodayCashDateValue();
   const todayDateLabel = formatCashDateLong(cashbook.todayDate);
   const isSelectedDateToday = cashbook.selectedDate === cashbook.todayDate;
 
   return (
     <div className="ops-page-shell">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.36fr)_minmax(360px,0.64fr)] xl:items-start xl:gap-6">
-        <Card className="order-1">
-          <CardHeader className="gap-1 border-b pb-4">
-            <p className="text-xs text-muted-foreground">{selectedDateLabel}</p>
-            <CardTitle className="text-base sm:text-lg">Gider / düzeltme</CardTitle>
-            <CardDescription>
-              Otomatik hareketleri kontrol edin; gerekiyorsa manuel gider veya düzeltme girin.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className="pt-4">
-            <OpsCashEntryForm
-              defaultDate={cashbook.selectedDate}
-              canChooseDate={canManageHistoryEntries}
-            />
-          </CardContent>
-        </Card>
-
-        <div className="order-2 space-y-4">
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.14fr)_minmax(340px,0.86fr)] xl:items-start xl:gap-6">
+        <div className="order-1 min-w-0 space-y-4 xl:space-y-5">
           <Card>
             <CardHeader className="gap-2 pb-3">
-              <div className="flex items-start justify-between gap-3">
-                <div className="space-y-1">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0 space-y-1">
+                  <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                    Son kontrol
+                  </p>
                   <CardTitle className="text-sm">Gün özeti</CardTitle>
                   <CardDescription>
-                    {isSelectedDateToday
-                      ? "Otomatik hareketleri ve manuel düzeltmeleri birlikte görün."
-                      : "Seçili günün hareketlerini burada kontrol edin."}
+                    {isSelectedDateToday ? "Bugünü kontrol edin." : "Seçili günü kontrol edin."}
                   </CardDescription>
                 </div>
-                <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
-                  <Button asChild variant="outline" size="sm" className="rounded-lg">
+                <div className="flex w-full min-w-0 flex-col items-stretch gap-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+                  <Button asChild variant="outline" size="sm" className="w-full rounded-lg sm:w-auto">
                     <Link href="/ops/staff/raporlar">Raporlar</Link>
                   </Button>
                   {canManageHistoryEntries ? (
-                    <form action="/ops/staff/kasa" className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+                    <form
+                      action="/ops/staff/kasa"
+                      className="grid min-w-0 gap-2 sm:w-auto sm:grid-cols-[minmax(0,1fr)_auto]"
+                    >
                       <input
                         type="date"
                         name="date"
                         defaultValue={cashbook.selectedDate}
-                        className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 rounded-lg border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+                        className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full min-w-0 rounded-lg border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px] sm:min-w-[11rem]"
                       />
-                      <Button type="submit" variant="outline" size="sm" className="rounded-lg">
+                      <Button type="submit" variant="outline" size="sm" className="w-full rounded-lg sm:w-auto">
                         Defteri göster
                       </Button>
                     </form>
@@ -201,62 +197,52 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
               ) : null}
             </CardContent>
           </Card>
+          <Card className="overflow-hidden">
+            <CardHeader className="gap-1.5 border-b pb-4">
+              <CardTitle>Defter</CardTitle>
+              <CardDescription>
+                {cashbook.entries.length
+                  ? `${selectedDateLabel} için ${cashbook.entries.length} hareket var.`
+                  : `${selectedDateLabel} için hareket yok.`}
+              </CardDescription>
+            </CardHeader>
 
-        </div>
-      </div>
-
-      <Card>
-        <CardHeader className="gap-1.5 border-b pb-4">
-          <CardTitle>Defter</CardTitle>
-          <CardDescription>
-            {cashbook.entries.length
-              ? `${selectedDateLabel} için ${cashbook.entries.length} aktif kayıt var.`
-              : `${selectedDateLabel} için aktif kayıt yok.`}
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className="px-0 pt-1">
-          {cashbook.entries.length ? (
-            <div className="divide-y divide-border">
+            <CardContent className="px-0 pt-1">
+              {cashbook.entries.length ? (
+                <div className="divide-y divide-border">
               {cashbook.entries.map((entry) => {
                 const entryTypeLabel = CASH_ENTRY_TYPE_LABELS[entry.entryType];
                 const entryReasonLabel = CASH_ENTRY_REASON_LABELS[entry.entryReason];
                 const isSystemEntry = isSystemGeneratedCashEntry(entry);
+                const entryTitle = getEntryTitle(entry);
 
                 return (
-                  <div key={entry.id} className="px-4 py-2 xl:px-5">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="min-w-0 flex-1 space-y-0.5">
-                        <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium uppercase tracking-wide">
-                          <span className={cn(getEntryTypeBadgeClassName(entry.entryType))}>
+                  <div key={entry.id} className="px-4 py-2.5 xl:px-5">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+                      <div className="min-w-0 flex-1 space-y-1.5">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-medium sm:text-[11px]">
+                          <span className={cn("uppercase tracking-[0.16em]", getEntryTypeBadgeClassName(entry.entryType))}>
                             {entryTypeLabel}
                           </span>
-                          <span className={cn(getEntryReasonClassName(entry))}>
+                          <span
+                            className={cn(
+                              "inline-flex rounded-full border px-2 py-0.5 text-[10px] sm:text-[11px]",
+                              getEntryReasonClassName(entry)
+                            )}
+                          >
                             {entryReasonLabel}
                           </span>
-                          {entry.entryDate !== todayDate ? (
-                            <span className="text-[11px] text-muted-foreground">Geçmiş kayıt</span>
-                          ) : null}
                         </div>
 
-                        <p className="truncate text-sm font-semibold text-foreground sm:text-base">
-                          {getEntryTitle(entry)}
+                        <p className="truncate text-sm font-medium text-foreground sm:text-[15px]">
+                          {entryTitle}
                         </p>
-                        <p className="text-xs text-muted-foreground">
-                          {entry.createdByName} · {formatCashTime(entry.createdAt)}
-                        </p>
-                        {isSystemEntry ? (
-                          <p className="text-xs text-muted-foreground">
-                            Sistem üretimi
-                            {entry.serviceIntakeId ? ` · işlem #${entry.serviceIntakeId}` : ""}
-                          </p>
-                        ) : null}
                       </div>
 
-                      <div className="shrink-0 pt-0.5 text-right">
+                      <div className="flex items-start justify-between gap-3 sm:block sm:shrink-0 sm:pt-0.5 sm:text-right">
                         <p
                           className={cn(
-                            "text-lg font-semibold font-numbers sm:text-xl",
+                            "min-w-0 text-lg font-semibold font-numbers sm:text-2xl",
                             getAmountClassName(entry.entryType)
                           )}
                         >
@@ -265,7 +251,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                         </p>
 
                         {canManageHistoryEntries && !isSystemEntry ? (
-                          <div className="mt-1 flex justify-end">
+                          <div className="mt-1.5 flex justify-end">
                             <OpsCashEntryManageDialog
                               entryId={entry.id}
                               entryDate={entry.entryDate}
@@ -284,14 +270,31 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                   </div>
                 );
               })}
-            </div>
-          ) : (
-            <div className="px-4 py-5 text-sm text-muted-foreground xl:px-5">
-              Kayıt yok.
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                </div>
+              ) : (
+                <div className="px-4 py-5 text-sm text-muted-foreground xl:px-5">
+                  Aktif hareket yok.
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="order-3 xl:order-2 xl:sticky xl:top-24">
+          <CardHeader className="gap-1 border-b pb-4">
+            <p className="text-xs text-muted-foreground">{selectedDateLabel}</p>
+            <CardTitle className="text-base sm:text-lg">Manuel giriş</CardTitle>
+            <CardDescription>Yalnız gerektiğinde kayıt ekleyin.</CardDescription>
+          </CardHeader>
+
+          <CardContent className="pt-4">
+            <OpsCashEntryForm
+              defaultDate={cashbook.selectedDate}
+              canChooseDate={canManageHistoryEntries}
+            />
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

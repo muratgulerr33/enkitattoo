@@ -4,7 +4,7 @@ Bu dosya repo içinden doğrulanabilen çalışma runbook’unu tutar. Reverse p
 
 Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya komut, env, local DB, bootstrap ve smoke-check akışına odaklanır.
 
-Current runtime ile planned roadmap burada da ayrıdır: unified staff day workspace, service-intake event’lerinden otomatik cashbook ve `serviceIntakeId` bazlı operasyon sözleşmesi + browser print + 1/2 copy akışı repo içine inmiştir; dijital imza / upload / PDF exporter repo içine inmediği sürece runtime sayılmaz.
+Current runtime ile planned roadmap burada da ayrıdır: staff visible top-level surfaces source-neutral tek işlem diliyle çalışır, unified staff day workspace, service-intake event’lerinden otomatik cashbook ve `serviceIntakeId` bazlı operasyon sözleşmesi + browser print + 1/2 copy akışı repo içine inmiştir. User/deeper runtime tarafında combined consent yaşayabilir; staff top-level surfaces bu dijital onay dilini visible badge/copy olarak taşımaz. Dijital imza / upload / PDF exporter repo içine inmediği sürece runtime sayılmaz.
 
 ## 1) Repo-İçi Runtime Özeti
 
@@ -15,7 +15,7 @@ Current runtime ile planned roadmap burada da ayrıdır: unified staff day works
 - Route-content generator: `python3 scripts/generate-route-content.py`
 - DB migration generate: `npm run db:generate`
 - Ops bootstrap user: `npm run ops:bootstrap-user`
-- Bugünkü ops runtime lock: combined consent, appointment-first teknik omurga üstünde tek visible işlem dili, unified staff day workspace, appointment/walk-in `service_intakes`, service-intake delta’larından beslenen otomatik kasa defteri ve staff operasyon sözleşmesi preview + browser print flow
+- Bugünkü ops runtime lock: user lane combined consent + staff top-level source-neutral tek visible işlem dili, unified staff day workspace, appointment/walk-in `service_intakes`, service-intake delta’larından beslenen otomatik kasa defteri ve staff operasyon sözleşmesi preview + browser print flow
 
 ## 2) Env ve Girdi Yüzeyi
 
@@ -88,12 +88,13 @@ Current runtime ile planned roadmap burada da ayrıdır: unified staff day works
 | Month root neutral occupancy | walk-in olan gün içeren ay görünümü | appointment-first teknik omurga korunur; visible takvimde source’a özel ikinci sinyal görünmez |
 | Automated cashbook create | collected > 0 ile appointment veya walk-in create | aynı gün kasa defterinde `service_collection` income satırı oluşur |
 | Automated cashbook delta | collected artır / azalt | artış yeni income, azalış yeni expense `service_adjustment` satırı üretir |
-| Manual cash exception | `/ops/staff/kasa` hızlı kayıt formu | manuel gider / düzeltme kaydı hâlâ açılır; kasa yardımcı/son kontrol yüzeyi olarak kalır |
+| Manual cash exception | `/ops/staff/kasa` manuel giriş formu | manuel gider / düzeltme kaydı hâlâ açılır; kasa yardımcı/son kontrol yüzeyi olarak kalır |
 | System cash read-only | service-source kasa satırı | manage dialog görünmez, update/delete app-level olarak açık olmaz |
+| Staff top-level polish | `/ops/staff/kasa`, `/ops/staff/musteriler`, `/ops/staff/profil` | mobile/desktop yatay overflow üretmez; müşteri kartları primary action gibi okunur; profil kısa kalır; kasa header ve defter satırları sakin görünür |
 | Appointment delete | detail sheet içindeki `Sil` aksiyonu | app-level confirm açılır, SQL error yok, stale reopen veya stale summary kalmaz |
 | Appointment delete guard | linked intake üzerinde aktif tahsilat izi olan appointment | delete bloklanır, önce kasa düzeltmesi gerektiğini anlatan kısa hata döner |
 | Packet print chrome | packet preview route browser print | `Geri` / `Yazdır` / `1 kopya - 2 kopya` barı print’e girmez, seçilen sözleşme sayısı A4 portrait olarak ayrılır |
-| Mobile ops safe-area | `/ops/staff/musteriler`, `/ops/staff/musteriler/[userId]`, `/ops/staff/kasa`, `/ops/staff/randevular`, `/ops/staff/belgeler/[serviceIntakeId]` | alt içerik fixed bottom nav veya screen edge altında kalmaz; son bloklar görünür ve scroll sonunda güvenli clearance korunur |
+| Mobile ops safe-area | `/ops/staff/musteriler`, `/ops/staff/musteriler/[userId]`, `/ops/staff/kasa`, `/ops/staff/randevular`, `/ops/staff/profil`, `/ops/staff/belgeler/[serviceIntakeId]` | alt içerik fixed bottom nav veya screen edge altında kalmaz; son bloklar görünür ve scroll sonunda rahat ama şişmeyen clearance korunur |
 | Locale bypass | `/ops` ailesi | locale rewrite katmanına girmez |
 | Default locale | `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/artistler`, `/iletisim` | prefixsiz `tr` açılır |
 | Prefixli locale | `/en`, `/en/kesfet`, `/en/piercing` | 404 olmaz, message load kırılmaz |

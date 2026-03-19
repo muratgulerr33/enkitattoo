@@ -1,21 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { OpsCustomerNoteForm } from "@/components/ops/ops-customer-note-form";
 import { APPOINTMENT_STATUS_LABELS } from "@/lib/ops/appointment-copy";
-import {
-  formatAppointmentDateLong,
-} from "@/lib/ops/appointments";
+import { formatAppointmentDateLong } from "@/lib/ops/appointments";
 import { getCustomerDetail, getCustomerLabel } from "@/lib/ops/customers";
-import {
-  OPS_TATTOO_PIERCING_CONSENT_VERSION,
-} from "@/lib/ops/user-workspace";
 import { cn } from "@/lib/utils";
 
 type PageProps = {
@@ -42,21 +37,6 @@ function getAppointmentStatusClassName(
   return "border-amber-500/20 bg-amber-500/10 text-amber-700";
 }
 
-function formatAcceptanceDate(value: Date | null): string | null {
-  if (!value) {
-    return null;
-  }
-
-  return new Intl.DateTimeFormat("tr-TR", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(value);
-}
-
-function getConsentSummary(acceptedAt: string | null): string {
-  return acceptedAt ? `Onaylandı ${acceptedAt}` : "Bu sürüm için kayıt yok.";
-}
-
 function getCustomerContactLine(customer: {
   phone: string | null;
   email: string | null;
@@ -81,6 +61,10 @@ function getServiceTypeLabel(value: string): string {
   return value === "piercing" ? "Piercing" : "Dövme";
 }
 
+function getFieldValue(value: string | null, emptyLabel = "Belirtilmemiş"): string {
+  return value?.trim() || emptyLabel;
+}
+
 export default async function OpsStaffCustomerDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const customerUserId = Number(resolvedParams.userId);
@@ -95,11 +79,20 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
     notFound();
   }
 
-  const latestConsentAcceptedAt = formatAcceptanceDate(
-    customer.workspace.latestConsent?.acceptedAt ?? null
-  );
   const customerLabel = getCustomerLabel(customer);
   const contactLine = getCustomerContactLine(customer);
+  const latestServiceIntake = customer.latestServiceIntake;
+  const latestServiceRemainingAmountCents = latestServiceIntake
+    ? Math.max(0, latestServiceIntake.totalAmountCents - latestServiceIntake.collectedAmountCents)
+    : 0;
+  const latestNoteUpdatedAt = customer.note
+    ? new Intl.DateTimeFormat("tr-TR", {
+        day: "numeric",
+        month: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(customer.note.updatedAt)
+    : null;
 
   return (
     <div className="ops-page-shell">
@@ -120,7 +113,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         </div>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:gap-6">
+      <div className="grid gap-4 xl:grid-cols-[minmax(340px,0.76fr)_minmax(0,1.24fr)] xl:gap-6">
         <Card>
           <CardHeader className="gap-1 px-5 py-5">
             <CardTitle>Temel bilgi</CardTitle>
@@ -131,9 +124,10 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 Ad soyad
               </p>
               <p className="mt-1 text-sm font-medium text-foreground">
-                {customer.fullName ?? "Kayıt yok"}
+                {getFieldValue(customer.fullName)}
               </p>
             </div>
+
             {customer.displayName && customer.displayName !== customer.fullName ? (
               <div className="min-w-0 sm:col-span-2">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
@@ -142,150 +136,113 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 <p className="mt-1 text-sm font-medium text-foreground">{customer.displayName}</p>
               </div>
             ) : null}
+
             <div className="min-w-0">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Telefon
               </p>
               <p className="mt-1 break-words text-sm font-medium text-foreground">
-                {customer.phone ?? "Kayıt yok"}
+                {getFieldValue(customer.phone)}
               </p>
             </div>
+
             <div className="min-w-0">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 E-posta
               </p>
-              <p className="mt-1 break-words text-sm text-muted-foreground">
-                {customer.email ?? "Kayıt yok"}
+              <p className="mt-1 break-words text-sm text-foreground/80">
+                {getFieldValue(customer.email)}
               </p>
             </div>
-          </CardContent>
-        </Card>
 
-        <Card>
-          <CardHeader className="gap-1 px-5 py-5">
-            <CardTitle>Onaylar</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 pt-0">
-            <div className="rounded-2xl border border-border px-4 py-3">
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-foreground">
-                    Dövme ve piercing sözleşmesi
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    Sürüm {OPS_TATTOO_PIERCING_CONSENT_VERSION}
-                  </p>
-                </div>
-                <Badge
-                  variant={customer.workspace.hasCurrentConsent ? "default" : "outline"}
-                  className="rounded-full"
-                >
-                  {customer.workspace.hasCurrentConsent ? "Kayıtlı" : "Kayıt yok"}
-                </Badge>
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {getConsentSummary(latestConsentAcceptedAt)}
-              </p>
-            </div>
-            <div className="flex items-center justify-between gap-3 rounded-2xl bg-muted/35 px-4 py-3">
-              <p className="text-sm text-muted-foreground">Profil</p>
+            <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-surface-1/55 px-4 py-3 sm:col-span-2">
+              <p className="text-sm text-muted-foreground">Profil durumu</p>
               <p className="text-sm font-medium text-foreground">
                 {customer.workspace.isProfileComplete ? "Hazır" : "Eksik"}
               </p>
             </div>
           </CardContent>
         </Card>
-      </div>
 
-      <Card>
-        <CardHeader className="gap-1 px-5 py-5">
-          <CardTitle>İşlem özeti</CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          {customer.latestServiceIntake ? (
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-              <div className="rounded-2xl border border-border px-4 py-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  İşlem tipi
-                </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  {getServiceTypeLabel(customer.latestServiceIntake.serviceType)}
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-border px-4 py-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Tarih
-                </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  {formatAppointmentDateLong(customer.latestServiceIntake.scheduledDate)}
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-border px-4 py-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Saat
-                </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  {customer.latestServiceIntake.scheduledTime}
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-border px-4 py-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Toplam
-                </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  {formatMoney(customer.latestServiceIntake.totalAmountCents)}
-                </p>
-              </div>
-
-              <div className="rounded-2xl border border-border px-4 py-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  Alınan / Kalan
-                </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  {formatMoney(customer.latestServiceIntake.collectedAmountCents)} /{" "}
-                  {formatMoney(
-                    customer.latestServiceIntake.totalAmountCents -
-                      customer.latestServiceIntake.collectedAmountCents
-                  )}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
-              Henüz işlem kaydı yok.
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] xl:gap-6">
-        <div className="flex flex-col gap-5 sm:gap-6">
-          <Card>
-            <CardHeader className="gap-1 px-5 py-5">
-              <CardTitle>Staff notu</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 pt-0">
-              {customer.note ? (
-                <div className="rounded-2xl border border-border bg-surface-1 px-4 py-3 text-sm text-muted-foreground">
-                  <p className="font-medium text-foreground">{customer.note.updatedByName}</p>
+        <Card className="border-foreground/10 bg-surface-1/25">
+          <CardHeader className="gap-1 px-5 py-5">
+            <CardTitle>İşlem özeti</CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0">
+            {latestServiceIntake ? (
+              <div className="space-y-4">
+                <div className="rounded-[1.7rem] border border-border bg-card px-4 py-4">
+                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                    Son işlem
+                  </p>
+                  <p className="mt-2 text-lg font-semibold text-foreground">
+                    {getServiceTypeLabel(latestServiceIntake.serviceType)}
+                  </p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {new Intl.DateTimeFormat("tr-TR", {
-                      day: "numeric",
-                      month: "long",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    }).format(customer.note.updatedAt)}
+                    {formatAppointmentDateLong(latestServiceIntake.scheduledDate)} ·{" "}
+                    {latestServiceIntake.scheduledTime}
                   </p>
                 </div>
-              ) : null}
 
-              <OpsCustomerNoteForm customerUserId={customer.userId} note={customer.note?.note ?? null} />
-            </CardContent>
-          </Card>
-        </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-border bg-card px-4 py-3">
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      Toplam
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-foreground">
+                      {formatMoney(latestServiceIntake.totalAmountCents)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-border bg-card px-4 py-3">
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      Alınan
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-foreground">
+                      {formatMoney(latestServiceIntake.collectedAmountCents)}
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-border bg-card px-4 py-3">
+                    <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                      Kalan
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-foreground">
+                      {formatMoney(latestServiceRemainingAmountCents)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
+                Henüz işlem kaydı yok.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-5 xl:grid-cols-[minmax(340px,0.76fr)_minmax(0,1.24fr)] xl:gap-6">
+        <Card>
+          <CardHeader className="gap-1 px-5 py-5">
+            <CardTitle>Staff notu</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 pt-0">
+            {customer.note ? (
+              <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3 text-sm text-muted-foreground">
+                <p className="font-medium text-foreground">{customer.note.updatedByName}</p>
+                {latestNoteUpdatedAt ? (
+                  <p className="mt-1 text-sm text-muted-foreground">{latestNoteUpdatedAt}</p>
+                ) : null}
+                <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-foreground">
+                  {customer.note.note}
+                </p>
+              </div>
+            ) : null}
+
+            <OpsCustomerNoteForm customerUserId={customer.userId} note={customer.note?.note ?? null} />
+          </CardContent>
+        </Card>
 
         <div className="flex flex-col gap-5 sm:gap-6">
           <Card>
@@ -295,7 +252,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
             <CardContent className="space-y-3">
               {customer.upcomingAppointments.length ? (
                 customer.upcomingAppointments.map((appointment) => (
-                  <div key={appointment.id} className="rounded-2xl border border-border px-4 py-3">
+                  <div key={appointment.id} className="rounded-[1.45rem] border border-border px-4 py-3">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <p className="min-w-0 text-sm font-medium text-foreground">
                         {formatAppointmentDateLong(appointment.appointmentDate)} ·{" "}
@@ -331,7 +288,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
             <CardContent className="space-y-3">
               {customer.pastAppointments.length ? (
                 customer.pastAppointments.map((appointment) => (
-                  <div key={appointment.id} className="rounded-2xl border border-border px-4 py-3">
+                  <div key={appointment.id} className="rounded-[1.45rem] border border-border px-4 py-3">
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <p className="min-w-0 text-sm font-medium text-foreground">
                         {formatAppointmentDateLong(appointment.appointmentDate)} ·{" "}

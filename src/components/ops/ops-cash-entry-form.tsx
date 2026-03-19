@@ -26,7 +26,7 @@ const INITIAL_STATE: OpsCashEntryActionState = {
 
 function getNotePlaceholder(entryType: CashEntryTypeValue, activePreset: CashEntryPreset | null): string {
   if (activePreset) {
-    return `${activePreset.label} için kısa ek not`;
+    return `${activePreset.label} için kısa not`;
   }
 
   if (entryType === "income") {
@@ -107,7 +107,9 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
       {canChooseDate ? null : <input type="hidden" name="entryDate" value={entryDateValue} />}
 
       <div className="space-y-2">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">İşlem</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          Kayıt türü
+        </p>
 
         <div className="grid grid-cols-2 rounded-2xl border border-border bg-surface-1 p-1">
           {CASH_ENTRY_TYPE_VALUES.map((value) => {
@@ -137,9 +139,31 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
       </div>
 
       <div className="space-y-2">
+        <Label htmlFor="amount" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          Tutar
+        </Label>
+        <div className="relative">
+          <Input
+            id="amount"
+            name="amount"
+            inputMode="decimal"
+            placeholder="0,00"
+            value={amountValue}
+            disabled={pending}
+            required
+            onChange={(event) => setAmountValue(event.target.value)}
+            className="h-14 rounded-2xl pr-14 text-2xl font-semibold tracking-tight md:text-2xl"
+          />
+          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-medium text-muted-foreground">
+            TL
+          </span>
+        </div>
+      </div>
+
+      <div className="space-y-2">
         <div className="flex items-center justify-between gap-3">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Kategori
+            Hazır etiket
           </p>
           {activePreset ? (
             <Button
@@ -177,28 +201,6 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="amount" className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Tutar
-        </Label>
-        <div className="relative">
-          <Input
-            id="amount"
-            name="amount"
-            inputMode="decimal"
-            placeholder="0,00"
-            value={amountValue}
-            disabled={pending}
-            required
-            onChange={(event) => setAmountValue(event.target.value)}
-            className="h-14 rounded-2xl pr-14 text-2xl font-semibold tracking-tight md:text-2xl"
-          />
-          <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-sm font-medium text-muted-foreground">
-            TL
-          </span>
-        </div>
-      </div>
-
       <Button type="submit" size="cta" className="h-12 w-full rounded-2xl text-base" disabled={pending}>
         {pending ? (
           <>
@@ -231,7 +233,9 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
         </div>
       ) : (
         <div className="border-t border-border pt-3">
-          <p className="text-sm text-muted-foreground">Artist yalnız bugünün kasasına kayıt açabilir.</p>
+          <p className="text-sm text-muted-foreground">
+            Artist yalnız bugün kayıt ekler.
+          </p>
         </div>
       )}
 

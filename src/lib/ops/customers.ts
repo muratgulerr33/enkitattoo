@@ -8,7 +8,6 @@ import {
 } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
-  consentAcceptances,
   customerNotes,
   userProfiles,
   userRoles,
@@ -28,12 +27,8 @@ import {
 } from "./appointments";
 import {
   getUserWorkspaceOverview,
-  OPS_TATTOO_PIERCING_CONSENT_DOCUMENT_TYPE,
-  OPS_TATTOO_PIERCING_CONSENT_VERSION,
   type UserWorkspaceOverview,
 } from "./user-workspace";
-
-export type CustomerConsentStatus = "none" | "accepted";
 
 export type CustomerUpcomingAppointment = {
   id: number;
@@ -47,7 +42,6 @@ export type CustomerListItem = {
   phone: string | null;
   fullName: string | null;
   displayName: string | null;
-  consentStatus: CustomerConsentStatus;
   nextAppointment: CustomerUpcomingAppointment | null;
   searchMatch: CustomerSearchMatch | null;
 };
@@ -133,10 +127,6 @@ function toCustomerNote(row: CustomerNoteRow | undefined): CustomerNoteRecord | 
     ),
     updatedAt: row.updatedAt,
   };
-}
-
-function getConsentStatus(hasAcceptedConsent: boolean): CustomerConsentStatus {
-  return hasAcceptedConsent ? "accepted" : "none";
 }
 
 function normalizeCustomerSearchValue(value: string | null | undefined): string {
@@ -266,14 +256,6 @@ export async function listCustomers(searchQuery?: string | null): Promise<Custom
       phone: users.phone,
       fullName: userProfiles.fullName,
       displayName: userProfiles.displayName,
-      hasAcceptedConsent: sql<boolean>`exists(
-        select 1
-        from ${consentAcceptances}
-        where ${consentAcceptances.userId} = ${users.id}
-          and ${consentAcceptances.documentType} = ${OPS_TATTOO_PIERCING_CONSENT_DOCUMENT_TYPE}
-          and ${consentAcceptances.documentVersion} = ${OPS_TATTOO_PIERCING_CONSENT_VERSION}
-          and ${consentAcceptances.accepted} = true
-      )`,
     })
     .from(users)
     .innerJoin(userRoles, and(eq(userRoles.userId, users.id), eq(userRoles.role, "user")))
@@ -293,7 +275,6 @@ export async function listCustomers(searchQuery?: string | null): Promise<Custom
     phone: row.phone,
     fullName: row.fullName,
     displayName: row.displayName,
-    consentStatus: getConsentStatus(Boolean(row.hasAcceptedConsent)),
     nextAppointment: nextAppointmentMap.get(row.userId) ?? null,
     searchMatch: getCustomerSearchMatch(row, query),
   }));
