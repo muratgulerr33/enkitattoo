@@ -17,6 +17,7 @@ import { createCustomerRecord } from "@/lib/ops/customers";
 import {
   attachServiceIntakeAppointment,
   createServiceIntake,
+  updateWalkInServiceIntake,
 } from "@/lib/ops/service-intakes";
 import {
   APPOINTMENT_STATUS_VALUES,
@@ -46,21 +47,29 @@ const INLINE_CUSTOMER_AUTH_ERROR_MESSAGE =
   "Oturum süreniz doldu. Sayfayı yenileyip yeniden giriş yapın.";
 const INLINE_CUSTOMER_ROLE_ERROR_MESSAGE = "Bu işlem için personel hesabı gerekli.";
 const DELETE_ERROR_MESSAGE = "Randevu silinemedi. Biraz sonra tekrar deneyin.";
+const WALK_IN_ERROR_MESSAGE = "Walk-in kaydı kaydedilemedi.";
 
 const SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES = new Set([
   "Metin alanı çok uzun. Lütfen kısaltın.",
   "Girdiler beklenenden uzun. Lütfen kısaltın.",
+  "Kaynak seçin.",
   "Müşteri seçin.",
+  "Seçilen müşteri kullanılamıyor.",
   "Tarih seçin.",
   "Saat seçin.",
+  "Geçerli bir tarih seçin.",
+  "Geçerli bir saat seçin.",
   "Durum seçin.",
   "Durum seçimi geçerli değil.",
   "İşlem tipi seçin.",
   "İşlem tipi geçerli değil.",
   "Toplam tutarı girin.",
+  "Toplam tutarı kontrol edin.",
   "Alınan tutarı girin.",
+  "Alınan tutarı kontrol edin.",
   "Alınan tutar toplam tutardan büyük olamaz.",
   "Randevu bulunamadı.",
+  "İşlem kaydı bulunamadı.",
   APPOINTMENT_SLOT_CONFLICT_MESSAGE,
 ]);
 
@@ -202,6 +211,39 @@ function toAmountCents(
   return Math.round(parsed * 100);
 }
 
+function toOptionalAmountCents(
+  value: FormDataEntryValue | null,
+  message: string
+): number {
+  if (value === null) {
+    return 0;
+  }
+
+  if (typeof value !== "string") {
+    throw new Error(message);
+  }
+
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return 0;
+  }
+
+  const normalized = trimmed.replace(",", ".");
+
+  if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) {
+    throw new Error(message);
+  }
+
+  const parsed = Number(normalized);
+
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    throw new Error(message);
+  }
+
+  return Math.round(parsed * 100);
+}
+
 function isUniqueConflict(error: unknown): boolean {
   return (
     typeof error === "object" &&
@@ -228,6 +270,32 @@ function revalidateStaffCustomerPaths(userIds: number[]) {
   }
 }
 
+async function getStaffActionSession():
+  Promise<{ ok: true; user: Awaited<ReturnType<typeof requireOpsSessionArea>> } | {
+    ok: false;
+    state: OpsAppointmentActionState;
+  }> {
+  const access = await getOpsSessionAreaAccess("staff");
+
+  if (!access.ok) {
+    return {
+      ok: false,
+      state: {
+        error:
+          access.reason === "unauthenticated"
+            ? INLINE_CUSTOMER_AUTH_ERROR_MESSAGE
+            : INLINE_CUSTOMER_ROLE_ERROR_MESSAGE,
+        success: null,
+      },
+    };
+  }
+
+  return {
+    ok: true,
+    user: access.user,
+  };
+}
+
 function getSafeActionErrorMessage(
   error: unknown,
   fallbackMessage: string,
@@ -240,42 +308,82 @@ function getSafeActionErrorMessage(
   return fallbackMessage;
 }
 
+function getScheduledDateValue(formData: FormData): string {
+  return toRequiredString(
+    formData.get("scheduledDate") ?? formData.get("appointmentDate"),
+    "Tarih seçin."
+  );
+}
+
+function getScheduledTimeValue(formData: FormData): string {
+  return toRequiredString(
+    formData.get("scheduledTime") ?? formData.get("appointmentTime"),
+    "Saat seçin."
+  );
+}
+
+function getServiceSessionFormValues(formData: FormData): {
+  customerUserId: number;
+  scheduledDate: string;
+  scheduledTime: string;
+  serviceType: ServiceIntakeServiceType;
+  totalAmountCents: number;
+  collectedAmountCents: number;
+  notes: string | null;
+} {
+  const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Müşteri seçin.");
+  const scheduledDate = getScheduledDateValue(formData);
+  const scheduledTime = getScheduledTimeValue(formData);
+  const rawServiceType = toRequiredString(formData.get("serviceType"), "İşlem tipi seçin.");
+  const totalAmountCents = toAmountCents(
+    formData.get("totalAmount"),
+    "Toplam tutarı kontrol edin."
+  );
+  const collectedAmountCents = toOptionalAmountCents(
+    formData.get("collectedAmount"),
+    "Alınan tutarı kontrol edin."
+  );
+  const notes = toNullableText(formData.get("notes"), 1200);
+
+  if (!isServiceIntakeServiceType(rawServiceType)) {
+    throw new Error("İşlem tipi geçerli değil.");
+  }
+
+  if (collectedAmountCents > totalAmountCents) {
+    throw new Error("Alınan tutar toplam tutardan büyük olamaz.");
+  }
+
+  return {
+    customerUserId,
+    scheduledDate,
+    scheduledTime,
+    serviceType: rawServiceType,
+    totalAmountCents,
+    collectedAmountCents,
+    notes,
+  };
+}
+
 export async function createStaffAppointmentAction(
   _previousState: OpsAppointmentActionState,
   formData: FormData
 ): Promise<OpsAppointmentActionState> {
   try {
     const sessionUser = await requireOpsSessionArea("staff");
-    const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Müşteri seçin.");
-    const appointmentDate = toRequiredString(formData.get("appointmentDate"), "Tarih seçin.");
-    const appointmentTime = toRequiredString(formData.get("appointmentTime"), "Saat seçin.");
-    const rawServiceType = toRequiredString(formData.get("serviceType"), "İşlem tipi seçin.");
-    const totalAmountCents = toAmountCents(formData.get("totalAmount"), "Toplam tutarı girin.");
-    const collectedAmountCents = toAmountCents(
-      formData.get("collectedAmount"),
-      "Alınan tutarı girin.",
-      { allowZero: true }
-    );
-    const notes = toNullableText(formData.get("notes"), 1200);
-
-    if (!isServiceIntakeServiceType(rawServiceType)) {
-      return {
-        error: "İşlem tipi geçerli değil.",
-        success: null,
-      };
-    }
-
-    if (collectedAmountCents > totalAmountCents) {
-      return {
-        error: "Alınan tutar toplam tutardan büyük olamaz.",
-        success: null,
-      };
-    }
+    const {
+      customerUserId,
+      scheduledDate,
+      scheduledTime,
+      serviceType,
+      totalAmountCents,
+      collectedAmountCents,
+      notes,
+    } = getServiceSessionFormValues(formData);
 
     const appointment = await createAppointment({
       customerUserId,
-      appointmentDate,
-      appointmentTime,
+      appointmentDate: scheduledDate,
+      appointmentTime: scheduledTime,
       notes,
       source: getSourceForStaffRoles(sessionUser.roles),
       createdByUserId: sessionUser.id,
@@ -284,9 +392,9 @@ export async function createStaffAppointmentAction(
     const serviceIntake = await createServiceIntake({
       customerUserId,
       flowType: "appointment",
-      serviceType: rawServiceType,
-      scheduledDate: appointmentDate,
-      scheduledTime: appointmentTime,
+      serviceType,
+      scheduledDate,
+      scheduledTime,
       totalAmountCents,
       collectedAmountCents,
       notes,
@@ -307,6 +415,82 @@ export async function createStaffAppointmentAction(
       error: null,
       success: "Randevu ve işlem kaydı açıldı.",
     };
+  } catch (error) {
+    return {
+      error: getSafeActionErrorMessage(
+        error,
+        INITIAL_ERROR_MESSAGE,
+        SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES
+      ),
+      success: null,
+    };
+  }
+}
+
+export async function createStaffWalkInAction(
+  _previousState: OpsAppointmentActionState,
+  formData: FormData
+): Promise<OpsAppointmentActionState> {
+  try {
+    const access = await getStaffActionSession();
+
+    if (!access.ok) {
+      return access.state;
+    }
+
+    const {
+      customerUserId,
+      scheduledDate,
+      scheduledTime,
+      serviceType,
+      totalAmountCents,
+      collectedAmountCents,
+      notes,
+    } = getServiceSessionFormValues(formData);
+
+    await createServiceIntake({
+      customerUserId,
+      flowType: "walk_in",
+      serviceType,
+      scheduledDate,
+      scheduledTime,
+      totalAmountCents,
+      collectedAmountCents,
+      notes,
+      createdByUserId: access.user.id,
+    });
+
+    revalidatePath("/ops/staff/randevular");
+    revalidateStaffCustomerPaths([customerUserId]);
+
+    return {
+      error: null,
+      success: "Walk-in işlem kaydı açıldı.",
+    };
+  } catch (error) {
+    return {
+      error: getSafeActionErrorMessage(
+        error,
+        WALK_IN_ERROR_MESSAGE,
+        SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES
+      ),
+      success: null,
+    };
+  }
+}
+
+export async function createStaffServiceSessionAction(
+  previousState: OpsAppointmentActionState,
+  formData: FormData
+): Promise<OpsAppointmentActionState> {
+  try {
+    const source = toRequiredString(formData.get("sessionSource"), "Kaynak seçin.");
+
+    if (source === "walk_in") {
+      return createStaffWalkInAction(previousState, formData);
+    }
+
+    return createStaffAppointmentAction(previousState, formData);
   } catch (error) {
     return {
       error: getSafeActionErrorMessage(
@@ -480,16 +664,24 @@ export async function updateStaffAppointmentAction(
       formData.get("appointmentId"),
       "Randevu bulunamadı."
     );
-    const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Müşteri seçin.");
-    const appointmentDate = toRequiredString(formData.get("appointmentDate"), "Tarih seçin.");
-    const appointmentTime = toRequiredString(formData.get("appointmentTime"), "Saat seçin.");
-    const notes = toNullableText(formData.get("notes"), 1200);
+    const {
+      customerUserId,
+      scheduledDate,
+      scheduledTime,
+      serviceType,
+      totalAmountCents,
+      collectedAmountCents,
+      notes,
+    } = getServiceSessionFormValues(formData);
 
     const result = await updateAppointment({
       appointmentId,
       customerUserId,
-      appointmentDate,
-      appointmentTime,
+      appointmentDate: scheduledDate,
+      appointmentTime: scheduledTime,
+      serviceType,
+      totalAmountCents,
+      collectedAmountCents,
       notes,
       actorUserId: sessionUser.id,
     });
@@ -509,6 +701,65 @@ export async function updateStaffAppointmentAction(
       error: getSafeActionErrorMessage(
         error,
         INITIAL_ERROR_MESSAGE,
+        SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES
+      ),
+      success: null,
+    };
+  }
+}
+
+export async function updateStaffWalkInAction(
+  _previousState: OpsAppointmentActionState,
+  formData: FormData
+): Promise<OpsAppointmentActionState> {
+  try {
+    const access = await getStaffActionSession();
+
+    if (!access.ok) {
+      return access.state;
+    }
+
+    const serviceIntakeId = toRequiredNumber(
+      formData.get("serviceIntakeId"),
+      "İşlem kaydı bulunamadı."
+    );
+    const {
+      customerUserId,
+      scheduledDate,
+      scheduledTime,
+      serviceType,
+      totalAmountCents,
+      collectedAmountCents,
+      notes,
+    } = getServiceSessionFormValues(formData);
+
+    const updated = await updateWalkInServiceIntake({
+      serviceIntakeId,
+      customerUserId,
+      serviceType,
+      scheduledDate,
+      scheduledTime,
+      totalAmountCents,
+      collectedAmountCents,
+      notes,
+      updatedByUserId: access.user.id,
+    });
+
+    revalidatePath("/ops/staff/randevular");
+    revalidateStaffCustomerPaths([
+      updated.previousCustomerUserId,
+      updated.serviceIntake.customerUserId,
+    ]);
+
+    return {
+      error: null,
+      success: "Walk-in işlem kaydı güncellendi.",
+    };
+  } catch (error) {
+    return {
+      error: getSafeActionErrorMessage(
+        error,
+        WALK_IN_ERROR_MESSAGE,
         SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES
       ),
       success: null,

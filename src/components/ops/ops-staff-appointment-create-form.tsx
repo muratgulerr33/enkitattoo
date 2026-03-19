@@ -3,11 +3,12 @@
 import { useActionState, useEffect, useState, useTransition } from "react";
 import { CalendarDays, ChevronDown, Clock3, LoaderCircle, UserPlus, Users } from "lucide-react";
 import {
-  createStaffAppointmentAction,
   createStaffAppointmentCustomerAction,
+  createStaffServiceSessionAction,
   type OpsAppointmentActionState,
   type OpsAppointmentCustomerCreateActionState,
   updateStaffAppointmentAction,
+  updateStaffWalkInAction,
 } from "@/app/ops/randevular/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,7 +47,12 @@ type StaffAppointmentCreateFormProps = {
   defaultTime: string;
   defaultCustomerUserId?: number;
   defaultNotes?: string | null;
+  defaultServiceType?: "tattoo" | "piercing";
+  defaultTotalAmountCents?: number | null;
+  defaultCollectedAmountCents?: number | null;
   appointmentId?: number;
+  serviceIntakeId?: number;
+  source?: "appointment" | "walk_in";
   mode?: "create" | "edit";
   submitLabel?: string;
   onSuccess?: () => void;
@@ -54,6 +60,15 @@ type StaffAppointmentCreateFormProps = {
 };
 
 type CustomerMode = "existing" | "new";
+type SessionSource = "appointment" | "walk_in";
+
+function toAmountInputValue(cents?: number | null, fallback = ""): string {
+  if (typeof cents !== "number" || Number.isNaN(cents)) {
+    return fallback;
+  }
+
+  return (cents / 100).toFixed(2);
+}
 
 export function OpsStaffAppointmentCreateForm({
   customerOptions,
@@ -62,13 +77,24 @@ export function OpsStaffAppointmentCreateForm({
   defaultTime,
   defaultCustomerUserId,
   defaultNotes,
+  defaultServiceType = "tattoo",
+  defaultTotalAmountCents,
+  defaultCollectedAmountCents,
   appointmentId,
+  serviceIntakeId,
+  source = "appointment",
   mode = "create",
   submitLabel,
   onSuccess,
   dateMode = "editable",
 }: StaffAppointmentCreateFormProps) {
-  const action = mode === "edit" ? updateStaffAppointmentAction : createStaffAppointmentAction;
+  const [sessionSource, setSessionSource] = useState<SessionSource>(source);
+  const action =
+    mode === "edit"
+      ? sessionSource === "walk_in"
+        ? updateStaffWalkInAction
+        : updateStaffAppointmentAction
+      : createStaffServiceSessionAction;
   const [state, formAction, pending] = useActionState(action, INITIAL_STATE);
   const [customerMode, setCustomerMode] = useState<CustomerMode>(
     customerOptions.length ? "existing" : "new"
@@ -87,6 +113,10 @@ export function OpsStaffAppointmentCreateForm({
   const selectedCustomer =
     customerOptions.find((option) => option.id.toString() === selectedCustomerUserId) ?? null;
   const isExistingMode = customerMode === "existing";
+
+  useEffect(() => {
+    setSessionSource(source);
+  }, [source]);
 
   useEffect(() => {
     if (state.success) {
@@ -144,20 +174,73 @@ export function OpsStaffAppointmentCreateForm({
     });
   }
 
+  const createSubmitLabel =
+    sessionSource === "walk_in" ? "Walk-in kaydı aç" : "Randevuyu ekle";
+  const defaultSubmitLabel =
+    mode === "edit"
+      ? sessionSource === "walk_in"
+        ? "Walk-in kaydını güncelle"
+        : "Kaydı güncelle"
+      : createSubmitLabel;
+
   return (
     <form
       action={formAction}
+      noValidate
       className={cn("space-y-4", mode === "create" && "space-y-3.5")}
       data-testid={mode === "edit" ? "appointment-edit-form" : "appointment-create-form"}
     >
+      <input type="hidden" name="sessionSource" value={sessionSource} />
+
       {mode === "edit" && appointmentId ? (
         <input type="hidden" name="appointmentId" value={appointmentId} />
       ) : null}
 
+      {mode === "edit" && serviceIntakeId ? (
+        <input type="hidden" name="serviceIntakeId" value={serviceIntakeId} />
+      ) : null}
+
       <div className={cn("grid gap-4", mode === "create" && "gap-3.5")}>
+        {mode === "create" ? (
+          <div className="space-y-2">
+            <Label>Kaynak</Label>
+            <Tabs
+              value={sessionSource}
+              onValueChange={(value) => setSessionSource(value as SessionSource)}
+              className="gap-3"
+            >
+              <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-surface-1/60 p-1">
+                <TabsTrigger
+                  value="appointment"
+                  disabled={isDisabled}
+                  className="min-h-10 rounded-xl px-3"
+                >
+                  Randevu
+                </TabsTrigger>
+                <TabsTrigger
+                  value="walk_in"
+                  disabled={isDisabled}
+                  className="min-h-10 rounded-xl px-3"
+                >
+                  Walk-in
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+        ) : (
+          <div className="rounded-xl bg-surface-1/55 px-3.5 py-2">
+            <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+              Kaynak
+            </p>
+            <p className="mt-1 text-sm font-medium text-foreground">
+              {sessionSource === "walk_in" ? "Walk-in" : "Randevu"}
+            </p>
+          </div>
+        )}
+
         {dateMode === "context" ? (
           <>
-            <input type="hidden" name="appointmentDate" value={defaultDate} />
+            <input type="hidden" name="scheduledDate" value={defaultDate} />
             <div className="rounded-xl bg-surface-1/55 px-3.5 py-2">
               <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
                 Tarih
@@ -179,108 +262,100 @@ export function OpsStaffAppointmentCreateForm({
           )}
         >
           <div className="space-y-2">
-            <Label htmlFor="appointmentTime">Saat</Label>
+            <Label htmlFor="scheduledTime">Saat</Label>
             <div className="relative">
               <Clock3
                 className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                 aria-hidden
               />
               <Input
-                id="appointmentTime"
-                name="appointmentTime"
+                id="scheduledTime"
+                name="scheduledTime"
                 type="time"
                 defaultValue={defaultTime}
                 step={1800}
                 className="pl-9"
                 disabled={isDisabled}
-                required
               />
             </div>
           </div>
 
           {dateMode === "editable" ? (
             <div className="space-y-2">
-              <Label htmlFor="appointmentDate">Tarih</Label>
+              <Label htmlFor="scheduledDate">Tarih</Label>
               <div className="relative rounded-2xl border border-border bg-surface-1/40 px-3 py-1.5">
                 <CalendarDays
                   className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                   aria-hidden
                 />
                 <Input
-                  id="appointmentDate"
-                  name="appointmentDate"
+                  id="scheduledDate"
+                  name="scheduledDate"
                   type="date"
                   defaultValue={defaultDate}
                   className="border-0 bg-transparent pl-9 shadow-none focus-visible:ring-0"
                   disabled={isDisabled}
-                  required
                 />
               </div>
             </div>
           ) : null}
         </div>
 
-        {mode === "create" ? (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2 sm:col-span-2">
-              <Label htmlFor="serviceType">İşlem tipi</Label>
-              <div className="relative rounded-xl border border-border bg-background">
-                <select
-                  id="serviceType"
-              name="serviceType"
-                  defaultValue="tattoo"
-                  className={cn(
-                    selectClassName,
-                    "h-11 rounded-xl border-0 bg-transparent pr-10 shadow-none focus-visible:ring-0"
-                  )}
-                  disabled={isDisabled}
-                  required
-                >
-                  <option value="tattoo">Dövme</option>
-                  <option value="piercing">Piercing</option>
-                </select>
-                <ChevronDown
-                  className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
-                  aria-hidden
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="totalAmount">Toplam tutar (TL)</Label>
-              <Input
-                id="totalAmount"
-                name="totalAmount"
-                type="number"
-                inputMode="decimal"
-                min="0"
-               step="0.01"
-                placeholder="9000"
-                className="h-11 rounded-xl bg-background"
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2 sm:col-span-2">
+            <Label htmlFor="serviceType">İşlem tipi</Label>
+            <div className="relative rounded-xl border border-border bg-background">
+              <select
+                id="serviceType"
+                name="serviceType"
+                defaultValue={defaultServiceType}
+                className={cn(
+                  selectClassName,
+                  "h-11 rounded-xl border-0 bg-transparent pr-10 shadow-none focus-visible:ring-0"
+                )}
                 disabled={isDisabled}
-                required
+              >
+                <option value="tattoo">Dövme</option>
+                <option value="piercing">Piercing</option>
+              </select>
+              <ChevronDown
+                className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="collectedAmount">Alınan tutar (TL)</Label>
-              <Input
-                id="collectedAmount"
-                name="collectedAmount"
-                type="number"
-                inputMode="decimal"
-                min="0"
-                step="0.01"
-                defaultValue="0"
-                placeholder="4000"
-                className="h-11 rounded-xl bg-background"
-                disabled={isDisabled}
-                required
-              />
-              <p className="text-xs text-muted-foreground">Kapora veya ilk tahsilatı yazın.</p>
             </div>
           </div>
-        ) : null}
+
+          <div className="space-y-2">
+            <Label htmlFor="totalAmount">Toplam tutar (TL)</Label>
+            <Input
+              id="totalAmount"
+              name="totalAmount"
+              type="text"
+              inputMode="decimal"
+              defaultValue={toAmountInputValue(defaultTotalAmountCents)}
+              placeholder="9000"
+              className="h-11 rounded-xl bg-background [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              disabled={isDisabled}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="collectedAmount">Alınan tutar (TL)</Label>
+            <Input
+              id="collectedAmount"
+              name="collectedAmount"
+              type="text"
+              inputMode="decimal"
+              defaultValue={toAmountInputValue(defaultCollectedAmountCents)}
+              placeholder="0"
+              className="h-11 rounded-xl bg-background [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              disabled={isDisabled}
+            />
+            <p className="text-xs text-muted-foreground">
+              İsterseniz kapora veya ilk tahsilatı yazın.
+            </p>
+          </div>
+        </div>
 
         <div className="space-y-3">
           <Label>Müşteri</Label>
@@ -342,7 +417,6 @@ export function OpsStaffAppointmentCreateForm({
                   )}
                   disabled={isDisabled}
                   onChange={(event) => setSelectedCustomerUserId(event.target.value)}
-                  required
                 >
                   {customerOptions.length ? (
                     customerOptions.map((option) => (
@@ -380,7 +454,7 @@ export function OpsStaffAppointmentCreateForm({
             >
               <div className="space-y-1">
                 <p className="text-sm font-medium text-foreground">Hızlı müşteri</p>
-                <p className="text-xs text-muted-foreground">Randevu akışından çıkmadan ekleyin.</p>
+                <p className="text-xs text-muted-foreground">Workspace’ten çıkmadan ekleyin.</p>
               </div>
 
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -502,7 +576,7 @@ export function OpsStaffAppointmentCreateForm({
             {mode === "edit" ? "Güncelleniyor" : "Kaydediliyor"}
           </>
         ) : (
-          submitLabel ?? (mode === "edit" ? "Kaydı güncelle" : "Randevu aç")
+          submitLabel ?? defaultSubmitLabel
         )}
       </Button>
     </form>

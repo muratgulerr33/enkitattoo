@@ -7,7 +7,10 @@ import {
   listCustomerOptions,
   parseMonthValue,
 } from "@/lib/ops/appointments";
-import { listLatestServiceIntakesByAppointmentIds } from "@/lib/ops/service-intakes";
+import {
+  listLatestServiceIntakesByAppointmentIds,
+  listWalkInServiceIntakesForMonth,
+} from "@/lib/ops/service-intakes";
 
 type PageProps = {
   searchParams: Promise<{
@@ -19,9 +22,10 @@ type PageProps = {
 export default async function OpsStaffAppointmentsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const monthValue = parseMonthValue(params.month);
-  const [monthAppointments, customerOptions] = await Promise.all([
+  const [monthAppointments, customerOptions, monthWalkIns] = await Promise.all([
     listAppointmentsForMonth(monthValue),
     listCustomerOptions(),
+    listWalkInServiceIntakesForMonth(monthValue),
   ]);
   const scheduledMonthAppointments = monthAppointments.filter(
     (appointment) => appointment.status === "scheduled"
@@ -38,11 +42,14 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
   const scheduledAppointments = scheduledMonthAppointments
     .map((appointment) => ({
       id: appointment.id,
+      source: "appointment" as const,
+      appointmentId: appointment.id,
+      serviceIntakeId: serviceIntakesByAppointmentId.get(appointment.id)?.id ?? null,
       customerUserId: appointment.customerUserId,
       customerName: appointment.customerName,
       customerEmail: appointment.customerEmail,
-      appointmentDate: appointment.appointmentDate,
-      appointmentTime: appointment.appointmentTime,
+      scheduledDate: appointment.appointmentDate,
+      scheduledTime: appointment.appointmentTime,
       notes: appointment.notes,
       serviceSummary: (() => {
         const serviceIntake = serviceIntakesByAppointmentId.get(appointment.id);
@@ -59,6 +66,24 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
         };
       })(),
     }));
+  const walkInSessions = monthWalkIns.map((serviceIntake) => ({
+    id: serviceIntake.id,
+    source: "walk_in" as const,
+    appointmentId: null,
+    serviceIntakeId: serviceIntake.id,
+    customerUserId: serviceIntake.customerUserId,
+    customerName: serviceIntake.customerName,
+    customerEmail: serviceIntake.customerEmail,
+    scheduledDate: serviceIntake.scheduledDate,
+    scheduledTime: serviceIntake.scheduledTime,
+    notes: serviceIntake.notes,
+    serviceSummary: {
+      id: serviceIntake.id,
+      serviceType: serviceIntake.serviceType,
+      totalAmountCents: serviceIntake.totalAmountCents,
+      collectedAmountCents: serviceIntake.collectedAmountCents,
+    },
+  }));
 
   const initialSelectedDay =
     params.day && isValidDateValue(params.day) && isDateInMonth(params.day, monthValue)
@@ -69,7 +94,7 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
     <OpsStaffAppointmentsWorkspace
       monthValue={monthValue}
       initialSelectedDay={initialSelectedDay}
-      appointments={scheduledAppointments}
+      sessions={[...scheduledAppointments, ...walkInSessions]}
       customerOptions={customerOptions}
     />
   );

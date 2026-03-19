@@ -81,6 +81,10 @@ function getServiceTypeLabel(value: string): string {
   return value === "piercing" ? "Piercing" : "Dövme";
 }
 
+function getFlowTypeLabel(value: "appointment" | "walk_in"): string {
+  return value === "walk_in" ? "Walk-in" : "Randevu";
+}
+
 export default async function OpsStaffCustomerDetailPage({ params }: PageProps) {
   const resolvedParams = await params;
   const customerUserId = Number(resolvedParams.userId);
@@ -203,7 +207,16 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
         </CardHeader>
         <CardContent className="pt-0">
           {customer.latestServiceIntake ? (
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+              <div className="rounded-2xl border border-border px-4 py-3">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  Kaynak
+                </p>
+                <p className="mt-1 text-sm font-medium text-foreground">
+                  {getFlowTypeLabel(customer.latestServiceIntake.flowType)}
+                </p>
+              </div>
+
               <div className="rounded-2xl border border-border px-4 py-3">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   İşlem tipi
@@ -213,7 +226,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 </p>
               </div>
 
-         <div className="rounded-2xl border border-border px-4 py-3">
+              <div className="rounded-2xl border border-border px-4 py-3">
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Tarih
                 </p>

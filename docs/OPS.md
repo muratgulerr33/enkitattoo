@@ -4,7 +4,7 @@ Bu dosya repo içinden doğrulanabilen çalışma runbook’unu tutar. Reverse p
 
 Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya komut, env, local DB, bootstrap ve smoke-check akışına odaklanır.
 
-Current runtime ile planned roadmap burada da ayrıdır: unified walk-in / service session workspace, cashbook automation ve document packet / signature akışları repo içine inmediği sürece smoke-check runtime’ı sayılmaz.
+Current runtime ile planned roadmap burada da ayrıdır: unified staff day workspace repo içine inmiştir; cashbook automation ve document packet / signature akışları repo içine inmediği sürece smoke-check runtime’ı sayılmaz.
 
 ## 1) Repo-İçi Runtime Özeti
 
@@ -15,7 +15,7 @@ Current runtime ile planned roadmap burada da ayrıdır: unified walk-in / servi
 - Route-content generator: `python3 scripts/generate-route-content.py`
 - DB migration generate: `npm run db:generate`
 - Ops bootstrap user: `npm run ops:bootstrap-user`
-- Bugünkü ops runtime lock: combined consent, appointment-first staff randevu V2, appointment-linked `service_intakes`, manuel kasa defteri
+- Bugünkü ops runtime lock: combined consent, appointment-first month root + unified staff day workspace, appointment/walk-in `service_intakes`, manuel kasa defteri
 
 ## 2) Env ve Girdi Yüzeyi
 
@@ -80,8 +80,11 @@ Current runtime ile planned roadmap burada da ayrıdır: unified walk-in / servi
 | Repo-side kalite | `npm run lint`, `npm run build`, gerekirse `npm run check:all` | temel kapılar geçer |
 | Route-content değiştiyse | generator sonrası ilgili route + `/sitemap.xml` + `/robots.txt` | canonical/noindex etkisi mantıklı kalır |
 | Ops auth | `/ops`, `/ops/giris`, `/ops/staff/kasa`, `/ops/user/randevular` | session ve role göre doğru redirect |
-| Staff randevular V2 | `/ops/staff/randevular` create/edit/delete zinciri | detail, edit ve müşteri detail `İşlem özeti` kontratı bozulmaz |
-| Inline müşteri create | randevu create sheet içindeki `Yeni müşteri` akışı | redirect olmaz, `NEXT_REDIRECT` sızmaz, yeni müşteri seçili kalır, outer form bağlamı korunur |
+| Staff randevular V2 | `/ops/staff/randevular` month root + selected day workspace | appointment create/edit/delete korunur, walk-in create/edit çalışır, `Alınan tutar` boş/0 kabul edilir, detail/edit ve müşteri detail `İşlem özeti` kontratı bozulmaz |
+| Inline müşteri create | işlem create sheet içindeki `Yeni müşteri` akışı | redirect olmaz, `NEXT_REDIRECT` sızmaz, yeni müşteri seçili kalır, outer form bağlamı korunur |
+| Unified day order | aynı gün ve saatte appointment + walk-in kaydı | sıra deterministic kalır; appointment önce, walk-in sonra görünür |
+| Customer detail latest intake | yeni walk-in sonrası `/ops/staff/musteriler/[userId]` | source-aware `İşlem özeti` doğru latest kaydı gösterir |
+| Month root walk-in signal | walk-in olan gün içeren ay görünümü | appointment-first takvim korunur; walk-in için hafif ikinci sinyal görünür |
 | Appointment delete | detail sheet içindeki `Sil` aksiyonu | app-level confirm açılır, SQL error yok, stale reopen veya stale summary kalmaz |
 | Locale bypass | `/ops` ailesi | locale rewrite katmanına girmez |
 | Default locale | `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/artistler`, `/iletisim` | prefixsiz `tr` açılır |
@@ -127,6 +130,7 @@ Script davranışı:
 - Migration generate unutulursa schema ile migration ayrışır.
 - Bootstrap/env eksik kalırsa ops login çalışmaz.
 - Ops copy ve shell polish borçları ayrı bir ürün kalitesi konusu olarak açık kalır; bu dosya bunları çözülmüş varsaymaz.
+- PR-B sonrası bloklamayan follow-up notları ayrıdır: `Alınan tutar` input yazım ergonomisi ile toast feedback sistemi bu runbook içinde current runtime tamamlanmış işi sayılmaz.
 
 ## 10) UNKNOWN
 

@@ -15,6 +15,7 @@ import {
   type AppointmentSource,
   type AppointmentStatus,
   serviceIntakes,
+  type ServiceIntakeServiceType,
   userProfiles,
   userRoles,
   users,
@@ -68,6 +69,9 @@ export type UpdateAppointmentInput = {
   customerUserId: number;
   appointmentDate: string;
   appointmentTime: string;
+  serviceType: ServiceIntakeServiceType;
+  totalAmountCents: number;
+  collectedAmountCents: number;
   notes: string | null;
   actorUserId: number;
 };
@@ -744,8 +748,11 @@ export async function updateAppointment(
         .update(serviceIntakes)
         .set({
           customerUserId,
+          serviceType: input.serviceType,
           scheduledDate: appointmentDate,
           scheduledTime: appointmentTime,
+          totalAmountCents: input.totalAmountCents,
+          collectedAmountCents: input.collectedAmountCents,
           notes,
           updatedByUserId: input.actorUserId,
           updatedAt: now,
@@ -770,8 +777,11 @@ export async function updateAppointment(
             payload: {
               appointmentId: input.appointmentId,
               customerUserId,
+              serviceType: input.serviceType,
               scheduledDate: appointmentDate,
               scheduledTime: appointmentTime,
+              totalAmountCents: input.totalAmountCents,
+              collectedAmountCents: input.collectedAmountCents,
               hasNotes: Boolean(notes),
             },
           },

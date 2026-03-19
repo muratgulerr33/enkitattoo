@@ -1,9 +1,12 @@
-import { desc, eq, inArray } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, lte } from "drizzle-orm";
 import { getDb } from "@/db";
 import {
   serviceIntakes,
   type ServiceIntakeFlowType,
   type ServiceIntakeServiceType,
+  userProfiles,
+  userRoles,
+  users,
 } from "@/db/schema";
 import { writeAuditLog } from "./audit";
 
@@ -42,6 +45,83 @@ export type AttachServiceIntakeAppointmentInput = {
   updatedByUserId: number;
 };
 
+export type UpdateWalkInServiceIntakeInput = {
+  serviceIntakeId: number;
+  customerUserId: number;
+  serviceType: ServiceIntakeServiceType;
+  scheduledDate: string;
+  scheduledTime: string;
+  totalAmountCents: number;
+  collectedAmountCents: number;
+  notes: string | null;
+  updatedByUserId: number;
+};
+
+export type StaffWalkInServiceIntakeRecord = ServiceIntakeRecord & {
+  customerName: string;
+  customerEmail: string | null;
+};
+
+export type UpdateWalkInServiceIntakeResult = {
+  serviceIntake: ServiceIntakeRecord;
+  previousCustomerUserId: number;
+};
+
+function padNumber(value: number): string {
+  return value.toString().padStart(2, "0");
+}
+
+function getMonthBounds(monthValue: string): {
+  startDate: string;
+  endDate: string;
+} {
+  const normalized = /^\d{4}-\d{2}$/.test(monthValue)
+    ? monthValue
+    : `${new Date().getFullYear()}-${padNumber(new Date().getMonth() + 1)}`;
+  const [yearPart, monthPart] = normalized.split("-");
+  const year = Number(yearPart);
+  const monthIndex = Number(monthPart) - 1;
+  const lastDay = new Date(year, monthIndex + 1, 0).getDate();
+
+  return {
+    startDate: `${yearPart}-${monthPart}-01`,
+    endDate: `${yearPart}-${monthPart}-${padNumber(lastDay)}`,
+  };
+}
+
+function getCustomerDisplayName(row: {
+  fullName: string | null;
+  displayName: string | null;
+  email: string | null;
+  customerUserId: number;
+}): string {
+  return (
+    row.displayName ??
+    row.fullName ??
+    row.email ??
+    `Kullanıcı #${row.customerUserId}`
+  );
+}
+
+async function assertCustomerUserExists(
+  customerUserId: number,
+  executor: Pick<ReturnType<typeof getDb>, "select"> = getDb()
+): Promise<void> {
+  const rows = await executor
+    .select({ id: users.id })
+    .from(users)
+    .innerJoin(
+      userRoles,
+      and(eq(userRoles.userId, users.id), eq(userRoles.role, "user"))
+    )
+    .where(and(eq(users.id, customerUserId), eq(users.isActive, true)))
+    .limit(1);
+
+  if (!rows[0]) {
+    throw new Error("Seçilen müşteri kullanılamıyor.");
+  }
+}
+
 function mapRow(row: {
   id: number;
   customerUserId: number;
@@ -68,6 +148,8 @@ export async function createServiceIntake(
   const now = new Date();
 
   return db.transaction(async (tx) => {
+    await assertCustomerUserExists(input.customerUserId, tx);
+
     const insertedRows = await tx
       .insert(serviceIntakes)
       .values({
@@ -186,6 +268,102 @@ export async function attachServiceIntakeAppointment(
   });
 }
 
+export async function updateWalkInServiceIntake(
+  input: UpdateWalkInServiceIntakeInput
+): Promise<UpdateWalkInServiceIntakeResult> {
+  const db = getDb();
+  const now = new Date();
+
+  return db.transaction(async (tx) => {
+    await assertCustomerUserExists(input.customerUserId, tx);
+
+    const currentRows = await tx
+      .select({
+        id: serviceIntakes.id,
+        customerUserId: serviceIntakes.customerUserId,
+      })
+      .from(serviceIntakes)
+      .where(
+        and(
+          eq(serviceIntakes.id, input.serviceIntakeId),
+          eq(serviceIntakes.flowType, "walk_in")
+        )
+      )
+      .limit(1);
+
+    const current = currentRows[0];
+
+    if (!current) {
+      throw new Error("İşlem kaydı bulunamadı.");
+    }
+
+    const updatedRows = await tx
+      .update(serviceIntakes)
+      .set({
+        customerUserId: input.customerUserId,
+        flowType: "walk_in",
+        serviceType: input.serviceType,
+        scheduledDate: input.scheduledDate,
+        scheduledTime: input.scheduledTime,
+        totalAmountCents: input.totalAmountCents,
+        collectedAmountCents: input.collectedAmountCents,
+        notes: input.notes,
+        appointmentId: null,
+        updatedByUserId: input.updatedByUserId,
+        updatedAt: now,
+      })
+      .where(
+        and(
+          eq(serviceIntakes.id, input.serviceIntakeId),
+          eq(serviceIntakes.flowType, "walk_in")
+        )
+      )
+      .returning({
+        id: serviceIntakes.id,
+        customerUserId: serviceIntakes.customerUserId,
+        flowType: serviceIntakes.flowType,
+        serviceType: serviceIntakes.serviceType,
+        scheduledDate: serviceIntakes.scheduledDate,
+        scheduledTime: serviceIntakes.scheduledTime,
+        totalAmountCents: serviceIntakes.totalAmountCents,
+        collectedAmountCents: serviceIntakes.collectedAmountCents,
+        notes: serviceIntakes.notes,
+        appointmentId: serviceIntakes.appointmentId,
+        createdByUserId: serviceIntakes.createdByUserId,
+        updatedByUserId: serviceIntakes.updatedByUserId,
+        createdAt: serviceIntakes.createdAt,
+        updatedAt: serviceIntakes.updatedAt,
+      });
+
+    const updated = updatedRows[0];
+
+    await writeAuditLog(
+      {
+        actorUserId: input.updatedByUserId,
+        action: "service_intake.updated",
+        entityType: "service_intake",
+        entityId: updated.id,
+        payload: {
+          flowType: updated.flowType,
+          customerUserId: updated.customerUserId,
+          serviceType: updated.serviceType,
+          scheduledDate: updated.scheduledDate,
+          scheduledTime: updated.scheduledTime,
+          totalAmountCents: updated.totalAmountCents,
+          collectedAmountCents: updated.collectedAmountCents,
+          hasNotes: Boolean(updated.notes),
+        },
+      },
+      tx
+    );
+
+    return {
+      serviceIntake: mapRow(updated),
+      previousCustomerUserId: current.customerUserId,
+    };
+  });
+}
+
 export async function getLatestServiceIntakeForCustomer(
   customerUserId: number
 ): Promise<ServiceIntakeRecord | null> {
@@ -256,4 +434,52 @@ export async function listLatestServiceIntakesByAppointmentIds(
   }
 
   return [...latestRowsByAppointmentId.values()];
+}
+
+export async function listWalkInServiceIntakesForMonth(
+  monthValue: string
+): Promise<StaffWalkInServiceIntakeRecord[]> {
+  const { startDate, endDate } = getMonthBounds(monthValue);
+  const db = getDb();
+  const rows = await db
+    .select({
+      id: serviceIntakes.id,
+      customerUserId: serviceIntakes.customerUserId,
+      flowType: serviceIntakes.flowType,
+      serviceType: serviceIntakes.serviceType,
+      scheduledDate: serviceIntakes.scheduledDate,
+      scheduledTime: serviceIntakes.scheduledTime,
+      totalAmountCents: serviceIntakes.totalAmountCents,
+      collectedAmountCents: serviceIntakes.collectedAmountCents,
+      notes: serviceIntakes.notes,
+      appointmentId: serviceIntakes.appointmentId,
+      createdByUserId: serviceIntakes.createdByUserId,
+      updatedByUserId: serviceIntakes.updatedByUserId,
+      createdAt: serviceIntakes.createdAt,
+      updatedAt: serviceIntakes.updatedAt,
+      email: users.email,
+      fullName: userProfiles.fullName,
+      displayName: userProfiles.displayName,
+    })
+    .from(serviceIntakes)
+    .innerJoin(users, eq(users.id, serviceIntakes.customerUserId))
+    .leftJoin(userProfiles, eq(userProfiles.userId, users.id))
+    .where(
+      and(
+        eq(serviceIntakes.flowType, "walk_in"),
+        gte(serviceIntakes.scheduledDate, startDate),
+        lte(serviceIntakes.scheduledDate, endDate)
+      )
+    )
+    .orderBy(
+      asc(serviceIntakes.scheduledDate),
+      asc(serviceIntakes.scheduledTime),
+      asc(serviceIntakes.id)
+    );
+
+  return rows.map((row) => ({
+    ...mapRow(row),
+    customerName: getCustomerDisplayName(row),
+    customerEmail: row.email ?? null,
+  }));
 }

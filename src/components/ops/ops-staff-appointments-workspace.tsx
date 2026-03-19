@@ -6,6 +6,7 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
+  ChevronRight as ChevronRightIcon,
   Clock3,
   LoaderCircle,
   PencilLine,
@@ -20,20 +21,7 @@ import {
 import { OpsStaffAppointmentCreateForm } from "@/components/ops/ops-staff-appointment-create-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -42,6 +30,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import {
   buildMonthCalendar,
   formatAppointmentDateLong,
@@ -65,22 +61,25 @@ type AppointmentCustomerOption = {
   email: string | null;
 };
 
-type StaffAppointmentServiceSummary = {
+type StaffServiceSummary = {
   id: number;
   serviceType: "tattoo" | "piercing";
   totalAmountCents: number;
   collectedAmountCents: number;
 };
 
-type StaffAppointmentView = {
+type StaffServiceSessionView = {
   id: number;
+  source: "appointment" | "walk_in";
+  appointmentId: number | null;
+  serviceIntakeId: number | null;
   customerUserId: number;
   customerName: string;
   customerEmail: string | null;
-  appointmentDate: string;
-  appointmentTime: string;
+  scheduledDate: string;
+  scheduledTime: string;
   notes: string | null;
-  serviceSummary: StaffAppointmentServiceSummary | null;
+  serviceSummary: StaffServiceSummary | null;
 };
 
 type FormState =
@@ -90,7 +89,7 @@ type FormState =
     }
   | {
       mode: "edit";
-      appointment: StaffAppointmentView;
+      session: StaffServiceSessionView;
     };
 
 type ViewMode = "root" | "day" | "detail" | "create" | "edit";
@@ -98,7 +97,7 @@ type ViewMode = "root" | "day" | "detail" | "create" | "edit";
 type OpsStaffAppointmentsWorkspaceProps = {
   monthValue: string;
   initialSelectedDay: string | null;
-  appointments: StaffAppointmentView[];
+  sessions: StaffServiceSessionView[];
   customerOptions: AppointmentCustomerOption[];
 };
 
@@ -109,6 +108,10 @@ function sortCustomerOptions(options: AppointmentCustomerOption[]): AppointmentC
 
     return leftValue.localeCompare(rightValue, "tr");
   });
+}
+
+function getSessionKey(session: Pick<StaffServiceSessionView, "source" | "id">): string {
+  return `${session.source}:${session.id}`;
 }
 
 function toMinutes(timeValue: string): number {
@@ -132,9 +135,9 @@ function roundUpToHalfHour(totalMinutes: number): number {
 
 function getQuickCreateDefaultTime(
   selectedDay: string,
-  dayAppointments: StaffAppointmentView[]
+  daySessions: StaffServiceSessionView[]
 ): string {
-  const scheduledMinutes = dayAppointments.map((appointment) => toMinutes(appointment.appointmentTime));
+  const scheduledMinutes = daySessions.map((session) => toMinutes(session.scheduledTime));
 
   let candidateMinutes = scheduledMinutes.length ? Math.max(...scheduledMinutes) + 30 : 12 * 60;
 
@@ -146,6 +149,21 @@ function getQuickCreateDefaultTime(
   }
 
   return toTimeValue(candidateMinutes);
+}
+
+function compareSessions(
+  left: Pick<StaffServiceSessionView, "scheduledTime" | "source" | "id">,
+  right: Pick<StaffServiceSessionView, "scheduledTime" | "source" | "id">
+): number {
+  if (left.scheduledTime !== right.scheduledTime) {
+    return left.scheduledTime.localeCompare(right.scheduledTime);
+  }
+
+  if (left.source !== right.source) {
+    return left.source === "appointment" ? -1 : 1;
+  }
+
+  return left.id - right.id;
 }
 
 function getAppointmentCountLabel(appointmentCount: number): string {
@@ -168,11 +186,15 @@ function formatMoney(cents: number): string {
   }).format(cents / 100);
 }
 
-function getServiceTypeLabel(value: StaffAppointmentServiceSummary["serviceType"]): string {
+function getServiceTypeLabel(value: StaffServiceSummary["serviceType"]): string {
   return value === "piercing" ? "Piercing" : "Dövme";
 }
 
-function getRemainingAmountCents(serviceSummary: StaffAppointmentServiceSummary): number {
+function getSourceLabel(source: StaffServiceSessionView["source"]): string {
+  return source === "walk_in" ? "Walk-in" : "Randevu";
+}
+
+function getRemainingAmountCents(serviceSummary: StaffServiceSummary): number {
   return Math.max(0, serviceSummary.totalAmountCents - serviceSummary.collectedAmountCents);
 }
 
@@ -208,10 +230,7 @@ function getOccupancyLevel(appointmentCount: number): "none" | "low" | "medium" 
   return "high";
 }
 
-function getOccupancyMarkerClassName(
-  appointmentCount: number,
-  isSelected: boolean
-): string {
+function getOccupancyMarkerClassName(appointmentCount: number, isSelected: boolean): string {
   const level = getOccupancyLevel(appointmentCount);
 
   if (level === "low") {
@@ -229,6 +248,12 @@ function getOccupancyMarkerClassName(
   return isSelected
     ? "h-2.5 w-14 bg-background shadow-[0_2px_14px_rgba(255,255,255,0.2)]"
     : "h-2.5 w-14 bg-foreground shadow-[0_2px_10px_rgba(15,23,42,0.18)]";
+}
+
+function getWalkInMarkerClassName(isSelected: boolean): string {
+  return isSelected
+    ? "size-2.5 border border-background/80 bg-background/70 shadow-[0_1px_8px_rgba(255,255,255,0.16)]"
+    : "size-2.5 border border-foreground/20 bg-amber-500/75 shadow-[0_1px_6px_rgba(217,119,6,0.18)]";
 }
 
 function SheetHandle() {
@@ -253,7 +278,7 @@ function AppointmentFab({
       data-testid={testId}
     >
       <Plus className="size-6" aria-hidden />
-      <span className="sr-only">Yeni randevu</span>
+      <span className="sr-only">Yeni işlem</span>
     </Button>
   );
 }
@@ -262,7 +287,7 @@ function AppointmentServiceSummarySection({
   serviceSummary,
   emptyMessage,
 }: {
-  serviceSummary: StaffAppointmentServiceSummary | null;
+  serviceSummary: StaffServiceSummary | null;
   emptyMessage: string;
 }) {
   return (
@@ -321,14 +346,14 @@ function AppointmentServiceSummarySection({
 function AppointmentFormSheet({
   formState,
   customerOptions,
-  dayAppointments,
+  daySessions,
   onOpenChange,
   createMode,
   onCustomerCreated,
 }: {
   formState: FormState | null;
   customerOptions: AppointmentCustomerOption[];
-  dayAppointments: StaffAppointmentView[];
+  daySessions: StaffServiceSessionView[];
   onOpenChange: (open: boolean) => void;
   createMode: boolean;
   onCustomerCreated: (customer: AppointmentCustomerOption) => void;
@@ -340,15 +365,29 @@ function AppointmentFormSheet({
   }
 
   const defaultDate =
-    formState.mode === "create" ? formState.day : formState.appointment.appointmentDate;
+    formState.mode === "create" ? formState.day : formState.session.scheduledDate;
   const defaultTime =
     formState.mode === "create"
-      ? getQuickCreateDefaultTime(formState.day, dayAppointments)
-      : formState.appointment.appointmentTime;
+      ? getQuickCreateDefaultTime(formState.day, daySessions)
+      : formState.session.scheduledTime;
   const defaultCustomerUserId =
-    formState.mode === "edit" ? formState.appointment.customerUserId : undefined;
-  const defaultNotes = formState.mode === "edit" ? formState.appointment.notes : null;
-  const appointmentId = formState.mode === "edit" ? formState.appointment.id : undefined;
+    formState.mode === "edit" ? formState.session.customerUserId : undefined;
+  const defaultNotes = formState.mode === "edit" ? formState.session.notes : null;
+  const defaultServiceType =
+    formState.mode === "edit" ? formState.session.serviceSummary?.serviceType : "tattoo";
+  const defaultTotalAmountCents =
+    formState.mode === "edit" ? formState.session.serviceSummary?.totalAmountCents : null;
+  const defaultCollectedAmountCents =
+    formState.mode === "edit" ? formState.session.serviceSummary?.collectedAmountCents : 0;
+  const appointmentId =
+    formState.mode === "edit" && formState.session.source === "appointment"
+      ? formState.session.appointmentId ?? formState.session.id
+      : undefined;
+  const serviceIntakeId =
+    formState.mode === "edit"
+      ? (formState.session.serviceIntakeId ?? formState.session.serviceSummary?.id ?? undefined)
+      : undefined;
+  const source = formState.mode === "edit" ? formState.session.source : "appointment";
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -369,10 +408,10 @@ function AppointmentFormSheet({
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <SheetTitle>
-                  {formState.mode === "edit" ? "Kaydı düzenle" : "Hızlı randevu"}
+                  {formState.mode === "edit" ? "İşlemi düzenle" : "Yeni işlem"}
                 </SheetTitle>
                 <SheetDescription className="sr-only">
-                  Tek saatli randevu formu
+                  Personel işlem workspace formu
                 </SheetDescription>
               </div>
               <SheetClose asChild>
@@ -386,16 +425,39 @@ function AppointmentFormSheet({
 
           <div className="overflow-y-auto px-5 py-5 sm:px-6">
             {formState.mode === "edit" ? (
-              <div className="mb-4">
+              <div className="mb-4 space-y-4">
+                <div className="rounded-[1.7rem] border border-border bg-surface-1/55 px-4 py-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                        Kaynak
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-foreground">
+                        {getSourceLabel(formState.session.source)}
+                      </p>
+                    </div>
+                    <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
+                      {formState.session.customerName}
+                    </Badge>
+                  </div>
+                </div>
+
                 <AppointmentServiceSummarySection
-                  serviceSummary={formState.appointment.serviceSummary}
-                  emptyMessage="Bağlı işlem kaydı yok."
+                  serviceSummary={formState.session.serviceSummary}
+                  emptyMessage="Bağlı işlem özeti yok."
                 />
               </div>
             ) : null}
 
             <OpsStaffAppointmentCreateForm
+              key={
+                formState.mode === "edit"
+                  ? `${formState.session.source}-${formState.session.id}`
+                  : `create-${formState.day}`
+              }
               appointmentId={appointmentId}
+              serviceIntakeId={serviceIntakeId}
+              source={source}
               mode={formState.mode}
               customerOptions={customerOptions}
               onCustomerCreated={onCustomerCreated}
@@ -403,8 +465,10 @@ function AppointmentFormSheet({
               defaultTime={defaultTime}
               defaultCustomerUserId={defaultCustomerUserId}
               defaultNotes={defaultNotes}
+              defaultServiceType={defaultServiceType}
+              defaultTotalAmountCents={defaultTotalAmountCents}
+              defaultCollectedAmountCents={defaultCollectedAmountCents}
               dateMode={formState.mode === "edit" ? "editable" : "context"}
-              submitLabel={formState.mode === "edit" ? "Kaydı güncelle" : "Randevuyu ekle"}
               onSuccess={() => onOpenChange(false)}
             />
           </div>
@@ -415,16 +479,16 @@ function AppointmentFormSheet({
 }
 
 function AppointmentDetailSheet({
-  appointment,
+  session,
   open,
   onOpenChange,
   onEdit,
   onDeleted,
 }: {
-  appointment: StaffAppointmentView | null;
+  session: StaffServiceSessionView | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onEdit: (appointment: StaffAppointmentView) => void;
+  onEdit: (session: StaffServiceSessionView) => void;
   onDeleted: () => void;
 }) {
   const [deleteState, deleteAction, deletePending] = useActionState(
@@ -446,9 +510,11 @@ function AppointmentDetailSheet({
     }
   }, [open]);
 
-  if (!appointment) {
+  if (!session) {
     return null;
   }
+
+  const canDelete = session.source === "appointment" && session.appointmentId !== null;
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -463,9 +529,9 @@ function AppointmentDetailSheet({
           <SheetHeader className="border-b border-border bg-surface-1/40 px-5 py-3 text-left sm:px-6">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
-                <SheetTitle>Randevu detayı</SheetTitle>
+                <SheetTitle>İşlem detayı</SheetTitle>
                 <SheetDescription className="sr-only">
-                  Randevu detayları ve işlemler
+                  İşlem detayları ve aksiyonlar
                 </SheetDescription>
               </div>
               <SheetClose asChild>
@@ -479,31 +545,36 @@ function AppointmentDetailSheet({
 
           <div className="space-y-4 overflow-y-auto px-5 py-4 sm:px-6">
             <section className="space-y-4 rounded-[1.7rem] border border-border bg-surface-1/70 p-4">
-              <div className="space-y-1">
-                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                  Müşteri
-                </p>
-                <p className="text-xl font-semibold text-foreground">{appointment.customerName}</p>
-                {appointment.customerEmail ? (
-                  <p className="text-sm text-muted-foreground">{appointment.customerEmail}</p>
-                ) : null}
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                    Müşteri
+                  </p>
+                  <p className="text-xl font-semibold text-foreground">{session.customerName}</p>
+                  {session.customerEmail ? (
+                    <p className="text-sm text-muted-foreground">{session.customerEmail}</p>
+                  ) : null}
+                </div>
+                <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
+                  {getSourceLabel(session.source)}
+                </Badge>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
                   <CalendarDays className="size-4" aria-hidden />
-                  {formatAppointmentDateLong(appointment.appointmentDate)}
+                  {formatAppointmentDateLong(session.scheduledDate)}
                 </Badge>
                 <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
                   <Clock3 className="size-4" aria-hidden />
-                  {appointment.appointmentTime}
+                  {session.scheduledTime}
                 </Badge>
               </div>
             </section>
 
             <AppointmentServiceSummarySection
-              serviceSummary={appointment.serviceSummary}
-              emptyMessage="Bağlı işlem kaydı yok."
+              serviceSummary={session.serviceSummary}
+              emptyMessage="Bağlı işlem özeti yok."
             />
 
             <section className="rounded-[1.7rem] border border-border bg-card p-4">
@@ -511,11 +582,11 @@ function AppointmentDetailSheet({
                 Not
               </p>
               <p className="mt-2 text-sm leading-6 text-foreground">
-                {appointment.notes ?? "Not yok."}
+                {session.notes ?? "Not yok."}
               </p>
             </section>
 
-            {deleteState.error ? (
+            {deleteState.error && canDelete ? (
               <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
                 {deleteState.error}
               </p>
@@ -528,21 +599,78 @@ function AppointmentDetailSheet({
                 variant="outline"
                 className="w-full sm:flex-1"
                 disabled={deletePending}
-                onClick={() => onEdit(appointment)}
+                onClick={() => onEdit(session)}
               >
                 <PencilLine className="size-4" aria-hidden />
                 Düzenle
               </Button>
 
-              <div className="w-full sm:flex-1">
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="cta"
-                  className="w-full"
-                  disabled={deletePending}
-                  onClick={() => setDeleteDialogOpen(true)}
-                >
+              {canDelete ? (
+                <div className="w-full sm:flex-1">
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="cta"
+                    className="w-full"
+                    disabled={deletePending}
+                    onClick={() => setDeleteDialogOpen(true)}
+                  >
+                    {deletePending ? (
+                      <>
+                        <LoaderCircle className="size-4 animate-spin" aria-hidden />
+                        Siliniyor
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="size-4" aria-hidden />
+                        Sil
+                      </>
+                    )}
+                  </Button>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      </SheetContent>
+
+      {canDelete ? (
+        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Randevuyu sil</DialogTitle>
+              <DialogDescription>
+                Bu randevu silinecek. Bağlı işlem kaydı yalnız bu randevu akışına aitse birlikte
+                kaldırılır.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="rounded-2xl border border-border bg-surface-1/45 px-4 py-3">
+              <p className="text-sm font-medium text-foreground">{session.customerName}</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {formatAppointmentDateLong(session.scheduledDate)} · {session.scheduledTime}
+              </p>
+            </div>
+
+            {deleteState.error ? (
+              <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                {deleteState.error}
+              </p>
+            ) : null}
+
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setDeleteDialogOpen(false)}
+                disabled={deletePending}
+              >
+                Vazgeç
+              </Button>
+
+              <form action={deleteAction}>
+                <input type="hidden" name="appointmentId" value={session.appointmentId ?? ""} />
+                <Button type="submit" variant="destructive" disabled={deletePending}>
                   {deletePending ? (
                     <>
                       <LoaderCircle className="size-4 animate-spin" aria-hidden />
@@ -551,68 +679,15 @@ function AppointmentDetailSheet({
                   ) : (
                     <>
                       <Trash2 className="size-4" aria-hidden />
-                      Sil
+                      Randevuyu sil
                     </>
                   )}
                 </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </SheetContent>
-
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Randevuyu sil</DialogTitle>
-            <DialogDescription>
-              Bu randevu silinecek. Bağlı işlem kaydı yalnız bu randevu akışına aitse birlikte
-              kaldırılır.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="rounded-2xl border border-border bg-surface-1/45 px-4 py-3">
-            <p className="text-sm font-medium text-foreground">{appointment.customerName}</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {formatAppointmentDateLong(appointment.appointmentDate)} · {appointment.appointmentTime}
-            </p>
-          </div>
-
-          {deleteState.error ? (
-            <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-              {deleteState.error}
-            </p>
-          ) : null}
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setDeleteDialogOpen(false)}
-              disabled={deletePending}
-            >
-              Vazgeç
-            </Button>
-
-            <form action={deleteAction}>
-              <input type="hidden" name="appointmentId" value={appointment.id} />
-              <Button type="submit" variant="destructive" disabled={deletePending}>
-                {deletePending ? (
-                  <>
-                    <LoaderCircle className="size-4 animate-spin" aria-hidden />
-                    Siliniyor
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="size-4" aria-hidden />
-                    Randevuyu sil
-                  </>
-                )}
-              </Button>
-            </form>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+              </form>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      ) : null}
     </Sheet>
   );
 }
@@ -620,7 +695,7 @@ function AppointmentDetailSheet({
 export function OpsStaffAppointmentsWorkspace({
   monthValue,
   initialSelectedDay,
-  appointments,
+  sessions,
   customerOptions,
 }: OpsStaffAppointmentsWorkspaceProps) {
   const [availableCustomerOptions, setAvailableCustomerOptions] = useState(() =>
@@ -628,16 +703,29 @@ export function OpsStaffAppointmentsWorkspace({
   );
   const [selectedDay, setSelectedDay] = useState<string | null>(initialSelectedDay);
   const [viewMode, setViewMode] = useState<ViewMode>("root");
-  const [activeAppointmentId, setActiveAppointmentId] = useState<number | null>(null);
+  const [activeSessionKey, setActiveSessionKey] = useState<string | null>(null);
   const [formState, setFormState] = useState<FormState | null>(null);
   const [returnToDayAfterForm, setReturnToDayAfterForm] = useState(false);
 
-  const countsByDate = new Map<string, number>();
+  useEffect(() => {
+    setAvailableCustomerOptions(sortCustomerOptions(customerOptions));
+  }, [customerOptions]);
 
-  for (const appointment of appointments) {
-    countsByDate.set(
-      appointment.appointmentDate,
-      (countsByDate.get(appointment.appointmentDate) ?? 0) + 1
+  const countsByDate = new Map<string, number>();
+  const walkInCountsByDate = new Map<string, number>();
+
+  for (const session of sessions) {
+    if (session.source === "appointment") {
+      countsByDate.set(
+        session.scheduledDate,
+        (countsByDate.get(session.scheduledDate) ?? 0) + 1
+      );
+      continue;
+    }
+
+    walkInCountsByDate.set(
+      session.scheduledDate,
+      (walkInCountsByDate.get(session.scheduledDate) ?? 0) + 1
     );
   }
 
@@ -647,31 +735,33 @@ export function OpsStaffAppointmentsWorkspace({
   const todayDateValue = getTodayDateValue();
   const todayMonthValue = todayDateValue.slice(0, 7);
   const showTodayShortcut = monthValue !== todayMonthValue;
-  const selectedDayAppointments = selectedDay
-    ? appointments.filter((appointment) => appointment.appointmentDate === selectedDay)
+  const selectedDaySessions = selectedDay
+    ? sessions
+        .filter((session) => session.scheduledDate === selectedDay)
+        .sort(compareSessions)
     : [];
   const selectedDayLabel = selectedDay ? formatAppointmentDateLong(selectedDay) : "";
   const recommendedTime = selectedDay
-    ? getQuickCreateDefaultTime(selectedDay, selectedDayAppointments)
+    ? getQuickCreateDefaultTime(selectedDay, selectedDaySessions)
     : null;
-  const activeAppointment =
-    activeAppointmentId === null
+  const activeSession =
+    activeSessionKey === null
       ? null
-      : appointments.find((appointment) => appointment.id === activeAppointmentId) ?? null;
+      : sessions.find((session) => getSessionKey(session) === activeSessionKey) ?? null;
   const rootFabDay = selectedDay ?? todayDateValue;
   const showRootFab = viewMode === "root";
   const showDayFab = viewMode === "day" && Boolean(selectedDay);
 
   function handleDaySelect(day: string) {
     setSelectedDay(day);
-    setActiveAppointmentId(null);
+    setActiveSessionKey(null);
     setFormState(null);
     setViewMode("day");
   }
 
   function handleDayAgendaOpenChange(open: boolean) {
     if (!open) {
-      setActiveAppointmentId(null);
+      setActiveSessionKey(null);
       setFormState(null);
       setViewMode("root");
     }
@@ -679,7 +769,7 @@ export function OpsStaffAppointmentsWorkspace({
 
   function handleDetailOpenChange(open: boolean) {
     if (!open) {
-      setActiveAppointmentId(null);
+      setActiveSessionKey(null);
       setViewMode("day");
     }
   }
@@ -691,18 +781,18 @@ export function OpsStaffAppointmentsWorkspace({
     }
   }
 
-  function handleEditFromDetail(appointment: StaffAppointmentView) {
+  function handleEditFromDetail(session: StaffServiceSessionView) {
     setReturnToDayAfterForm(true);
     setFormState({
       mode: "edit",
-      appointment,
+      session,
     });
-    setActiveAppointmentId(null);
+    setActiveSessionKey(null);
     setViewMode("edit");
   }
 
   function handleDeleteComplete() {
-    setActiveAppointmentId(null);
+    setActiveSessionKey(null);
     setFormState(null);
     setReturnToDayAfterForm(false);
     setViewMode("root");
@@ -718,8 +808,8 @@ export function OpsStaffAppointmentsWorkspace({
     setViewMode("create");
   }
 
-  function handleAppointmentOpen(appointmentId: number) {
-    setActiveAppointmentId(appointmentId);
+  function handleSessionOpen(session: StaffServiceSessionView) {
+    setActiveSessionKey(getSessionKey(session));
     setViewMode("detail");
   }
 
@@ -781,11 +871,14 @@ export function OpsStaffAppointmentsWorkspace({
                   type="button"
                   onClick={() => handleDaySelect(cell.date)}
                   aria-pressed={cell.isSelected}
-                  aria-label={`${cell.dayNumber} ${getMonthCellOccupancyLabel(cell.count)}`}
+                  aria-label={`${cell.dayNumber} ${getMonthCellOccupancyLabel(cell.count)}${
+                    walkInCountsByDate.get(cell.date) ? ", walk-in var" : ""
+                  }`}
                   data-testid={`month-cell-${cell.date}`}
                   data-selected={cell.isSelected ? "true" : "false"}
                   data-today={cell.isToday ? "true" : "false"}
                   data-count={cell.count}
+                  data-walk-in-count={walkInCountsByDate.get(cell.date) ?? 0}
                   data-occupancy={getOccupancyLevel(cell.count)}
                   className={cn(
                     "group relative isolate flex min-h-[5.3rem] w-full flex-col overflow-hidden rounded-[1.25rem] border px-1.5 py-1.5 text-left transition-[transform,background-color,color,border-color,box-shadow] duration-150 hover:bg-muted/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] sm:min-h-28 sm:px-2.5 sm:py-2.5 xl:min-h-[8.75rem] xl:px-4 xl:py-3",
@@ -803,13 +896,24 @@ export function OpsStaffAppointmentsWorkspace({
                         "inline-flex size-7 items-center justify-center rounded-full text-sm font-semibold sm:size-8 sm:text-base xl:size-10 xl:text-lg",
                         cell.isToday && cell.isSelected
                           ? "bg-background text-foreground ring-2 ring-background/65 shadow-sm"
-                        : cell.isToday
+                          : cell.isToday
                             ? "bg-background text-foreground ring-2 ring-foreground/28"
                             : "bg-transparent"
                       )}
                     >
                       {cell.dayNumber}
                     </span>
+
+                    {walkInCountsByDate.get(cell.date) ? (
+                      <span
+                        data-testid={`month-cell-walkin-${cell.date}`}
+                        className={cn(
+                          "inline-flex shrink-0 rounded-full",
+                          getWalkInMarkerClassName(cell.isSelected)
+                        )}
+                        aria-hidden
+                      />
+                    ) : null}
                   </div>
 
                   {cell.count ? (
@@ -863,10 +967,10 @@ export function OpsStaffAppointmentsWorkspace({
                   </Button>
                 </SheetClose>
               </div>
-              {selectedDayAppointments.length ? (
+              {selectedDaySessions.length ? (
                 <div className="flex flex-wrap gap-2">
                   <Badge variant="outline" className="rounded-full">
-                    {getAppointmentCountLabel(selectedDayAppointments.length)}
+                    {getAppointmentCountLabel(selectedDaySessions.length)}
                   </Badge>
                   {recommendedTime ? (
                     <Badge variant="outline" className="rounded-full">
@@ -878,14 +982,14 @@ export function OpsStaffAppointmentsWorkspace({
             </SheetHeader>
 
             <div className="relative flex-1 overflow-y-auto px-5 py-3 sm:px-6">
-              {selectedDayAppointments.length ? (
+              {selectedDaySessions.length ? (
                 <div className="space-y-2 pb-24">
-                  {selectedDayAppointments.map((appointment) => (
+                  {selectedDaySessions.map((session) => (
                     <button
-                      key={appointment.id}
+                      key={getSessionKey(session)}
                       type="button"
-                      onClick={() => handleAppointmentOpen(appointment.id)}
-                      data-testid={`day-appointment-${appointment.id}`}
+                      onClick={() => handleSessionOpen(session)}
+                      data-testid={`day-appointment-${getSessionKey(session)}`}
                       className="w-full rounded-[1.45rem] border border-border bg-card px-3.5 py-3.5 text-left transition-[transform,background-color,border-color,box-shadow] duration-150 hover:bg-surface-1/65 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99]"
                     >
                       <div className="flex items-center gap-3">
@@ -894,25 +998,40 @@ export function OpsStaffAppointmentsWorkspace({
                             Saat
                           </span>
                           <span className="mt-0.5 text-base font-semibold font-numbers">
-                            {appointment.appointmentTime}
+                            {session.scheduledTime}
                           </span>
                         </div>
 
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center justify-between gap-3">
-                            <p className="truncate text-base font-semibold text-foreground">
-                              {appointment.customerName}
-                            </p>
-                            <ChevronRight className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                            <div className="min-w-0">
+                              <p className="truncate text-base font-semibold text-foreground">
+                                {session.customerName}
+                              </p>
+                              <div className="mt-1 flex flex-wrap gap-2">
+                                <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[11px]">
+                                  {getSourceLabel(session.source)}
+                                </Badge>
+                                {session.serviceSummary ? (
+                                  <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[11px]">
+                                    {getServiceTypeLabel(session.serviceSummary.serviceType)}
+                                  </Badge>
+                                ) : null}
+                              </div>
+                            </div>
+                            <ChevronRightIcon
+                              className="size-4 shrink-0 text-muted-foreground"
+                              aria-hidden
+                            />
                           </div>
-                          {appointment.notes ? (
+                          {session.notes ? (
                             <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
-                              {appointment.notes}
+                              {session.notes}
                             </p>
                           ) : null}
-                          {appointment.customerEmail ? (
+                          {session.customerEmail ? (
                             <p className="mt-1 hidden truncate text-[11px] text-muted-foreground/68 sm:block">
-                              {appointment.customerEmail}
+                              {session.customerEmail}
                             </p>
                           ) : null}
                         </div>
@@ -922,7 +1041,7 @@ export function OpsStaffAppointmentsWorkspace({
                 </div>
               ) : (
                 <div className="rounded-[1.45rem] border border-dashed border-border px-4 py-3 text-sm text-foreground">
-                  Bugün için randevu yok.
+                  Bugün için işlem yok.
                 </div>
               )}
 
@@ -939,9 +1058,9 @@ export function OpsStaffAppointmentsWorkspace({
       </Sheet>
 
       <AppointmentDetailSheet
-        key={activeAppointment?.id ?? "empty"}
-        appointment={activeAppointment}
-        open={viewMode === "detail" && activeAppointment !== null}
+        key={activeSession ? getSessionKey(activeSession) : "empty"}
+        session={activeSession}
+        open={viewMode === "detail" && activeSession !== null}
         onOpenChange={handleDetailOpenChange}
         onEdit={handleEditFromDetail}
         onDeleted={handleDeleteComplete}
@@ -950,7 +1069,7 @@ export function OpsStaffAppointmentsWorkspace({
       <AppointmentFormSheet
         formState={viewMode === "create" || viewMode === "edit" ? formState : null}
         customerOptions={availableCustomerOptions}
-        dayAppointments={formState?.mode === "create" && selectedDay ? selectedDayAppointments : []}
+        daySessions={formState?.mode === "create" && selectedDay ? selectedDaySessions : []}
         onOpenChange={handleFormOpenChange}
         createMode={viewMode === "create"}
         onCustomerCreated={(customer) => {
