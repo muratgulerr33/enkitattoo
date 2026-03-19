@@ -68,6 +68,7 @@ function toNullableText(value: FormDataEntryValue | null, maxLength: number): st
 
 function revalidateCashbookPath() {
   revalidatePath("/ops/staff/kasa");
+  revalidatePath("/ops/staff/raporlar");
 }
 
 export async function createCashEntryAction(

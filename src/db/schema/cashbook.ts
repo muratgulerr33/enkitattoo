@@ -20,6 +20,16 @@ export type CashEntryType = (typeof CASH_ENTRY_TYPE_VALUES)[number];
 
 export const cashEntryTypeEnum = pgEnum("cash_entry_type", CASH_ENTRY_TYPE_VALUES);
 
+export const CASH_ENTRY_REASON_VALUES = [
+  "manual",
+  "service_collection",
+  "service_adjustment",
+] as const;
+
+export type CashEntryReason = (typeof CASH_ENTRY_REASON_VALUES)[number];
+
+export const cashEntryReasonEnum = pgEnum("cash_entry_reason", CASH_ENTRY_REASON_VALUES);
+
 export const CASH_ENTRY_PAYMENT_METHOD_VALUES = [
   "cash",
   "card",
@@ -40,9 +50,11 @@ export const cashEntries = pgTable(
     id: bigserial("id", { mode: "number" }).primaryKey(),
     entryDate: date("entry_date", { mode: "string" }).notNull(),
     entryType: cashEntryTypeEnum("entry_type").notNull(),
+    entryReason: cashEntryReasonEnum("entry_reason").notNull().default("manual"),
     paymentMethod: cashEntryPaymentMethodEnum("payment_method").notNull().default("cash"),
     amountCents: integer("amount_cents").notNull(),
     note: text("note"),
+    serviceIntakeId: bigint("service_intake_id", { mode: "number" }),
     createdByUserId: bigint("created_by_user_id", { mode: "number" })
       .notNull()
       .references(() => users.id),
@@ -55,7 +67,9 @@ export const cashEntries = pgTable(
     check("cash_entries_amount_cents_positive", sql`${table.amountCents} > 0`),
     index("cash_entries_entry_date_idx").on(table.entryDate),
     index("cash_entries_entry_type_idx").on(table.entryType),
+    index("cash_entries_entry_reason_idx").on(table.entryReason),
     index("cash_entries_payment_method_idx").on(table.paymentMethod),
+    index("cash_entries_service_intake_id_idx").on(table.serviceIntakeId),
     index("cash_entries_created_by_idx").on(table.createdByUserId),
     index("cash_entries_deleted_at_idx").on(table.deletedAt),
     index("cash_entries_entry_date_deleted_idx").on(table.entryDate, table.deletedAt),

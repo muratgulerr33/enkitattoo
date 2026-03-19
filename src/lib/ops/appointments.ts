@@ -22,8 +22,14 @@ import {
 } from "@/db/schema";
 import type { UserRole } from "@/db/schema/users";
 import { writeAuditLog } from "./audit";
+import {
+  hasActiveCashEntriesForServiceIntakeIds,
+  postServiceIntakeCashDelta,
+} from "./cashbook";
 export const APPOINTMENT_SLOT_CONFLICT_MESSAGE =
   "Aynı tarih ve saat için başka bir randevu zaten kayıtlı.";
+export const APPOINTMENT_DELETE_WITH_CASH_ENTRIES_MESSAGE =
+  "Tahsilat izi olan randevu silinemez. Önce kasa düzeltmesini çözün.";
 
 export type AppointmentRecord = {
   id: number;
@@ -715,6 +721,24 @@ export async function updateAppointment(
     const db = getDb();
     const updated = await db.transaction(async (tx) => {
       const now = new Date();
+      const currentLinkedServiceIntakes = await tx
+        .select({
+          id: serviceIntakes.id,
+          collectedAmountCents: serviceIntakes.collectedAmountCents,
+        })
+        .from(serviceIntakes)
+        .where(
+          and(
+            eq(serviceIntakes.appointmentId, input.appointmentId),
+            eq(serviceIntakes.flowType, "appointment")
+          )
+        );
+      const previousCollectedByServiceIntakeId = new Map(
+        currentLinkedServiceIntakes.map((serviceIntake) => [
+          serviceIntake.id,
+          serviceIntake.collectedAmountCents,
+        ])
+      );
       const updatedRows = await tx
         .update(appointments)
         .set({
@@ -765,6 +789,11 @@ export async function updateAppointment(
         )
         .returning({
           id: serviceIntakes.id,
+          flowType: serviceIntakes.flowType,
+          serviceType: serviceIntakes.serviceType,
+          scheduledDate: serviceIntakes.scheduledDate,
+          scheduledTime: serviceIntakes.scheduledTime,
+          collectedAmountCents: serviceIntakes.collectedAmountCents,
         });
 
       for (const serviceIntake of syncedServiceIntakes) {
@@ -784,6 +813,21 @@ export async function updateAppointment(
               collectedAmountCents: input.collectedAmountCents,
               hasNotes: Boolean(notes),
             },
+          },
+          tx
+        );
+
+        await postServiceIntakeCashDelta(
+          {
+            serviceIntakeId: serviceIntake.id,
+            flowType: serviceIntake.flowType,
+            serviceType: serviceIntake.serviceType,
+            scheduledDate: serviceIntake.scheduledDate,
+            scheduledTime: serviceIntake.scheduledTime,
+            previousCollectedAmountCents:
+              previousCollectedByServiceIntakeId.get(serviceIntake.id) ?? 0,
+            nextCollectedAmountCents: serviceIntake.collectedAmountCents,
+            actorUserId: input.actorUserId,
           },
           tx
         );
@@ -929,6 +973,13 @@ export async function deleteAppointment(
     const detachedServiceIntakeIds = linkedServiceIntakeRows
       .filter((serviceIntake) => serviceIntake.flowType !== "appointment")
       .map((serviceIntake) => serviceIntake.id);
+
+    if (
+      appointmentServiceIntakeIds.length &&
+      (await hasActiveCashEntriesForServiceIntakeIds(appointmentServiceIntakeIds, tx))
+    ) {
+      throw new Error(APPOINTMENT_DELETE_WITH_CASH_ENTRIES_MESSAGE);
+    }
 
     const deletedServiceIntakes = appointmentServiceIntakeIds.length
       ? await tx

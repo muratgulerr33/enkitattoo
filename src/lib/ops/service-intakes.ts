@@ -9,6 +9,7 @@ import {
   users,
 } from "@/db/schema";
 import { writeAuditLog } from "./audit";
+import { postServiceIntakeCashDelta } from "./cashbook";
 
 export type ServiceIntakeRecord = {
   id: number;
@@ -209,6 +210,20 @@ export async function createServiceIntake(
       tx
     );
 
+    await postServiceIntakeCashDelta(
+      {
+        serviceIntakeId: inserted.id,
+        flowType: inserted.flowType,
+        serviceType: inserted.serviceType,
+        scheduledDate: inserted.scheduledDate,
+        scheduledTime: inserted.scheduledTime,
+        previousCollectedAmountCents: 0,
+        nextCollectedAmountCents: inserted.collectedAmountCents,
+        actorUserId: input.createdByUserId,
+      },
+      tx
+    );
+
     return mapRow(inserted);
   });
 }
@@ -281,6 +296,7 @@ export async function updateWalkInServiceIntake(
       .select({
         id: serviceIntakes.id,
         customerUserId: serviceIntakes.customerUserId,
+        collectedAmountCents: serviceIntakes.collectedAmountCents,
       })
       .from(serviceIntakes)
       .where(
@@ -353,6 +369,20 @@ export async function updateWalkInServiceIntake(
           collectedAmountCents: updated.collectedAmountCents,
           hasNotes: Boolean(updated.notes),
         },
+      },
+      tx
+    );
+
+    await postServiceIntakeCashDelta(
+      {
+        serviceIntakeId: updated.id,
+        flowType: updated.flowType,
+        serviceType: updated.serviceType,
+        scheduledDate: updated.scheduledDate,
+        scheduledTime: updated.scheduledTime,
+        previousCollectedAmountCents: current.collectedAmountCents,
+        nextCollectedAmountCents: updated.collectedAmountCents,
+        actorUserId: input.updatedByUserId,
       },
       tx
     );

@@ -8,7 +8,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `/ops` shell’i ayrı bir yüzeydir; public `AppShell` sözleşmesine dahil değildir.
 - Component veya sayfa değişikliği yapılırken önce bu dosya, sonra ilgili canonical component okunur.
 - Bu dosya yalnız current runtime visible behavior’ı yazar; implement edilmemiş roadmap ekranları ayrı ve açıkça `planned roadmap` diye işaretlenir.
-- Current runtime ops lock PR-B ile appointment-first month root + unified staff service session day workspace modeline genişlemiştir: staff randevu V2, selected day içinde appointment + walk-in birleşmesi, user lane `Onaylar / Randevular / Profil`, customer detail `İşlem özeti` ve manuel kasa yüzeyi.
+- Current runtime ops lock PR-C ile appointment-first month root + unified staff service session day workspace modeline genişlemiştir: staff randevu V2, selected day içinde appointment + walk-in birleşmesi, user lane `Onaylar / Randevular / Profil`, customer detail `İşlem özeti` ve service-intake event’lerinden otomatik beslenen kasa yüzeyi.
 - Cashbook automation ve document packet / print / signature akışları current UI kontratı değildir.
 
 ## 2) Public UI Ownership Matrix
@@ -71,7 +71,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 
 ### Ekran bazlı öncelik kuralları
 
-- Kasa: hızlı kayıt birincil yüzeydir; kompakt `Gelir / Gider` kontrolü, kısa kategori etiketleri, tutar ve `Kaydı ekle` akışı öne çıkar. Current runtime kullanıcı yüzeyinde cash-only çalışır; ödeme tipi görünmez. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır. `Raporlar` erişimi küçük secondary link olarak kasa yüzeyinden açılır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
+- Kasa: current runtime’da gün özeti ve defter service-intake kaynaklı otomatik hareketleri taşır; hızlı form artık manuel istisna / gider / correction yüzeyidir. `Gelir / Gider` kontrolü, kısa kategori etiketi, tutar ve `Kaydı ekle` akışı manuel kayıt için yaşar; sistem satırları read-only kalır. Yüzey cash-only çalışır; ödeme tipi görünmez. Tarih secondary, not disclosure, gün özeti ve defter ikincil destek katmanıdır. `Raporlar` erişimi küçük secondary link olarak kasa yüzeyinden açılır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
 - Raporlar: mobile-first sakin bloklar halinde taranır; ağır dashboard veya grafik hissi yoktur. Admin günlük, haftalık ve seçili tarih aralığı için kasa + randevu özetleri ile randevu listesini görür; artist yalnız bugün, bu hafta ve tüm randevuların read-only listesini görür.
 - Cashbook automation roadmaptır; current runtime kasa ekranı manuel kayıt, özet ve defter yönetimi kontratını korur.
 - Randevular: ilk görünür ana yüzey aylık takvimdir; mobile ve tablet month root, shell safe padding dışında kalan genişliği mümkün olduğunca kullanır ve dar ortalı kart gibi durmaz.
@@ -93,6 +93,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Staff create formu current runtime’da aynı workspace içinde `Kaynak` seçimi taşır; varsayılan `Randevu`, ikinci seçenek `Walk-in`dir. Ortak alanlar müşteri, işlem tipi, tarih, saat, toplam, alınan ve not olarak aynı kalır.
 - Staff service session formu current runtime’da `noValidate` yaklaşımıyla browser native required tooltip’ine yaslanmaz; boş/bozuk alanlar aynı sheet içinde app-level hata metniyle görünür.
 - Staff service session formunda `Alınan tutar` opsiyoneldir; boş bırakılabilir veya `0` olabilir. Yardımcı copy bunu açıkça opsiyonel anlatır.
+- Staff service session tarafında current runtime PR-C ile `Alınan tutar` değişimleri otomatik kasa satırı üretir; pozitif delta tahsilat, negatif delta düzeltme olarak görünür. `Toplam`, tarih, saat, müşteri ve not değişimi tek başına kasa satırı üretmez.
 - Staff randevu create formunda müşteri alanı `Mevcut müşteri` ve `Yeni müşteri` seçimleriyle net ayrılır. `Yeni müşteri` seçimi aynı form içinde küçük inline `Hızlı müşteri` alanını açar.
 - Staff randevu içi inline müşteri oluşturma alanı mobile-first kompakt kalır; `Ad soyad`, `Telefon`, opsiyonel `E-posta` alanlarıyla çalışır, başarıda yeni müşteri otomatik seçilir, tarih/saat/işlem tipi/tutar/not bağlamı korunur.
 - Inline `Yeni müşteri` akışı aynı sheet içinde kalır; redirect etmez, kullanıcıya `NEXT_REDIRECT` veya ham teknik hata stringi göstermez. Başarısızlıkta kısa ve insan-okunur alan/işlem hatası görünür.
@@ -106,6 +107,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Müşteriler: arama ve hızlı create aynı workspace içinde birlikte görünür; yeni müşteri oluşturma yolu gizlenmez. Hızlı create kartı ana akışta `Ad soyad` + `Telefon` alanlarını önde tutar, `Not` disclosure olarak secondary açılır. Staff disclosure row pattern’i mobile-safe kalır ve x-overflow üretmez.
 - Müşteri detayı: ilk taramada müşteri kimliği, kısa iletişim bilgisi, onay durumu, yaklaşan randevu ve staff notu okunmalıdır. Temel bilgi büyük iç kartlara bölünmez; profil hazır bilgisi pasif büyük kutu gibi davranmaz; onaylar kartı, staff notu ve randevu blokları daha sakin, kompakt bilgi hiyerarşisiyle okunur; onaylar sürüm ve tarih satırıyla özetlenir.
 - Staff müşteri detail `İşlem özeti` kartı müşteri bazlı latest service intake kaydını gösterir; bu kart source-aware `Kaynak` alanı taşır ve randevu detail sheet’in devamı değil, müşteri zaman çizgisinin son özetidir.
+- Staff kasa defterinde system-generated satırlar küçük reason/source badge’i ile ayırt edilir; manage affordance yalnız manuel kayıtlarda görünür. Bu yüzey ikinci bir finans ekranı açmadan aynı listede manual ve automated satırları birlikte okutur.
 - Prefixsiz public legal sayfalar ve `/ops/user/onaylar` aynı markdown kaynak ailesini kullanır (`src/content/legal/*.md`, `src/content/ops/legal/*.md`); içerik ikinci kez hardcode edilmez.
 - Profil ve placeholder benzeri sayfalar ürün dışı açıklama diline kaymamalıdır.
 
@@ -147,6 +149,7 @@ Bu bölüm çözüldü listesi değildir; repo içindeki mevcut durumun kısa ka
 
 - `OpsShell` üst alanı sakin tutulur; buna rağmen bazı dense workspace yüzeylerinde kart yoğunluğu veya secondary copy yeni polish turlarında daha da azaltılabilir (`src/components/ops/ops-shell.tsx`, `src/app/ops/staff/*.tsx`, `src/app/ops/user/*.tsx`).
 - Kasa ekranı artık hızlı kayıt merkezlidir; mobilde form fold üstünde daha nettir, desktop’ta summary rail daha sakin destek yüzeyi gibi davranır. `Raporlar` girişinin ve yeni rapor sayfasının ilk versiyonu açılmış olsa da içerik yoğunluğu, spacing ve micro-copy tarafında yeni polish alanı kalır (`src/app/ops/staff/kasa/page.tsx`, `src/components/ops/ops-cash-entry-form.tsx`, `src/app/ops/staff/raporlar/page.tsx`).
+- PR-C sonrası kasa ekranında service-source satırlar read-only kalsa da source detay linki veya daha zengin reconciliation görünümü açılmaz; ilk tur aynı listeyi badge/copy seviyesinde ayırır (`src/app/ops/staff/kasa/page.tsx`).
 - Bazı user workspace yüzeylerinde kart yoğunluğu hâlâ yüksektir; ürün dili temizlenmiş olsa da bilgi hiyerarşisi sonraki polish turlarında sadeleştirilebilir (`src/app/ops/user/randevular/page.tsx`).
 - Staff service session formunda `Alınan tutar` alanının varsayılan `0,00` yazım ergonomisi ayrı küçük polish turuna bırakılmıştır; current runtime lock yalnız alanın opsiyonel olması ve native validation’a yaslanmaması üzerinedir (`src/components/ops/ops-staff-appointment-create-form.tsx`).
 - Toast feedback sistemi current runtime kontratı değildir; create/edit success ve hata geri bildirimi ayrı follow-up PR’da ele alınacaktır.

@@ -6,6 +6,7 @@ import {
   requireOpsSessionArea,
 } from "@/lib/ops/auth/guards";
 import {
+  APPOINTMENT_DELETE_WITH_CASH_ENTRIES_MESSAGE,
   APPOINTMENT_SLOT_CONFLICT_MESSAGE,
   createAppointment,
   deleteAppointment,
@@ -70,6 +71,7 @@ const SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES = new Set([
   "Alınan tutar toplam tutardan büyük olamaz.",
   "Randevu bulunamadı.",
   "İşlem kaydı bulunamadı.",
+  APPOINTMENT_DELETE_WITH_CASH_ENTRIES_MESSAGE,
   APPOINTMENT_SLOT_CONFLICT_MESSAGE,
 ]);
 
@@ -258,6 +260,11 @@ function revalidateAppointmentPaths() {
   revalidatePath("/ops/user/randevular");
 }
 
+function revalidateCashAutomationPaths() {
+  revalidatePath("/ops/staff/kasa");
+  revalidatePath("/ops/staff/raporlar");
+}
+
 function revalidateStaffCustomerPaths(userIds: number[]) {
   revalidatePath("/ops/staff/musteriler");
 
@@ -408,6 +415,7 @@ export async function createStaffAppointmentAction(
     });
 
     revalidateAppointmentPaths();
+    revalidateCashAutomationPaths();
     revalidatePath("/ops/staff/musteriler");
     revalidatePath(`/ops/staff/musteriler/${customerUserId}`);
 
@@ -461,6 +469,7 @@ export async function createStaffWalkInAction(
     });
 
     revalidatePath("/ops/staff/randevular");
+    revalidateCashAutomationPaths();
     revalidateStaffCustomerPaths([customerUserId]);
 
     return {
@@ -687,6 +696,7 @@ export async function updateStaffAppointmentAction(
     });
 
     revalidateAppointmentPaths();
+    revalidateCashAutomationPaths();
     revalidateStaffCustomerPaths([
       result.previousCustomerUserId,
       result.appointment.customerUserId,
@@ -746,6 +756,7 @@ export async function updateStaffWalkInAction(
     });
 
     revalidatePath("/ops/staff/randevular");
+    revalidateCashAutomationPaths();
     revalidateStaffCustomerPaths([
       updated.previousCustomerUserId,
       updated.serviceIntake.customerUserId,

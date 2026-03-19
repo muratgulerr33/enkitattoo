@@ -64,6 +64,13 @@
       "when": 1773847986699,
       "tag": "0008_red_wrecker",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1773880672484,
+      "tag": "0009_pale_hiroim",
+      "breakpoints": true
     }
   ]
 }

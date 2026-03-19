@@ -4,7 +4,7 @@ Bu dosya repo içinden doğrulanabilen çalışma runbook’unu tutar. Reverse p
 
 Teknik route/schema/rol sözleşmesinin ana evi `docs/SSOT.md`’dir. Bu dosya komut, env, local DB, bootstrap ve smoke-check akışına odaklanır.
 
-Current runtime ile planned roadmap burada da ayrıdır: unified staff day workspace repo içine inmiştir; cashbook automation ve document packet / signature akışları repo içine inmediği sürece smoke-check runtime’ı sayılmaz.
+Current runtime ile planned roadmap burada da ayrıdır: unified staff day workspace ve service-intake event’lerinden otomatik cashbook repo içine inmiştir; document packet / signature akışları repo içine inmediği sürece smoke-check runtime’ı sayılmaz.
 
 ## 1) Repo-İçi Runtime Özeti
 
@@ -15,7 +15,7 @@ Current runtime ile planned roadmap burada da ayrıdır: unified staff day works
 - Route-content generator: `python3 scripts/generate-route-content.py`
 - DB migration generate: `npm run db:generate`
 - Ops bootstrap user: `npm run ops:bootstrap-user`
-- Bugünkü ops runtime lock: combined consent, appointment-first month root + unified staff day workspace, appointment/walk-in `service_intakes`, manuel kasa defteri
+- Bugünkü ops runtime lock: combined consent, appointment-first month root + unified staff day workspace, appointment/walk-in `service_intakes`, service-intake delta’larından beslenen otomatik kasa defteri
 
 ## 2) Env ve Girdi Yüzeyi
 
@@ -85,7 +85,12 @@ Current runtime ile planned roadmap burada da ayrıdır: unified staff day works
 | Unified day order | aynı gün ve saatte appointment + walk-in kaydı | sıra deterministic kalır; appointment önce, walk-in sonra görünür |
 | Customer detail latest intake | yeni walk-in sonrası `/ops/staff/musteriler/[userId]` | source-aware `İşlem özeti` doğru latest kaydı gösterir |
 | Month root walk-in signal | walk-in olan gün içeren ay görünümü | appointment-first takvim korunur; walk-in için hafif ikinci sinyal görünür |
+| Automated cashbook create | collected > 0 ile appointment veya walk-in create | aynı gün kasa defterinde `service_collection` income satırı oluşur |
+| Automated cashbook delta | collected artır / azalt | artış yeni income, azalış yeni expense `service_adjustment` satırı üretir |
+| Manual cash exception | `/ops/staff/kasa` hızlı kayıt formu | manuel gider / istisna kaydı hâlâ açılır |
+| System cash read-only | service-source kasa satırı | manage dialog görünmez, update/delete app-level olarak açık olmaz |
 | Appointment delete | detail sheet içindeki `Sil` aksiyonu | app-level confirm açılır, SQL error yok, stale reopen veya stale summary kalmaz |
+| Appointment delete guard | linked intake üzerinde aktif tahsilat izi olan appointment | delete bloklanır, önce kasa düzeltmesi gerektiğini anlatan kısa hata döner |
 | Locale bypass | `/ops` ailesi | locale rewrite katmanına girmez |
 | Default locale | `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/artistler`, `/iletisim` | prefixsiz `tr` açılır |
 | Prefixli locale | `/en`, `/en/kesfet`, `/en/piercing` | 404 olmaz, message load kırılmaz |

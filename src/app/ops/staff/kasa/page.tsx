@@ -8,7 +8,10 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
-import { CASH_ENTRY_TYPE_LABELS } from "@/lib/ops/cashbook-copy";
+import {
+  CASH_ENTRY_REASON_LABELS,
+  CASH_ENTRY_TYPE_LABELS,
+} from "@/lib/ops/cashbook-copy";
 import {
   canManageCashHistory,
   formatCashAmount,
@@ -17,6 +20,7 @@ import {
   formatCashTime,
   getCashbookSnapshot,
   getTodayCashDateValue,
+  isSystemGeneratedCashEntry,
   type CashEntryRecord,
   type CashEntrySummary,
 } from "@/lib/ops/cashbook";
@@ -44,6 +48,18 @@ function getAmountClassName(entryType: CashEntryRecord["entryType"]): string {
   }
 
   return "text-amber-700";
+}
+
+function getEntryReasonClassName(entry: CashEntryRecord): string {
+  if (entry.entryReason === "service_collection") {
+    return "text-sky-700";
+  }
+
+  if (entry.entryReason === "service_adjustment") {
+    return "text-violet-700";
+  }
+
+  return "text-muted-foreground";
 }
 
 function getNetClassName(netCents: number): string {
@@ -116,8 +132,8 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
         <Card className="order-1">
           <CardHeader className="gap-1 border-b pb-4">
             <p className="text-xs text-muted-foreground">{selectedDateLabel}</p>
-            <CardTitle className="text-base sm:text-lg">Hızlı kayıt</CardTitle>
-            <CardDescription>İşlem, kategori ve tutarı girin.</CardDescription>
+            <CardTitle className="text-base sm:text-lg">Manuel kayıt</CardTitle>
+            <CardDescription>İstisna, gider veya düzeltme girin.</CardDescription>
           </CardHeader>
 
           <CardContent className="pt-4">
@@ -198,6 +214,8 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
             <div className="divide-y divide-border">
               {cashbook.entries.map((entry) => {
                 const entryTypeLabel = CASH_ENTRY_TYPE_LABELS[entry.entryType];
+                const entryReasonLabel = CASH_ENTRY_REASON_LABELS[entry.entryReason];
+                const isSystemEntry = isSystemGeneratedCashEntry(entry);
 
                 return (
                   <div key={entry.id} className="px-4 py-2 xl:px-5">
@@ -206,6 +224,9 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                         <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium uppercase tracking-wide">
                           <span className={cn(getEntryTypeBadgeClassName(entry.entryType))}>
                             {entryTypeLabel}
+                          </span>
+                          <span className={cn(getEntryReasonClassName(entry))}>
+                            {entryReasonLabel}
                           </span>
                           {entry.entryDate !== todayDate ? (
                             <span className="text-[11px] text-muted-foreground">Geçmiş kayıt</span>
@@ -218,6 +239,12 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                         <p className="text-xs text-muted-foreground">
                           {entry.createdByName} · {formatCashTime(entry.createdAt)}
                         </p>
+                        {isSystemEntry ? (
+                          <p className="text-xs text-muted-foreground">
+                            Sistem üretimi
+                            {entry.serviceIntakeId ? ` · işlem #${entry.serviceIntakeId}` : ""}
+                          </p>
+                        ) : null}
                       </div>
 
                       <div className="shrink-0 pt-0.5 text-right">
@@ -231,7 +258,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                           {formatCashAmount(entry.amountCents)}
                         </p>
 
-                        {canManageHistoryEntries ? (
+                        {canManageHistoryEntries && !isSystemEntry ? (
                           <div className="mt-1 flex justify-end">
                             <OpsCashEntryManageDialog
                               entryId={entry.id}

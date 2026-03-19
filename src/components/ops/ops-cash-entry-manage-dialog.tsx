@@ -78,7 +78,7 @@ export function OpsCashEntryManageDialog({
           <DialogHeader className="space-y-2 text-left">
             <DialogTitle>Kasa kaydı</DialogTitle>
             <DialogDescription>
-              Düzenleme ve kaldırma yalnız yöneticiye açıktır.
+              Yalnız manuel kayıtlar burada yönetilir. Düzenleme ve kaldırma yalnız yöneticiye açıktır.
             </DialogDescription>
           </DialogHeader>
 

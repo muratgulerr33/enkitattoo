@@ -23,6 +23,12 @@ export const CASH_ENTRY_PAYMENT_METHOD_LABELS: Record<CashEntryPaymentMethodValu
   other: "Diğer",
 };
 
+export const CASH_ENTRY_REASON_LABELS = {
+  manual: "Manuel",
+  service_collection: "Tahsilat",
+  service_adjustment: "Düzeltme",
+} as const;
+
 export type CashEntryPreset = {
   key: string;
   label: string;

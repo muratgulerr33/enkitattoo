@@ -1,10 +1,13 @@
-import { and, desc, eq, gte, isNull, lte } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, isNull, lte } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { getDb } from "@/db";
+import { getDb, type Db } from "@/db";
 import {
   cashEntries,
   type CashEntryPaymentMethod,
+  type CashEntryReason,
   type CashEntryType,
+  type ServiceIntakeFlowType,
+  type ServiceIntakeServiceType,
   userProfiles,
   users,
   type UserRole,
@@ -13,14 +16,18 @@ import { writeAuditLog } from "./audit";
 
 export const CASHBOOK_DATE_LOCK_MESSAGE =
   "Artist yalnız bugün için kasa kaydı açabilir.";
+export const SYSTEM_CASH_ENTRY_UPDATE_MESSAGE = "Sistem kaydı düzenlenemez.";
+export const SYSTEM_CASH_ENTRY_DELETE_MESSAGE = "Sistem kaydı kaldırılamaz.";
 
 export type CashEntryRecord = {
   id: number;
   entryDate: string;
   entryType: CashEntryType;
+  entryReason: CashEntryReason;
   paymentMethod: CashEntryPaymentMethod;
   amountCents: number;
   note: string | null;
+  serviceIntakeId: number | null;
   createdByUserId: number;
   createdByName: string;
   updatedByUserId: number | null;
@@ -43,9 +50,11 @@ export type CashEntrySummary = {
 export type CreateCashEntryInput = {
   entryDate: string;
   entryType: CashEntryType;
+  entryReason?: CashEntryReason;
   paymentMethod: CashEntryPaymentMethod;
   amountCents: number;
   note: string | null;
+  serviceIntakeId?: number | null;
   actorUserId: number;
 };
 
@@ -77,9 +86,11 @@ type CashEntryRow = {
   id: number;
   entryDate: string;
   entryType: CashEntryType;
+  entryReason: CashEntryReason;
   paymentMethod: CashEntryPaymentMethod;
   amountCents: number;
   note: string | null;
+  serviceIntakeId: number | null;
   createdByUserId: number;
   createdByEmail: string | null;
   createdByFullName: string | null;
@@ -101,12 +112,26 @@ type CashEntryMutationRecord = {
   id: number;
   entryDate: string;
   entryType: CashEntryType;
+  entryReason: CashEntryReason;
   paymentMethod: CashEntryPaymentMethod;
   amountCents: number;
   note: string | null;
+  serviceIntakeId: number | null;
 };
 
-type CashEntryLookupExecutor = Pick<ReturnType<typeof getDb>, "select">;
+type CashEntryLookupExecutor = Pick<Db, "select">;
+type CashEntryMutationExecutor = Pick<Db, "insert">;
+
+export type PostServiceIntakeCashDeltaInput = {
+  serviceIntakeId: number;
+  flowType: ServiceIntakeFlowType;
+  serviceType: ServiceIntakeServiceType;
+  scheduledDate: string;
+  scheduledTime: string;
+  previousCollectedAmountCents: number;
+  nextCollectedAmountCents: number;
+  actorUserId: number;
+};
 
 function padNumber(value: number): string {
   return value.toString().padStart(2, "0");
@@ -165,9 +190,11 @@ function toCashEntryRecord(row: CashEntryRow): CashEntryRecord {
     id: row.id,
     entryDate: row.entryDate,
     entryType: row.entryType,
+    entryReason: row.entryReason,
     paymentMethod: row.paymentMethod,
     amountCents: row.amountCents,
     note: row.note,
+    serviceIntakeId: row.serviceIntakeId,
     createdByUserId: row.createdByUserId,
     createdByName: getDisplayName(
       row.createdByEmail,
@@ -197,6 +224,12 @@ function toCashEntryRecord(row: CashEntryRow): CashEntryRecord {
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
+}
+
+export function isSystemGeneratedCashEntry(
+  entry: Pick<CashEntryRecord, "entryReason">
+): boolean {
+  return entry.entryReason !== "manual";
 }
 
 export function summarizeCashEntries(entries: CashEntryRecord[]): CashEntrySummary {
@@ -295,6 +328,18 @@ export function toCashEntryType(value: string): CashEntryType {
   return assertCashEntryType(value);
 }
 
+function assertCashEntryReason(value: string): CashEntryReason {
+  if (
+    value === "manual" ||
+    value === "service_collection" ||
+    value === "service_adjustment"
+  ) {
+    return value;
+  }
+
+  throw new Error("Kasa kayıt nedeni geçerli değil.");
+}
+
 function assertCashEntryPaymentMethod(value: string): CashEntryPaymentMethod {
   if (value === "cash" || value === "card" || value === "bank_transfer" || value === "other") {
     return value;
@@ -321,9 +366,11 @@ async function listActiveCashEntriesForDate(entryDate: string): Promise<CashEntr
       id: cashEntries.id,
       entryDate: cashEntries.entryDate,
       entryType: cashEntries.entryType,
+      entryReason: cashEntries.entryReason,
       paymentMethod: cashEntries.paymentMethod,
       amountCents: cashEntries.amountCents,
       note: cashEntries.note,
+      serviceIntakeId: cashEntries.serviceIntakeId,
       createdByUserId: cashEntries.createdByUserId,
       createdByEmail: createdByUsers.email,
       createdByFullName: createdByProfiles.fullName,
@@ -377,9 +424,11 @@ export async function listActiveCashEntriesForDateRange(
       id: cashEntries.id,
       entryDate: cashEntries.entryDate,
       entryType: cashEntries.entryType,
+      entryReason: cashEntries.entryReason,
       paymentMethod: cashEntries.paymentMethod,
       amountCents: cashEntries.amountCents,
       note: cashEntries.note,
+      serviceIntakeId: cashEntries.serviceIntakeId,
       createdByUserId: cashEntries.createdByUserId,
       createdByEmail: createdByUsers.email,
       createdByFullName: createdByProfiles.fullName,
@@ -424,15 +473,122 @@ async function getActiveCashEntry(
       id: cashEntries.id,
       entryDate: cashEntries.entryDate,
       entryType: cashEntries.entryType,
+      entryReason: cashEntries.entryReason,
       paymentMethod: cashEntries.paymentMethod,
       amountCents: cashEntries.amountCents,
       note: cashEntries.note,
+      serviceIntakeId: cashEntries.serviceIntakeId,
     })
     .from(cashEntries)
     .where(and(eq(cashEntries.id, entryId), isNull(cashEntries.deletedAt)))
     .limit(1);
 
   return rows[0] ?? null;
+}
+
+export async function hasActiveCashEntriesForServiceIntakeIds(
+  serviceIntakeIds: number[],
+  executor: CashEntryLookupExecutor = getDb()
+): Promise<boolean> {
+  if (!serviceIntakeIds.length) {
+    return false;
+  }
+
+  const rows = await executor
+    .select({ id: cashEntries.id })
+    .from(cashEntries)
+    .where(
+      and(
+        isNull(cashEntries.deletedAt),
+        inArray(cashEntries.entryReason, ["service_collection", "service_adjustment"]),
+        inArray(cashEntries.serviceIntakeId, serviceIntakeIds)
+      )
+    )
+    .limit(1);
+
+  return Boolean(rows[0]);
+}
+
+function getFlowLabel(flowType: ServiceIntakeFlowType): string {
+  return flowType === "walk_in" ? "Walk-in" : "Randevu";
+}
+
+function getServiceLabel(serviceType: ServiceIntakeServiceType): string {
+  return serviceType === "piercing" ? "Piercing" : "Dövme";
+}
+
+function buildServiceIntakeCashEntryNote(
+  input: Pick<
+    PostServiceIntakeCashDeltaInput,
+    "flowType" | "serviceType" | "scheduledDate" | "scheduledTime"
+  > & {
+    entryReason: CashEntryReason;
+  }
+): string {
+  const eventLabel =
+    input.entryReason === "service_collection" ? "tahsilatı" : "düzeltmesi";
+
+  return `${getFlowLabel(input.flowType)} ${eventLabel} · ${getServiceLabel(
+    input.serviceType
+  )} · ${input.scheduledDate} ${input.scheduledTime}`;
+}
+
+async function insertCashEntryRecord(
+  executor: CashEntryMutationExecutor,
+  input: Required<
+    Pick<CreateCashEntryInput, "entryDate" | "entryType" | "entryReason" | "paymentMethod" | "amountCents" | "actorUserId">
+  > &
+    Pick<CreateCashEntryInput, "note" | "serviceIntakeId">
+): Promise<CashEntryMutationRecord> {
+  const insertedRows = await executor
+    .insert(cashEntries)
+    .values({
+      entryDate: assertCashDateValue(input.entryDate),
+      entryType: assertCashEntryType(input.entryType),
+      entryReason: assertCashEntryReason(input.entryReason),
+      paymentMethod: assertCashEntryPaymentMethod(input.paymentMethod),
+      amountCents: assertPositiveAmountCents(input.amountCents),
+      note: input.note,
+      serviceIntakeId: input.serviceIntakeId ?? null,
+      createdByUserId: input.actorUserId,
+    })
+    .returning({
+      id: cashEntries.id,
+      entryDate: cashEntries.entryDate,
+      entryType: cashEntries.entryType,
+      entryReason: cashEntries.entryReason,
+      paymentMethod: cashEntries.paymentMethod,
+      amountCents: cashEntries.amountCents,
+      note: cashEntries.note,
+      serviceIntakeId: cashEntries.serviceIntakeId,
+    });
+
+  const inserted = insertedRows[0];
+
+  if (!inserted) {
+    throw new Error("Kasa kaydı eklenemedi.");
+  }
+
+  await writeAuditLog(
+    {
+      actorUserId: input.actorUserId,
+      action: "cash_entry.created",
+      entityType: "cash_entry",
+      entityId: inserted.id,
+      payload: {
+        entryDate: inserted.entryDate,
+        entryType: inserted.entryType,
+        entryReason: inserted.entryReason,
+        paymentMethod: inserted.paymentMethod,
+        amountCents: inserted.amountCents,
+        serviceIntakeId: inserted.serviceIntakeId,
+        hasNote: Boolean(inserted.note),
+      },
+    },
+    executor
+  );
+
+  return inserted;
 }
 
 export async function getCashbookSnapshot(
@@ -465,49 +621,47 @@ export async function createCashEntry(input: CreateCashEntryInput): Promise<Cash
   const db = getDb();
 
   return db.transaction(async (tx) => {
-    const insertedRows = await tx
-      .insert(cashEntries)
-      .values({
-        entryDate: assertCashDateValue(input.entryDate),
-        entryType: assertCashEntryType(input.entryType),
-        paymentMethod: assertCashEntryPaymentMethod(input.paymentMethod),
-        amountCents: assertPositiveAmountCents(input.amountCents),
-        note: input.note,
-        createdByUserId: input.actorUserId,
-      })
-      .returning({
-        id: cashEntries.id,
-        entryDate: cashEntries.entryDate,
-        entryType: cashEntries.entryType,
-        paymentMethod: cashEntries.paymentMethod,
-        amountCents: cashEntries.amountCents,
-        note: cashEntries.note,
-      });
+    return insertCashEntryRecord(tx, {
+      entryDate: input.entryDate,
+      entryType: input.entryType,
+      entryReason: input.entryReason ?? "manual",
+      paymentMethod: input.paymentMethod,
+      amountCents: input.amountCents,
+      note: input.note,
+      serviceIntakeId: input.serviceIntakeId ?? null,
+      actorUserId: input.actorUserId,
+    });
+  });
+}
 
-    const inserted = insertedRows[0];
+export async function postServiceIntakeCashDelta(
+  input: PostServiceIntakeCashDeltaInput,
+  executor: CashEntryMutationExecutor = getDb()
+): Promise<CashEntryMutationRecord | null> {
+  const delta = input.nextCollectedAmountCents - input.previousCollectedAmountCents;
 
-    if (!inserted) {
-      throw new Error("Kasa kaydı eklenemedi.");
-    }
+  if (delta === 0) {
+    return null;
+  }
 
-    await writeAuditLog(
-      {
-        actorUserId: input.actorUserId,
-        action: "cash_entry.created",
-        entityType: "cash_entry",
-        entityId: inserted.id,
-        payload: {
-          entryDate: inserted.entryDate,
-          entryType: inserted.entryType,
-          paymentMethod: inserted.paymentMethod,
-          amountCents: inserted.amountCents,
-          hasNote: Boolean(inserted.note),
-        },
-      },
-      tx
-    );
+  const entryReason: CashEntryReason =
+    delta > 0 ? "service_collection" : "service_adjustment";
 
-    return inserted;
+  return insertCashEntryRecord(executor, {
+    entryDate: getTodayCashDateValue(),
+    entryType: delta > 0 ? "income" : "expense",
+    entryReason,
+    paymentMethod: "cash",
+    amountCents: Math.abs(delta),
+    note: buildServiceIntakeCashEntryNote({
+      flowType: input.flowType,
+      serviceType: input.serviceType,
+      scheduledDate: input.scheduledDate,
+      scheduledTime: input.scheduledTime,
+      entryReason,
+    }),
+    serviceIntakeId: input.serviceIntakeId,
+    actorUserId: input.actorUserId,
   });
 }
 
@@ -519,6 +673,10 @@ export async function updateCashEntry(input: UpdateCashEntryInput): Promise<Cash
 
     if (!current) {
       throw new Error("Kasa kaydı bulunamadı.");
+    }
+
+    if (current.entryReason !== "manual") {
+      throw new Error(SYSTEM_CASH_ENTRY_UPDATE_MESSAGE);
     }
 
     const updatedRows = await tx
@@ -537,9 +695,11 @@ export async function updateCashEntry(input: UpdateCashEntryInput): Promise<Cash
         id: cashEntries.id,
         entryDate: cashEntries.entryDate,
         entryType: cashEntries.entryType,
+        entryReason: cashEntries.entryReason,
         paymentMethod: cashEntries.paymentMethod,
         amountCents: cashEntries.amountCents,
         note: cashEntries.note,
+        serviceIntakeId: cashEntries.serviceIntakeId,
       });
 
     const updated = updatedRows[0];
@@ -564,8 +724,10 @@ export async function updateCashEntry(input: UpdateCashEntryInput): Promise<Cash
           ].filter((value): value is string => Boolean(value)),
           entryDate: updated.entryDate,
           entryType: updated.entryType,
+          entryReason: updated.entryReason,
           paymentMethod: updated.paymentMethod,
           amountCents: updated.amountCents,
+          serviceIntakeId: updated.serviceIntakeId,
           hasNote: Boolean(updated.note),
         },
       },
@@ -588,6 +750,10 @@ export async function softDeleteCashEntry(
       throw new Error("Kasa kaydı bulunamadı.");
     }
 
+    if (current.entryReason !== "manual") {
+      throw new Error(SYSTEM_CASH_ENTRY_DELETE_MESSAGE);
+    }
+
     const updatedRows = await tx
       .update(cashEntries)
       .set({
@@ -601,9 +767,11 @@ export async function softDeleteCashEntry(
         id: cashEntries.id,
         entryDate: cashEntries.entryDate,
         entryType: cashEntries.entryType,
+        entryReason: cashEntries.entryReason,
         paymentMethod: cashEntries.paymentMethod,
         amountCents: cashEntries.amountCents,
         note: cashEntries.note,
+        serviceIntakeId: cashEntries.serviceIntakeId,
       });
 
     const deleted = updatedRows[0];
@@ -621,8 +789,10 @@ export async function softDeleteCashEntry(
         payload: {
           entryDate: current.entryDate,
           entryType: current.entryType,
+          entryReason: current.entryReason,
           paymentMethod: current.paymentMethod,
           amountCents: current.amountCents,
+          serviceIntakeId: current.serviceIntakeId,
           hasNote: Boolean(current.note),
         },
       },
