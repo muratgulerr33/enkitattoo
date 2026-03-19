@@ -92,7 +92,7 @@ type FormState =
       session: StaffServiceSessionView;
     };
 
-type ViewMode = "root" | "day" | "detail" | "create" | "edit";
+type ViewMode = "root" | "detail" | "create" | "edit";
 
 type OpsStaffAppointmentsWorkspaceProps = {
   monthValue: string;
@@ -168,7 +168,7 @@ function compareSessions(
 
 function getAppointmentCountLabel(appointmentCount: number): string {
   if (!appointmentCount) {
-    return "Bugün boş";
+    return "İşlem yok";
   }
 
   if (appointmentCount === 1) {
@@ -682,6 +682,132 @@ function AppointmentDetailSheet({
   );
 }
 
+function AppointmentDayWorkspacePanel({
+  selectedDay,
+  selectedDayLabel,
+  selectedDaySessions,
+  recommendedTime,
+  onSessionOpen,
+  onCreate,
+  className,
+}: {
+  selectedDay: string | null;
+  selectedDayLabel: string;
+  selectedDaySessions: StaffServiceSessionView[];
+  recommendedTime: string | null;
+  onSessionOpen: (session: StaffServiceSessionView) => void;
+  onCreate: () => void;
+  className?: string;
+}) {
+  if (!selectedDay) {
+    return null;
+  }
+
+  return (
+    <Card className={cn("order-2 overflow-hidden xl:sticky xl:top-24", className)}>
+      <CardHeader className="gap-3 border-b bg-surface-1/35 pb-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 space-y-1">
+            <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              Seçili gün
+            </p>
+            <CardTitle className="text-base leading-tight sm:text-lg">
+              {selectedDayLabel || "Gün workspace"}
+            </CardTitle>
+          </div>
+
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="hidden rounded-xl xl:inline-flex"
+            onClick={onCreate}
+          >
+            <Plus className="size-4" aria-hidden />
+            Yeni işlem
+          </Button>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+          <p className="font-medium text-foreground">
+            {getAppointmentCountLabel(selectedDaySessions.length)}
+          </p>
+          {recommendedTime ? (
+            <p className="text-muted-foreground">Yeni işlem için {recommendedTime} uygun.</p>
+          ) : null}
+        </div>
+      </CardHeader>
+
+      <CardContent className="px-4 py-4 sm:px-5">
+        {selectedDaySessions.length ? (
+          <div className="space-y-2.5">
+            {selectedDaySessions.map((session) => (
+              <button
+                key={getSessionKey(session)}
+                type="button"
+                onClick={() => onSessionOpen(session)}
+                data-testid={`day-appointment-${getSessionKey(session)}`}
+                className="w-full rounded-[1.45rem] border border-border bg-card px-3.5 py-3.5 text-left transition-[transform,background-color,border-color,box-shadow] duration-150 hover:bg-surface-1/65 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99]"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex min-h-14 w-16 shrink-0 flex-col items-center justify-center rounded-2xl border border-border bg-surface-1/80 text-foreground">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                      Saat
+                    </span>
+                    <span className="mt-0.5 text-base font-semibold font-numbers">
+                      {session.scheduledTime}
+                    </span>
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-base font-semibold text-foreground">
+                          {session.customerName}
+                        </p>
+                        <div className="mt-1 flex flex-wrap gap-2">
+                          {session.serviceSummary ? (
+                            <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[11px]">
+                              {getServiceTypeLabel(session.serviceSummary.serviceType)}
+                            </Badge>
+                          ) : null}
+                        </div>
+                      </div>
+                      <ChevronRightIcon
+                        className="size-4 shrink-0 text-muted-foreground"
+                        aria-hidden
+                      />
+                    </div>
+
+                    {session.notes ? (
+                      <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
+                        {session.notes}
+                      </p>
+                    ) : null}
+
+                    {session.customerEmail ? (
+                      <p className="mt-1 hidden truncate text-[11px] text-muted-foreground/68 sm:block">
+                        {session.customerEmail}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-[1.45rem] border border-dashed border-border bg-surface-1/20 px-4 py-4">
+            <p className="text-sm font-medium text-foreground">Seçili gün için işlem yok.</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Takvimden başka bir gün seçin veya bu gün için yeni işlem açın.
+            </p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
 export function OpsStaffAppointmentsWorkspace({
   monthValue,
   initialSelectedDay,
@@ -695,11 +821,14 @@ export function OpsStaffAppointmentsWorkspace({
   const [viewMode, setViewMode] = useState<ViewMode>("root");
   const [activeSessionKey, setActiveSessionKey] = useState<string | null>(null);
   const [formState, setFormState] = useState<FormState | null>(null);
-  const [returnToDayAfterForm, setReturnToDayAfterForm] = useState(false);
 
   useEffect(() => {
     setAvailableCustomerOptions(sortCustomerOptions(customerOptions));
   }, [customerOptions]);
+
+  useEffect(() => {
+    setSelectedDay(initialSelectedDay);
+  }, [initialSelectedDay]);
 
   const countsByDate = new Map<string, number>();
 
@@ -731,39 +860,29 @@ export function OpsStaffAppointmentsWorkspace({
       : sessions.find((session) => getSessionKey(session) === activeSessionKey) ?? null;
   const rootFabDay = selectedDay ?? todayDateValue;
   const showRootFab = viewMode === "root";
-  const showDayFab = viewMode === "day" && Boolean(selectedDay);
 
   function handleDaySelect(day: string) {
     setSelectedDay(day);
     setActiveSessionKey(null);
     setFormState(null);
-    setViewMode("day");
-  }
-
-  function handleDayAgendaOpenChange(open: boolean) {
-    if (!open) {
-      setActiveSessionKey(null);
-      setFormState(null);
-      setViewMode("root");
-    }
+    setViewMode("root");
   }
 
   function handleDetailOpenChange(open: boolean) {
     if (!open) {
       setActiveSessionKey(null);
-      setViewMode("day");
+      setViewMode("root");
     }
   }
 
   function handleFormOpenChange(open: boolean) {
     if (!open) {
       setFormState(null);
-      setViewMode(returnToDayAfterForm && selectedDay ? "day" : "root");
+      setViewMode("root");
     }
   }
 
   function handleEditFromDetail(session: StaffServiceSessionView) {
-    setReturnToDayAfterForm(true);
     setFormState({
       mode: "edit",
       session,
@@ -775,13 +894,11 @@ export function OpsStaffAppointmentsWorkspace({
   function handleDeleteComplete() {
     setActiveSessionKey(null);
     setFormState(null);
-    setReturnToDayAfterForm(false);
     setViewMode("root");
   }
 
-  function startCreateForDay(day: string, fromDaySheet: boolean) {
+  function startCreateForDay(day: string) {
     setSelectedDay(day);
-    setReturnToDayAfterForm(fromDaySheet);
     setFormState({
       mode: "create",
       day,
@@ -796,228 +913,132 @@ export function OpsStaffAppointmentsWorkspace({
 
   return (
     <div
-      className="ops-page-shell relative pb-0 -mb-[calc(env(safe-area-inset-bottom)+4.15rem)] sm:-mb-[calc(env(safe-area-inset-bottom)+4.35rem)] md:mb-0 xl:space-y-5"
+      className="ops-page-shell relative"
       data-testid="appointments-workspace"
       data-view-mode={viewMode}
     >
-      <Card
-        className="-mx-4 -mt-3 gap-0 overflow-hidden rounded-none border-x-0 border-t-0 py-0 shadow-none sm:-mx-6 sm:-mt-4 md:gap-6 md:py-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm xl:py-5"
-        data-testid="appointments-month-card"
-      >
-        <CardHeader className="border-b px-1.5 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-4 xl:px-7 2xl:px-8">
-          <div className="flex items-start justify-between gap-4">
-            <CardTitle className="text-base sm:text-lg xl:text-xl">{getMonthLabel(monthValue)}</CardTitle>
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(24rem,0.8fr)] xl:items-start xl:gap-5">
+        <Card
+          className="-mx-4 -mt-3 order-1 gap-0 overflow-hidden rounded-none border-x-0 border-t-0 py-0 shadow-none sm:-mx-6 sm:-mt-4 md:gap-6 md:py-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm xl:py-5"
+          data-testid="appointments-month-card"
+        >
+          <CardHeader className="border-b px-1.5 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-4 xl:px-7 2xl:px-8">
+            <div className="flex items-start justify-between gap-4">
+              <CardTitle className="text-base sm:text-lg xl:text-xl">{getMonthLabel(monthValue)}</CardTitle>
 
-            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
-              {showTodayShortcut ? (
-                <Button asChild variant="outline" size="sm" className="rounded-xl">
-                  <Link href={`/ops/staff/randevular?month=${todayMonthValue}`}>Bugün</Link>
+              <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+                {showTodayShortcut ? (
+                  <Button asChild variant="outline" size="sm" className="rounded-xl">
+                    <Link href={`/ops/staff/randevular?month=${todayMonthValue}`}>Bugün</Link>
+                  </Button>
+                ) : null}
+
+                <Button asChild variant="outline" size="icon-sm" className="rounded-xl" aria-label="Önceki ay">
+                  <Link href={`/ops/staff/randevular?month=${previousMonth}`}>
+                    <ChevronLeft className="size-4" aria-hidden />
+                  </Link>
                 </Button>
-              ) : null}
-
-              <Button asChild variant="outline" size="icon-sm" className="rounded-xl" aria-label="Önceki ay">
-                <Link href={`/ops/staff/randevular?month=${previousMonth}`}>
-                  <ChevronLeft className="size-4" aria-hidden />
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="icon-sm" className="rounded-xl" aria-label="Sonraki ay">
-                <Link href={`/ops/staff/randevular?month=${nextMonth}`}>
-                  <ChevronRight className="size-4" aria-hidden />
-                </Link>
-              </Button>
+                <Button asChild variant="outline" size="icon-sm" className="rounded-xl" aria-label="Sonraki ay">
+                  <Link href={`/ops/staff/randevular?month=${nextMonth}`}>
+                    <ChevronRight className="size-4" aria-hidden />
+                  </Link>
+                </Button>
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground sm:gap-1.5 sm:text-[11px] lg:gap-2.5 xl:gap-3">
-            {WEEKDAY_LABELS.map((label) => (
-              <div key={label}>{label}</div>
-            ))}
-          </div>
-        </CardHeader>
+            <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground sm:gap-1.5 sm:text-[11px] lg:gap-2.5 xl:gap-3">
+              {WEEKDAY_LABELS.map((label) => (
+                <div key={label}>{label}</div>
+              ))}
+            </div>
+          </CardHeader>
 
-        <CardContent className="px-1 pt-2 pb-16 sm:px-3 sm:pt-3 sm:pb-20 lg:px-6 lg:pt-4 lg:pb-5 xl:px-7 2xl:px-8">
-          <div
-            className="grid grid-cols-7 gap-1 sm:gap-1.5 lg:gap-2.5 xl:gap-3"
-            data-testid="appointments-month-grid"
-          >
-            {calendarCells.map((cell) =>
-              cell.kind === "empty" ? (
-                <div
-                  key={cell.key}
-                  className="min-h-[5.25rem] rounded-[1.2rem] border border-transparent bg-transparent sm:min-h-28 xl:min-h-[8.75rem]"
-                />
-              ) : (
-                <button
-                  key={cell.key}
-                  type="button"
-                  onClick={() => handleDaySelect(cell.date)}
-                  aria-pressed={cell.isSelected}
-                  aria-label={`${cell.dayNumber} ${getMonthCellOccupancyLabel(cell.count)}`}
-                  data-testid={`month-cell-${cell.date}`}
-                  data-selected={cell.isSelected ? "true" : "false"}
-                  data-today={cell.isToday ? "true" : "false"}
-                  data-count={cell.count}
-                  data-occupancy={getOccupancyLevel(cell.count)}
-                  className={cn(
-                    "group relative isolate flex min-h-[5.3rem] w-full flex-col overflow-hidden rounded-[1.25rem] border px-1.5 py-1.5 text-left transition-[transform,background-color,color,border-color,box-shadow] duration-150 hover:bg-muted/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] sm:min-h-28 sm:px-2.5 sm:py-2.5 xl:min-h-[8.75rem] xl:px-4 xl:py-3",
-                    cell.isSelected
-                      ? "border-foreground bg-foreground text-background shadow-[0_18px_40px_rgba(15,23,42,0.24)] ring-2 ring-foreground/12"
-                      : cell.count
-                        ? "border-foreground/18 bg-surface-1 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.34)]"
-                        : "border-border/85 bg-card text-foreground"
-                  )}
-                >
-                  <div className="flex items-start justify-between gap-1.5 sm:gap-2">
-                    <span
-                      data-testid={`month-cell-day-${cell.date}`}
-                      className={cn(
-                        "inline-flex size-7 items-center justify-center rounded-full text-sm font-semibold sm:size-8 sm:text-base xl:size-10 xl:text-lg",
-                        cell.isToday && cell.isSelected
-                          ? "bg-background text-foreground ring-2 ring-background/65 shadow-sm"
-                          : cell.isToday
-                            ? "bg-background text-foreground ring-2 ring-foreground/34"
-                            : "bg-transparent"
-                      )}
-                    >
-                      {cell.dayNumber}
-                    </span>
-                  </div>
-
-                  {cell.count ? (
-                    <span
-                      className="pointer-events-none absolute inset-x-0 bottom-2.5 flex justify-center sm:bottom-3.5"
-                      aria-hidden
-                    >
+          <CardContent className="px-1 pt-2 pb-4 sm:px-3 sm:pt-3 sm:pb-5 lg:px-6 lg:pt-4 lg:pb-5 xl:px-7 2xl:px-8">
+            <div
+              className="grid grid-cols-7 gap-1 sm:gap-1.5 lg:gap-2.5 xl:gap-3"
+              data-testid="appointments-month-grid"
+            >
+              {calendarCells.map((cell) =>
+                cell.kind === "empty" ? (
+                  <div
+                    key={cell.key}
+                    className="min-h-[4.4rem] rounded-[1.15rem] border border-transparent bg-transparent sm:min-h-24 xl:min-h-[8.25rem]"
+                  />
+                ) : (
+                  <button
+                    key={cell.key}
+                    type="button"
+                    onClick={() => handleDaySelect(cell.date)}
+                    aria-pressed={cell.isSelected}
+                    aria-label={`${cell.dayNumber} ${getMonthCellOccupancyLabel(cell.count)}`}
+                    data-testid={`month-cell-${cell.date}`}
+                    data-selected={cell.isSelected ? "true" : "false"}
+                    data-today={cell.isToday ? "true" : "false"}
+                    data-count={cell.count}
+                    data-occupancy={getOccupancyLevel(cell.count)}
+                    className={cn(
+                      "group relative isolate flex min-h-[4.45rem] w-full flex-col overflow-hidden rounded-[1.15rem] border px-1.5 py-1.5 text-left transition-[transform,background-color,color,border-color,box-shadow] duration-150 hover:bg-muted/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] sm:min-h-24 sm:px-2.5 sm:py-2.5 xl:min-h-[8.25rem] xl:px-4 xl:py-3",
+                      cell.isSelected
+                        ? "border-foreground bg-foreground text-background shadow-[0_18px_40px_rgba(15,23,42,0.24)] ring-2 ring-foreground/12"
+                        : cell.count
+                          ? "border-foreground/18 bg-surface-1 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.34)]"
+                          : "border-border/85 bg-card text-foreground"
+                    )}
+                  >
+                    <div className="flex items-start justify-between gap-1.5 sm:gap-2">
                       <span
-                        data-testid={`month-cell-occupancy-${cell.date}`}
+                        data-testid={`month-cell-day-${cell.date}`}
                         className={cn(
-                          "inline-flex rounded-full transition-[width,height,background-color,box-shadow] duration-150",
-                          getOccupancyMarkerClassName(cell.count, cell.isSelected)
+                          "inline-flex size-7 items-center justify-center rounded-full text-sm font-semibold sm:size-8 sm:text-base xl:size-10 xl:text-lg",
+                          cell.isToday && cell.isSelected
+                            ? "bg-background text-foreground ring-2 ring-background/65 shadow-sm"
+                            : cell.isToday
+                              ? "bg-background text-foreground ring-2 ring-foreground/34"
+                              : "bg-transparent"
                         )}
-                      />
-                    </span>
-                  ) : null}
-                </button>
-              )
-            )}
-          </div>
-        </CardContent>
-      </Card>
+                      >
+                        {cell.dayNumber}
+                      </span>
+                    </div>
+
+                    {cell.count ? (
+                      <span
+                        className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center sm:bottom-3"
+                        aria-hidden
+                      >
+                        <span
+                          data-testid={`month-cell-occupancy-${cell.date}`}
+                          className={cn(
+                            "inline-flex rounded-full transition-[width,height,background-color,box-shadow] duration-150",
+                            getOccupancyMarkerClassName(cell.count, cell.isSelected)
+                          )}
+                        />
+                      </span>
+                    ) : null}
+                  </button>
+                )
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <AppointmentDayWorkspacePanel
+          selectedDay={selectedDay}
+          selectedDayLabel={selectedDayLabel}
+          selectedDaySessions={selectedDaySessions}
+          recommendedTime={recommendedTime}
+          onSessionOpen={handleSessionOpen}
+          onCreate={() => startCreateForDay(selectedDay as string)}
+        />
+      </div>
 
       {showRootFab ? (
         <AppointmentFab
-          className="fixed right-4 bottom-[calc(env(safe-area-inset-bottom)+4.4rem)] z-20 shadow-[0_18px_34px_rgba(15,23,42,0.2)] sm:right-5 sm:bottom-[calc(env(safe-area-inset-bottom)+4.55rem)] md:bottom-6 lg:right-[max(2rem,calc((100vw-92rem)/2+2rem))] xl:bottom-7"
-          onClick={() => startCreateForDay(rootFabDay, false)}
+          className="fixed right-4 bottom-[calc(env(safe-area-inset-bottom)+4.4rem)] z-20 shadow-[0_18px_34px_rgba(15,23,42,0.2)] sm:right-5 sm:bottom-[calc(env(safe-area-inset-bottom)+4.55rem)] md:bottom-6 xl:hidden"
+          onClick={() => startCreateForDay(rootFabDay)}
           testId="appointments-root-fab"
         />
       ) : null}
-
-      <Sheet open={viewMode === "day"} onOpenChange={handleDayAgendaOpenChange}>
-        <SheetContent
-          side="bottom"
-          showCloseButton={false}
-          data-testid="appointments-day-sheet"
-          className="mx-auto max-h-[60vh] w-full max-w-2xl overflow-hidden rounded-t-[2rem] p-0 lg:inset-y-6 lg:left-auto lg:right-6 lg:bottom-6 lg:top-20 lg:max-h-none lg:h-[calc(100vh-7rem)] lg:w-[26rem] lg:max-w-[26rem] lg:rounded-[2rem] lg:border"
-        >
-          <div className="flex h-full max-h-[60vh] flex-col bg-background lg:max-h-none">
-            <SheetHandle />
-            <SheetHeader className="border-b border-border px-5 py-2.5 text-left sm:px-6">
-              <div className="flex items-center justify-between gap-3">
-                <div className="space-y-1">
-                  <SheetTitle>{selectedDayLabel || "Gün ajandası"}</SheetTitle>
-                  <SheetDescription className="sr-only">Gün ajandası</SheetDescription>
-                </div>
-                <SheetClose asChild>
-                  <Button type="button" variant="ghost" size="icon-sm" className="rounded-full">
-                    <X className="size-4" aria-hidden />
-                    <span className="sr-only">Kapat</span>
-                  </Button>
-                </SheetClose>
-              </div>
-              {selectedDaySessions.length ? (
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-                  <p className="font-medium text-foreground">
-                    {getAppointmentCountLabel(selectedDaySessions.length)}
-                  </p>
-                  {recommendedTime ? (
-                    <p className="text-muted-foreground">Yeni işlem için {recommendedTime} uygun.</p>
-                  ) : null}
-                </div>
-              ) : null}
-            </SheetHeader>
-
-            <div className="relative flex-1 overflow-y-auto px-5 py-3 sm:px-6">
-              {selectedDaySessions.length ? (
-                <div className="space-y-2.5 pb-[4.5rem]">
-                  {selectedDaySessions.map((session) => (
-                    <button
-                      key={getSessionKey(session)}
-                      type="button"
-                      onClick={() => handleSessionOpen(session)}
-                      data-testid={`day-appointment-${getSessionKey(session)}`}
-                      className="w-full rounded-[1.45rem] border border-border bg-card px-3.5 py-3.5 text-left transition-[transform,background-color,border-color,box-shadow] duration-150 hover:bg-surface-1/65 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99]"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex min-h-14 w-16 shrink-0 flex-col items-center justify-center rounded-2xl border border-border bg-surface-1/80 text-foreground">
-                          <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                            Saat
-                          </span>
-                          <span className="mt-0.5 text-base font-semibold font-numbers">
-                            {session.scheduledTime}
-                          </span>
-                        </div>
-
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between gap-3">
-                            <div className="min-w-0">
-                              <p className="truncate text-base font-semibold text-foreground">
-                                {session.customerName}
-                              </p>
-                              <div className="mt-1 flex flex-wrap gap-2">
-                                {session.serviceSummary ? (
-                                  <Badge variant="outline" className="rounded-full px-2 py-0.5 text-[11px]">
-                                    {getServiceTypeLabel(session.serviceSummary.serviceType)}
-                                  </Badge>
-                                ) : null}
-                              </div>
-                            </div>
-                            <ChevronRightIcon
-                              className="size-4 shrink-0 text-muted-foreground"
-                              aria-hidden
-                            />
-                          </div>
-                          {session.notes ? (
-                            <p className="mt-1 line-clamp-1 text-sm text-muted-foreground">
-                              {session.notes}
-                            </p>
-                          ) : null}
-                          {session.customerEmail ? (
-                            <p className="mt-1 hidden truncate text-[11px] text-muted-foreground/68 sm:block">
-                              {session.customerEmail}
-                            </p>
-                          ) : null}
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="rounded-[1.45rem] border border-dashed border-border px-4 py-3 text-sm text-foreground">
-                  Seçili gün için işlem yok.
-                </div>
-              )}
-
-              {showDayFab ? (
-                <AppointmentFab
-                  className="absolute right-1 bottom-3 shadow-[0_16px_28px_rgba(15,23,42,0.18)] sm:right-2 sm:bottom-3"
-                  onClick={() => startCreateForDay(selectedDay as string, true)}
-                  testId="appointments-day-fab"
-                />
-              ) : null}
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
 
       <AppointmentDetailSheet
         key={activeSession ? getSessionKey(activeSession) : "empty"}

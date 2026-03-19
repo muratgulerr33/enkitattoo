@@ -85,10 +85,11 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
     },
   }));
 
-  const initialSelectedDay =
+  const requestedDay =
     params.day && isValidDateValue(params.day) && isDateInMonth(params.day, monthValue)
-      ? getDefaultSelectedDay(monthValue, params.day)
+      ? params.day
       : null;
+  const initialSelectedDay = getDefaultSelectedDay(monthValue, requestedDay);
 
   return (
     <OpsStaffAppointmentsWorkspace
