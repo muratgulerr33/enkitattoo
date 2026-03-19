@@ -244,11 +244,6 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                 ) : null}
               </div>
 
-              {!canManageHistoryEntries ? (
-                <p className="text-xs text-muted-foreground">
-                  Artist yalnız bugünün defteriyle çalışır.
-                </p>
-              ) : null}
             </CardContent>
           </Card>
           <Card className="overflow-hidden">

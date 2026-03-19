@@ -15,9 +15,7 @@ import { formatAppointmentDateLong } from "@/lib/ops/appointments";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import { formatCashAmount } from "@/lib/ops/cashbook";
 import {
-  canViewAdminReports,
   getAdminReportsSnapshot,
-  getArtistReportsSnapshot,
   resolveSelectedAdminRange,
   type AdminReportSection,
   type ArtistReportSection,
@@ -221,115 +219,9 @@ function AppointmentList({
 
 export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const sessionUser = await requireOpsSessionArea("staff");
-  const isAdmin = canViewAdminReports(sessionUser.roles);
-
-  if (isAdmin) {
-    const selectedRange = resolveSelectedAdminRange(params);
-    const reports = await getAdminReportsSnapshot(params);
-
-    return (
-      <div className="ops-page-shell space-y-4">
-        <Card>
-          <CardHeader className="gap-2 border-b pb-4">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div className="space-y-1">
-                <CardTitle className="text-base sm:text-lg">Raporlar</CardTitle>
-                <CardDescription>
-                  Günlük, haftalık ve seçili aralık özeti burada toplanır.
-                </CardDescription>
-              </div>
-
-              <Button asChild variant="outline" size="sm" className="rounded-lg">
-                <Link href="/ops/staff/kasa">
-                  <ArrowLeft className="size-4" aria-hidden />
-                  Kasaya dön
-                </Link>
-              </Button>
-            </div>
-          </CardHeader>
-
-          <CardContent className="space-y-3 pt-4">
-            <div className="grid gap-3 lg:grid-cols-2">
-              <div className="rounded-2xl border border-border px-4 py-4">
-                <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
-                  <CalendarRange className="size-4" aria-hidden />
-                  {reports.today.range.title}
-                </div>
-                <div className="space-y-4">
-                  <CashSummaryBlock section={reports.today} />
-                  <AppointmentSummaryBlock
-                    title="Randevu özeti"
-                    label={reports.today.range.label}
-                    summary={reports.today.appointmentSummary}
-                  />
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-border px-4 py-4">
-                <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
-                  <CalendarRange className="size-4" aria-hidden />
-                  {reports.week.range.title}
-                </div>
-                <div className="space-y-4">
-                  <CashSummaryBlock section={reports.week} />
-                  <AppointmentSummaryBlock
-                    title="Randevu özeti"
-                    label={reports.week.range.label}
-                    summary={reports.week.appointmentSummary}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-border px-4 py-4">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-foreground">Genel rapor</p>
-                  <p className="text-xs text-muted-foreground">{reports.selected.range.label}</p>
-                </div>
-
-                <form action="/ops/staff/raporlar" className="grid w-full gap-2 sm:w-auto sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-                  <Input
-                    type="date"
-                    name="from"
-                    defaultValue={selectedRange.from}
-                    aria-label="Başlangıç tarihi"
-                  />
-                  <Input
-                    type="date"
-                    name="to"
-                    defaultValue={selectedRange.to}
-                    aria-label="Bitiş tarihi"
-                  />
-                  <Button type="submit" variant="outline" size="sm" className="rounded-lg">
-                    Uygula
-                  </Button>
-                </form>
-              </div>
-
-              <div className="mt-4 space-y-4">
-                <CashSummaryBlock section={reports.selected} />
-                <AppointmentSummaryBlock
-                  title="Randevu özeti"
-                  label={reports.selected.range.label}
-                  summary={reports.selected.appointmentSummary}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <AppointmentList
-          title="Seçilen aralıktaki randevular"
-          description={`${reports.selected.range.label} için ${reports.selected.appointments.length} kayıt bulundu.`}
-          appointments={reports.selected.appointments}
-        />
-      </div>
-    );
-  }
-
-  const reports = await getArtistReportsSnapshot();
+  await requireOpsSessionArea("staff");
+  const selectedRange = resolveSelectedAdminRange(params);
+  const reports = await getAdminReportsSnapshot(params);
 
   return (
     <div className="ops-page-shell space-y-4">
@@ -339,7 +231,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
             <div className="space-y-1">
               <CardTitle className="text-base sm:text-lg">Raporlar</CardTitle>
               <CardDescription>
-                Bugün ve bu hafta özetiyle tüm randevuları buradan okuyabilirsiniz.
+                Günlük, haftalık ve seçili aralık özeti staff için burada toplanır.
               </CardDescription>
             </div>
 
@@ -352,37 +244,81 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
           </div>
         </CardHeader>
 
-        <CardContent className="grid gap-3 pt-4 lg:grid-cols-2">
-          <div className="rounded-2xl border border-border px-4 py-4">
-            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
-              <CalendarRange className="size-4" aria-hidden />
-              {reports.today.range.title}
+        <CardContent className="space-y-3 pt-4">
+          <div className="grid gap-3 lg:grid-cols-2">
+            <div className="rounded-2xl border border-border px-4 py-4">
+              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
+                <CalendarRange className="size-4" aria-hidden />
+                {reports.today.range.title}
+              </div>
+              <div className="space-y-4">
+                <CashSummaryBlock section={reports.today} />
+                <AppointmentSummaryBlock
+                  title="Randevu özeti"
+                  label={reports.today.range.label}
+                  summary={reports.today.appointmentSummary}
+                />
+              </div>
             </div>
-            <AppointmentSummaryBlock
-              title="Randevu özeti"
-              label={reports.today.range.label}
-              summary={reports.today.appointmentSummary}
-            />
+
+            <div className="rounded-2xl border border-border px-4 py-4">
+              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
+                <CalendarRange className="size-4" aria-hidden />
+                {reports.week.range.title}
+              </div>
+              <div className="space-y-4">
+                <CashSummaryBlock section={reports.week} />
+                <AppointmentSummaryBlock
+                  title="Randevu özeti"
+                  label={reports.week.range.label}
+                  summary={reports.week.appointmentSummary}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="rounded-2xl border border-border px-4 py-4">
-            <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
-              <CalendarRange className="size-4" aria-hidden />
-              {reports.week.range.title}
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-foreground">Genel rapor</p>
+                <p className="text-xs text-muted-foreground">{reports.selected.range.label}</p>
+              </div>
+
+              <form action="/ops/staff/raporlar" className="grid w-full gap-2 sm:w-auto sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
+                <Input
+                  type="date"
+                  name="from"
+                  defaultValue={selectedRange.from}
+                  aria-label="Başlangıç tarihi"
+                />
+                <Input
+                  type="date"
+                  name="to"
+                  defaultValue={selectedRange.to}
+                  aria-label="Bitiş tarihi"
+                />
+                <Button type="submit" variant="outline" size="sm" className="rounded-lg">
+                  Uygula
+                </Button>
+              </form>
             </div>
-            <AppointmentSummaryBlock
-              title="Randevu özeti"
-              label={reports.week.range.label}
-              summary={reports.week.appointmentSummary}
-            />
+
+            <div className="mt-4 space-y-4">
+              <CashSummaryBlock section={reports.selected} />
+              <AppointmentSummaryBlock
+                title="Randevu özeti"
+                label={reports.selected.range.label}
+                summary={reports.selected.appointmentSummary}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
 
       <AppointmentList
-        title="Tüm randevular"
-        description={`${reports.appointments.length} kayıt read-only listede gösterilir.`}
-        appointments={reports.appointments}
+        title="Seçilen aralıktaki randevular"
+        description={`${reports.selected.range.label} için ${reports.selected.appointments.length} kayıt bulundu.`}
+        appointments={reports.selected.appointments}
       />
     </div>
   );

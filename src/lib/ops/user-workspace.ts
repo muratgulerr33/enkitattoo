@@ -5,7 +5,9 @@ import {
   userProfiles,
   users,
 } from "@/db/schema";
+import { assertPhoneIsAvailable } from "./auth/users";
 import { writeAuditLog } from "./audit";
+import { normalizePhoneForMatching } from "./phone";
 
 export const OPS_TATTOO_PIERCING_CONSENT_DOCUMENT_TYPE = "tattoo_piercing_consent";
 export const OPS_TATTOO_PIERCING_CONSENT_VERSION = "2026-03-combined-v1";
@@ -95,17 +97,17 @@ export function getUserWorkspaceNextStep(
   if (!overview.isProfileComplete) {
     return {
       key: "profile",
-      title: "Profilini tamamla",
+      title: "Ayarlarını tamamla",
       description: "Ad soyad ve telefon bilgisi randevu için gerekir.",
       href: "/ops/user/profil",
-      actionLabel: "Profili tamamla",
+      actionLabel: "Ayarlarını tamamla",
     };
   }
 
   return {
     key: "appointments",
     title: "Yeni randevu oluştur",
-    description: "Profilin hazır. Tarih ve saat seçerek talep açabilirsin.",
+    description: "Ayarların hazır. Tarih ve saat seçerek talep açabilirsin.",
     href: "/ops/user/randevular",
     actionLabel: "Randevu aç",
   };
@@ -171,6 +173,12 @@ export async function updateUserWorkspaceProfile(
       .limit(1);
 
     const current = currentRows[0];
+    const currentNormalizedPhone = normalizePhoneForMatching(current?.phone ?? "");
+    const nextNormalizedPhone = normalizePhoneForMatching(input.phone);
+
+    if (currentNormalizedPhone !== nextNormalizedPhone) {
+      await assertPhoneIsAvailable(input.phone, { excludeUserId: userId }, tx);
+    }
 
     await tx
       .update(users)

@@ -6,12 +6,15 @@ import { createOpsSession, isOpsAuthConfigured } from "@/lib/ops/auth/session";
 import { hashPassword, verifyPassword } from "@/lib/ops/auth/password";
 import { getOpsHomePath } from "@/lib/ops/auth/roles";
 import {
+  findOpsUserByIdentifier,
   canUseOpsAuthDatabase,
   findOpsUserByEmail,
   normalizeEmail,
 } from "@/lib/ops/auth/users";
 import { writeAuditLogBestEffort } from "@/lib/ops/audit";
 import { createCustomerRecord } from "@/lib/ops/customers";
+import { isPhoneValid } from "@/lib/ops/phone";
+import { emptyToNull } from "@/lib/ops/settings";
 
 export type LoginActionState = {
   error: string | null;
@@ -20,28 +23,6 @@ export type LoginActionState = {
 export type CustomerRegisterActionState = {
   error: string | null;
 };
-
-function emptyToNull(value: FormDataEntryValue | null, maxLength: number): string | null {
-  if (typeof value !== "string") {
-    return null;
-  }
-
-  const normalized = value.trim();
-
-  if (!normalized) {
-    return null;
-  }
-
-  if (normalized.length > maxLength) {
-    throw new Error("Girdiler beklenenden uzun. Lütfen kısaltın.");
-  }
-
-  return normalized;
-}
-
-function isPhoneValid(phone: string): boolean {
-  return /^[0-9+\s()\-]{7,32}$/.test(phone);
-}
 
 function isEmailValid(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -57,29 +38,37 @@ export async function loginAction(
     };
   }
 
-  const email = formData.get("email");
+  const identifier = formData.get("identifier");
   const password = formData.get("password");
 
-  if (typeof email !== "string" || typeof password !== "string") {
+  if (typeof identifier !== "string" || typeof password !== "string") {
     return {
-      error: "E-posta ve şifre gerekli.",
+      error: "Telefon veya e-posta ve şifre gerekli.",
     };
   }
 
-  const trimmedEmail = email.trim();
+  const trimmedIdentifier = identifier.trim();
   const trimmedPassword = password.trim();
 
-  if (!trimmedEmail || !trimmedPassword) {
+  if (!trimmedIdentifier || !trimmedPassword) {
     return {
-      error: "E-posta ve şifre gerekli.",
+      error: "Telefon veya e-posta ve şifre gerekli.",
     };
   }
 
-  const user = await findOpsUserByEmail(trimmedEmail);
+  const lookup = await findOpsUserByIdentifier(trimmedIdentifier);
+
+  if (lookup.status === "ambiguous_phone") {
+    return {
+      error: "Bu telefon birden fazla hesapta kayıtlı. E-posta ile giriş yapın.",
+    };
+  }
+
+  const user = lookup.status === "found" ? lookup.user : null;
 
   if (!user || !user.isActive || !user.passwordHash) {
     return {
-      error: "E-posta veya şifre hatalı.",
+      error: "Telefon, e-posta veya şifre hatalı.",
     };
   }
 
@@ -87,7 +76,7 @@ export async function loginAction(
 
   if (!passwordValid) {
     return {
-      error: "E-posta veya şifre hatalı.",
+      error: "Telefon, e-posta veya şifre hatalı.",
     };
   }
 

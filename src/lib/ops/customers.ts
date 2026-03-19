@@ -28,6 +28,7 @@ import {
   getUserWorkspaceOverview,
   type UserWorkspaceOverview,
 } from "./user-workspace";
+import { assertPhoneIsAvailable } from "./auth/users";
 
 export type CustomerUpcomingAppointment = {
   id: number;
@@ -312,6 +313,8 @@ export async function createCustomerRecord(
   const now = new Date();
 
   const createdCustomer = await db.transaction(async (tx) => {
+    await assertPhoneIsAvailable(input.phone, undefined, tx);
+
     const insertedUsers = await tx
       .insert(users)
       .values({

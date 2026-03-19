@@ -10,11 +10,11 @@ export const STAFF_NAV_ITEMS: OpsNavItem[] = [
   { href: "/ops/staff/randevular", label: "İşlemler", shortLabel: "İşlemler" },
   { href: "/ops/staff/musteriler", label: "Müşteriler", shortLabel: "Müşteriler" },
   { href: "/ops/staff/kasa", label: "Kasa", shortLabel: "Kasa" },
-  { href: "/ops/staff/profil", label: "Profil", shortLabel: "Profil" },
+  { href: "/ops/staff/profil", label: "Ayarlar", shortLabel: "Ayarlar" },
 ];
 
 export const USER_NAV_ITEMS: OpsNavItem[] = [
   { href: "/ops/user/onaylar", label: "Onaylar", shortLabel: "Onaylar" },
   { href: "/ops/user/randevular", label: "Randevular", shortLabel: "Randevular" },
-  { href: "/ops/user/profil", label: "Profil", shortLabel: "Profil" },
+  { href: "/ops/user/profil", label: "Ayarlar", shortLabel: "Ayarlar" },
 ];

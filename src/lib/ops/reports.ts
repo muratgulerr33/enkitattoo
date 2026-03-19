@@ -1,8 +1,8 @@
 import type { UserRole } from "@/db/schema";
+import { hasStaffRole } from "@/lib/ops/auth/roles";
 import {
   formatAppointmentDateLong,
   getTodayDateValue,
-  listAllAppointments,
   listAppointmentsForDateRange,
   summarizeAppointments,
   type AppointmentRecord,
@@ -50,12 +50,6 @@ export type AdminReportsSnapshot = {
   today: AdminReportSection;
   week: AdminReportSection;
   selected: AdminReportSection;
-};
-
-export type ArtistReportsSnapshot = {
-  today: ArtistReportSection;
-  week: ArtistReportSection;
-  appointments: ReportsAppointmentListItem[];
 };
 
 function padNumber(value: number): string {
@@ -134,7 +128,7 @@ function getWeekRange(): ReportsRange {
 }
 
 export function canViewAdminReports(roles: UserRole[]): boolean {
-  return roles.includes("admin");
+  return hasStaffRole(roles);
 }
 
 export function resolveSelectedAdminRange(searchParams: {
@@ -230,27 +224,5 @@ export async function getAdminReportsSnapshot(searchParams: {
     today,
     week,
     selected,
-  };
-}
-
-export async function getArtistReportsSnapshot(): Promise<ArtistReportsSnapshot> {
-  const todayRange = getTodayRange();
-  const weekRange = getWeekRange();
-  const [todayAppointments, weekAppointments, appointments] = await Promise.all([
-    listAppointmentsForDateRange(todayRange.from, todayRange.to),
-    listAppointmentsForDateRange(weekRange.from, weekRange.to),
-    listAllAppointments(),
-  ]);
-
-  return {
-    today: {
-      range: todayRange,
-      appointmentSummary: summarizeAppointments(todayAppointments),
-    },
-    week: {
-      range: weekRange,
-      appointmentSummary: summarizeAppointments(weekAppointments),
-    },
-    appointments: toAppointmentListItems(appointments),
   };
 }

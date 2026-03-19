@@ -21,14 +21,14 @@ export function OpsLoginForm({ disabled = false }: OpsLoginFormProps) {
   return (
     <form action={formAction} className="space-y-3">
       <div className="space-y-2">
-        <Label htmlFor="email">E-posta</Label>
+        <Label htmlFor="identifier">Telefon veya e-posta</Label>
         <Input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          placeholder="ornek@enki.com"
-          inputMode="email"
+          id="identifier"
+          name="identifier"
+          type="text"
+          autoComplete="username"
+          placeholder="05xx xxx xx xx veya ornek@enki.com"
+          inputMode="text"
           disabled={disabled || pending}
           required
         />

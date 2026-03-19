@@ -13,10 +13,10 @@ import {
   type UserRole,
 } from "@/db/schema";
 import { writeAuditLog } from "./audit";
+import { hasStaffRole } from "./auth/roles";
 import { formatOpsMoneyDisplay } from "./money";
 
-export const CASHBOOK_DATE_LOCK_MESSAGE =
-  "Artist yalnız bugün için kasa kaydı açabilir.";
+export const CASHBOOK_DATE_LOCK_MESSAGE = "Bu tarih için kasa kaydı açılamadı.";
 export const SYSTEM_CASH_ENTRY_UPDATE_MESSAGE = "Sistem kaydı düzenlenemez.";
 export const SYSTEM_CASH_ENTRY_DELETE_MESSAGE = "Sistem kaydı kaldırılamaz.";
 
@@ -155,12 +155,8 @@ function assertCashDateValue(value: string): string {
   return value;
 }
 
-export function isAdminCashUser(roles: UserRole[]): boolean {
-  return roles.includes("admin");
-}
-
 export function canManageCashHistory(roles: UserRole[]): boolean {
-  return isAdminCashUser(roles);
+  return hasStaffRole(roles);
 }
 
 export function resolveCashbookDate(roles: UserRole[], requestedDate?: string | null): string {

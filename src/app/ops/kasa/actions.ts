@@ -124,7 +124,7 @@ export async function updateCashEntryAction(
 
     if (!canManageCashHistory(sessionUser.roles)) {
       return {
-        error: "Bu işlem yalnız yöneticiye açık.",
+        error: "Bu işlem için staff hesabı gerekli.",
         success: null,
       };
     }
@@ -166,7 +166,7 @@ export async function deleteCashEntryAction(
 
     if (!canManageCashHistory(sessionUser.roles)) {
       return {
-        error: "Bu işlem yalnız yöneticiye açık.",
+        error: "Bu işlem için staff hesabı gerekli.",
         success: null,
       };
     }

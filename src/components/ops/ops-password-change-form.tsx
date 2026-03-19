@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { LoaderCircle } from "lucide-react";
-import { updateOwnProfileAction } from "@/app/ops/settings/actions";
+import { changeOwnPasswordAction } from "@/app/ops/settings/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,65 +13,51 @@ const INITIAL_STATE: OpsSettingsActionState = {
   success: null,
 };
 
-type OpsProfileFormProps = {
-  email: string | null;
-  fullName: string | null;
-  displayName: string | null;
-  phone: string | null;
-};
-
-export function OpsProfileForm({
-  email,
-  fullName,
-  displayName,
-  phone,
-}: OpsProfileFormProps) {
-  const [state, formAction, pending] = useActionState(updateOwnProfileAction, INITIAL_STATE);
+export function OpsPasswordChangeForm() {
+  const [state, formAction, pending] = useActionState(
+    changeOwnPasswordAction,
+    INITIAL_STATE
+  );
 
   return (
     <form action={formAction} className="space-y-3">
       <div className="grid gap-2.5 sm:grid-cols-2">
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="email">E-posta</Label>
-          <Input id="email" value={email ?? ""} disabled readOnly />
-        </div>
-
-        <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="fullName">Ad soyad</Label>
+          <Label htmlFor="currentPassword">Eski şifre</Label>
           <Input
-            id="fullName"
-            name="fullName"
-            autoComplete="name"
-            placeholder="Ad soyad"
-            defaultValue={fullName ?? ""}
+            id="currentPassword"
+            name="currentPassword"
+            type="password"
+            autoComplete="current-password"
+            placeholder="Mevcut şifre"
             disabled={pending}
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="phone">Telefon</Label>
+          <Label htmlFor="nextPassword">Yeni şifre</Label>
           <Input
-            id="phone"
-            name="phone"
-            type="tel"
-            autoComplete="tel"
-            inputMode="tel"
-            placeholder="05xx xxx xx xx"
-            defaultValue={phone ?? ""}
+            id="nextPassword"
+            name="nextPassword"
+            type="password"
+            autoComplete="new-password"
+            placeholder="En az 8 karakter"
             disabled={pending}
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="displayName">Görünen ad</Label>
+          <Label htmlFor="nextPasswordRepeat">Yeni şifre tekrar</Label>
           <Input
-            id="displayName"
-            name="displayName"
-            placeholder="Kısa ad"
-            defaultValue={displayName ?? ""}
+            id="nextPasswordRepeat"
+            name="nextPasswordRepeat"
+            type="password"
+            autoComplete="new-password"
+            placeholder="Yeni şifreyi tekrar yazın"
             disabled={pending}
+            required
           />
         </div>
       </div>
@@ -92,10 +78,10 @@ export function OpsProfileForm({
         {pending ? (
           <>
             <LoaderCircle className="size-4 animate-spin" aria-hidden />
-            Kaydediliyor
+            Değiştiriliyor
           </>
         ) : (
-          "Bilgileri kaydet"
+          "Şifreyi değiştir"
         )}
       </Button>
     </form>

@@ -99,7 +99,6 @@ export default async function OpsUserAppointmentsPage() {
   ]);
   const isReadyForAppointments = isUserReadyForAppointments(overview);
   const hasUpcomingAppointments = appointmentLists.upcoming.length > 0;
-  const needsProfile = !overview.isProfileComplete;
   const showPrerequisiteCard = !hasUpcomingAppointments && !isReadyForAppointments;
   const showCreateCard = !hasUpcomingAppointments && isReadyForAppointments;
 
@@ -112,14 +111,14 @@ export default async function OpsUserAppointmentsPage() {
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
                 Randevu alanı
               </p>
-              <p className="text-lg font-semibold text-foreground">Profil bilgilerin eksik</p>
+              <p className="text-lg font-semibold text-foreground">Ayarlarında eksik bilgi var</p>
               <p className="text-sm text-muted-foreground">
                 Ad soyad ve telefon bilgini kaydetmeden randevu talebi açılamaz.
               </p>
             </div>
 
             <Button asChild size="cta" className="w-full sm:w-auto">
-              <Link href="/ops/user/profil">Profili düzenle</Link>
+              <Link href="/ops/user/profil">Ayarları düzenle</Link>
             </Button>
           </CardContent>
         </Card>

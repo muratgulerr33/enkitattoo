@@ -1,3 +1,4 @@
+import { OpsPasswordChangeForm } from "@/components/ops/ops-password-change-form";
 import { OpsProfileForm } from "@/components/ops/ops-profile-form";
 import {
   Card,
@@ -14,21 +15,33 @@ export default async function OpsUserProfilePage() {
   const overview = await getUserWorkspaceOverview(sessionUser.id);
 
   return (
-    <div className="ops-page-shell">
+    <div className="ops-page-shell space-y-4">
       <Card className="overflow-hidden">
-        <CardHeader className="gap-1.5 px-4 pt-4 pb-2.5 sm:px-5 sm:pt-5">
+        <CardHeader className="gap-2 border-b pb-4">
           <div className="space-y-1">
-            <CardTitle>Profil bilgileri</CardTitle>
-            <CardDescription>Bilgilerinizi buradan güncelleyebilirsiniz.</CardDescription>
+            <CardTitle>Ayarlar</CardTitle>
+            <CardDescription>Hesap bilgilerinizi buradan güncelleyebilirsiniz.</CardDescription>
           </div>
         </CardHeader>
-        <CardContent className="px-4 pb-4 sm:px-5 sm:pb-5">
+        <CardContent className="pt-4">
           <OpsProfileForm
             email={overview.profile.email}
             fullName={overview.profile.fullName}
             displayName={overview.profile.displayName}
             phone={overview.profile.phone}
           />
+        </CardContent>
+      </Card>
+
+      <Card className="overflow-hidden">
+        <CardHeader className="gap-2 border-b pb-4">
+          <div className="space-y-1">
+            <CardTitle>Şifre değiştir</CardTitle>
+            <CardDescription>Eski şifrenizle yeni şifrenizi buradan tanımlayın.</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <OpsPasswordChangeForm />
         </CardContent>
       </Card>
     </div>

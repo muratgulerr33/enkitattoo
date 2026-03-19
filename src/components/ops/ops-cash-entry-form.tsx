@@ -234,7 +234,7 @@ export function OpsCashEntryForm({ defaultDate, canChooseDate }: OpsCashEntryFor
       ) : (
         <div className="border-t border-border pt-3">
           <p className="text-sm text-muted-foreground">
-            Artist yalnız bugün kayıt ekler.
+            Staff kasa kaydı seçili güne eklenir.
           </p>
         </div>
       )}

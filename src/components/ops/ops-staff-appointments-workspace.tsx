@@ -472,19 +472,13 @@ function AppointmentDetailSheet({
     INITIAL_ACTION_STATE
   );
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const effectiveDeleteDialogOpen = open && deleteDialogOpen && !deleteState.success;
 
   useEffect(() => {
     if (deleteState.success) {
-      setDeleteDialogOpen(false);
       onDeleted();
     }
   }, [deleteState.success, onDeleted]);
-
-  useEffect(() => {
-    if (!open) {
-      setDeleteDialogOpen(false);
-    }
-  }, [open]);
 
   if (!session) {
     return null;
@@ -619,7 +613,7 @@ function AppointmentDetailSheet({
       </SheetContent>
 
       {canDelete ? (
-        <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <Dialog open={effectiveDeleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>İşlemi sil</DialogTitle>

@@ -38,12 +38,12 @@ export function OpsApprovalReader({
   const router = useRouter();
   const [state, formAction, pending] = useActionState(saveConsentApprovalAction, INITIAL_STATE);
   const endMarkerRef = useRef<HTMLDivElement>(null);
-  const [hasReachedEnd, setHasReachedEnd] = useState(approvalRecorded || !approvalEnabled);
+  const [hasScrolledToEnd, setHasScrolledToEnd] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const hasReachedEnd = approvalRecorded || !approvalEnabled || hasScrolledToEnd;
 
   useEffect(() => {
     if (approvalRecorded || !approvalEnabled) {
-      setHasReachedEnd(true);
       return;
     }
 
@@ -58,7 +58,7 @@ export function OpsApprovalReader({
         const [entry] = entries;
 
         if (entry?.isIntersecting && entry.intersectionRatio >= 0.95) {
-          setHasReachedEnd(true);
+          setHasScrolledToEnd(true);
         }
       },
       {

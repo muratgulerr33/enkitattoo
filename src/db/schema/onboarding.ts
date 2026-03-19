@@ -9,7 +9,6 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
-import { timestampColumns } from "./shared";
 import { users } from "./users";
 
 export const consentAcceptances = pgTable(

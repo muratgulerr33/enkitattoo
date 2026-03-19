@@ -35,6 +35,11 @@ export default async function OpsLoginPage({ searchParams }: PageProps) {
             <p className="text-lg font-semibold tracking-tight text-foreground">
               {showRegister ? "Hesap oluştur" : "Giriş yap"}
             </p>
+            {!showRegister ? (
+              <p className="text-sm text-muted-foreground">
+                Telefon veya e-posta ile tek ekrandan giriş yapın.
+              </p>
+            ) : null}
           </header>
 
           <div className="grid grid-cols-2 gap-1 rounded-2xl border border-border bg-surface-1 p-1">
