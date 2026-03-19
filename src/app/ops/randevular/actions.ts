@@ -193,11 +193,7 @@ function toAmountCents(
   message: string,
   options?: { allowZero?: boolean }
 ): number {
-  const normalized = toRequiredString(value, message).replace(",", ".");
-
-  if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) {
-    throw new Error(message);
-  }
+  const normalized = normalizeAmountInput(toRequiredString(value, message), message);
 
   const parsed = Number(normalized);
 
@@ -210,6 +206,28 @@ function toAmountCents(
   }
 
   return Math.round(parsed * 100);
+}
+
+function normalizeAmountInput(value: string, message: string): string {
+  const compact = value.trim().replace(/\s+/g, "").replace(",", ".");
+
+  if (!compact) {
+    throw new Error(message);
+  }
+
+  if (!/^(?:\d+(?:\.\d{0,2})?|\.\d{1,2})$/.test(compact)) {
+    throw new Error(message);
+  }
+
+  if (compact.startsWith(".")) {
+    return `0${compact}`;
+  }
+
+  if (compact.endsWith(".")) {
+    return compact.slice(0, -1);
+  }
+
+  return compact;
 }
 
 function toOptionalAmountCents(
@@ -230,11 +248,7 @@ function toOptionalAmountCents(
     return 0;
   }
 
-  const normalized = trimmed.replace(",", ".");
-
-  if (!/^\d+(?:\.\d{1,2})?$/.test(normalized)) {
-    throw new Error(message);
-  }
+  const normalized = normalizeAmountInput(trimmed, message);
 
   const parsed = Number(normalized);
 

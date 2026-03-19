@@ -368,7 +368,7 @@ function AppointmentFormSheet({
   const defaultTotalAmountCents =
     formState.mode === "edit" ? formState.session.serviceSummary?.totalAmountCents : null;
   const defaultCollectedAmountCents =
-    formState.mode === "edit" ? formState.session.serviceSummary?.collectedAmountCents : 0;
+    formState.mode === "edit" ? formState.session.serviceSummary?.collectedAmountCents : null;
   const appointmentId =
     formState.mode === "edit" && formState.session.source === "appointment"
       ? formState.session.appointmentId ?? formState.session.id

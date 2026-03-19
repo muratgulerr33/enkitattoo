@@ -62,12 +62,25 @@ type StaffAppointmentCreateFormProps = {
 type CustomerMode = "existing" | "new";
 type SessionSource = "appointment" | "walk_in";
 
-function toAmountInputValue(cents?: number | null, fallback = ""): string {
+function toAmountInputValue(
+  cents?: number | null,
+  options?: { fallback?: string; emptyWhenZero?: boolean }
+): string {
+  const fallback = options?.fallback ?? "";
+
   if (typeof cents !== "number" || Number.isNaN(cents)) {
     return fallback;
   }
 
-  return (cents / 100).toFixed(2);
+  if (options?.emptyWhenZero && cents === 0) {
+    return "";
+  }
+
+  return (cents / 100)
+    .toFixed(2)
+    .replace(/\.00$/, "")
+    .replace(/(\.\d)0$/, "$1")
+    .replace(".", ",");
 }
 
 export function OpsStaffAppointmentCreateForm({
@@ -109,6 +122,14 @@ export function OpsStaffAppointmentCreateForm({
     (defaultCustomerUserId ?? customerOptions[0]?.id)?.toString() ?? ""
   );
   const [createCustomerPending, startCreateCustomerTransition] = useTransition();
+  const [totalAmountInput, setTotalAmountInput] = useState(() =>
+    toAmountInputValue(defaultTotalAmountCents)
+  );
+  const [collectedAmountInput, setCollectedAmountInput] = useState(() =>
+    toAmountInputValue(defaultCollectedAmountCents, {
+      emptyWhenZero: mode === "create",
+    })
+  );
   const isDisabled = pending || createCustomerPending;
   const selectedCustomer =
     customerOptions.find((option) => option.id.toString() === selectedCustomerUserId) ?? null;
@@ -117,6 +138,18 @@ export function OpsStaffAppointmentCreateForm({
   useEffect(() => {
     setSessionSource(source);
   }, [source]);
+
+  useEffect(() => {
+    setTotalAmountInput(toAmountInputValue(defaultTotalAmountCents));
+  }, [defaultTotalAmountCents]);
+
+  useEffect(() => {
+    setCollectedAmountInput(
+      toAmountInputValue(defaultCollectedAmountCents, {
+        emptyWhenZero: mode === "create",
+      })
+    );
+  }, [defaultCollectedAmountCents, mode]);
 
   useEffect(() => {
     if (state.success) {
@@ -288,10 +321,10 @@ export function OpsStaffAppointmentCreateForm({
               name="totalAmount"
               type="text"
               inputMode="decimal"
-              defaultValue={toAmountInputValue(defaultTotalAmountCents)}
-              placeholder="9000"
+              value={totalAmountInput}
               className="h-11 rounded-xl bg-background [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               disabled={isDisabled}
+              onChange={(event) => setTotalAmountInput(event.target.value)}
             />
           </div>
 
@@ -302,14 +335,11 @@ export function OpsStaffAppointmentCreateForm({
               name="collectedAmount"
               type="text"
               inputMode="decimal"
-              defaultValue={toAmountInputValue(defaultCollectedAmountCents)}
-              placeholder="0"
+              value={collectedAmountInput}
               className="h-11 rounded-xl bg-background [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               disabled={isDisabled}
+              onChange={(event) => setCollectedAmountInput(event.target.value)}
             />
-            <p className="text-xs text-muted-foreground">
-              İsterseniz kapora veya ilk tahsilatı yazın.
-            </p>
           </div>
         </div>
 
