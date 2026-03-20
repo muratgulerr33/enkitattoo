@@ -28,6 +28,7 @@ const iconClassName = "size-4 shrink-0";
 type OpsHeaderAction = {
   href: string;
   label: string;
+  className?: string;
 };
 
 function isActivePath(pathname: string, href: string): boolean {
@@ -81,6 +82,7 @@ function getHeaderAction(pathname: string): OpsHeaderAction | null {
     return {
       href: "/ops/staff/kasa#manuel-giris",
       label: "Manuel giriş",
+      className: "md:hidden",
     };
   }
 
@@ -172,7 +174,12 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
           </div>
 
           {headerAction ? (
-            <Button asChild variant="outline" size="sm" className="shrink-0 rounded-lg">
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className={cn("shrink-0 rounded-lg", headerAction.className)}
+            >
               <Link href={headerAction.href}>{headerAction.label}</Link>
             </Button>
           ) : null}

@@ -176,148 +176,10 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
 
   return (
     <div className="ops-page-shell">
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.18fr)_minmax(320px,0.82fr)] xl:items-start xl:gap-6">
-        <div className="order-1 min-w-0 space-y-4 xl:space-y-5">
-          <Card className="overflow-hidden">
-            <CardHeader className="gap-3 pb-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                <div className="min-w-0 space-y-1">
-                  <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-                    Kasa
-                  </p>
-                  <CardTitle className="text-sm">Defter kontrolü</CardTitle>
-                  <CardDescription>
-                    {isSelectedDateToday
-                      ? "Bugünün hareketlerini gözden geçirin."
-                      : "Seçili günün defterini gözden geçirin."}
-                  </CardDescription>
-                </div>
-                <div className="flex w-full min-w-0 flex-col items-stretch gap-2 sm:w-auto sm:min-w-[16rem] sm:items-end">
-                  {canManageHistoryEntries ? (
-                    <form
-                      action="/ops/staff/kasa"
-                      className="grid min-w-0 gap-2 sm:w-full sm:grid-cols-[minmax(0,1fr)_auto]"
-                    >
-                      <input
-                        type="date"
-                        name="date"
-                        defaultValue={cashbook.selectedDate}
-                        className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full min-w-0 rounded-lg border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px] sm:min-w-[11rem]"
-                        />
-                      <Button type="submit" variant="outline" size="sm" className="w-full rounded-lg sm:w-auto">
-                        Defteri göster
-                      </Button>
-                    </form>
-                  ) : null}
-                </div>
-              </div>
-            </CardHeader>
-
-            <CardContent className="space-y-3 pt-0">
-              <div className={cn("grid gap-2", "sm:grid-cols-1")}>
-                <div className="rounded-2xl border border-border/80 bg-surface-1/55 p-3">
-                  <SummaryRows label="Bugün" dateLabel={todayDateLabel} summary={cashbook.todaySummary} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="overflow-hidden">
-            <CardHeader className="gap-1.5 border-b pb-4">
-              <CardTitle className="text-base">Defter</CardTitle>
-              <CardDescription>
-                {cashbook.entries.length
-                  ? `${selectedDateLabel} için ${cashbook.entries.length} hareket.`
-                  : `${selectedDateLabel} için hareket yok.`}
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="px-0 pt-1">
-              {cashbook.entries.length ? (
-                <div className="divide-y divide-border">
-                  {cashbook.entries.map((entry) => {
-                    const entryTypeLabel = CASH_ENTRY_TYPE_LABELS[entry.entryType];
-                    const entryReasonLabel = CASH_ENTRY_REASON_LABELS[entry.entryReason];
-                    const isSystemEntry = isSystemGeneratedCashEntry(entry);
-                    const entryPrimaryLabel = getEntryPrimaryLabel(entry);
-                    const entrySupportLabel = getEntrySupportLabel(entry);
-
-                    return (
-                      <div key={entry.id} className="px-4 py-3 xl:px-5">
-                        <div className="flex items-start justify-between gap-3 sm:gap-4">
-                          <div className="min-w-0 flex-1 space-y-1.5">
-                            <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-medium sm:text-[11px]">
-                              <span
-                                className={cn(
-                                  "uppercase tracking-[0.16em]",
-                                  getEntryTypeBadgeClassName(entry.entryType)
-                                )}
-                              >
-                                {entryTypeLabel}
-                              </span>
-                              <span className="text-muted-foreground">{entryReasonLabel}</span>
-                            </div>
-
-                            <p className="truncate text-sm font-medium text-foreground sm:text-[15px]">
-                              {entryPrimaryLabel}
-                            </p>
-
-                            <p className="truncate text-xs text-muted-foreground">
-                              {entrySupportLabel}
-                            </p>
-                          </div>
-
-                          <div className="shrink-0 text-right">
-                            <p
-                              className={cn(
-                                "text-lg font-semibold font-numbers sm:text-[1.4rem]",
-                                getAmountClassName(entry.entryType)
-                              )}
-                            >
-                              {entry.entryType === "income" ? "+" : "-"}
-                              {formatCashAmount(entry.amountCents)}
-                            </p>
-
-                            {canManageHistoryEntries && !isSystemEntry ? (
-                              <div className="mt-1.5 flex justify-end">
-                                <OpsCashEntryManageDialog
-                                  entryId={entry.id}
-                                  entryDate={entry.entryDate}
-                                  entryType={entry.entryType}
-                                  amountInput={formatCashAmountInput(entry.amountCents)}
-                                  note={entry.note}
-                                  createdByName={entry.createdByName}
-                                  createdAtLabel={getManageTimestampLabel(
-                                    selectedDateLabel,
-                                    isSelectedDateToday,
-                                    entry.createdAt
-                                  )}
-                                  updatedByName={entry.updatedByName}
-                                  updatedAtLabel={getManageTimestampLabel(
-                                    selectedDateLabel,
-                                    isSelectedDateToday,
-                                    entry.updatedAt
-                                  )}
-                                />
-                              </div>
-                            ) : null}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="px-4 py-5 text-sm text-muted-foreground xl:px-5">
-                  Aktif hareket yok.
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
+      <div className="space-y-4 xl:space-y-5">
         <Card
           id="manuel-giris"
-          className="order-3 scroll-mt-20 border-border/70 bg-surface-1/35 xl:order-2 xl:sticky xl:top-24 xl:scroll-mt-24"
+          className="scroll-mt-20 border-border/70 bg-surface-1/35 md:scroll-mt-24"
         >
           <CardHeader className="gap-1 border-b pb-4">
             <p className="text-xs text-muted-foreground">{selectedDateLabel}</p>
@@ -330,6 +192,143 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
               defaultDate={cashbook.selectedDate}
               canChooseDate={canManageHistoryEntries}
             />
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden">
+          <CardHeader className="gap-3 pb-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0 space-y-1">
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  Kasa
+                </p>
+                <CardTitle className="text-sm">Defter kontrolü</CardTitle>
+                <CardDescription>
+                  {isSelectedDateToday
+                    ? "Bugünün hareketlerini gözden geçirin."
+                    : "Seçili günün defterini gözden geçirin."}
+                </CardDescription>
+              </div>
+              <div className="flex w-full min-w-0 flex-col items-stretch gap-2 sm:w-auto sm:min-w-[16rem] sm:items-end">
+                {canManageHistoryEntries ? (
+                  <form
+                    action="/ops/staff/kasa"
+                    className="grid min-w-0 gap-2 sm:w-full sm:grid-cols-[minmax(0,1fr)_auto]"
+                  >
+                    <input
+                      type="date"
+                      name="date"
+                      defaultValue={cashbook.selectedDate}
+                      className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full min-w-0 rounded-lg border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px] sm:min-w-[11rem]"
+                    />
+                    <Button type="submit" variant="outline" size="sm" className="w-full rounded-lg sm:w-auto">
+                      Defteri göster
+                    </Button>
+                  </form>
+                ) : null}
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-3 pt-0">
+            <div className={cn("grid gap-2", "sm:grid-cols-1")}>
+              <div className="rounded-2xl border border-border/80 bg-surface-1/55 p-3">
+                <SummaryRows label="Bugün" dateLabel={todayDateLabel} summary={cashbook.todaySummary} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden">
+          <CardHeader className="gap-1.5 border-b pb-4">
+            <CardTitle className="text-base">Defter</CardTitle>
+            <CardDescription>
+              {cashbook.entries.length
+                ? `${selectedDateLabel} için ${cashbook.entries.length} hareket.`
+                : `${selectedDateLabel} için hareket yok.`}
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="px-0 pt-1">
+            {cashbook.entries.length ? (
+              <div className="divide-y divide-border">
+                {cashbook.entries.map((entry) => {
+                  const entryTypeLabel = CASH_ENTRY_TYPE_LABELS[entry.entryType];
+                  const entryReasonLabel = CASH_ENTRY_REASON_LABELS[entry.entryReason];
+                  const isSystemEntry = isSystemGeneratedCashEntry(entry);
+                  const entryPrimaryLabel = getEntryPrimaryLabel(entry);
+                  const entrySupportLabel = getEntrySupportLabel(entry);
+
+                  return (
+                    <div key={entry.id} className="px-4 py-3 xl:px-5">
+                      <div className="flex items-start justify-between gap-3 sm:gap-4">
+                        <div className="min-w-0 flex-1 space-y-1.5">
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-medium sm:text-[11px]">
+                            <span
+                              className={cn(
+                                "uppercase tracking-[0.16em]",
+                                getEntryTypeBadgeClassName(entry.entryType)
+                              )}
+                            >
+                              {entryTypeLabel}
+                            </span>
+                            <span className="text-muted-foreground">{entryReasonLabel}</span>
+                          </div>
+
+                          <p className="truncate text-sm font-medium text-foreground sm:text-[15px]">
+                            {entryPrimaryLabel}
+                          </p>
+
+                          <p className="truncate text-xs text-muted-foreground">
+                            {entrySupportLabel}
+                          </p>
+                        </div>
+
+                        <div className="shrink-0 text-right">
+                          <p
+                            className={cn(
+                              "text-lg font-semibold font-numbers sm:text-[1.4rem]",
+                              getAmountClassName(entry.entryType)
+                            )}
+                          >
+                            {entry.entryType === "income" ? "+" : "-"}
+                            {formatCashAmount(entry.amountCents)}
+                          </p>
+
+                          {canManageHistoryEntries && !isSystemEntry ? (
+                            <div className="mt-1.5 flex justify-end">
+                              <OpsCashEntryManageDialog
+                                entryId={entry.id}
+                                entryDate={entry.entryDate}
+                                entryType={entry.entryType}
+                                amountInput={formatCashAmountInput(entry.amountCents)}
+                                note={entry.note}
+                                createdByName={entry.createdByName}
+                                createdAtLabel={getManageTimestampLabel(
+                                  selectedDateLabel,
+                                  isSelectedDateToday,
+                                  entry.createdAt
+                                )}
+                                updatedByName={entry.updatedByName}
+                                updatedAtLabel={getManageTimestampLabel(
+                                  selectedDateLabel,
+                                  isSelectedDateToday,
+                                  entry.updatedAt
+                                )}
+                              />
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="px-4 py-5 text-sm text-muted-foreground xl:px-5">
+                Aktif hareket yok.
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
