@@ -50,107 +50,102 @@ function ContractCopy({ packet }: { packet: StaffDocumentPacket }) {
   const scheduledAt = `${formatSessionDate(packet.scheduledDate)} · ${packet.scheduledTime}`;
 
   return (
-    <article className="document-packet-copy border border-border/85 bg-card shadow-[0_20px_52px_rgba(15,23,42,0.07)]">
-      <div className="document-packet-sheet document-contract-sheet flex min-h-[272mm] flex-col px-6 py-6 text-foreground sm:px-8 sm:py-7">
-        <header className="space-y-4 border-b border-border/80 pb-4">
-          <div className="flex items-start justify-between gap-5 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+    <article className="document-packet-copy border border-border/85 bg-card shadow-[0_10px_26px_rgba(15,23,42,0.04)]">
+      <div className="document-packet-sheet document-contract-sheet flex min-h-[272mm] flex-col px-6 py-5 text-foreground sm:px-9 sm:py-6">
+        <header className="space-y-3.5 border-b border-border/80 pb-5">
+          <div className="flex items-end justify-between gap-6 text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground">
             <div className="space-y-1">
               <p>Sayı</p>
-              <p className="text-[15px] font-semibold tracking-[0.06em] text-foreground">
+              <p className="text-[12.5px] font-medium tracking-[0.03em] text-foreground sm:text-[13px]">
                 {packet.displayNo}
               </p>
             </div>
 
             <div className="space-y-1 text-right">
               <p>Kayıt tarihi</p>
-              <p className="text-[15px] font-semibold tracking-normal text-foreground">
+              <p className="text-[12.5px] font-medium tracking-normal text-foreground sm:text-[13px]">
                 {formatDate(packet.contractDate)}
               </p>
             </div>
           </div>
 
-          <div className="space-y-2.5 text-center">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              Operasyon sözleşme kaydı
-            </p>
-            <h1 className="mx-auto max-w-[26rem] text-[1.4rem] font-semibold tracking-[-0.025em] text-foreground sm:text-[1.6rem]">
-              Enki Tattoo Dövme ve Piercing Sözleşmesi
-            </h1>
-          </div>
+          <h1 className="mx-auto max-w-[29rem] text-center text-[1.42rem] font-semibold leading-[1.08] tracking-[-0.038em] text-foreground sm:text-[1.68rem]">
+            Enki Tattoo Dövme / Piercing Sözleşmesi
+          </h1>
         </header>
 
-        <section className="flex-1 py-5">
+        <section className="flex-1 pt-5 pb-7">
           <LegalMarkdown
             markdown={packet.legal.markdown}
-            className="document-contract-body space-y-3 text-[12px] leading-[1.48] text-foreground [&>h2]:hidden [&>h3]:hidden [&>ol]:space-y-1.5 [&>ol]:pl-5 [&>ol]:leading-[1.48] [&>p]:text-foreground [&>p]:leading-[1.48]"
+            className="document-contract-body mx-auto w-full max-w-[168mm] space-y-4 text-[12px] leading-[1.62] text-foreground [&>h2]:hidden [&>h3]:hidden [&>ol]:space-y-2.5 [&>ol]:pl-6 [&>ol]:leading-[1.62] [&>ol>li]:pl-1 [&>ol>li]:leading-[1.62] [&>p]:text-foreground [&>p]:leading-[1.62]"
           />
         </section>
 
-        <footer className="border-t border-border/80 pt-5">
+        <footer className="mt-1 border-t border-border/80 pt-7">
           <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
-            <section className="space-y-3.5 rounded-[1.25rem] border border-border/75 bg-surface-1/28 p-4">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            <section className="space-y-4 border border-border/80 bg-transparent px-4 pt-4 pb-5 sm:px-5">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                 Müşteri bilgisi
               </p>
 
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                   İsim Soyisim
                 </p>
-                <div className="border-b border-foreground/45 pb-1.5 text-[13px] font-medium text-foreground">
+                <div className="border-b border-foreground/40 pb-2.5 text-[13px] font-medium text-foreground">
                   {customerName}
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                   Telefon
                 </p>
-                <div className="border-b border-foreground/45 pb-1.5 text-[13px] font-medium text-foreground">
+                <div className="border-b border-foreground/40 pb-2.5 text-[13px] font-medium text-foreground">
                   {packet.customer.phone ?? "Kayıt yok"}
                 </div>
               </div>
 
-              <div className="space-y-1">
+              <div className="space-y-1.5 pt-1">
                 <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                   İmza
                 </p>
-                <div className="h-11 border-b border-foreground/45" />
+                <div className="mt-2 h-14 border-b border-foreground/40" />
               </div>
             </section>
 
-            <section className="space-y-3 rounded-[1.25rem] border border-border/75 bg-card p-4 text-[12px] leading-[1.45]">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+            <section className="space-y-3.5 border border-border/80 bg-transparent px-4 pt-4 pb-5 text-[12px] leading-[1.55] sm:px-5">
+              <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
                 İşlem bilgisi
               </p>
 
-              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 py-2.5">
                 <span className="text-muted-foreground">İşlem Tipi</span>
                 <span className="text-right font-medium text-foreground">
                   {getServiceTypeLabel(packet.serviceType)}
                 </span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 py-2.5">
                 <span className="text-muted-foreground">İşlem Tarihi ve Saati</span>
                 <span className="text-right font-semibold text-foreground">{scheduledAt}</span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 py-2.5">
                 <span className="text-muted-foreground">Artist</span>
                 <span className="text-right font-medium text-foreground">
                   {packet.artistName ?? UNASSIGNED_ARTIST_LABEL}
                 </span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 py-2.5">
                 <span className="text-muted-foreground">Toplam Tutar</span>
                 <span className="text-right font-semibold text-foreground">
                   {formatOpsMoneyDisplay(packet.totalAmountCents)}
                 </span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 py-2.5">
                 <span className="text-muted-foreground">Kapora</span>
                 <span className="text-right font-semibold text-foreground">
                   {formatOpsMoneyDisplay(packet.collectedAmountCents)}
