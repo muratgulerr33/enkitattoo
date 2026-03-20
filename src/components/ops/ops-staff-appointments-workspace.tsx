@@ -278,19 +278,31 @@ function AppointmentFab({
 function AppointmentServiceSummarySection({
   serviceSummary,
   emptyMessage,
+  compact = false,
 }: {
   serviceSummary: StaffServiceSummary | null;
   emptyMessage: string;
+  compact?: boolean;
 }) {
   return (
-    <section className="rounded-[1.55rem] border border-border bg-card p-3.5 sm:p-4">
+    <section
+      className={cn(
+        "rounded-[1.55rem] border border-border bg-card",
+        compact ? "p-3 sm:p-3.5" : "p-3.5 sm:p-4"
+      )}
+    >
       <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
         İşlem özeti
       </p>
 
       {serviceSummary ? (
-        <div className="mt-3 space-y-2.5">
-          <div className="rounded-2xl border border-border bg-surface-1/35 px-3.5 py-3">
+        <div className={cn("mt-3", compact ? "space-y-2" : "space-y-2.5")}>
+          <div
+            className={cn(
+              "rounded-2xl border border-border bg-surface-1/35",
+              compact ? "px-3 py-2.5" : "px-3.5 py-3"
+            )}
+          >
             <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
               İşlem tipi
             </p>
@@ -299,8 +311,13 @@ function AppointmentServiceSummarySection({
             </p>
           </div>
 
-          <div className="grid gap-2.5 sm:grid-cols-2">
-            <div className="rounded-2xl border border-border px-3.5 py-3">
+          <div className={cn("grid sm:grid-cols-2", compact ? "gap-2" : "gap-2.5")}>
+            <div
+              className={cn(
+                "rounded-2xl border border-border",
+                compact ? "px-3 py-2.5" : "px-3.5 py-3"
+              )}
+            >
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Toplam
               </p>
@@ -309,7 +326,12 @@ function AppointmentServiceSummarySection({
               </p>
             </div>
 
-            <div className="rounded-2xl border border-border px-3.5 py-3">
+            <div
+              className={cn(
+                "rounded-2xl border border-border",
+                compact ? "px-3 py-2.5" : "px-3.5 py-3"
+              )}
+            >
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Kapora
               </p>
@@ -320,7 +342,12 @@ function AppointmentServiceSummarySection({
           </div>
         </div>
       ) : (
-        <div className="mt-3 rounded-2xl border border-dashed border-border px-4 py-4 text-sm text-muted-foreground">
+        <div
+          className={cn(
+            "mt-3 rounded-2xl border border-dashed border-border text-sm text-muted-foreground",
+            compact ? "px-3.5 py-3 leading-5" : "px-4 py-4"
+          )}
+        >
           {emptyMessage}
         </div>
       )}
@@ -332,28 +359,47 @@ function AppointmentContextCard({
   customerName,
   scheduledDate,
   scheduledTime,
+  compact = false,
 }: {
   customerName: string;
   scheduledDate: string;
   scheduledTime: string;
+  compact?: boolean;
 }) {
   return (
-    <section className="rounded-[1.55rem] border border-border bg-surface-1/45 px-4 py-3.5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div className="space-y-1">
+    <section
+      className={cn(
+        "rounded-[1.55rem] border border-border bg-surface-1/45",
+        compact ? "px-3.5 py-3" : "px-4 py-3.5"
+      )}
+    >
+      <div className={cn("flex flex-wrap items-start justify-between", compact ? "gap-2.5" : "gap-3")}>
+        <div className={compact ? "space-y-0.5" : "space-y-1"}>
           <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
             Müşteri
           </p>
           <p className="text-base font-semibold text-foreground">{customerName}</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
-            <CalendarDays className="size-4" aria-hidden />
+        <div className={cn("flex flex-wrap items-center", compact ? "gap-1.5" : "gap-2")}>
+          <Badge
+            variant="outline"
+            className={cn(
+              "rounded-full font-medium",
+              compact ? "px-2.5 py-0.5 text-xs" : "px-3 py-1 text-sm"
+            )}
+          >
+            <CalendarDays className={compact ? "size-3.5" : "size-4"} aria-hidden />
             {formatAppointmentDateLong(scheduledDate)}
           </Badge>
-          <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
-            <Clock3 className="size-4" aria-hidden />
+          <Badge
+            variant="outline"
+            className={cn(
+              "rounded-full font-medium",
+              compact ? "px-2.5 py-0.5 text-xs" : "px-3 py-1 text-sm"
+            )}
+          >
+            <Clock3 className={compact ? "size-3.5" : "size-4"} aria-hidden />
             {scheduledTime}
           </Badge>
         </div>
@@ -428,13 +474,13 @@ function AppointmentFormSheet({
         className={cn(
           "mx-auto overflow-hidden rounded-t-[2.1rem] p-0",
           createMode
-            ? "max-h-[88vh] w-full max-w-2xl lg:inset-x-auto lg:right-6 lg:left-auto lg:top-20 lg:bottom-6 lg:max-h-none lg:h-[calc(100vh-7rem)] lg:w-[28rem] lg:max-w-[28rem] lg:rounded-[2rem] lg:border"
-            : "max-h-[90vh] w-full max-w-3xl lg:inset-x-auto lg:right-6 lg:left-auto lg:top-16 lg:bottom-6 lg:max-h-none lg:h-[calc(100vh-5.5rem)] lg:w-[36rem] lg:max-w-[36rem] lg:rounded-[2rem] lg:border"
+            ? "max-h-[90vh] w-full max-w-2xl md:max-h-[88vh] md:max-w-[34rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:right-5 lg:left-auto lg:top-18 lg:bottom-4 lg:max-h-none lg:h-[calc(100vh-5.5rem)] lg:w-[27rem] lg:max-w-[27rem] lg:rounded-[2rem] lg:border xl:w-[28rem] xl:max-w-[28rem]"
+            : "max-h-[92vh] w-full max-w-3xl md:max-h-[89vh] md:max-w-[42rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:right-5 lg:left-auto lg:top-14 lg:bottom-4 lg:max-h-none lg:h-[calc(100vh-4.5rem)] lg:w-[34rem] lg:max-w-[34rem] lg:rounded-[2rem] lg:border xl:w-[35rem] xl:max-w-[35rem]"
         )}
       >
-        <div className="flex h-full max-h-[92vh] flex-col bg-background">
+        <div className="flex h-full max-h-[92vh] flex-col bg-background md:max-h-[89vh] lg:max-h-none">
           <SheetHandle />
-          <SheetHeader className="border-b border-border px-5 py-3 text-left sm:px-6">
+          <SheetHeader className="border-b border-border px-4 py-2.5 text-left sm:px-5 sm:py-3">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <SheetTitle>
@@ -453,18 +499,20 @@ function AppointmentFormSheet({
             </div>
           </SheetHeader>
 
-          <div className="overflow-y-auto px-5 py-4 pb-5 sm:px-6">
+          <div className="overflow-y-auto px-4 py-3 pb-4 sm:px-5 sm:py-3.5 sm:pb-5">
             {formState.mode === "edit" ? (
-              <div className="mb-3 space-y-3">
+              <div className="mb-2.5 grid gap-2.5 sm:mb-3 md:grid-cols-2">
                 <AppointmentContextCard
                   customerName={formState.session.customerName}
                   scheduledDate={formState.session.scheduledDate}
                   scheduledTime={formState.session.scheduledTime}
+                  compact
                 />
 
                 <AppointmentServiceSummarySection
                   serviceSummary={formState.session.serviceSummary}
                   emptyMessage="Bağlı işlem özeti yok."
+                  compact
                 />
               </div>
             ) : null}
@@ -541,11 +589,11 @@ function AppointmentDetailSheet({
         side="bottom"
         showCloseButton={false}
         data-testid="appointments-detail-sheet"
-        className="mx-auto max-h-[76vh] w-full max-w-xl overflow-hidden rounded-t-[2rem] p-0 lg:inset-x-auto lg:left-1/2 lg:right-auto lg:top-1/2 lg:bottom-auto lg:max-h-[78vh] lg:w-[29rem] lg:max-w-[29rem] lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-[2rem] lg:border"
+        className="mx-auto max-h-[82vh] w-full max-w-xl overflow-hidden rounded-t-[2rem] p-0 md:max-h-[80vh] md:max-w-[34rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:left-1/2 lg:right-auto lg:top-1/2 lg:bottom-auto lg:max-h-[76vh] lg:w-[28rem] lg:max-w-[28rem] lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-[2rem] lg:border"
       >
-        <div className="flex h-full max-h-[76vh] flex-col bg-background lg:max-h-[78vh]">
+        <div className="flex h-full max-h-[82vh] flex-col bg-background md:max-h-[80vh] lg:max-h-[76vh]">
           <SheetHandle />
-          <SheetHeader className="border-b border-border bg-surface-1/40 px-5 py-3 text-left sm:px-6">
+          <SheetHeader className="border-b border-border bg-surface-1/40 px-4 py-2.5 text-left sm:px-5 sm:py-3">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <SheetTitle>İşlem detayı</SheetTitle>
@@ -562,25 +610,31 @@ function AppointmentDetailSheet({
             </div>
           </SheetHeader>
 
-          <div className="space-y-3.5 overflow-y-auto px-5 py-4 pb-5 sm:px-6">
+          <div className="space-y-3 overflow-y-auto px-4 py-3 pb-4 sm:px-5 sm:py-3.5 sm:pb-5">
             <AppointmentContextCard
               customerName={session.customerName}
               scheduledDate={session.scheduledDate}
               scheduledTime={session.scheduledTime}
+              compact
             />
 
             <AppointmentServiceSummarySection
               serviceSummary={session.serviceSummary}
               emptyMessage="Bağlı işlem özeti yok."
+              compact
             />
 
-            <section className="rounded-[1.55rem] border border-border bg-card p-3.5 sm:p-4">
+            <section className="rounded-[1.55rem] border border-border bg-card p-3 sm:p-3.5">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
                 Not
               </p>
-              <p className="mt-2 text-sm leading-6 text-foreground">
-                {session.notes ?? "Not yok."}
-              </p>
+              {session.notes ? (
+                <p className="mt-1.5 text-sm leading-5 text-foreground">{session.notes}</p>
+              ) : (
+                <p className="mt-2 rounded-xl border border-dashed border-border px-3 py-2 text-sm text-muted-foreground">
+                  Not yok.
+                </p>
+              )}
             </section>
 
             {deleteState.error && canDelete ? (
@@ -589,14 +643,14 @@ function AppointmentDetailSheet({
               </p>
             ) : null}
 
-            <div className="flex flex-col gap-3 border-t border-border pt-2.5">
-              {canOpenPacket ? (
-                <Button asChild size="cta" className="w-full">
-                  <Link href={`/ops/staff/belgeler/${session.serviceIntakeId}`}>Belge</Link>
-                </Button>
-              ) : null}
+            <div className="flex flex-col gap-2.5 border-t border-border pt-2">
+              <div className={cn("grid gap-2.5", canOpenPacket ? "grid-cols-2" : "grid-cols-1")}>
+                {canOpenPacket ? (
+                  <Button asChild size="cta" className="w-full">
+                    <Link href={`/ops/staff/belgeler/${session.serviceIntakeId}`}>Belge</Link>
+                  </Button>
+                ) : null}
 
-              <div className="flex flex-col gap-3">
                 <Button
                   type="button"
                   size="cta"
@@ -608,32 +662,32 @@ function AppointmentDetailSheet({
                   <PencilLine className="size-4" aria-hidden />
                   Düzenle
                 </Button>
-
-                {canDelete ? (
-                  <div className="w-full border-t border-border/60 pt-3">
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="cta"
-                      className="w-full"
-                      disabled={deletePending}
-                      onClick={() => setDeleteDialogOpen(true)}
-                    >
-                      {deletePending ? (
-                        <>
-                          <LoaderCircle className="size-4 animate-spin" aria-hidden />
-                          Siliniyor
-                        </>
-                      ) : (
-                        <>
-                          <Trash2 className="size-4" aria-hidden />
-                          Sil
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                ) : null}
               </div>
+
+              {canDelete ? (
+                <div className="w-full border-t border-border/60 pt-2.5">
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="cta"
+                    className="w-full"
+                    disabled={deletePending}
+                    onClick={() => setDeleteDialogOpen(true)}
+                  >
+                    {deletePending ? (
+                      <>
+                        <LoaderCircle className="size-4 animate-spin" aria-hidden />
+                        Siliniyor
+                      </>
+                    ) : (
+                      <>
+                        <Trash2 className="size-4" aria-hidden />
+                        Sil
+                      </>
+                    )}
+                  </Button>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
