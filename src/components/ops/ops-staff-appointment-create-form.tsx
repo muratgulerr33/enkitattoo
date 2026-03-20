@@ -172,6 +172,7 @@ export function OpsStaffAppointmentCreateForm({
     phone: "",
     email: "",
   });
+  const [showInlineCustomerEmail, setShowInlineCustomerEmail] = useState(false);
   const [selectedCustomerUserId, setSelectedCustomerUserId] = useState(
     (defaultCustomerUserId ?? customerOptions[0]?.id)?.toString() ?? ""
   );
@@ -186,8 +187,6 @@ export function OpsStaffAppointmentCreateForm({
     })
   );
   const isDisabled = pending || createCustomerPending;
-  const selectedCustomer =
-    customerOptions.find((option) => option.id.toString() === selectedCustomerUserId) ?? null;
   const isExistingMode = customerMode === "existing";
 
   useEffect(() => {
@@ -268,6 +267,7 @@ export function OpsStaffAppointmentCreateForm({
         phone: "",
         email: "",
       });
+      setShowInlineCustomerEmail(false);
       setCustomerMode("existing");
     });
   }
@@ -291,7 +291,7 @@ export function OpsStaffAppointmentCreateForm({
         <input type="hidden" name="serviceIntakeId" value={serviceIntakeId} />
       ) : null}
 
-      <div className={cn("grid gap-4", mode === "create" && "gap-3.5")}>
+      <div className={cn("grid gap-4 pb-1", mode === "create" && "gap-3.5")}>
         {dateMode === "context" ? (
           <>
             <input type="hidden" name="scheduledDate" value={defaultDate} />
@@ -416,7 +416,9 @@ export function OpsStaffAppointmentCreateForm({
               </p>
             ) : null}
           </div>
+        </div>
 
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
           <div className="space-y-2">
             <Label htmlFor="totalAmount">Toplam tutar (TL)</Label>
             <Input
@@ -480,22 +482,8 @@ export function OpsStaffAppointmentCreateForm({
           </Tabs>
 
           {isExistingMode ? (
-            <div className="rounded-2xl border border-border bg-surface-1/45 p-3.5">
-              <div className="rounded-xl border border-border/80 bg-background/85 px-3.5 py-3">
-                <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                  Seçili müşteri
-                </p>
-                <p className="mt-1 text-sm font-medium text-foreground">
-                  {selectedCustomer?.label ?? "Müşteri seçin"}
-                </p>
-                <p className="mt-0.5 break-words text-sm text-muted-foreground">
-                  {selectedCustomer
-                    ? (selectedCustomer.email ?? "E-posta yok.")
-                    : "Kayıtlı müşteri listesinden seçim yapın."}
-                </p>
-              </div>
-
-              <div className="relative mt-3 rounded-xl border border-border bg-background">
+            <div className="rounded-2xl border border-border bg-surface-1/45 p-3">
+              <div className="relative rounded-xl border border-border bg-background">
                 <select
                   id="customerUserId"
                   name="customerUserId"
@@ -510,7 +498,7 @@ export function OpsStaffAppointmentCreateForm({
                   {customerOptions.length ? (
                     customerOptions.map((option) => (
                       <option key={option.id} value={option.id}>
-                        {option.email ? `${option.label} · ${option.email}` : option.label}
+                        {option.label}
                       </option>
                     ))
                   ) : (
@@ -563,7 +551,7 @@ export function OpsStaffAppointmentCreateForm({
                   />
                 </div>
 
-                <div className="space-y-1.5">
+                <div className="space-y-1.5 sm:col-span-2">
                   <Label htmlFor="inlineCustomerPhone">Telefon</Label>
                   <Input
                     id="inlineCustomerPhone"
@@ -581,25 +569,40 @@ export function OpsStaffAppointmentCreateForm({
                     disabled={isDisabled}
                   />
                 </div>
+              </div>
 
-                <div className="space-y-1.5">
-                  <Label htmlFor="inlineCustomerEmail">E-posta</Label>
-                  <Input
-                    id="inlineCustomerEmail"
-                    type="email"
-                    inputMode="email"
-                    placeholder="ornek@mail.com"
-                    value={inlineCustomerForm.email}
-                    onChange={(event) =>
-                      setInlineCustomerForm((current) => ({
-                        ...current,
-                        email: event.target.value,
-                      }))
-                    }
-                    className="h-10 rounded-xl bg-background"
-                    disabled={isDisabled}
-                  />
-                </div>
+              <div className="mt-3">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 rounded-lg px-2 text-xs text-muted-foreground"
+                  disabled={isDisabled}
+                  onClick={() => setShowInlineCustomerEmail((current) => !current)}
+                >
+                  {showInlineCustomerEmail ? "E-posta alanını gizle" : "E-posta ekle (opsiyonel)"}
+                </Button>
+
+                {showInlineCustomerEmail ? (
+                  <div className="mt-2 space-y-1.5">
+                    <Label htmlFor="inlineCustomerEmail">E-posta</Label>
+                    <Input
+                      id="inlineCustomerEmail"
+                      type="email"
+                      inputMode="email"
+                      placeholder="ornek@mail.com"
+                      value={inlineCustomerForm.email}
+                      onChange={(event) =>
+                        setInlineCustomerForm((current) => ({
+                          ...current,
+                          email: event.target.value,
+                        }))
+                      }
+                      className="h-10 rounded-xl bg-background"
+                      disabled={isDisabled}
+                    />
+                  </div>
+                ) : null}
               </div>
 
               {inlineCustomerState.error ? (
@@ -653,21 +656,23 @@ export function OpsStaffAppointmentCreateForm({
         </p>
       ) : null}
 
-      <Button
-        type="submit"
-        size="cta"
-        className={cn("w-full", mode === "edit" && "sm:w-auto")}
-        disabled={isDisabled}
-      >
-        {pending ? (
-          <>
-            <LoaderCircle className="size-4 animate-spin" aria-hidden />
-            {mode === "edit" ? "Güncelleniyor" : "Kaydediliyor"}
-          </>
-        ) : (
-          submitLabel ?? defaultSubmitLabel
-        )}
-      </Button>
+      <div className="sticky bottom-0 -mx-4 border-t border-border/80 bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/88 sm:-mx-5 sm:px-5 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-0 lg:backdrop-blur-0">
+        <Button
+          type="submit"
+          size="cta"
+          className={cn("w-full", mode === "edit" && "sm:w-auto")}
+          disabled={isDisabled}
+        >
+          {pending ? (
+            <>
+              <LoaderCircle className="size-4 animate-spin" aria-hidden />
+              {mode === "edit" ? "Güncelleniyor" : "Kaydediliyor"}
+            </>
+          ) : (
+            submitLabel ?? defaultSubmitLabel
+          )}
+        </Button>
+      </div>
     </form>
   );
 }
