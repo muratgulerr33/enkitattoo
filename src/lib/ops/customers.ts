@@ -25,6 +25,10 @@ import {
   listUserAppointments,
 } from "./appointments";
 import {
+  getNormalizedPhoneSql,
+  normalizePhoneForMatching,
+} from "./phone";
+import {
   getUserWorkspaceOverview,
   type UserWorkspaceOverview,
 } from "./user-workspace";
@@ -155,6 +159,17 @@ function customerFieldMatches(value: string | null | undefined, query: string): 
   return normalizedValue.includes(normalizeCustomerSearchValue(query));
 }
 
+function customerPhoneMatches(value: string | null | undefined, query: string): boolean {
+  const normalizedValue = value ? normalizePhoneForMatching(value) : null;
+  const normalizedQuery = normalizePhoneForMatching(query);
+
+  if (!normalizedValue || !normalizedQuery) {
+    return false;
+  }
+
+  return normalizedValue.includes(normalizedQuery);
+}
+
 function getCustomerSearchMatch(
   customer: Pick<CustomerListItem, "email" | "phone" | "fullName" | "displayName">,
   query: string | null | undefined
@@ -165,7 +180,7 @@ function getCustomerSearchMatch(
     return null;
   }
 
-  if (customerFieldMatches(customer.phone, trimmedQuery)) {
+  if (customerPhoneMatches(customer.phone, trimmedQuery)) {
     return { field: "phone" };
   }
 
@@ -251,10 +266,14 @@ export async function listCustomers(searchQuery?: string | null): Promise<Custom
 
   if (query) {
     const pattern = `%${query}%`;
+    const normalizedPhoneQuery = normalizePhoneForMatching(query);
     conditions.push(
       or(
         ilike(users.email, pattern),
         ilike(users.phone, pattern),
+        ...(normalizedPhoneQuery
+          ? [ilike(getNormalizedPhoneSql(users.phone), `%${normalizedPhoneQuery}%`)]
+          : []),
         ilike(userProfiles.fullName, pattern),
         ilike(userProfiles.displayName, pattern)
       )!

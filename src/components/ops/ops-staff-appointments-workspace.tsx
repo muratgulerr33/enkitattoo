@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import {
   CalendarDays,
   ChevronLeft,
@@ -61,6 +61,7 @@ type AppointmentCustomerOption = {
   id: number;
   label: string;
   email: string | null;
+  phone: string | null;
 };
 
 type StaffServiceSummary = {
@@ -113,8 +114,8 @@ type OpsStaffAppointmentsWorkspaceProps = {
 
 function sortCustomerOptions(options: AppointmentCustomerOption[]): AppointmentCustomerOption[] {
   return [...options].sort((left, right) => {
-    const leftValue = left.email ? `${left.label} ${left.email}` : left.label;
-    const rightValue = right.email ? `${right.label} ${right.email}` : right.label;
+    const leftValue = [left.label, left.phone, left.email].filter(Boolean).join(" ");
+    const rightValue = [right.label, right.phone, right.email].filter(Boolean).join(" ");
 
     return leftValue.localeCompare(rightValue, "tr");
   });
@@ -414,6 +415,9 @@ function AppointmentFormSheet({
   artistOptions,
   currentStaffUserId,
   currentStaffRoles,
+  defaultCustomerLabel,
+  defaultCustomerEmail,
+  defaultCustomerPhone,
   daySessions,
   onOpenChange,
   createMode,
@@ -427,6 +431,9 @@ function AppointmentFormSheet({
   }>;
   currentStaffUserId: number;
   currentStaffRoles: UserRole[];
+  defaultCustomerLabel?: string;
+  defaultCustomerEmail?: string | null;
+  defaultCustomerPhone?: string | null;
   daySessions: StaffServiceSessionView[];
   onOpenChange: (open: boolean) => void;
   createMode: boolean;
@@ -529,6 +536,9 @@ function AppointmentFormSheet({
               defaultDate={defaultDate}
               defaultTime={defaultTime}
               defaultCustomerUserId={defaultCustomerUserId}
+              defaultCustomerLabel={defaultCustomerLabel}
+              defaultCustomerEmail={defaultCustomerEmail}
+              defaultCustomerPhone={defaultCustomerPhone}
               defaultArtistUserId={defaultArtistUserId}
               defaultNotes={defaultNotes}
               defaultServiceType={defaultServiceType}
@@ -886,6 +896,8 @@ export function OpsStaffAppointmentsWorkspace({
   const [viewMode, setViewMode] = useState<ViewMode>("root");
   const [activeSessionKey, setActiveSessionKey] = useState<string | null>(null);
   const [formState, setFormState] = useState<FormState | null>(null);
+  const dayWorkspaceRef = useRef<HTMLDivElement | null>(null);
+  const previousSelectedDayRef = useRef<string | null>(initialSelectedDay);
 
   useEffect(() => {
     setAvailableCustomerOptions(sortCustomerOptions(customerOptions));
@@ -894,6 +906,45 @@ export function OpsStaffAppointmentsWorkspace({
   useEffect(() => {
     setSelectedDay(initialSelectedDay);
   }, [initialSelectedDay]);
+
+  useEffect(() => {
+    if (!selectedDay || typeof window === "undefined") {
+      previousSelectedDayRef.current = selectedDay;
+      return;
+    }
+
+    if (selectedDay === previousSelectedDayRef.current) {
+      return;
+    }
+
+    previousSelectedDayRef.current = selectedDay;
+
+    if (window.innerWidth >= 1280) {
+      return;
+    }
+
+    const panel = dayWorkspaceRef.current;
+
+    if (!panel) {
+      return;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      const rect = panel.getBoundingClientRect();
+      const targetTop = Math.max(0, window.scrollY + rect.top - 88);
+
+      if (Math.abs(window.scrollY - targetTop) < 40) {
+        return;
+      }
+
+      window.scrollTo({
+        top: targetTop,
+        behavior: "smooth",
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [selectedDay]);
 
   const countsByDate = new Map<string, number>();
 
@@ -1089,14 +1140,16 @@ export function OpsStaffAppointmentsWorkspace({
           </CardContent>
         </Card>
 
-        <AppointmentDayWorkspacePanel
-          selectedDay={selectedDay}
-          selectedDayLabel={selectedDayLabel}
-          selectedDaySessions={selectedDaySessions}
-          recommendedTime={recommendedTime}
-          onSessionOpen={handleSessionOpen}
-          onCreate={() => startCreateForDay(selectedDay as string)}
-        />
+        <div ref={dayWorkspaceRef}>
+          <AppointmentDayWorkspacePanel
+            selectedDay={selectedDay}
+            selectedDayLabel={selectedDayLabel}
+            selectedDaySessions={selectedDaySessions}
+            recommendedTime={recommendedTime}
+            onSessionOpen={handleSessionOpen}
+            onCreate={() => startCreateForDay(selectedDay as string)}
+          />
+        </div>
       </div>
 
       {showRootFab ? (
@@ -1122,6 +1175,12 @@ export function OpsStaffAppointmentsWorkspace({
         artistOptions={artistOptions}
         currentStaffUserId={currentStaffUserId}
         currentStaffRoles={currentStaffRoles}
+        defaultCustomerLabel={
+          formState?.mode === "edit" ? formState.session.customerName : undefined
+        }
+        defaultCustomerEmail={
+          formState?.mode === "edit" ? formState.session.customerEmail : undefined
+        }
         daySessions={
           formState?.mode === "create"
             ? sessions

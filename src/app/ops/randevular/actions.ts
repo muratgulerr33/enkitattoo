@@ -8,13 +8,14 @@ import {
 import {
   APPOINTMENT_DELETE_WITH_CASH_ENTRIES_MESSAGE,
   APPOINTMENT_SLOT_CONFLICT_MESSAGE,
+  type AppointmentCustomerOption,
   createAppointment,
   deleteAppointment,
   getSourceForStaffRoles,
   updateAppointment,
   updateAppointmentStatus,
 } from "@/lib/ops/appointments";
-import { createCustomerRecord } from "@/lib/ops/customers";
+import { createCustomerRecord, getCustomerLabel, listCustomers } from "@/lib/ops/customers";
 import { resolveStaffArtistAssignment } from "@/lib/ops/artists";
 import {
   attachServiceIntakeAppointment,
@@ -40,7 +41,13 @@ export type OpsAppointmentCustomerCreateActionState = {
     id: number;
     label: string;
     email: string | null;
+    phone: string | null;
   } | null;
+};
+
+export type OpsAppointmentCustomerSearchActionResult = {
+  error: string | null;
+  customers: AppointmentCustomerOption[];
 };
 
 const INITIAL_ERROR_MESSAGE = "İşlem tamamlanamadı.";
@@ -48,6 +55,7 @@ const INITIAL_CREATE_CUSTOMER_ERROR_MESSAGE = "Müşteri oluşturulamadı.";
 const INLINE_CUSTOMER_AUTH_ERROR_MESSAGE =
   "Oturum süreniz doldu. Sayfayı yenileyip yeniden giriş yapın.";
 const INLINE_CUSTOMER_ROLE_ERROR_MESSAGE = "Bu işlem için personel hesabı gerekli.";
+const CUSTOMER_SEARCH_ERROR_MESSAGE = "Müşteri listesi yüklenemedi.";
 const DELETE_ERROR_MESSAGE = "İşlem silinemedi. Biraz sonra tekrar deneyin.";
 const WALK_IN_ERROR_MESSAGE = "İşlem kaydı kaydedilemedi.";
 
@@ -84,6 +92,11 @@ const SAFE_INLINE_CUSTOMER_ERROR_MESSAGES = new Set([
   "Telefon bilgisini daha sade yazın.",
   "E-posta bilgisini kontrol edin.",
   "Girdiler beklenenden uzun. Lütfen kısaltın.",
+  INLINE_CUSTOMER_AUTH_ERROR_MESSAGE,
+  INLINE_CUSTOMER_ROLE_ERROR_MESSAGE,
+]);
+
+const SAFE_CUSTOMER_SEARCH_ERROR_MESSAGES = new Set([
   INLINE_CUSTOMER_AUTH_ERROR_MESSAGE,
   INLINE_CUSTOMER_ROLE_ERROR_MESSAGE,
 ]);
@@ -616,6 +629,7 @@ export async function createStaffAppointmentCustomerAction(
         id: customer.userId,
         label: customer.displayName ?? customer.fullName ?? customer.email ?? `Kullanıcı #${customer.userId}`,
         email: customer.email,
+        phone: customer.phone,
       },
     };
   } catch (error) {
@@ -635,6 +649,46 @@ export async function createStaffAppointmentCustomerAction(
       ),
       success: null,
       createdCustomer: null,
+    };
+  }
+}
+
+export async function searchStaffAppointmentCustomersAction(
+  query: string
+): Promise<OpsAppointmentCustomerSearchActionResult> {
+  try {
+    const access = await getOpsSessionAreaAccess("staff");
+
+    if (!access.ok) {
+      return {
+        error:
+          access.reason === "unauthenticated"
+            ? INLINE_CUSTOMER_AUTH_ERROR_MESSAGE
+            : INLINE_CUSTOMER_ROLE_ERROR_MESSAGE,
+        customers: [],
+      };
+    }
+
+    const customers = await listCustomers(query);
+
+    return {
+      error: null,
+      customers: customers.map((customer) => ({
+        id: customer.userId,
+        label: getCustomerLabel(customer),
+        email: customer.email,
+        phone: customer.phone,
+      })),
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : null;
+
+    return {
+      error:
+        message && SAFE_CUSTOMER_SEARCH_ERROR_MESSAGES.has(message)
+          ? message
+          : CUSTOMER_SEARCH_ERROR_MESSAGE,
+      customers: [],
     };
   }
 }

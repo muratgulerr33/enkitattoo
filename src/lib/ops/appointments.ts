@@ -51,6 +51,7 @@ export type AppointmentCustomerOption = {
   id: number;
   label: string;
   email: string | null;
+  phone: string | null;
 };
 
 export type AppointmentSummary = {
@@ -492,6 +493,7 @@ export async function listCustomerOptions(): Promise<AppointmentCustomerOption[]
     .select({
       id: users.id,
       email: users.email,
+      phone: users.phone,
       fullName: userProfiles.fullName,
       displayName: userProfiles.displayName,
     })
@@ -505,12 +507,14 @@ export async function listCustomerOptions(): Promise<AppointmentCustomerOption[]
     .orderBy(
       asc(sql`coalesce(${userProfiles.displayName}, ${userProfiles.fullName}, ${users.email}, '')`),
       asc(users.id)
-    );
+    )
+    .limit(60);
 
   return rows.map((row) => ({
     id: row.id,
     label: row.displayName ?? row.fullName ?? row.email ?? `Kullanıcı #${row.id}`,
     email: row.email ?? null,
+    phone: row.phone ?? null,
   }));
 }
 

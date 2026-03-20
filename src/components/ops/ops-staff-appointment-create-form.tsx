@@ -1,19 +1,35 @@
 "use client";
 
 import { useActionState, useEffect, useState, useTransition } from "react";
-import { CalendarDays, ChevronDown, Clock3, LoaderCircle, UserPlus, Users } from "lucide-react";
+import {
+  CalendarDays,
+  Check,
+  ChevronDown,
+  Clock3,
+  LoaderCircle,
+  Search,
+  UserPlus,
+  Users,
+} from "lucide-react";
 import {
   createStaffAppointmentCustomerAction,
   createStaffServiceSessionAction,
   type OpsAppointmentActionState,
   type OpsAppointmentCustomerCreateActionState,
+  searchStaffAppointmentCustomersAction,
   updateStaffAppointmentAction,
   updateStaffWalkInAction,
 } from "@/app/ops/randevular/actions";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import type { UserRole } from "@/db/schema/users";
 import { formatAppointmentDateLong } from "@/lib/ops/appointment-calendar";
@@ -38,6 +54,7 @@ type StaffAppointmentCreateFormProps = {
     id: number;
     label: string;
     email: string | null;
+    phone: string | null;
   }>;
   artistOptions: Array<{
     id: number;
@@ -49,10 +66,14 @@ type StaffAppointmentCreateFormProps = {
     id: number;
     label: string;
     email: string | null;
+    phone: string | null;
   }) => void;
   defaultDate: string;
   defaultTime: string;
   defaultCustomerUserId?: number;
+  defaultCustomerLabel?: string;
+  defaultCustomerEmail?: string | null;
+  defaultCustomerPhone?: string | null;
   defaultArtistUserId?: number | null;
   defaultNotes?: string | null;
   defaultServiceType?: "tattoo" | "piercing";
@@ -67,8 +88,9 @@ type StaffAppointmentCreateFormProps = {
   dateMode?: "context" | "editable";
 };
 
-type CustomerMode = "existing" | "new";
 type SessionSource = "appointment" | "walk_in";
+type CustomerPickerMode = "results" | "create";
+type AppointmentCustomerPickerOption = StaffAppointmentCreateFormProps["customerOptions"][number];
 
 function toAmountInputValue(
   cents?: number | null,
@@ -127,6 +149,41 @@ function getDefaultArtistUserId(input: {
   return "";
 }
 
+function resolveInitialSelectedCustomer(input: {
+  customerOptions: AppointmentCustomerPickerOption[];
+  defaultCustomerUserId?: number;
+  defaultCustomerLabel?: string;
+  defaultCustomerEmail?: string | null;
+  defaultCustomerPhone?: string | null;
+}): AppointmentCustomerPickerOption | null {
+  if (typeof input.defaultCustomerUserId === "number") {
+    const matchedCustomer = input.customerOptions.find(
+      (customer) => customer.id === input.defaultCustomerUserId
+    );
+
+    if (matchedCustomer) {
+      return matchedCustomer;
+    }
+
+    return {
+      id: input.defaultCustomerUserId,
+      label: input.defaultCustomerLabel ?? `Kullanıcı #${input.defaultCustomerUserId}`,
+      email: input.defaultCustomerEmail ?? null,
+      phone: input.defaultCustomerPhone ?? null,
+    };
+  }
+
+  return input.customerOptions[0] ?? null;
+}
+
+function getCustomerPickerMeta(customer: AppointmentCustomerPickerOption): string | null {
+  if (customer.phone && customer.email) {
+    return `${customer.phone} · ${customer.email}`;
+  }
+
+  return customer.phone ?? customer.email ?? null;
+}
+
 export function OpsStaffAppointmentCreateForm({
   customerOptions,
   artistOptions,
@@ -136,6 +193,9 @@ export function OpsStaffAppointmentCreateForm({
   defaultDate,
   defaultTime,
   defaultCustomerUserId,
+  defaultCustomerLabel,
+  defaultCustomerEmail,
+  defaultCustomerPhone,
   defaultArtistUserId,
   defaultNotes,
   defaultServiceType = "tattoo",
@@ -163,9 +223,6 @@ export function OpsStaffAppointmentCreateForm({
         : updateStaffAppointmentAction
       : createStaffServiceSessionAction;
   const [state, formAction, pending] = useActionState(action, INITIAL_STATE);
-  const [customerMode, setCustomerMode] = useState<CustomerMode>(
-    customerOptions.length ? "existing" : "new"
-  );
   const [inlineCustomerState, setInlineCustomerState] = useState(INITIAL_CUSTOMER_CREATE_STATE);
   const [inlineCustomerForm, setInlineCustomerForm] = useState({
     fullName: "",
@@ -173,11 +230,24 @@ export function OpsStaffAppointmentCreateForm({
     email: "",
   });
   const [showInlineCustomerEmail, setShowInlineCustomerEmail] = useState(false);
-  const [selectedCustomerUserId, setSelectedCustomerUserId] = useState(
-    (defaultCustomerUserId ?? customerOptions[0]?.id)?.toString() ?? ""
+  const [selectedCustomer, setSelectedCustomer] = useState<AppointmentCustomerPickerOption | null>(
+    () =>
+      resolveInitialSelectedCustomer({
+        customerOptions,
+        defaultCustomerUserId,
+        defaultCustomerLabel,
+        defaultCustomerEmail,
+        defaultCustomerPhone,
+      })
   );
+  const [customerPickerOpen, setCustomerPickerOpen] = useState(false);
+  const [customerPickerMode, setCustomerPickerMode] = useState<CustomerPickerMode>("results");
+  const [customerSearchQuery, setCustomerSearchQuery] = useState("");
+  const [customerSearchResults, setCustomerSearchResults] = useState(customerOptions);
+  const [customerSearchError, setCustomerSearchError] = useState<string | null>(null);
   const [selectedArtistUserId, setSelectedArtistUserId] = useState(resolvedDefaultArtistUserId);
   const [createCustomerPending, startCreateCustomerTransition] = useTransition();
+  const [customerSearchPending, startCustomerSearchTransition] = useTransition();
   const [totalAmountInput, setTotalAmountInput] = useState(() =>
     toAmountInputValue(defaultTotalAmountCents)
   );
@@ -187,7 +257,7 @@ export function OpsStaffAppointmentCreateForm({
     })
   );
   const isDisabled = pending || createCustomerPending;
-  const isExistingMode = customerMode === "existing";
+  const selectedCustomerUserId = selectedCustomer?.id.toString() ?? "";
 
   useEffect(() => {
     setSessionSource(source);
@@ -222,15 +292,66 @@ export function OpsStaffAppointmentCreateForm({
   }, [onSuccess, state.success]);
 
   useEffect(() => {
-    if (!customerOptions.length) {
-      setCustomerMode("new");
+    setCustomerSearchResults((current) =>
+      customerSearchQuery.trim() ? current : customerOptions
+    );
+
+    setSelectedCustomer((current) => {
+      if (!current) {
+        return customerOptions[0] ?? null;
+      }
+
+      return customerOptions.find((customer) => customer.id === current.id) ?? current;
+    });
+  }, [customerOptions, customerSearchQuery]);
+
+  useEffect(() => {
+    if (!customerPickerOpen || customerPickerMode !== "results") {
       return;
     }
 
-    if (!selectedCustomerUserId) {
-      setSelectedCustomerUserId(customerOptions[0]?.id?.toString() ?? "");
+    const trimmedQuery = customerSearchQuery.trim();
+
+    if (!trimmedQuery) {
+      setCustomerSearchError(null);
+      setCustomerSearchResults(customerOptions);
+      return;
     }
-  }, [customerOptions, selectedCustomerUserId]);
+
+    let cancelled = false;
+    const timeoutId = window.setTimeout(() => {
+      startCustomerSearchTransition(async () => {
+        const result = await searchStaffAppointmentCustomersAction(trimmedQuery);
+
+        if (cancelled) {
+          return;
+        }
+
+        setCustomerSearchError(result.error);
+        setCustomerSearchResults(result.customers);
+      });
+    }, 180);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeoutId);
+    };
+  }, [
+    customerOptions,
+    customerPickerMode,
+    customerPickerOpen,
+    customerSearchQuery,
+    startCustomerSearchTransition,
+  ]);
+
+  function handleCustomerSelect(customer: AppointmentCustomerPickerOption) {
+    setSelectedCustomer(customer);
+    setCustomerPickerOpen(false);
+    setCustomerPickerMode("results");
+    setCustomerSearchQuery("");
+    setCustomerSearchError(null);
+    setInlineCustomerState(INITIAL_CUSTOMER_CREATE_STATE);
+  }
 
   async function handleInlineCustomerCreate() {
     const formData = new FormData();
@@ -260,15 +381,24 @@ export function OpsStaffAppointmentCreateForm({
         return;
       }
 
-      onCustomerCreated?.(result.createdCustomer);
-      setSelectedCustomerUserId(result.createdCustomer.id.toString());
+      const createdCustomer = result.createdCustomer;
+
+      onCustomerCreated?.(createdCustomer);
+      setSelectedCustomer(createdCustomer);
+      setCustomerSearchResults((current) => {
+        const withoutDuplicate = current.filter((customer) => customer.id !== createdCustomer.id);
+        return [createdCustomer, ...withoutDuplicate];
+      });
       setInlineCustomerForm({
         fullName: "",
         phone: "",
         email: "",
       });
       setShowInlineCustomerEmail(false);
-      setCustomerMode("existing");
+      setCustomerPickerMode("results");
+      setCustomerSearchQuery("");
+      setCustomerSearchError(null);
+      setCustomerPickerOpen(false);
     });
   }
 
@@ -448,187 +578,320 @@ export function OpsStaffAppointmentCreateForm({
           </div>
         </div>
 
-        <div className="space-y-3">
-          <Label>Müşteri</Label>
+        <div className="space-y-2.5">
+          <Label htmlFor="customerPickerTrigger">Müşteri</Label>
+          <input type="hidden" name="customerUserId" value={selectedCustomerUserId} />
 
-          <Tabs
-            value={customerMode}
-            onValueChange={(value) => {
-              setCustomerMode(value as CustomerMode);
-              setInlineCustomerState((current) =>
-                current.success ? current : { ...current, error: null }
-              );
+          <Button
+            id="customerPickerTrigger"
+            type="button"
+            variant="outline"
+            className="h-12 w-full justify-between rounded-xl px-3 text-left"
+            disabled={isDisabled}
+            data-testid="customer-picker-trigger"
+            onClick={() => {
+              setCustomerPickerOpen(true);
+              setCustomerPickerMode("results");
+              setCustomerSearchQuery("");
+              setCustomerSearchError(null);
+              setCustomerSearchResults(customerOptions);
+              setInlineCustomerState(INITIAL_CUSTOMER_CREATE_STATE);
+              setShowInlineCustomerEmail(false);
             }}
-            className="gap-3"
           >
-            <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-surface-1/60 p-1">
-              <TabsTrigger
-                value="existing"
-                disabled={!customerOptions.length || isDisabled}
-                className="min-h-10 rounded-xl px-3"
-              >
-                <Users className="size-4" aria-hidden />
-                Mevcut müşteri
-              </TabsTrigger>
-              <TabsTrigger
-                value="new"
-                disabled={isDisabled}
-                className="min-h-10 rounded-xl px-3"
-              >
-                <UserPlus className="size-4" aria-hidden />
-                Yeni müşteri
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {isExistingMode ? (
-            <div className="rounded-2xl border border-border bg-surface-1/45 p-3">
-              <div className="relative rounded-xl border border-border bg-background">
-                <select
-                  id="customerUserId"
-                  name="customerUserId"
-                  value={selectedCustomerUserId}
-                  className={cn(
-                    selectClassName,
-                    "h-11 rounded-xl border-0 bg-transparent pr-10 shadow-none focus-visible:ring-0"
-                  )}
-                  disabled={isDisabled}
-                  onChange={(event) => setSelectedCustomerUserId(event.target.value)}
-                >
-                  {customerOptions.length ? (
-                    customerOptions.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.label}
-                      </option>
-                    ))
-                  ) : (
-                    <option value="">Önce müşteri oluşturun</option>
-                  )}
-                </select>
-                <ChevronDown
-                  className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
-                  aria-hidden
-                />
-              </div>
-
-              {inlineCustomerState.success ? (
-                <p className="mt-3 rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
-                  {inlineCustomerState.success}
-                </p>
-              ) : null}
-            </div>
-          ) : (
-            <div
-              className="rounded-2xl border border-border bg-surface-1/45 p-3.5"
-              onKeyDown={(event) => {
-                if (event.key !== "Enter" || isDisabled) {
-                  return;
-                }
-
-                event.preventDefault();
-                void handleInlineCustomerCreate();
-              }}
-            >
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-foreground">Hızlı müşteri</p>
-                <p className="text-xs text-muted-foreground">Workspace’ten çıkmadan ekleyin.</p>
-              </div>
-
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                <div className="space-y-1.5 sm:col-span-2">
-                  <Label htmlFor="inlineCustomerFullName">Ad soyad</Label>
-                  <Input
-                    id="inlineCustomerFullName"
-                    value={inlineCustomerForm.fullName}
-                    onChange={(event) =>
-                      setInlineCustomerForm((current) => ({
-                        ...current,
-                        fullName: event.target.value,
-                      }))
-                    }
-                    className="h-10 rounded-xl bg-background"
-                    disabled={isDisabled}
-                  />
-                </div>
-
-                <div className="space-y-1.5 sm:col-span-2">
-                  <Label htmlFor="inlineCustomerPhone">Telefon</Label>
-                  <Input
-                    id="inlineCustomerPhone"
-                    type="tel"
-                    inputMode="tel"
-                    placeholder="05xx xxx xx xx"
-                    value={inlineCustomerForm.phone}
-                    onChange={(event) =>
-                      setInlineCustomerForm((current) => ({
-                        ...current,
-                        phone: event.target.value,
-                      }))
-                    }
-                    className="h-10 rounded-xl bg-background"
-                    disabled={isDisabled}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-3">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 rounded-lg px-2 text-xs text-muted-foreground"
-                  disabled={isDisabled}
-                  onClick={() => setShowInlineCustomerEmail((current) => !current)}
-                >
-                  {showInlineCustomerEmail ? "E-posta alanını gizle" : "E-posta ekle (opsiyonel)"}
-                </Button>
-
-                {showInlineCustomerEmail ? (
-                  <div className="mt-2 space-y-1.5">
-                    <Label htmlFor="inlineCustomerEmail">E-posta</Label>
-                    <Input
-                      id="inlineCustomerEmail"
-                      type="email"
-                      inputMode="email"
-                      placeholder="ornek@mail.com"
-                      value={inlineCustomerForm.email}
-                      onChange={(event) =>
-                        setInlineCustomerForm((current) => ({
-                          ...current,
-                          email: event.target.value,
-                        }))
-                      }
-                      className="h-10 rounded-xl bg-background"
-                      disabled={isDisabled}
-                    />
-                  </div>
-                ) : null}
-              </div>
-
-              {inlineCustomerState.error ? (
-                <p className="mt-3 rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
-                  {inlineCustomerState.error}
-                </p>
-              ) : null}
-
-              <Button
-                type="button"
-                size="cta"
-                className="mt-3 w-full sm:w-auto"
-                disabled={isDisabled}
-                onClick={handleInlineCustomerCreate}
-              >
-                {createCustomerPending ? (
-                  <>
-                    <LoaderCircle className="size-4 animate-spin" aria-hidden />
-                    Oluşturuluyor
-                  </>
-                ) : (
-                  "Müşteri oluştur"
+            <span className="flex min-w-0 flex-1 items-center gap-3">
+              <Users className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+              <span
+                className={cn(
+                  "min-w-0 truncate text-sm font-medium",
+                  selectedCustomer ? "text-foreground" : "text-muted-foreground"
                 )}
-              </Button>
-            </div>
-          )}
+              >
+                {selectedCustomer ? selectedCustomer.label : "Müşteri seçin"}
+              </span>
+            </span>
+            <ChevronDown className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+          </Button>
+
+          {inlineCustomerState.success ? (
+            <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+              {inlineCustomerState.success}
+            </p>
+          ) : null}
+
+          <Dialog
+            open={customerPickerOpen}
+            onOpenChange={(open) => {
+              setCustomerPickerOpen(open);
+
+              if (!open) {
+                setCustomerPickerMode("results");
+                setCustomerSearchQuery("");
+                setCustomerSearchError(null);
+                setCustomerSearchResults(customerOptions);
+                setShowInlineCustomerEmail(false);
+              }
+            }}
+          >
+            <DialogContent
+              showCloseButton
+              className="top-auto bottom-2 left-1/2 flex h-[min(90vh,calc(100vh-1rem))] w-[calc(100%-1rem)] max-w-none translate-x-[-50%] translate-y-0 flex-col gap-0 overflow-hidden rounded-[2rem] border p-0 sm:max-w-[36rem] md:max-w-[38rem] lg:top-1/2 lg:bottom-auto lg:max-w-[34rem] lg:translate-y-[-50%]"
+            >
+              <DialogHeader className="border-b px-4 py-3 text-left sm:px-5">
+                <DialogTitle>Müşteri seç</DialogTitle>
+                <DialogDescription className="sr-only">
+                  İşlem için müşteri seçin veya yeni müşteri oluşturun.
+                </DialogDescription>
+              </DialogHeader>
+
+              {customerPickerMode === "results" ? (
+                <>
+                  <div className="border-b px-4 py-3 sm:px-5">
+                    <div className="relative">
+                      <Search
+                        className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+                        aria-hidden
+                      />
+                      <Input
+                        value={customerSearchQuery}
+                        onChange={(event) => setCustomerSearchQuery(event.target.value)}
+                        placeholder="Ad soyad, telefon veya e-posta ile ara"
+                        className="h-11 rounded-xl pl-9"
+                        disabled={isDisabled}
+                        data-testid="customer-picker-search"
+                      />
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between gap-3">
+                      <p className="text-xs text-muted-foreground">
+                        {customerSearchPending
+                          ? "Müşteriler aranıyor..."
+                          : customerSearchQuery.trim()
+                            ? `${customerSearchResults.length} müşteri bulundu`
+                            : "Yakın müşteriler"}
+                      </p>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 rounded-lg px-2 text-xs"
+                        disabled={isDisabled}
+                        onClick={() => {
+                          setCustomerPickerMode("create");
+                          setInlineCustomerState(INITIAL_CUSTOMER_CREATE_STATE);
+                          setInlineCustomerForm({
+                            fullName: "",
+                            phone: "",
+                            email: "",
+                          });
+                          setShowInlineCustomerEmail(false);
+                        }}
+                      >
+                        <UserPlus className="size-3.5" aria-hidden />
+                        Yeni müşteri ekle
+                      </Button>
+                    </div>
+
+                    {customerSearchError ? (
+                      <p className="mt-3 rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                        {customerSearchError}
+                      </p>
+                    ) : null}
+                  </div>
+
+                  <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3 pb-4 sm:px-5">
+                    {customerSearchResults.length ? (
+                      <div className="space-y-2">
+                        {customerSearchResults.map((customer) => {
+                          const isSelected = selectedCustomer?.id === customer.id;
+                          const supportText = getCustomerPickerMeta(customer);
+
+                          return (
+                            <button
+                              key={customer.id}
+                              type="button"
+                              className={cn(
+                                "w-full rounded-xl border px-3 py-3 text-left transition-[border-color,background-color,box-shadow] duration-150 hover:bg-surface-1/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                                isSelected
+                                  ? "border-foreground/30 bg-surface-1/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.32)]"
+                                  : "border-border bg-card"
+                              )}
+                              data-testid={`customer-picker-option-${customer.id}`}
+                              onClick={() => handleCustomerSelect(customer)}
+                            >
+                              <div className="flex items-start justify-between gap-3">
+                                <div className="min-w-0">
+                                  <p className="truncate text-sm font-medium text-foreground">
+                                    {customer.label}
+                                  </p>
+                                  {supportText ? (
+                                    <p className="mt-1 truncate text-xs text-muted-foreground">
+                                      {supportText}
+                                    </p>
+                                  ) : null}
+                                </div>
+
+                                {isSelected ? (
+                                  <Check className="mt-0.5 size-4 shrink-0 text-foreground" aria-hidden />
+                                ) : null}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="rounded-[1.35rem] border border-dashed border-border bg-surface-1/20 px-4 py-4">
+                        <p className="text-sm font-medium text-foreground">Müşteri bulunamadı.</p>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          Aramayı değiştirin veya yeni müşteri ekleyin.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="border-b px-4 py-3 sm:px-5">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-foreground">Yeni müşteri</p>
+                        <p className="text-xs text-muted-foreground">
+                          Ad soyad ve telefonla hızlıca ekleyin.
+                        </p>
+                      </div>
+
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 rounded-lg px-2 text-xs"
+                        disabled={isDisabled}
+                        onClick={() => {
+                          setCustomerPickerMode("results");
+                          setInlineCustomerState(INITIAL_CUSTOMER_CREATE_STATE);
+                          setShowInlineCustomerEmail(false);
+                        }}
+                      >
+                        Müşteri listesi
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div
+                    className="min-h-0 flex-1 overflow-y-auto px-4 py-3 pb-4 sm:px-5"
+                    onKeyDown={(event) => {
+                      if (event.key !== "Enter" || isDisabled) {
+                        return;
+                      }
+
+                      event.preventDefault();
+                      void handleInlineCustomerCreate();
+                    }}
+                  >
+                    <div className="space-y-3">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="inlineCustomerFullName">Ad soyad</Label>
+                        <Input
+                          id="inlineCustomerFullName"
+                          value={inlineCustomerForm.fullName}
+                          onChange={(event) =>
+                            setInlineCustomerForm((current) => ({
+                              ...current,
+                              fullName: event.target.value,
+                            }))
+                          }
+                          className="h-10 rounded-xl bg-background"
+                          disabled={isDisabled}
+                        />
+                      </div>
+
+                      <div className="space-y-1.5">
+                        <Label htmlFor="inlineCustomerPhone">Telefon</Label>
+                        <Input
+                          id="inlineCustomerPhone"
+                          type="tel"
+                          inputMode="tel"
+                          placeholder="05xx xxx xx xx"
+                          value={inlineCustomerForm.phone}
+                          onChange={(event) =>
+                            setInlineCustomerForm((current) => ({
+                              ...current,
+                              phone: event.target.value,
+                            }))
+                          }
+                          className="h-10 rounded-xl bg-background"
+                          disabled={isDisabled}
+                        />
+                      </div>
+
+                      <div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 rounded-lg px-2 text-xs text-muted-foreground"
+                          disabled={isDisabled}
+                          onClick={() => setShowInlineCustomerEmail((current) => !current)}
+                        >
+                          {showInlineCustomerEmail
+                            ? "E-posta alanını gizle"
+                            : "E-posta ekle (opsiyonel)"}
+                        </Button>
+
+                        {showInlineCustomerEmail ? (
+                          <div className="mt-2 space-y-1.5">
+                            <Label htmlFor="inlineCustomerEmail">E-posta</Label>
+                            <Input
+                              id="inlineCustomerEmail"
+                              type="email"
+                              inputMode="email"
+                              placeholder="ornek@mail.com"
+                              value={inlineCustomerForm.email}
+                              onChange={(event) =>
+                                setInlineCustomerForm((current) => ({
+                                  ...current,
+                                  email: event.target.value,
+                                }))
+                              }
+                              className="h-10 rounded-xl bg-background"
+                              disabled={isDisabled}
+                            />
+                          </div>
+                        ) : null}
+                      </div>
+
+                      {inlineCustomerState.error ? (
+                        <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                          {inlineCustomerState.error}
+                        </p>
+                      ) : null}
+
+                      <div className="sticky bottom-0 -mx-4 border-t border-border/70 bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.25rem)] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/88 sm:-mx-5 sm:px-5">
+                        <Button
+                          type="button"
+                          size="cta"
+                          className="w-full"
+                          disabled={isDisabled}
+                          data-testid="customer-picker-create-button"
+                          onClick={handleInlineCustomerCreate}
+                        >
+                          {createCustomerPending ? (
+                            <>
+                              <LoaderCircle className="size-4 animate-spin" aria-hidden />
+                              Oluşturuluyor
+                            </>
+                          ) : (
+                            "Müşteri oluştur"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
 
         <div className="space-y-2">
