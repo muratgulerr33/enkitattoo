@@ -8,7 +8,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - `/ops` shell’i ayrı bir yüzeydir; public `AppShell` sözleşmesine dahil değildir.
 - Component veya sayfa değişikliği yapılırken önce bu dosya, sonra ilgili canonical component okunur.
 - Bu dosya yalnız current runtime visible behavior’ı yazar; implement edilmemiş roadmap ekranları ayrı ve açıkça `planned roadmap` diye işaretlenir.
-- Current runtime ops lock appointment-first teknik omurgayı korurken visible staff ürün modelini tek müşteri + tek işlem diline indirir: staff `İşlemler / Müşteriler / Kasa / Ayarlar`, selected day içinde unified işlem workspace, customer detail `İşlem özeti`, service-intake event’lerinden otomatik beslenen kasa yardımcı yüzeyi ve staff `Belge paketi` operasyon sözleşmesi route’u birlikte doğrulanır.
+- Current runtime ops lock appointment-first teknik omurgayı korurken visible staff ürün modelini tek müşteri + tek işlem diline indirir: staff `İşlemler / Müşteriler / Rapor / Ayarlar`, selected day içinde unified işlem workspace, customer detail `İşlem özeti`, service-intake event’lerinden otomatik beslenen kasa yardımcı yüzeyi ve staff `Belge paketi` operasyon sözleşmesi route’u birlikte doğrulanır.
 
 ## 2) Public UI Ownership Matrix
 
@@ -60,7 +60,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - İlk gerçek iş bloğu fold üstüne mümkün olduğunca yakın gelmelidir.
 - Mobil alt navigasyon `safe-pb-ops-nav` ve `safe-pb-ops-shell` ile çalışır; etiketler tam okunur kalır ve bar viewport’a fixed native tab bar gibi bağlı kalır. Staff yüzeylerinde son içerik bloğu ile nav arasında rahat ama şişmeyen final clearance korunur.
 - User mobile shell fold üstünde daha ekonomik kalır; alt nav ve page-body padding içerikten gereksiz alan çalmaz (`src/components/ops/ops-shell.tsx`).
-- Staff mobile nav etiketi seti `İşlemler`, `Müşteriler`, `Kasa`, `Ayarlar` olarak tam görünür (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
+- Staff mobile nav etiketi seti `İşlemler`, `Müşteriler`, `Rapor`, `Ayarlar` olarak tam görünür; `/ops/staff/kasa` helper yüzeyi açıkken de `Rapor` sekmesi aktif grup olarak okunur (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 - User mobile nav etiketi seti `Onaylar`, `Randevular`, `Ayarlar` olarak tam görünür; kolon yapısı item sayısına göre akar (`src/lib/ops/navigation.ts`, `src/components/ops/ops-shell.tsx`).
 
 ### Tek iş odağı
@@ -71,8 +71,8 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 
 ### Ekran bazlı öncelik kuralları
 
-- Kasa: current runtime’da gün özeti ve defter service-intake kaynaklı otomatik hareketleri taşır; manuel form artık yalnız istisna / gider / correction yüzeyidir. `Gelir / Gider` kontrolü, kısa kategori etiketi, tutar ve `Kaydı ekle` akışı manuel kayıt için yaşar; sistem satırları read-only kalır. Yüzey cash-only çalışır; ödeme tipi görünmez. Mobile öncelik sırası `Gün özeti -> Defter -> Manuel giriş` olarak okunur; desktop’ta manuel form secondary sağ kolon gibi kalır. Gün özeti ve defter ana okuma yüzeyi, tarih ve not disclosure secondary destek katmanıdır. Defter satırları ana bakışta `Gelir/Gider -> Tahsilat/Düzeltme/Manuel -> kısa işlem tipi -> tutar` sırasıyla okunur; sistem üretimi, işlem id ve oluşturan meta bilgisi görünür listede baskın durmaz. `Raporlar` erişimi küçük secondary link olarak kasa yüzeyinden açılır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
-- Raporlar: mobile-first sakin bloklar halinde taranır; ağır dashboard veya grafik hissi yoktur. Staff günlük, haftalık ve seçili tarih aralığı için aynı kasa + randevu özetleri ile randevu listesini görür.
+- Kasa: current runtime’da gün özeti ve defter service-intake kaynaklı otomatik hareketleri taşır; manuel form yalnız istisna / gider / correction yüzeyi olarak kalır. `Gelir / Gider` kontrolü, kısa kategori etiketi, tutar ve `Kaydı ekle` akışı manuel kayıt için yaşar; sistem satırları read-only kalır. Yüzey cash-only çalışır; ödeme tipi görünmez. Mobile öncelik sırası `Bugün özeti -> Defter -> Manuel giriş` olarak okunur; desktop’ta manuel form secondary sağ kolon gibi kalır. Gün özeti ana referans, defter ve tarih seçici seçili gün kontrolü için çalışır. Disclosure row mobile-safe kalır ve x-overflow üretmez.
+- Raporlar: mobile-first sakin bloklar halinde taranır; ağır dashboard veya grafik hissi yoktur. Staff bu yüzeyde `filtreler -> özet -> hareket listesi` sırasıyla çalışır. Filtre seti current runtime’da `tarih aralığı`, `işlem tipi`, `artist` ve `kayıt kaynağı` alanlarını taşır; özet ve liste aynı filtre kapsamına göre güncellenir. Liste ana bakışta `Gelir/Gider -> Tahsilat/Düzeltme/Manuel -> kısa işlem tipi -> tutar -> kısa destek bilgisi` ritmiyle okunur.
 - Kasa otomasyonu current runtime’ın parçasıdır; visible yüzeyde kasa ana başlangıç ekranı değil, otomatik hareketleri kontrol eden ve gerektiğinde manuel gider / düzeltme girilen yardımcı yüzey gibi davranır.
 - İşlemler: ilk görünür ana yüzey aylık takvimdir; mobile ve tablet month root, shell safe padding dışında kalan genişliği mümkün olduğunca kullanır ve dar ortalı kart gibi durmaz.
 - Selected-day workspace current runtime’da root takvimin hemen altında inline/fold üstü okunur; mobile ve desktop hiyerarşisi `month root -> selected day workspace -> detail/create-edit katmanları` sırasıyla net kalır.

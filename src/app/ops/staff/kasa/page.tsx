@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -190,7 +189,7 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                   <CardDescription>
                     {isSelectedDateToday
                       ? "Bugünün hareketlerini gözden geçirin."
-                      : "Seçili günün hareketlerini gözden geçirin."}
+                      : "Seçili günün defterini gözden geçirin."}
                   </CardDescription>
                 </div>
                 <div className="flex w-full min-w-0 flex-col items-stretch gap-2 sm:w-auto sm:min-w-[16rem] sm:items-end">
@@ -210,40 +209,16 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
                       </Button>
                     </form>
                   ) : null}
-                  <Button
-                    asChild
-                    variant="link"
-                    size="sm"
-                    className="h-auto justify-start px-0 text-muted-foreground/85 sm:justify-end"
-                  >
-                    <Link href="/ops/staff/raporlar">Raporlar</Link>
-                  </Button>
                 </div>
               </div>
             </CardHeader>
 
             <CardContent className="space-y-3 pt-0">
-              <div
-                className={cn(
-                  "grid gap-2",
-                  isSelectedDateToday ? "sm:grid-cols-1" : "sm:grid-cols-2"
-                )}
-              >
+              <div className={cn("grid gap-2", "sm:grid-cols-1")}>
                 <div className="rounded-2xl border border-border/80 bg-surface-1/55 p-3">
                   <SummaryRows label="Bugün" dateLabel={todayDateLabel} summary={cashbook.todaySummary} />
                 </div>
-
-                {!isSelectedDateToday ? (
-                  <div className="rounded-2xl border border-border/80 bg-surface-1/55 p-3">
-                  <SummaryRows
-                    label="Seçili gün"
-                    dateLabel={selectedDateLabel}
-                    summary={cashbook.selectedSummary}
-                  />
-                  </div>
-                ) : null}
               </div>
-
             </CardContent>
           </Card>
           <Card className="overflow-hidden">

@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import type { OpsNavItem } from "@/lib/ops/navigation";
 import {
   CalendarDays,
+  CalendarRange,
   ChevronLeft,
   FileText,
   ShieldCheck,
@@ -26,10 +27,21 @@ type OpsShellProps = {
 const iconClassName = "size-4 shrink-0";
 
 function isActivePath(pathname: string, href: string): boolean {
+  if (
+    href === "/ops/staff/raporlar" &&
+    (pathname === "/ops/staff/kasa" || pathname.startsWith("/ops/staff/kasa/"))
+  ) {
+    return true;
+  }
+
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 function OpsNavIcon({ href }: { href: string }) {
+  if (href.includes("/raporlar")) {
+    return <CalendarRange className={iconClassName} aria-hidden />;
+  }
+
   if (href.includes("/kasa")) {
     return <WalletCards className={iconClassName} aria-hidden />;
   }

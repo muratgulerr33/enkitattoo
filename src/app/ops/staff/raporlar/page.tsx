@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, CalendarRange } from "lucide-react";
+import { ArrowRight, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,17 +9,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import type { AppointmentStatus } from "@/db/schema";
-import { APPOINTMENT_STATUS_LABELS } from "@/lib/ops/appointment-copy";
-import { formatAppointmentDateLong } from "@/lib/ops/appointments";
 import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import { formatCashAmount } from "@/lib/ops/cashbook";
 import {
-  getAdminReportsSnapshot,
-  resolveSelectedAdminRange,
-  type AdminReportSection,
-  type ArtistReportSection,
-  type ReportsAppointmentListItem,
+  CASH_ENTRY_REASON_LABELS,
+  CASH_ENTRY_TYPE_LABELS,
+} from "@/lib/ops/cashbook-copy";
+import {
+  getStaffReportsSnapshot,
+  type ReportsCashListItem,
 } from "@/lib/ops/reports";
 import { cn } from "@/lib/utils";
 
@@ -27,54 +25,33 @@ type PageProps = {
   searchParams: Promise<{
     from?: string;
     to?: string;
+    serviceType?: string;
+    artistUserId?: string;
+    source?: string;
   }>;
 };
 
-function getStatusClassName(status: AppointmentStatus): string {
-  if (status === "completed") {
+function getEntryTypeClassName(entryType: ReportsCashListItem["entryType"]): string {
+  if (entryType === "income") {
     return "text-emerald-700";
   }
 
-  if (status === "scheduled") {
-    return "text-sky-700";
-  }
-
-  if (status === "cancelled") {
-    return "text-amber-700";
-  }
-
-  return "text-rose-700";
-}
-
-function truncateNote(note: string | null): string | null {
-  const normalized = note?.trim();
-
-  if (!normalized) {
-    return null;
-  }
-
-  if (normalized.length <= 88) {
-    return normalized;
-  }
-
-  return `${normalized.slice(0, 85)}...`;
+  return "text-amber-700";
 }
 
 function MetricGrid({
   items,
-  columns = 2,
 }: {
   items: Array<{
     label: string;
     value: string | number;
     toneClassName?: string;
   }>;
-  columns?: 2 | 4;
 }) {
   return (
-    <div className={cn("grid gap-2", columns === 4 ? "sm:grid-cols-2 xl:grid-cols-4" : "sm:grid-cols-2")}>
+    <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((item) => (
-        <div key={item.label} className="rounded-2xl border border-border bg-surface-1 px-3 py-3">
+        <div key={item.label} className="rounded-2xl border border-border/80 bg-surface-1/55 px-3 py-3">
           <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
             {item.label}
           </p>
@@ -87,85 +64,14 @@ function MetricGrid({
   );
 }
 
-function CashSummaryBlock({ section }: { section: AdminReportSection }) {
-  return (
-    <div className="space-y-2">
-      <div>
-        <p className="text-sm font-medium text-foreground">Kasa özeti</p>
-        <p className="text-xs text-muted-foreground">{section.range.label}</p>
-      </div>
-
-      <MetricGrid
-        columns={4}
-        items={[
-          {
-            label: "Toplam gelir",
-            value: formatCashAmount(section.cashSummary.incomeCents),
-            toneClassName: "text-emerald-700",
-          },
-          {
-            label: "Toplam gider",
-            value: formatCashAmount(section.cashSummary.expenseCents),
-            toneClassName: "text-amber-700",
-          },
-          {
-            label: "Net",
-            value: formatCashAmount(section.cashSummary.netCents),
-            toneClassName:
-              section.cashSummary.netCents > 0
-                ? "text-emerald-700"
-                : section.cashSummary.netCents < 0
-                  ? "text-amber-700"
-                  : undefined,
-          },
-          {
-            label: "Kayıt",
-            value: section.cashSummary.entryCount,
-          },
-        ]}
-      />
-    </div>
-  );
-}
-
-function AppointmentSummaryBlock({
-  title,
-  label,
-  summary,
-}: {
-  title: string;
-  label: string;
-  summary: ArtistReportSection["appointmentSummary"];
-}) {
-  return (
-    <div className="space-y-2">
-      <div>
-        <p className="text-sm font-medium text-foreground">{title}</p>
-        <p className="text-xs text-muted-foreground">{label}</p>
-      </div>
-
-      <MetricGrid
-        columns={4}
-        items={[
-          { label: "Toplam", value: summary.totalCount },
-          { label: "Planlı", value: summary.scheduledCount, toneClassName: "text-sky-700" },
-          { label: "Tamamlanan", value: summary.completedCount, toneClassName: "text-emerald-700" },
-          { label: "İptal", value: summary.cancelledCount, toneClassName: "text-amber-700" },
-          { label: "No-show", value: summary.noShowCount, toneClassName: "text-rose-700" },
-        ]}
-      />
-    </div>
-  );
-}
-
-function AppointmentList({
+function ReportsList({
   title,
   description,
-  appointments,
+  entries,
 }: {
   title: string;
   description: string;
-  appointments: ReportsAppointmentListItem[];
+  entries: ReportsCashListItem[];
 }) {
   return (
     <Card>
@@ -175,39 +81,50 @@ function AppointmentList({
       </CardHeader>
 
       <CardContent className="px-0 pt-1">
-        {appointments.length ? (
+        {entries.length ? (
           <div className="divide-y divide-border">
-            {appointments.map((appointment) => {
-              const notePreview = truncateNote(appointment.notes);
-
-              return (
-                <div key={appointment.id} className="space-y-1.5 px-4 py-3 xl:px-5">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0 space-y-0.5">
-                      <p className="text-sm font-semibold text-foreground">
-                        {appointment.customerName}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {formatAppointmentDateLong(appointment.appointmentDate)} · {appointment.appointmentTime}
-                      </p>
+            {entries.map((entry) => (
+              <div key={entry.id} className="px-4 py-3 xl:px-5">
+                <div className="flex items-start justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 flex-1 space-y-1.5">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-medium sm:text-[11px]">
+                      <span
+                        className={cn(
+                          "uppercase tracking-[0.16em]",
+                          getEntryTypeClassName(entry.entryType)
+                        )}
+                      >
+                        {CASH_ENTRY_TYPE_LABELS[entry.entryType]}
+                      </span>
+                      <span className="text-muted-foreground">
+                        {CASH_ENTRY_REASON_LABELS[entry.entryReason] ?? entry.reasonLabel}
+                      </span>
+                      {entry.sourceLabel ? (
+                        <span className="text-muted-foreground">{entry.sourceLabel}</span>
+                      ) : null}
                     </div>
 
-                    <span
-                      className={cn(
-                        "shrink-0 text-[11px] font-medium uppercase tracking-wide",
-                        getStatusClassName(appointment.status)
-                      )}
-                    >
-                      {APPOINTMENT_STATUS_LABELS[appointment.status]}
-                    </span>
+                    <p className="truncate text-sm font-medium text-foreground sm:text-[15px]">
+                      {entry.primaryLabel}
+                    </p>
+
+                    <p className="truncate text-xs text-muted-foreground">{entry.supportLabel}</p>
                   </div>
 
-                  {notePreview ? (
-                    <p className="text-sm text-muted-foreground">{notePreview}</p>
-                  ) : null}
+                  <div className="shrink-0 text-right">
+                    <p
+                      className={cn(
+                        "text-lg font-semibold font-numbers sm:text-[1.4rem]",
+                        getEntryTypeClassName(entry.entryType)
+                      )}
+                    >
+                      {entry.entryType === "income" ? "+" : "-"}
+                      {formatCashAmount(entry.amountCents)}
+                    </p>
+                  </div>
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         ) : (
           <div className="px-4 py-5 text-sm text-muted-foreground xl:px-5">Kayıt yok.</div>
@@ -220,105 +137,167 @@ function AppointmentList({
 export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   await requireOpsSessionArea("staff");
-  const selectedRange = resolveSelectedAdminRange(params);
-  const reports = await getAdminReportsSnapshot(params);
+  const reports = await getStaffReportsSnapshot(params);
 
   return (
     <div className="ops-page-shell space-y-4">
-      <Card>
-        <CardHeader className="gap-2 border-b pb-4">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="space-y-1">
-              <CardTitle className="text-base sm:text-lg">Raporlar</CardTitle>
-              <CardDescription>
-                Günlük, haftalık ve seçili aralık özeti staff için burada toplanır.
-              </CardDescription>
-            </div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="ops-page-header">
+          <p className="text-base font-semibold tracking-tight text-foreground sm:text-lg">Rapor</p>
+          <p className="ops-page-intro">
+            Tarih aralığı ve operasyon filtreleriyle hareketleri görüntüleyin.
+          </p>
+        </div>
 
-            <Button asChild variant="outline" size="sm" className="rounded-lg">
-              <Link href="/ops/staff/kasa">
-                <ArrowLeft className="size-4" aria-hidden />
-                Kasaya dön
-              </Link>
-            </Button>
-          </div>
+        <Button asChild variant="outline" size="sm" className="rounded-lg sm:shrink-0">
+          <Link href="/ops/staff/kasa">
+            Defteri aç
+            <ArrowRight className="size-4" aria-hidden />
+          </Link>
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader className="gap-1.5 border-b pb-4">
+          <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+            <Filter className="size-4" aria-hidden />
+            Filtreler
+          </CardTitle>
+          <CardDescription>{reports.range.label}</CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-3 pt-4">
-          <div className="grid gap-3 lg:grid-cols-2">
-            <div className="rounded-2xl border border-border px-4 py-4">
-              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
-                <CalendarRange className="size-4" aria-hidden />
-                {reports.today.range.title}
-              </div>
-              <div className="space-y-4">
-                <CashSummaryBlock section={reports.today} />
-                <AppointmentSummaryBlock
-                  title="Randevu özeti"
-                  label={reports.today.range.label}
-                  summary={reports.today.appointmentSummary}
-                />
-              </div>
+        <CardContent className="pt-4">
+          <form
+            action="/ops/staff/raporlar"
+            className="grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,0.9fr)]"
+          >
+            <div className="space-y-2">
+              <label htmlFor="from" className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                Başlangıç
+              </label>
+              <Input id="from" type="date" name="from" defaultValue={reports.filters.from} />
             </div>
 
-            <div className="rounded-2xl border border-border px-4 py-4">
-              <div className="mb-3 flex items-center gap-2 text-sm font-medium text-foreground">
-                <CalendarRange className="size-4" aria-hidden />
-                {reports.week.range.title}
-              </div>
-              <div className="space-y-4">
-                <CashSummaryBlock section={reports.week} />
-                <AppointmentSummaryBlock
-                  title="Randevu özeti"
-                  label={reports.week.range.label}
-                  summary={reports.week.appointmentSummary}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-border px-4 py-4">
-            <div className="flex flex-wrap items-start justify-between gap-3">
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-foreground">Genel rapor</p>
-                <p className="text-xs text-muted-foreground">{reports.selected.range.label}</p>
-              </div>
-
-              <form action="/ops/staff/raporlar" className="grid w-full gap-2 sm:w-auto sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto]">
-                <Input
-                  type="date"
-                  name="from"
-                  defaultValue={selectedRange.from}
-                  aria-label="Başlangıç tarihi"
-                />
-                <Input
-                  type="date"
-                  name="to"
-                  defaultValue={selectedRange.to}
-                  aria-label="Bitiş tarihi"
-                />
-                <Button type="submit" variant="outline" size="sm" className="rounded-lg">
-                  Uygula
-                </Button>
-              </form>
+            <div className="space-y-2">
+              <label htmlFor="to" className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                Bitiş
+              </label>
+              <Input id="to" type="date" name="to" defaultValue={reports.filters.to} />
             </div>
 
-            <div className="mt-4 space-y-4">
-              <CashSummaryBlock section={reports.selected} />
-              <AppointmentSummaryBlock
-                title="Randevu özeti"
-                label={reports.selected.range.label}
-                summary={reports.selected.appointmentSummary}
-              />
+            <div className="space-y-2">
+              <label
+                htmlFor="serviceType"
+                className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground"
+              >
+                İşlem tipi
+              </label>
+              <select
+                id="serviceType"
+                name="serviceType"
+                defaultValue={reports.filters.serviceType}
+                className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+              >
+                <option value="all">Tümü</option>
+                <option value="tattoo">Dövme</option>
+                <option value="piercing">Piercing</option>
+              </select>
             </div>
-          </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="artistUserId"
+                className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground"
+              >
+                Artist
+              </label>
+              <select
+                id="artistUserId"
+                name="artistUserId"
+                defaultValue={reports.filters.artistUserId?.toString() ?? ""}
+                className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+              >
+                <option value="">Tüm artistler</option>
+                {reports.artistOptions.map((artist) => (
+                  <option key={artist.userId} value={artist.userId}>
+                    {artist.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label
+                htmlFor="source"
+                className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground"
+              >
+                Kayıt kaynağı
+              </label>
+              <select
+                id="source"
+                name="source"
+                defaultValue={reports.filters.source}
+                className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+              >
+                <option value="all">Tümü</option>
+                <option value="appointment">Randevu</option>
+                <option value="walk_in">Walk-in</option>
+                <option value="manual">Manuel</option>
+              </select>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 md:col-span-2 xl:col-span-5">
+              <Button type="submit" variant="outline" size="sm" className="rounded-lg">
+                Uygula
+              </Button>
+              <Button asChild variant="ghost" size="sm" className="rounded-lg text-muted-foreground">
+                <Link href="/ops/staff/raporlar">Temizle</Link>
+              </Button>
+            </div>
+          </form>
         </CardContent>
       </Card>
 
-      <AppointmentList
-        title="Seçilen aralıktaki randevular"
-        description={`${reports.selected.range.label} için ${reports.selected.appointments.length} kayıt bulundu.`}
-        appointments={reports.selected.appointments}
+      <section className="space-y-2">
+        <div className="space-y-1">
+          <p className="text-sm font-medium text-foreground">Özet</p>
+          <p className="text-xs text-muted-foreground">{reports.range.label}</p>
+        </div>
+
+        <MetricGrid
+          items={[
+            {
+              label: "Toplam gelir",
+              value: formatCashAmount(reports.summary.incomeCents),
+              toneClassName: "text-emerald-700",
+            },
+            {
+              label: "Toplam gider",
+              value: formatCashAmount(reports.summary.expenseCents),
+              toneClassName: "text-amber-700",
+            },
+            {
+              label: "Net",
+              value: formatCashAmount(reports.summary.netCents),
+              toneClassName:
+                reports.summary.netCents > 0
+                  ? "text-emerald-700"
+                  : reports.summary.netCents < 0
+                    ? "text-amber-700"
+                    : undefined,
+            },
+            {
+              label: "Hareket",
+              value: reports.summary.entryCount,
+            },
+          ]}
+        />
+      </section>
+
+      <ReportsList
+        title="Hareketler"
+        description={`${reports.range.label} için ${reports.entries.length} kayıt bulundu.`}
+        entries={reports.entries}
       />
     </div>
   );

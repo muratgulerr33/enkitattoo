@@ -9,7 +9,7 @@ export const OPS_LOGIN_HREF = "/ops/giris";
 export const STAFF_NAV_ITEMS: OpsNavItem[] = [
   { href: "/ops/staff/randevular", label: "İşlemler", shortLabel: "İşlemler" },
   { href: "/ops/staff/musteriler", label: "Müşteriler", shortLabel: "Müşteriler" },
-  { href: "/ops/staff/kasa", label: "Kasa", shortLabel: "Kasa" },
+  { href: "/ops/staff/raporlar", label: "Rapor", shortLabel: "Rapor" },
   { href: "/ops/staff/profil", label: "Ayarlar", shortLabel: "Ayarlar" },
 ];
 
