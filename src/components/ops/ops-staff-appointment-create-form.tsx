@@ -628,7 +628,7 @@ export function OpsStaffAppointmentCreateForm({
           >
             <DialogContent
               showCloseButton
-              className="top-auto bottom-2 left-1/2 flex h-[min(84vh,calc(100vh-1rem))] w-[calc(100%-1rem)] max-w-none translate-x-[-50%] translate-y-0 flex-col gap-0 overflow-hidden rounded-[2rem] border bg-background p-0 sm:h-[min(82vh,calc(100vh-2rem))] sm:max-w-[36rem] md:max-w-[38rem] lg:top-1/2 lg:bottom-auto lg:h-auto lg:max-w-[34rem] lg:translate-y-[-50%]"
+              className="top-auto bottom-2 left-1/2 flex min-h-0 h-[min(84vh,calc(100vh-1rem))] w-[calc(100%-1rem)] max-w-none translate-x-[-50%] translate-y-0 flex-col gap-0 overflow-hidden rounded-[2rem] border bg-background p-0 sm:h-[min(82vh,calc(100vh-2rem))] sm:max-w-[36rem] md:max-w-[38rem] lg:top-1/2 lg:bottom-auto lg:h-[min(78vh,42rem)] lg:max-h-[min(78vh,42rem)] lg:max-w-[34rem] lg:translate-y-[-50%]"
             >
               <DialogHeader className="border-b px-4 py-3 text-left sm:px-5">
                 <DialogTitle>Müşteri seç</DialogTitle>
