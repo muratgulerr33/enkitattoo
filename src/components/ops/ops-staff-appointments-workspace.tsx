@@ -288,11 +288,11 @@ function AppointmentServiceSummarySection({
   return (
     <section
       className={cn(
-        "rounded-[1.55rem] border border-border bg-card",
+        "rounded-[1.55rem] border border-border bg-card dark:border-border/90 dark:bg-card/96",
         compact ? "p-3 sm:p-3.5" : "p-3.5 sm:p-4"
       )}
     >
-      <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+      <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground dark:text-muted-foreground/92">
         İşlem özeti
       </p>
 
@@ -300,11 +300,11 @@ function AppointmentServiceSummarySection({
         <div className={cn("mt-3", compact ? "space-y-2" : "space-y-2.5")}>
           <div
             className={cn(
-              "rounded-2xl border border-border bg-surface-1/35",
+              "rounded-2xl border border-border bg-surface-1/35 dark:border-border/85 dark:bg-surface-1/72",
               compact ? "px-3 py-2.5" : "px-3.5 py-3"
             )}
           >
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground dark:text-muted-foreground/92">
               İşlem tipi
             </p>
             <p className="mt-1 text-sm font-medium text-foreground">
@@ -315,11 +315,11 @@ function AppointmentServiceSummarySection({
           <div className={cn("grid sm:grid-cols-2", compact ? "gap-2" : "gap-2.5")}>
             <div
               className={cn(
-                "rounded-2xl border border-border",
+                "rounded-2xl border border-border dark:border-border/85 dark:bg-surface-1/6",
                 compact ? "px-3 py-2.5" : "px-3.5 py-3"
               )}
             >
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground dark:text-muted-foreground/92">
                 Toplam
               </p>
               <p className="mt-1 text-sm font-semibold text-foreground">
@@ -329,11 +329,11 @@ function AppointmentServiceSummarySection({
 
             <div
               className={cn(
-                "rounded-2xl border border-border",
+                "rounded-2xl border border-border dark:border-border/85 dark:bg-surface-1/6",
                 compact ? "px-3 py-2.5" : "px-3.5 py-3"
               )}
             >
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground dark:text-muted-foreground/92">
                 Kapora
               </p>
               <p className="mt-1 text-sm font-semibold text-foreground">
@@ -345,7 +345,7 @@ function AppointmentServiceSummarySection({
       ) : (
         <div
           className={cn(
-            "mt-3 rounded-2xl border border-dashed border-border text-sm text-muted-foreground",
+            "mt-3 rounded-2xl border border-dashed border-border text-sm text-muted-foreground dark:border-border/80 dark:bg-surface-1/48 dark:text-muted-foreground/92",
             compact ? "px-3.5 py-3 leading-5" : "px-4 py-4"
           )}
         >
@@ -370,13 +370,13 @@ function AppointmentContextCard({
   return (
     <section
       className={cn(
-        "rounded-[1.55rem] border border-border bg-surface-1/45",
+        "rounded-[1.55rem] border border-border bg-surface-1/45 dark:border-border/90 dark:bg-surface-1/74",
         compact ? "px-3.5 py-3" : "px-4 py-3.5"
       )}
     >
       <div className={cn("flex flex-wrap items-start justify-between", compact ? "gap-2.5" : "gap-3")}>
         <div className={compact ? "space-y-0.5" : "space-y-1"}>
-          <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground dark:text-muted-foreground/92">
             Müşteri
           </p>
           <p className="text-base font-semibold text-foreground">{customerName}</p>
@@ -479,15 +479,15 @@ function AppointmentFormSheet({
         showCloseButton={false}
         data-testid={createMode ? "appointments-create-sheet" : "appointments-edit-sheet"}
         className={cn(
-          "mx-auto overflow-hidden rounded-t-[2.1rem] p-0",
+          "mx-auto overflow-hidden rounded-t-[2.1rem] p-0 dark:border-border/90 dark:bg-card/96",
           createMode
             ? "max-h-[90vh] w-full max-w-2xl md:max-h-[88vh] md:max-w-[34rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:right-5 lg:left-auto lg:top-4 lg:bottom-4 lg:max-h-none lg:w-[27rem] lg:max-w-[27rem] lg:rounded-[2rem] lg:border xl:w-[28rem] xl:max-w-[28rem]"
             : "max-h-[92vh] w-full max-w-3xl md:max-h-[89vh] md:max-w-[42rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:right-5 lg:left-auto lg:top-4 lg:bottom-4 lg:max-h-none lg:w-[34rem] lg:max-w-[34rem] lg:rounded-[2rem] lg:border xl:w-[35rem] xl:max-w-[35rem]"
         )}
       >
-        <div className="flex h-full min-h-0 max-h-[92vh] flex-col bg-background md:max-h-[89vh] lg:max-h-none">
+        <div className="flex h-full min-h-0 max-h-[92vh] flex-col bg-background dark:bg-card/96 md:max-h-[89vh] lg:max-h-none">
           <SheetHandle />
-          <SheetHeader className="border-b border-border px-4 py-2.5 text-left sm:px-5 sm:py-3">
+          <SheetHeader className="border-b border-border px-4 py-2.5 text-left dark:border-border/90 dark:bg-surface-1/62 sm:px-5 sm:py-3">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <SheetTitle>
@@ -582,11 +582,11 @@ function AppointmentDetailSheet({
         side="bottom"
         showCloseButton={false}
         data-testid="appointments-detail-sheet"
-        className="mx-auto max-h-[82vh] w-full max-w-xl overflow-hidden rounded-t-[2rem] p-0 md:max-h-[80vh] md:max-w-[34rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:left-1/2 lg:right-auto lg:top-4 lg:bottom-4 lg:max-h-none lg:w-[28rem] lg:max-w-[28rem] lg:-translate-x-1/2 lg:translate-y-0 lg:rounded-[2rem] lg:border"
+        className="mx-auto max-h-[82vh] w-full max-w-xl overflow-hidden rounded-t-[2rem] p-0 md:max-h-[80vh] md:max-w-[34rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:left-1/2 lg:right-auto lg:top-4 lg:bottom-4 lg:max-h-none lg:w-[28rem] lg:max-w-[28rem] lg:-translate-x-1/2 lg:translate-y-0 lg:rounded-[2rem] lg:border dark:border-border/90 dark:bg-card/96"
       >
-        <div className="flex h-full min-h-0 max-h-[82vh] flex-col bg-background md:max-h-[80vh] lg:max-h-none">
+        <div className="flex h-full min-h-0 max-h-[82vh] flex-col bg-background dark:bg-card/96 md:max-h-[80vh] lg:max-h-none">
           <SheetHandle />
-          <SheetHeader className="border-b border-border bg-surface-1/40 px-4 py-2.5 text-left sm:px-5 sm:py-3">
+          <SheetHeader className="border-b border-border bg-surface-1/40 px-4 py-2.5 text-left dark:border-border/90 dark:bg-surface-1/72 sm:px-5 sm:py-3">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
                 <SheetTitle>İşlem detayı</SheetTitle>
@@ -617,14 +617,14 @@ function AppointmentDetailSheet({
               compact
             />
 
-            <section className="rounded-[1.55rem] border border-border bg-card p-3 sm:p-3.5">
-              <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+            <section className="rounded-[1.55rem] border border-border bg-card p-3 dark:border-border/90 dark:bg-card/96 sm:p-3.5">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground dark:text-muted-foreground/92">
                 Not
               </p>
               {session.notes ? (
                 <p className="mt-1.5 text-sm leading-5 text-foreground">{session.notes}</p>
               ) : (
-                <p className="mt-2 rounded-xl border border-dashed border-border px-3 py-2 text-sm text-muted-foreground">
+                <p className="mt-2 rounded-xl border border-dashed border-border px-3 py-2 text-sm text-muted-foreground dark:border-border/80 dark:bg-surface-1/48 dark:text-muted-foreground/92">
                   Not yok.
                 </p>
               )}
@@ -767,14 +767,14 @@ function AppointmentDayWorkspacePanel({
   return (
     <Card
       className={cn(
-        "w-full min-w-0 overflow-hidden min-[1440px]:sticky min-[1440px]:top-24",
+        "w-full min-w-0 overflow-hidden min-[1440px]:sticky min-[1440px]:top-24 dark:border-border/90 dark:bg-card/96",
         className
       )}
     >
-      <CardHeader className="gap-2.5 border-b bg-surface-1/35 px-4 py-3 sm:gap-3 sm:px-5 sm:py-4">
+      <CardHeader className="gap-2.5 border-b bg-surface-1/35 px-4 py-3 dark:border-border/90 dark:bg-surface-1/74 sm:gap-3 sm:px-5 sm:py-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 space-y-1">
-            <p className="hidden text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground md:block">
+            <p className="hidden text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground dark:text-muted-foreground/92 md:block">
               Seçili gün
             </p>
             <CardTitle className="text-base leading-tight sm:text-lg">
@@ -799,7 +799,9 @@ function AppointmentDayWorkspacePanel({
             {getAppointmentCountLabel(selectedDaySessions.length)}
           </p>
           {recommendedTime ? (
-            <p className="text-muted-foreground">Yeni işlem için {recommendedTime} uygun.</p>
+            <p className="text-muted-foreground dark:text-muted-foreground/92">
+              Yeni işlem için {recommendedTime} uygun.
+            </p>
           ) : null}
         </div>
       </CardHeader>
@@ -813,11 +815,11 @@ function AppointmentDayWorkspacePanel({
                 type="button"
                 onClick={() => onSessionOpen(session)}
                 data-testid={`day-appointment-${getSessionKey(session)}`}
-                className="w-full rounded-[1.35rem] border border-border bg-card px-3 py-3 text-left transition-[transform,background-color,border-color,box-shadow] duration-150 hover:bg-surface-1/65 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] sm:rounded-[1.45rem] sm:px-3.5 sm:py-3.5"
+                className="w-full rounded-[1.35rem] border border-border bg-card px-3 py-3 text-left transition-[transform,background-color,border-color,box-shadow] duration-150 hover:bg-surface-1/65 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] dark:border-border/90 dark:bg-card/96 dark:hover:bg-surface-1/78 sm:rounded-[1.45rem] sm:px-3.5 sm:py-3.5"
               >
                 <div className="flex items-center gap-2.5 sm:gap-3">
-                  <div className="flex min-h-12 w-14 shrink-0 flex-col items-center justify-center rounded-2xl border border-border bg-surface-1/80 text-foreground sm:min-h-14 sm:w-16">
-                    <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                  <div className="flex min-h-12 w-14 shrink-0 flex-col items-center justify-center rounded-2xl border border-border bg-surface-1/80 text-foreground dark:border-border/85 dark:bg-surface-1/92 sm:min-h-14 sm:w-16">
+                    <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground dark:text-muted-foreground/92">
                       Saat
                     </span>
                     <span className="mt-0.5 text-[15px] font-semibold font-numbers sm:text-base">
@@ -839,20 +841,17 @@ function AppointmentDayWorkspacePanel({
                           ) : null}
                         </div>
                       </div>
-                      <ChevronRightIcon
-                        className="size-4 shrink-0 text-muted-foreground"
-                        aria-hidden
-                      />
+                      <ChevronRightIcon className="size-4 shrink-0 text-muted-foreground dark:text-muted-foreground/90" aria-hidden />
                     </div>
 
                     {session.notes ? (
-                      <p className="mt-1 hidden line-clamp-1 text-sm text-muted-foreground md:block">
+                      <p className="mt-1 hidden line-clamp-1 text-sm text-muted-foreground dark:text-muted-foreground/90 md:block">
                         {session.notes}
                       </p>
                     ) : null}
 
                     {session.customerEmail ? (
-                      <p className="mt-1 hidden truncate text-[11px] text-muted-foreground/68 sm:block">
+                      <p className="mt-1 hidden truncate text-[11px] text-muted-foreground/68 dark:text-muted-foreground/82 sm:block">
                         {session.customerEmail}
                       </p>
                     ) : null}
@@ -862,9 +861,9 @@ function AppointmentDayWorkspacePanel({
             ))}
           </div>
         ) : (
-          <div className="rounded-[1.35rem] border border-dashed border-border bg-surface-1/20 px-4 py-3.5 sm:rounded-[1.45rem] sm:py-4">
+          <div className="rounded-[1.35rem] border border-dashed border-border bg-surface-1/20 px-4 py-3.5 dark:border-border/80 dark:bg-surface-1/48 sm:rounded-[1.45rem] sm:py-4">
             <p className="text-sm font-medium text-foreground">Seçili gün için işlem yok.</p>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-muted-foreground dark:text-muted-foreground/92">
               Takvimden başka bir gün seçin veya bu gün için yeni işlem açın.
             </p>
           </div>
@@ -988,7 +987,7 @@ export function OpsStaffAppointmentsWorkspace({
     >
       <div className="grid gap-4 min-[1440px]:grid-cols-[minmax(0,1.28fr)_minmax(22rem,0.72fr)] min-[1440px]:items-start min-[1440px]:gap-5">
         <Card
-          className="-mx-4 -mt-3 min-w-0 gap-0 overflow-hidden rounded-none border-x-0 border-t-0 py-0 shadow-none sm:-mx-6 sm:-mt-4 md:gap-6 md:py-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm xl:py-5"
+          className="-mx-4 -mt-3 min-w-0 gap-0 overflow-hidden rounded-none border-x-0 border-t-0 py-0 shadow-none sm:-mx-6 sm:-mt-4 md:gap-6 md:py-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm dark:lg:border-border/90 dark:lg:bg-card/96 xl:py-5"
           data-testid="appointments-month-card"
         >
           <CardHeader className="border-b px-1.5 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-4 xl:px-7 2xl:px-8">
@@ -1050,8 +1049,8 @@ export function OpsStaffAppointmentsWorkspace({
                       cell.isSelected
                         ? "border-foreground bg-foreground text-background shadow-[0_20px_44px_rgba(15,23,42,0.28)] ring-2 ring-foreground/16 hover:bg-foreground"
                         : cell.count
-                          ? "border-foreground/18 bg-surface-1 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.34)] hover:bg-surface-1/80"
-                          : "border-border/85 bg-card text-foreground hover:bg-surface-1/45"
+                          ? "border-foreground/18 bg-surface-1 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.34)] hover:bg-surface-1/80 dark:border-border/90 dark:bg-surface-1/92 dark:hover:bg-surface-1"
+                          : "border-border/85 bg-card text-foreground hover:bg-surface-1/45 dark:border-border/90 dark:bg-card/96 dark:hover:bg-surface-1/72"
                     )}
                   >
                     <div className="flex items-start justify-between gap-1.5 sm:gap-2">

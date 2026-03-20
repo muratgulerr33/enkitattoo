@@ -30,6 +30,7 @@ export function OpsCustomerRegisterForm() {
             name="fullName"
             autoComplete="name"
             placeholder="Ad soyad"
+            className="h-11 rounded-xl bg-surface-1/40 dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />
@@ -44,6 +45,7 @@ export function OpsCustomerRegisterForm() {
             autoComplete="tel"
             inputMode="tel"
             placeholder="05xx xxx xx xx"
+            className="h-11 rounded-xl bg-surface-1/40 dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />
@@ -58,6 +60,7 @@ export function OpsCustomerRegisterForm() {
             autoComplete="email"
             inputMode="email"
             placeholder="ornek@enki.com"
+            className="h-11 rounded-xl bg-surface-1/40 dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />
@@ -71,6 +74,7 @@ export function OpsCustomerRegisterForm() {
             type="password"
             autoComplete="new-password"
             placeholder="En az 8 karakter"
+            className="h-11 rounded-xl bg-surface-1/40 dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />

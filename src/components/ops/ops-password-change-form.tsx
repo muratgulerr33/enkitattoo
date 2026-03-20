@@ -30,6 +30,7 @@ export function OpsPasswordChangeForm() {
             type="password"
             autoComplete="current-password"
             placeholder="Mevcut şifre"
+            className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />
@@ -43,6 +44,7 @@ export function OpsPasswordChangeForm() {
             type="password"
             autoComplete="new-password"
             placeholder="En az 8 karakter"
+            className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />
@@ -56,6 +58,7 @@ export function OpsPasswordChangeForm() {
             type="password"
             autoComplete="new-password"
             placeholder="Yeni şifreyi tekrar yazın"
+            className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />
@@ -69,7 +72,7 @@ export function OpsPasswordChangeForm() {
       ) : null}
 
       {state.success ? (
-        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground dark:border-border/90 dark:bg-surface-1/72">
           {state.success}
         </p>
       ) : null}

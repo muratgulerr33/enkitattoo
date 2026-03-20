@@ -41,7 +41,7 @@ export function OpsStaffCustomerCreateForm() {
             id="fullName"
             name="fullName"
             autoComplete="name"
-            className="h-9 rounded-xl bg-background"
+            className="h-9 rounded-xl bg-background dark:border-border/90 dark:bg-surface-1/78"
             disabled={pending}
             required
           />
@@ -56,14 +56,14 @@ export function OpsStaffCustomerCreateForm() {
             autoComplete="tel"
             inputMode="tel"
             placeholder="05xx xxx xx xx"
-            className="h-9 rounded-xl bg-background"
+            className="h-9 rounded-xl bg-background dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />
         </div>
       </div>
 
-      <Collapsible open={noteOpen} onOpenChange={setNoteOpen} className="border-t border-border/80 pt-2.5">
+      <Collapsible open={noteOpen} onOpenChange={setNoteOpen} className="border-t border-border/80 pt-2.5 dark:border-border/85">
         <div className="flex min-w-0 items-center justify-between gap-3">
           <p id="customer-note-label" className="min-w-0 text-sm font-medium text-foreground">
             Not
@@ -74,7 +74,7 @@ export function OpsStaffCustomerCreateForm() {
               type="button"
               variant="ghost"
               size="xs"
-              className="rounded-full px-2 text-muted-foreground"
+              className="rounded-full px-2 text-muted-foreground dark:text-muted-foreground/92 dark:hover:bg-surface-1/72"
               disabled={pending}
             >
               {noteOpen ? "Kapat" : "Ekle"}
@@ -96,7 +96,7 @@ export function OpsStaffCustomerCreateForm() {
               value={noteValue}
               onChange={(event) => setNoteValue(event.target.value)}
               placeholder="Kısa not"
-              className="min-h-[64px] rounded-xl bg-background"
+              className="min-h-[64px] rounded-xl bg-background dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
               disabled={pending}
             />
           </CollapsibleContent>
@@ -112,7 +112,7 @@ export function OpsStaffCustomerCreateForm() {
       ) : null}
 
       {state.success ? (
-        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground dark:border-border/90 dark:bg-surface-1/72">
           {state.success}
         </p>
       ) : null}

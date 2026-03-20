@@ -33,7 +33,7 @@ export function OpsProfileForm({
       <div className="grid gap-2.5 sm:grid-cols-2">
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="email">E-posta</Label>
-          <Input id="email" value={email ?? ""} disabled readOnly />
+          <Input id="email" value={email ?? ""} className="dark:border-border/90 dark:bg-surface-1/78" disabled readOnly />
         </div>
 
         <div className="space-y-2 sm:col-span-2">
@@ -44,6 +44,7 @@ export function OpsProfileForm({
             autoComplete="name"
             placeholder="Ad soyad"
             defaultValue={fullName ?? ""}
+            className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />
@@ -59,6 +60,7 @@ export function OpsProfileForm({
             inputMode="tel"
             placeholder="05xx xxx xx xx"
             defaultValue={phone ?? ""}
+            className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
             required
           />
@@ -71,6 +73,7 @@ export function OpsProfileForm({
             name="displayName"
             placeholder="Kısa ad"
             defaultValue={displayName ?? ""}
+            className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={pending}
           />
         </div>
@@ -83,7 +86,7 @@ export function OpsProfileForm({
       ) : null}
 
       {state.success ? (
-        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground dark:border-border/90 dark:bg-surface-1/72">
           {state.success}
         </p>
       ) : null}

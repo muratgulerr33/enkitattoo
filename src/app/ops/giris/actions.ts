@@ -43,7 +43,7 @@ export async function loginAction(
 
   if (typeof identifier !== "string" || typeof password !== "string") {
     return {
-      error: "Telefon veya e-posta ve şifre gerekli.",
+      error: "Telefon veya e-posta bilginizi ve şifrenizi girin.",
     };
   }
 
@@ -52,7 +52,7 @@ export async function loginAction(
 
   if (!trimmedIdentifier || !trimmedPassword) {
     return {
-      error: "Telefon veya e-posta ve şifre gerekli.",
+      error: "Telefon veya e-posta bilginizi ve şifrenizi girin.",
     };
   }
 

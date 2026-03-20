@@ -35,6 +35,7 @@ export function OpsCustomerNoteForm({
         defaultValue={note ?? ""}
         rows={4}
         placeholder="Kısa not"
+        className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
         disabled={pending}
       />
 
@@ -45,7 +46,7 @@ export function OpsCustomerNoteForm({
       ) : null}
 
       {state.success ? (
-        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground dark:border-border/90 dark:bg-surface-1/72">
           {state.success}
         </p>
       ) : null}

@@ -49,7 +49,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
   return (
     <div className="ops-page-shell">
       <div className="grid gap-3.5 xl:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)] xl:items-start xl:gap-4">
-        <Card className="gap-2.5 border-foreground/12 bg-card shadow-[0_10px_24px_rgba(15,23,42,0.04)] xl:min-h-[9.4rem]">
+        <Card className="gap-2.5 border-foreground/12 bg-card shadow-[0_10px_24px_rgba(15,23,42,0.04)] dark:border-border/90 dark:bg-card/96 dark:shadow-[0_12px_30px_rgba(0,0,0,0.22)] xl:min-h-[9.4rem]">
           <CardHeader className="gap-1">
             <CardTitle>Müşteri ara</CardTitle>
             <CardDescription>Önce arayın. Kayıt yoksa hızlı müşteri ekleyin.</CardDescription>
@@ -61,11 +61,11 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                 defaultValue={query}
                 placeholder="İsim, telefon veya e-posta"
                 autoComplete="off"
-                className="h-10 rounded-xl bg-background"
+                className="h-10 rounded-xl bg-background dark:border-border/90 dark:bg-surface-1/74 dark:placeholder:text-muted-foreground/78"
               />
               <button
                 type="submit"
-                className="inline-flex h-10 items-center justify-center rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/35"
+                className="inline-flex h-10 items-center justify-center rounded-xl border border-border px-4 text-sm font-medium text-foreground transition-colors hover:bg-muted/35 dark:border-border/90 dark:bg-surface-1/58 dark:hover:bg-surface-1/76"
               >
                 Ara
               </button>
@@ -73,7 +73,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
           </CardContent>
         </Card>
 
-        <Card id="yeni-musteri" className="gap-3 border-border/55 bg-surface-1/18 xl:min-h-[9.4rem]">
+        <Card id="yeni-musteri" className="gap-3 border-border/55 bg-surface-1/18 dark:border-border/90 dark:bg-surface-1/48 xl:min-h-[9.4rem]">
           <CardHeader className="gap-1">
             <CardTitle>Hızlı müşteri</CardTitle>
             <CardDescription>Kayıt yoksa kısa bilgilerle ekleyin.</CardDescription>
@@ -84,7 +84,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
         </Card>
       </div>
 
-      <Card className="gap-4">
+      <Card className="gap-4 dark:border-border/90 dark:bg-card/96">
         <CardHeader className="gap-1">
           <CardTitle>{getCustomerResultsTitle(query)}</CardTitle>
           <CardDescription>{getCustomerResultsDescription(query, customers.length)}</CardDescription>
@@ -102,8 +102,8 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                   className={cn(
                     "group flex h-full min-h-[7.8rem] flex-col justify-center rounded-[1.45rem] border px-3.5 py-3 transition-[transform,border-color,background-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.995]",
                     isSearchActive
-                      ? "border-foreground/10 bg-muted/10 hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-muted/15 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)]"
-                      : "border-border/80 bg-card hover:-translate-y-0.5 hover:border-foreground/15 hover:bg-surface-1/40 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)]"
+                      ? "border-foreground/10 bg-muted/10 hover:-translate-y-0.5 hover:border-foreground/20 hover:bg-muted/15 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)] dark:border-border/85 dark:bg-surface-1/56 dark:hover:border-border dark:hover:bg-surface-1/72 dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.24)]"
+                      : "border-border/80 bg-card hover:-translate-y-0.5 hover:border-foreground/15 hover:bg-surface-1/40 hover:shadow-[0_12px_24px_rgba(15,23,42,0.08)] dark:border-border/90 dark:bg-card/96 dark:hover:border-border dark:hover:bg-surface-1/74 dark:hover:shadow-[0_12px_28px_rgba(0,0,0,0.24)]"
                   )}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -111,7 +111,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                       <p className="truncate text-base font-semibold text-foreground">
                         {getCustomerLabel(customer)}
                       </p>
-                      <p className="truncate text-sm text-foreground/80">
+                      <p className="truncate text-sm text-foreground/80 dark:text-foreground/88">
                         {customer.phone ?? "Telefon eklenmedi"}
                       </p>
                       <p
@@ -124,7 +124,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
                       </p>
                     </div>
 
-                    <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-xl border border-transparent bg-transparent text-foreground/42 transition-[transform,color,background-color] duration-150 group-hover:translate-x-0.5 group-hover:bg-surface-1/75 group-hover:text-foreground/72">
+                    <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-xl border border-transparent bg-transparent text-foreground/42 transition-[transform,color,background-color] duration-150 group-hover:translate-x-0.5 group-hover:bg-surface-1/75 group-hover:text-foreground/72 dark:text-muted-foreground/76 dark:group-hover:bg-surface-1/82 dark:group-hover:text-foreground/88">
                       <ChevronRight
                         className="size-3.5"
                         aria-hidden
@@ -135,7 +135,7 @@ export default async function OpsStaffCustomersPage({ searchParams }: PageProps)
               );
             })
           ) : (
-            <div className="rounded-2xl border border-dashed border-border p-5 text-sm text-muted-foreground xl:col-span-2">
+            <div className="rounded-2xl border border-dashed border-border p-5 text-sm text-muted-foreground dark:border-border/80 dark:bg-surface-1/46 dark:text-muted-foreground/92 xl:col-span-2">
               {isSearchActive
                 ? `"${query}" için eşleşen müşteri yok. Yukarıdan yeni müşteri ekleyin veya arama kelimesini sadeleştirin.`
                 : "Henüz müşteri yok. Yukarıdan yeni müşteri ekleyin."}

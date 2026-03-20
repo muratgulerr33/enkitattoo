@@ -62,8 +62,8 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
     <div className="ops-page-shell">
       <div className="grid gap-4 xl:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] xl:items-start xl:gap-6">
         <div className="space-y-4">
-          <Card className="overflow-hidden">
-            <CardHeader className="gap-2 border-b pb-4">
+          <Card className="overflow-hidden dark:border-border/90 dark:bg-card/96">
+            <CardHeader className="gap-2 border-b pb-4 dark:border-border/90">
               <div className="space-y-1">
                 <CardTitle>Ayarlar</CardTitle>
                 <CardDescription>Hesap bilgilerinizi ve erişim özetinizi buradan yönetin.</CardDescription>
@@ -71,8 +71,8 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
             </CardHeader>
             <CardContent className="space-y-4 pt-4">
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3">
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3 dark:border-border/90 dark:bg-surface-1/74">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground dark:text-muted-foreground/92">
                     Hesap
                   </p>
                   <p className="mt-1 break-words text-sm font-medium text-foreground">
@@ -80,8 +80,8 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3">
-                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                <div className="rounded-2xl border border-border bg-surface-1/55 px-4 py-3 dark:border-border/90 dark:bg-surface-1/74">
+                  <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground dark:text-muted-foreground/92">
                     Rol
                   </p>
                   <p className="mt-1 text-sm font-medium text-foreground">{roleSummary}</p>
@@ -97,8 +97,8 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
             </CardContent>
           </Card>
 
-          <Card className="overflow-hidden">
-            <CardHeader className="gap-2 border-b pb-4">
+          <Card className="overflow-hidden dark:border-border/90 dark:bg-card/96">
+            <CardHeader className="gap-2 border-b pb-4 dark:border-border/90">
               <div className="space-y-1">
                 <CardTitle>Şifre değiştir</CardTitle>
                 <CardDescription>Eski şifrenizle yeni şifrenizi buradan tanımlayın.</CardDescription>
@@ -109,8 +109,8 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
             </CardContent>
           </Card>
 
-          <Card className="overflow-hidden">
-            <CardHeader className="gap-2 border-b pb-4">
+          <Card className="overflow-hidden dark:border-border/90 dark:bg-card/96">
+            <CardHeader className="gap-2 border-b pb-4 dark:border-border/90">
               <div className="space-y-1">
                 <CardTitle>Oturum</CardTitle>
                 <CardDescription>Bu cihazdaki ops oturumunuzu buradan kapatabilirsiniz.</CardDescription>
@@ -125,8 +125,8 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
         </div>
 
         {isAdmin && artistOverview ? (
-          <Card className="overflow-hidden">
-            <CardHeader className="gap-2 border-b pb-4">
+          <Card className="overflow-hidden dark:border-border/90 dark:bg-card/96">
+            <CardHeader className="gap-2 border-b pb-4 dark:border-border/90">
               <div className="space-y-1">
                 <CardTitle>Artist yönetimi</CardTitle>
                 <CardDescription>Sadece artist hesaplarını bu alandan oluşturup güncelleyebilirsiniz.</CardDescription>
@@ -141,24 +141,24 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
             </CardContent>
           </Card>
         ) : (
-          <Card className="border-border/80 bg-surface-1/45">
-            <CardHeader className="gap-2 border-b pb-4">
+          <Card className="border-border/80 bg-surface-1/45 dark:border-border/90 dark:bg-surface-1/58">
+            <CardHeader className="gap-2 border-b pb-4 dark:border-border/90">
               <CardTitle>Çalışma alanı</CardTitle>
               <CardDescription>Staff erişimi admin ve artist için aynı yüzeylerden yürür.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3 pt-4">
-              <div className="rounded-2xl border border-border/80 bg-background/75 px-4 py-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <div className="rounded-2xl border border-border/80 bg-background/75 px-4 py-3 dark:border-border/90 dark:bg-card/92">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground dark:text-muted-foreground/92">
                   Ana akış
                 </p>
                 <p className="mt-1 text-sm text-foreground">İşlemler, müşteriler, rapor ve kasa aynı staff akışındadır.</p>
               </div>
 
-              <div className="rounded-2xl border border-border/80 bg-background/75 px-4 py-3">
-                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              <div className="rounded-2xl border border-border/80 bg-background/75 px-4 py-3 dark:border-border/90 dark:bg-card/92">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground dark:text-muted-foreground/92">
                   Yetki farkı
                 </p>
-                <p className="mt-1 text-sm text-foreground/80">
+                <p className="mt-1 text-sm text-foreground/80 dark:text-foreground/88">
                   Artist yönetimi yalnız yönetici hesabında görünür.
                 </p>
               </div>

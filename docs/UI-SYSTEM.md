@@ -146,6 +146,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Ops-visible para gösterimi current runtime’da kuruşsuz ve `TL` ekli sade sayı formatıyla hizalanır; kasa, raporlar, müşteri `İşlem özeti`, staff işlem summary’leri ve belge paketi aynı whole-number display ritmini kullanır. Input serialization helper’ları bu kontratın parçası değildir.
 - Staff kasa ve staff müşteri create disclosure row’ları current runtime’da mobile-safe’dir; `Not / Ekle / Kapat` satırları yatay taşma üretmez.
 - Staff randevular current runtime’da mobile month root’u shell hack’iyle değil, workspace kendi dikey budget’ını yöneterek screen-first calendar surface gibi gösterir; gerçek cihaz viewport’unda ilk açılışta page vertical scroll üretmez. Bu kontrat shell bottom nav anchoring fix’inden ayrıdır.
+- Ops dark mode current runtime’da light mode ile aynı akış ve hiyerarşiyi korur; `/ops/giris`, `randevular`, `musteriler`, `raporlar` ve `profil` yüzeylerinde kart/input/border/helper-meta ayrımı daha okunur olacak şekilde polish edilmiştir. Bu tur IA, CTA yeri veya layout değiştirmez.
 - Prefixsiz public legal page, public site shell içinde açılır; ops shell devamlılığı taşımaz.
 
 #### Current inconsistency

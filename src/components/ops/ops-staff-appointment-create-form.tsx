@@ -47,7 +47,7 @@ const INITIAL_CUSTOMER_CREATE_STATE: OpsAppointmentCustomerCreateActionState = {
 };
 
 const selectClassName =
-  "border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full appearance-none rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50";
+  "border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-9 w-full appearance-none rounded-md border bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-border/90 dark:bg-surface-1/78";
 
 type StaffAppointmentCreateFormProps = {
   customerOptions: Array<{
@@ -425,12 +425,12 @@ export function OpsStaffAppointmentCreateForm({
         {dateMode === "context" ? (
           <>
             <input type="hidden" name="scheduledDate" value={defaultDate} />
-            <div className="rounded-xl bg-surface-1/55 px-3.5 py-2">
-              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+            <div className="rounded-xl bg-surface-1/55 px-3.5 py-2 dark:bg-surface-1/76">
+              <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground dark:text-muted-foreground/92">
                 Tarih
               </p>
               <p className="mt-1 inline-flex items-center gap-2 text-sm font-medium text-foreground">
-                <CalendarDays className="size-4 text-muted-foreground" aria-hidden />
+                <CalendarDays className="size-4 text-muted-foreground dark:text-muted-foreground/90" aria-hidden />
                 {formatAppointmentDateLong(defaultDate)}
               </p>
             </div>
@@ -451,7 +451,7 @@ export function OpsStaffAppointmentCreateForm({
                 type="time"
                 defaultValue={defaultTime}
                 step={1800}
-                className="pl-9"
+                className="pl-9 dark:border-border/90 dark:bg-surface-1/78"
                 disabled={isDisabled}
               />
             </div>
@@ -470,7 +470,7 @@ export function OpsStaffAppointmentCreateForm({
                   name="scheduledDate"
                   type="date"
                   defaultValue={defaultDate}
-                  className="pl-9"
+                  className="pl-9 dark:border-border/90 dark:bg-surface-1/78"
                   disabled={isDisabled}
                 />
               </div>
@@ -481,7 +481,7 @@ export function OpsStaffAppointmentCreateForm({
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="serviceType">İşlem tipi</Label>
-            <div className="relative rounded-xl border border-border bg-background">
+            <div className="relative rounded-xl border border-border bg-background dark:border-border/90 dark:bg-surface-1/78">
               <select
                 id="serviceType"
                 name="serviceType"
@@ -504,7 +504,7 @@ export function OpsStaffAppointmentCreateForm({
 
           <div className="space-y-2">
             <Label htmlFor="artistUserId">Artist</Label>
-            <div className="relative rounded-xl border border-border bg-background">
+            <div className="relative rounded-xl border border-border bg-background dark:border-border/90 dark:bg-surface-1/78">
               <select
                 id="artistUserId"
                 name="artistUserId"
@@ -534,7 +534,7 @@ export function OpsStaffAppointmentCreateForm({
               />
             </div>
             {!artistOptions.length ? (
-              <p className="text-xs leading-5 text-muted-foreground">
+              <p className="text-xs leading-5 text-muted-foreground dark:text-muted-foreground/92">
                 İşlem kaydı açmak için önce aktif bir artist hesabı gerekli.
               </p>
             ) : null}
@@ -550,7 +550,7 @@ export function OpsStaffAppointmentCreateForm({
               type="text"
               inputMode="decimal"
               value={totalAmountInput}
-              className="h-11 rounded-xl bg-background [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="h-11 rounded-xl bg-background dark:border-border/90 dark:bg-surface-1/78 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               disabled={isDisabled}
               onChange={(event) => setTotalAmountInput(event.target.value)}
             />
@@ -564,7 +564,7 @@ export function OpsStaffAppointmentCreateForm({
               type="text"
               inputMode="decimal"
               value={collectedAmountInput}
-              className="h-11 rounded-xl bg-background [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              className="h-11 rounded-xl bg-background dark:border-border/90 dark:bg-surface-1/78 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               disabled={isDisabled}
               onChange={(event) => setCollectedAmountInput(event.target.value)}
             />
@@ -579,7 +579,7 @@ export function OpsStaffAppointmentCreateForm({
             id="customerPickerTrigger"
             type="button"
             variant="outline"
-            className="h-12 w-full justify-between rounded-xl px-3 text-left"
+            className="h-12 w-full justify-between rounded-xl px-3 text-left dark:border-border/90 dark:bg-surface-1/72 dark:hover:bg-surface-1/84"
             disabled={isDisabled}
             data-testid="customer-picker-trigger"
             onClick={() => {
@@ -607,7 +607,7 @@ export function OpsStaffAppointmentCreateForm({
           </Button>
 
           {inlineCustomerState.success ? (
-            <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+            <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground dark:border-border/90 dark:bg-surface-1/72">
               {inlineCustomerState.success}
             </p>
           ) : null}
@@ -628,9 +628,9 @@ export function OpsStaffAppointmentCreateForm({
           >
             <DialogContent
               showCloseButton
-              className="top-auto bottom-2 left-1/2 flex min-h-0 h-[min(84vh,calc(100vh-1rem))] w-[calc(100%-1rem)] max-w-none translate-x-[-50%] translate-y-0 flex-col gap-0 overflow-hidden rounded-[2rem] border bg-background p-0 sm:h-[min(82vh,calc(100vh-2rem))] sm:max-w-[36rem] md:max-w-[38rem] lg:top-1/2 lg:bottom-auto lg:h-[min(78vh,42rem)] lg:max-h-[min(78vh,42rem)] lg:max-w-[34rem] lg:translate-y-[-50%]"
+              className="top-auto bottom-2 left-1/2 flex min-h-0 h-[min(84vh,calc(100vh-1rem))] w-[calc(100%-1rem)] max-w-none translate-x-[-50%] translate-y-0 flex-col gap-0 overflow-hidden rounded-[2rem] border bg-background p-0 dark:border-border/90 dark:bg-card/96 sm:h-[min(82vh,calc(100vh-2rem))] sm:max-w-[36rem] md:max-w-[38rem] lg:top-1/2 lg:bottom-auto lg:h-[min(78vh,42rem)] lg:max-h-[min(78vh,42rem)] lg:max-w-[34rem] lg:translate-y-[-50%]"
             >
-              <DialogHeader className="border-b px-4 py-3 text-left sm:px-5">
+              <DialogHeader className="border-b px-4 py-3 text-left dark:border-border/90 dark:bg-surface-1/62 sm:px-5">
                 <DialogTitle>Müşteri seç</DialogTitle>
                 <DialogDescription className="sr-only">
                   İşlem için müşteri seçin veya yeni müşteri oluşturun.
@@ -649,14 +649,14 @@ export function OpsStaffAppointmentCreateForm({
                         value={customerSearchQuery}
                         onChange={(event) => setCustomerSearchQuery(event.target.value)}
                         placeholder="Ad soyad, telefon veya e-posta ile ara"
-                        className="h-11 rounded-xl pl-9"
+                        className="h-11 rounded-xl pl-9 dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
                         disabled={isDisabled}
                         data-testid="customer-picker-search"
                       />
                     </div>
 
                     <div className="mt-3 flex items-center justify-between gap-3">
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-muted-foreground dark:text-muted-foreground/92">
                         {customerSearchPending
                           ? "Müşteriler aranıyor..."
                           : customerSearchQuery.trim()
@@ -668,7 +668,7 @@ export function OpsStaffAppointmentCreateForm({
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-8 rounded-lg px-2 text-xs"
+                        className="h-8 rounded-lg px-2 text-xs dark:text-muted-foreground/92 dark:hover:bg-surface-1/72"
                         disabled={isDisabled}
                         onClick={() => {
                           setCustomerPickerMode("create");
@@ -707,8 +707,8 @@ export function OpsStaffAppointmentCreateForm({
                               className={cn(
                                 "w-full rounded-xl border px-3 py-3 text-left transition-[border-color,background-color,box-shadow] duration-150 hover:bg-surface-1/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                                 isSelected
-                                  ? "border-foreground/30 bg-surface-1/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.32)]"
-                                  : "border-border bg-card"
+                                  ? "border-foreground/30 bg-surface-1/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.32)] dark:border-border/95 dark:bg-surface-1/88"
+                                  : "border-border bg-card dark:border-border/90 dark:bg-card/96 dark:hover:bg-surface-1/76"
                               )}
                               data-testid={`customer-picker-option-${customer.id}`}
                               onClick={() => handleCustomerSelect(customer)}
@@ -719,7 +719,7 @@ export function OpsStaffAppointmentCreateForm({
                                     {customer.label}
                                   </p>
                                   {supportText ? (
-                                    <p className="mt-1 truncate text-xs text-muted-foreground">
+                                    <p className="mt-1 truncate text-xs text-muted-foreground dark:text-muted-foreground/88">
                                       {supportText}
                                     </p>
                                   ) : null}
@@ -734,7 +734,7 @@ export function OpsStaffAppointmentCreateForm({
                         })}
                       </div>
                     ) : (
-                      <div className="rounded-[1.35rem] border border-dashed border-border bg-surface-1/20 px-4 py-4">
+                      <div className="rounded-[1.35rem] border border-dashed border-border bg-surface-1/20 px-4 py-4 dark:border-border/80 dark:bg-surface-1/50">
                         <p className="text-sm font-medium text-foreground">Müşteri bulunamadı.</p>
                         <p className="mt-1 text-sm text-muted-foreground">
                           Aramayı değiştirin veya yeni müşteri ekleyin.
@@ -745,11 +745,11 @@ export function OpsStaffAppointmentCreateForm({
                 </>
               ) : (
                 <>
-                  <div className="border-b px-4 py-3 sm:px-5">
+                  <div className="border-b px-4 py-3 dark:border-border/90 dark:bg-surface-1/38 sm:px-5">
                     <div className="flex items-start justify-between gap-3">
                       <div className="space-y-1">
                         <p className="text-sm font-medium text-foreground">Yeni müşteri</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground dark:text-muted-foreground/92">
                           Ad soyad ve telefonla hızlıca ekleyin.
                         </p>
                       </div>
@@ -758,7 +758,7 @@ export function OpsStaffAppointmentCreateForm({
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-8 rounded-lg px-2 text-xs"
+                        className="h-8 rounded-lg px-2 text-xs dark:text-muted-foreground/92 dark:hover:bg-surface-1/72"
                         disabled={isDisabled}
                         onClick={() => {
                           setCustomerPickerMode("results");
@@ -794,7 +794,7 @@ export function OpsStaffAppointmentCreateForm({
                               fullName: event.target.value,
                             }))
                           }
-                          className="h-10 rounded-xl bg-background"
+                          className="h-10 rounded-xl bg-background dark:border-border/90 dark:bg-surface-1/78"
                           disabled={isDisabled}
                         />
                       </div>
@@ -813,7 +813,7 @@ export function OpsStaffAppointmentCreateForm({
                               phone: event.target.value,
                             }))
                           }
-                          className="h-10 rounded-xl bg-background"
+                          className="h-10 rounded-xl bg-background dark:border-border/90 dark:bg-surface-1/78"
                           disabled={isDisabled}
                         />
                       </div>
@@ -823,7 +823,7 @@ export function OpsStaffAppointmentCreateForm({
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className="h-8 rounded-lg px-2 text-xs text-muted-foreground"
+                          className="h-8 rounded-lg px-2 text-xs text-muted-foreground dark:text-muted-foreground/92 dark:hover:bg-surface-1/72"
                           disabled={isDisabled}
                           onClick={() => setShowInlineCustomerEmail((current) => !current)}
                         >
@@ -847,7 +847,7 @@ export function OpsStaffAppointmentCreateForm({
                                   email: event.target.value,
                                 }))
                               }
-                              className="h-10 rounded-xl bg-background"
+                              className="h-10 rounded-xl bg-background dark:border-border/90 dark:bg-surface-1/78"
                               disabled={isDisabled}
                             />
                           </div>
@@ -860,7 +860,7 @@ export function OpsStaffAppointmentCreateForm({
                         </p>
                       ) : null}
 
-                      <div className="sticky bottom-0 -mx-4 mt-2 border-t border-border/70 bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/88 sm:-mx-5 sm:px-5">
+                      <div className="sticky bottom-0 -mx-4 mt-2 border-t border-border/70 bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/88 dark:border-border/85 dark:bg-card/92 supports-[backdrop-filter]:dark:bg-card/86 sm:-mx-5 sm:px-5">
                         <Button
                           type="button"
                           size="cta"
@@ -895,6 +895,7 @@ export function OpsStaffAppointmentCreateForm({
             placeholder="Kısa not"
             rows={mode === "create" ? 2 : 3}
             defaultValue={defaultNotes ?? ""}
+            className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
             disabled={isDisabled}
           />
         </div>
@@ -907,12 +908,12 @@ export function OpsStaffAppointmentCreateForm({
       ) : null}
 
       {state.success ? (
-        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+        <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground dark:border-border/90 dark:bg-surface-1/72">
           {state.success}
         </p>
       ) : null}
 
-      <div className="sticky bottom-0 -mx-4 border-t border-border/80 bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/88 sm:-mx-5 sm:px-5 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-0 lg:backdrop-blur-0">
+      <div className="sticky bottom-0 -mx-4 border-t border-border/80 bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/88 dark:border-border/85 dark:bg-card/92 supports-[backdrop-filter]:dark:bg-card/86 sm:-mx-5 sm:px-5 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-0 lg:backdrop-blur-0">
         <Button
           type="submit"
           size="cta"

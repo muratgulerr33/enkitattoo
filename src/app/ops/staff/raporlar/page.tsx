@@ -33,10 +33,10 @@ type PageProps = {
 
 function getEntryTypeClassName(entryType: ReportsCashListItem["entryType"]): string {
   if (entryType === "income") {
-    return "text-emerald-700";
+    return "text-emerald-700 dark:text-emerald-200";
   }
 
-  return "text-amber-700";
+  return "text-amber-700 dark:text-amber-200";
 }
 
 function MetricGrid({
@@ -51,8 +51,8 @@ function MetricGrid({
   return (
     <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((item) => (
-        <div key={item.label} className="rounded-2xl border border-border/80 bg-surface-1/55 px-3 py-3">
-          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+        <div key={item.label} className="rounded-2xl border border-border/80 bg-surface-1/55 px-3 py-3 dark:border-border/90 dark:bg-surface-1/74">
+          <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground dark:text-muted-foreground/92">
             {item.label}
           </p>
           <p className={cn("mt-1 text-base font-semibold font-numbers text-foreground", item.toneClassName)}>
@@ -74,15 +74,15 @@ function ReportsList({
   entries: ReportsCashListItem[];
 }) {
   return (
-    <Card>
-      <CardHeader className="gap-1.5 border-b pb-4">
+    <Card className="dark:border-border/90 dark:bg-card/96">
+      <CardHeader className="gap-1.5 border-b pb-4 dark:border-border/90">
         <CardTitle className="text-sm sm:text-base">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
 
       <CardContent className="px-0 pt-1">
         {entries.length ? (
-          <div className="divide-y divide-border">
+          <div className="divide-y divide-border dark:divide-border/85">
             {entries.map((entry) => (
               <div key={entry.id} className="px-4 py-3 xl:px-5">
                 <div className="flex items-start justify-between gap-3 sm:gap-4">
@@ -96,11 +96,11 @@ function ReportsList({
                       >
                         {CASH_ENTRY_TYPE_LABELS[entry.entryType]}
                       </span>
-                      <span className="text-muted-foreground">
+                      <span className="text-muted-foreground dark:text-muted-foreground/88">
                         {CASH_ENTRY_REASON_LABELS[entry.entryReason] ?? entry.reasonLabel}
                       </span>
                       {entry.sourceLabel ? (
-                        <span className="text-muted-foreground">{entry.sourceLabel}</span>
+                        <span className="text-muted-foreground dark:text-muted-foreground/88">{entry.sourceLabel}</span>
                       ) : null}
                     </div>
 
@@ -108,7 +108,7 @@ function ReportsList({
                       {entry.primaryLabel}
                     </p>
 
-                    <p className="truncate text-xs text-muted-foreground">{entry.supportLabel}</p>
+                    <p className="truncate text-xs text-muted-foreground dark:text-muted-foreground/90">{entry.supportLabel}</p>
                   </div>
 
                   <div className="shrink-0 text-right">
@@ -127,7 +127,7 @@ function ReportsList({
             ))}
           </div>
         ) : (
-          <div className="px-4 py-5 text-sm text-muted-foreground xl:px-5">Kayıt yok.</div>
+          <div className="px-4 py-5 text-sm text-muted-foreground dark:text-muted-foreground/92 xl:px-5">Kayıt yok.</div>
         )}
       </CardContent>
     </Card>
@@ -146,8 +146,8 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
         <p className="ops-page-intro">Hareketleri filtreleyip özetleyin.</p>
       </div>
 
-      <Card>
-        <CardHeader className="gap-1.5 border-b pb-4">
+      <Card className="dark:border-border/90 dark:bg-card/96">
+        <CardHeader className="gap-1.5 border-b pb-4 dark:border-border/90">
           <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
             <Filter className="size-4" aria-hidden />
             Filtreler
@@ -161,23 +161,23 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
             className="grid gap-3 md:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,0.9fr)]"
           >
             <div className="space-y-2">
-              <label htmlFor="from" className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+              <label htmlFor="from" className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground dark:text-muted-foreground/92">
                 Başlangıç
               </label>
-              <Input id="from" type="date" name="from" defaultValue={reports.filters.from} />
+              <Input id="from" type="date" name="from" defaultValue={reports.filters.from} className="dark:border-border/90 dark:bg-surface-1/76" />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="to" className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+              <label htmlFor="to" className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground dark:text-muted-foreground/92">
                 Bitiş
               </label>
-              <Input id="to" type="date" name="to" defaultValue={reports.filters.to} />
+              <Input id="to" type="date" name="to" defaultValue={reports.filters.to} className="dark:border-border/90 dark:bg-surface-1/76" />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="serviceType"
-                className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground"
+                className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground dark:text-muted-foreground/92"
               >
                 İşlem tipi
               </label>
@@ -185,7 +185,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
                 id="serviceType"
                 name="serviceType"
                 defaultValue={reports.filters.serviceType}
-                className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+                className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px] dark:border-border/90 dark:bg-surface-1/76"
               >
                 <option value="all">Tümü</option>
                 <option value="tattoo">Dövme</option>
@@ -196,7 +196,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
             <div className="space-y-2">
               <label
                 htmlFor="artistUserId"
-                className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground"
+                className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground dark:text-muted-foreground/92"
               >
                 Artist
               </label>
@@ -204,7 +204,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
                 id="artistUserId"
                 name="artistUserId"
                 defaultValue={reports.filters.artistUserId?.toString() ?? ""}
-                className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+                className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px] dark:border-border/90 dark:bg-surface-1/76"
               >
                 <option value="">Tüm artistler</option>
                 {reports.artistOptions.map((artist) => (
@@ -218,7 +218,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
             <div className="space-y-2">
               <label
                 htmlFor="source"
-                className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground"
+                className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground dark:text-muted-foreground/92"
               >
                 Kayıt kaynağı
               </label>
@@ -226,7 +226,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
                 id="source"
                 name="source"
                 defaultValue={reports.filters.source}
-                className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px]"
+                className="border-input focus-visible:border-ring focus-visible:ring-ring/50 h-9 w-full rounded-md border bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:ring-[3px] dark:border-border/90 dark:bg-surface-1/76"
               >
                 <option value="all">Tümü</option>
                 <option value="appointment">Randevu</option>
@@ -239,7 +239,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
               <Button type="submit" variant="outline" size="sm" className="rounded-lg">
                 Uygula
               </Button>
-              <Button asChild variant="ghost" size="sm" className="rounded-lg text-muted-foreground">
+              <Button asChild variant="ghost" size="sm" className="rounded-lg text-muted-foreground dark:text-muted-foreground/92">
                 <Link href="/ops/staff/raporlar">Temizle</Link>
               </Button>
             </div>
@@ -255,21 +255,21 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
             {
               label: "Toplam gelir",
               value: formatCashAmount(reports.summary.incomeCents),
-              toneClassName: "text-emerald-700",
+              toneClassName: "text-emerald-700 dark:text-emerald-200",
             },
             {
               label: "Toplam gider",
               value: formatCashAmount(reports.summary.expenseCents),
-              toneClassName: "text-amber-700",
+              toneClassName: "text-amber-700 dark:text-amber-200",
             },
             {
               label: "Net",
               value: formatCashAmount(reports.summary.netCents),
               toneClassName:
                 reports.summary.netCents > 0
-                  ? "text-emerald-700"
+                  ? "text-emerald-700 dark:text-emerald-200"
                   : reports.summary.netCents < 0
-                    ? "text-amber-700"
+                    ? "text-amber-700 dark:text-amber-200"
                     : undefined,
             },
             {

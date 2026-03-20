@@ -19,7 +19,7 @@ export function OpsLoginForm({ disabled = false }: OpsLoginFormProps) {
   const [state, formAction, pending] = useActionState(loginAction, INITIAL_STATE);
 
   return (
-    <form action={formAction} className="space-y-3">
+    <form action={formAction} className="space-y-3.5">
       <div className="space-y-2">
         <Label htmlFor="identifier">Telefon veya e-posta</Label>
         <Input
@@ -27,11 +27,15 @@ export function OpsLoginForm({ disabled = false }: OpsLoginFormProps) {
           name="identifier"
           type="text"
           autoComplete="username"
-          placeholder="05xx xxx xx xx veya ornek@enki.com"
+          placeholder="Telefon numarası veya e-posta adresi"
           inputMode="text"
+          className="h-11 rounded-xl bg-surface-1/40 dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
           disabled={disabled || pending}
           required
         />
+        <p className="text-xs text-muted-foreground dark:text-muted-foreground/92">
+          Hesabınızda kayıtlı bilgiyi girin.
+        </p>
       </div>
 
       <div className="space-y-2">
@@ -42,6 +46,7 @@ export function OpsLoginForm({ disabled = false }: OpsLoginFormProps) {
           type="password"
           autoComplete="current-password"
           placeholder="••••••••"
+          className="h-11 rounded-xl bg-surface-1/40 dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
           disabled={disabled || pending}
           required
         />

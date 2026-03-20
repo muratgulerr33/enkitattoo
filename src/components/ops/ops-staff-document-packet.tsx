@@ -110,7 +110,7 @@ function ContractCopy({ packet }: { packet: StaffDocumentPacket }) {
                 <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                   İmza
                 </p>
-                <div className="mt-1 h-12 border-b border-foreground/40" />
+                <div className="mt-1 h-12" />
               </div>
             </section>
 
@@ -145,7 +145,7 @@ function ContractCopy({ packet }: { packet: StaffDocumentPacket }) {
                 </span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 border-b border-border/80 py-2">
+              <div className="flex items-end justify-between gap-4 py-2">
                 <span className="text-muted-foreground">Kapora</span>
                 <span className="text-right font-semibold text-foreground">
                   {formatOpsMoneyDisplay(packet.collectedAmountCents)}

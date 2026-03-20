@@ -48,8 +48,8 @@ function ArtistStatusBadge({ isActive }: { isActive: boolean }) {
       className={cn(
         "inline-flex rounded-full px-2.5 py-1 text-[11px] font-medium",
         isActive
-          ? "bg-emerald-500/10 text-emerald-700"
-          : "bg-amber-500/10 text-amber-700"
+          ? "bg-emerald-500/10 text-emerald-700 dark:bg-emerald-400/12 dark:text-emerald-200"
+          : "bg-amber-500/10 text-amber-700 dark:bg-amber-400/12 dark:text-amber-200"
       )}
     >
       {isActive ? "Aktif" : "Pasif"}
@@ -126,7 +126,7 @@ function ArtistEditDialog({ artist }: { artist: ArtistListItem }) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-lg rounded-3xl p-0">
+      <DialogContent className="max-w-lg rounded-3xl border p-0 dark:border-border/90 dark:bg-card/96">
         <div className="space-y-5 p-6">
           <DialogHeader className="space-y-2 text-left">
             <DialogTitle>Artist düzenle</DialogTitle>
@@ -142,6 +142,7 @@ function ArtistEditDialog({ artist }: { artist: ArtistListItem }) {
                 id={`artist-full-name-${artist.userId}`}
                 name="fullName"
                 defaultValue={artist.fullName ?? ""}
+                className="dark:border-border/90 dark:bg-surface-1/78"
                 disabled={pending}
                 required
               />
@@ -156,6 +157,7 @@ function ArtistEditDialog({ artist }: { artist: ArtistListItem }) {
                 autoComplete="tel"
                 inputMode="tel"
                 defaultValue={artist.phone ?? ""}
+                className="dark:border-border/90 dark:bg-surface-1/78"
                 disabled={pending}
                 required
               />
@@ -168,7 +170,7 @@ function ArtistEditDialog({ artist }: { artist: ArtistListItem }) {
             ) : null}
 
             {state.success ? (
-              <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground">
+              <p className="rounded-xl border border-border bg-surface-1 px-3 py-2 text-sm text-foreground dark:border-border/90 dark:bg-surface-1/72">
                 {state.success}
               </p>
             ) : null}
@@ -209,13 +211,13 @@ export function OpsArtistManagement({
   return (
     <div className="space-y-5">
       <div className="space-y-2">
-        <p className="text-sm text-muted-foreground">
-          Yeni artist varsayılan olarak aktif açılır. Daha sonra bu listeden pasife alabilir
-          veya yeniden aktifleştirebilirsiniz.
-        </p>
+          <p className="text-sm text-muted-foreground dark:text-muted-foreground/92">
+            Yeni artist varsayılan olarak aktif açılır. Daha sonra bu listeden pasife alabilir
+            veya yeniden aktifleştirebilirsiniz.
+          </p>
       </div>
 
-      <form ref={formRef} action={formAction} className="space-y-3 rounded-2xl border border-border bg-surface-1/45 p-4">
+      <form ref={formRef} action={formAction} className="space-y-3 rounded-2xl border border-border bg-surface-1/45 p-4 dark:border-border/90 dark:bg-surface-1/62">
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="space-y-2 sm:col-span-2">
             <Label htmlFor="artistCreateFullName">Ad soyad</Label>
@@ -224,6 +226,7 @@ export function OpsArtistManagement({
               name="fullName"
               autoComplete="name"
               placeholder="Ad soyad"
+              className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
               disabled={pending}
               required
             />
@@ -238,6 +241,7 @@ export function OpsArtistManagement({
               autoComplete="tel"
               inputMode="tel"
               placeholder="05xx xxx xx xx"
+              className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
               disabled={pending}
               required
             />
@@ -251,6 +255,7 @@ export function OpsArtistManagement({
               type="password"
               autoComplete="new-password"
               placeholder="En az 8 karakter"
+              className="dark:border-border/90 dark:bg-surface-1/78 dark:placeholder:text-muted-foreground/78"
               disabled={pending}
               required
             />
@@ -264,7 +269,7 @@ export function OpsArtistManagement({
         ) : null}
 
         {state.success ? (
-          <p className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground">
+          <p className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground dark:border-border/90 dark:bg-card/92">
             {state.success}
           </p>
         ) : null}
@@ -288,8 +293,8 @@ export function OpsArtistManagement({
           className={cn(
             "inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-medium",
             filter === "active"
-              ? "border-border bg-foreground text-background"
-              : "border-border bg-background text-foreground hover:bg-muted/45"
+              ? "border-border bg-foreground text-background dark:border-border/95 dark:bg-foreground dark:text-background"
+              : "border-border bg-background text-foreground hover:bg-muted/45 dark:border-border/90 dark:bg-surface-1/72 dark:hover:bg-surface-1/88"
           )}
         >
           Aktif ({counts.active})
@@ -300,8 +305,8 @@ export function OpsArtistManagement({
           className={cn(
             "inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-medium",
             filter === "inactive"
-              ? "border-border bg-foreground text-background"
-              : "border-border bg-background text-foreground hover:bg-muted/45"
+              ? "border-border bg-foreground text-background dark:border-border/95 dark:bg-foreground dark:text-background"
+              : "border-border bg-background text-foreground hover:bg-muted/45 dark:border-border/90 dark:bg-surface-1/72 dark:hover:bg-surface-1/88"
           )}
         >
           Pasif ({counts.inactive})
@@ -312,8 +317,8 @@ export function OpsArtistManagement({
           className={cn(
             "inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-medium",
             filter === "all"
-              ? "border-border bg-foreground text-background"
-              : "border-border bg-background text-foreground hover:bg-muted/45"
+              ? "border-border bg-foreground text-background dark:border-border/95 dark:bg-foreground dark:text-background"
+              : "border-border bg-background text-foreground hover:bg-muted/45 dark:border-border/90 dark:bg-surface-1/72 dark:hover:bg-surface-1/88"
           )}
         >
           Tümü ({counts.total})
@@ -325,7 +330,7 @@ export function OpsArtistManagement({
           artists.map((artist) => (
             <div
               key={artist.userId}
-              className="rounded-2xl border border-border bg-background px-4 py-4"
+              className="rounded-2xl border border-border bg-background px-4 py-4 dark:border-border/90 dark:bg-card/94"
             >
               <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                 <div className="min-w-0 space-y-2">
@@ -336,7 +341,7 @@ export function OpsArtistManagement({
                     <ArtistStatusBadge isActive={artist.isActive} />
                   </div>
 
-                  <div className="space-y-1 text-sm text-muted-foreground">
+                  <div className="space-y-1 text-sm text-muted-foreground dark:text-muted-foreground/90">
                     <p>{artist.phone ?? "Telefon belirtilmemiş"}</p>
                     {artist.email ? <p>{artist.email}</p> : null}
                   </div>
@@ -350,7 +355,7 @@ export function OpsArtistManagement({
             </div>
           ))
         ) : (
-          <div className="rounded-2xl border border-dashed border-border bg-background px-4 py-5 text-sm text-muted-foreground">
+          <div className="rounded-2xl border border-dashed border-border bg-background px-4 py-5 text-sm text-muted-foreground dark:border-border/80 dark:bg-surface-1/46 dark:text-muted-foreground/92">
             Bu filtrede artist yok.
           </div>
         )}
