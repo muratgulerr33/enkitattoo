@@ -614,9 +614,7 @@ function AppointmentDetailSheet({
             <div className="flex flex-col gap-3 border-t border-border pt-2.5">
               {canOpenPacket ? (
                 <Button asChild size="cta" className="w-full">
-                  <Link href={`/ops/staff/belgeler/${session.serviceIntakeId}`}>
-                    Belge paketi
-                  </Link>
+                  <Link href={`/ops/staff/belgeler/${session.serviceIntakeId}`}>Belge</Link>
                 </Button>
               ) : null}
 
@@ -1018,12 +1016,12 @@ export function OpsStaffAppointmentsWorkspace({
                     data-count={cell.count}
                     data-occupancy={getOccupancyLevel(cell.count)}
                     className={cn(
-                      "group relative isolate flex min-h-[4.45rem] w-full flex-col overflow-hidden rounded-[1.15rem] border px-1.5 py-1.5 text-left transition-[transform,background-color,color,border-color,box-shadow] duration-150 hover:bg-muted/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] sm:min-h-24 sm:px-2.5 sm:py-2.5 xl:min-h-[8.25rem] xl:px-4 xl:py-3",
+                      "group relative isolate flex min-h-[4.45rem] w-full flex-col overflow-hidden rounded-[1.15rem] border px-1.5 py-1.5 text-left transition-[transform,background-color,color,border-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] sm:min-h-24 sm:px-2.5 sm:py-2.5 xl:min-h-[8.25rem] xl:px-4 xl:py-3",
                       cell.isSelected
-                        ? "border-foreground bg-foreground text-background shadow-[0_20px_44px_rgba(15,23,42,0.28)] ring-2 ring-foreground/16"
+                        ? "border-foreground bg-foreground text-background shadow-[0_20px_44px_rgba(15,23,42,0.28)] ring-2 ring-foreground/16 hover:bg-foreground"
                         : cell.count
-                          ? "border-foreground/18 bg-surface-1 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.34)]"
-                          : "border-border/85 bg-card text-foreground"
+                          ? "border-foreground/18 bg-surface-1 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.34)] hover:bg-surface-1/80"
+                          : "border-border/85 bg-card text-foreground hover:bg-surface-1/45"
                     )}
                   >
                     {cell.isSelected ? (
@@ -1105,7 +1103,13 @@ export function OpsStaffAppointmentsWorkspace({
         artistOptions={artistOptions}
         currentStaffUserId={currentStaffUserId}
         currentStaffRoles={currentStaffRoles}
-        daySessions={formState?.mode === "create" && selectedDay ? selectedDaySessions : []}
+        daySessions={
+          formState?.mode === "create"
+            ? sessions
+                .filter((session) => session.scheduledDate === formState.day)
+                .sort(compareSessions)
+            : []
+        }
         onOpenChange={handleFormOpenChange}
         createMode={viewMode === "create"}
         onCustomerCreated={(customer) => {

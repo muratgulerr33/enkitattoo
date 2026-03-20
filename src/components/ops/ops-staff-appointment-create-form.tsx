@@ -337,7 +337,7 @@ export function OpsStaffAppointmentCreateForm({
           {dateMode === "editable" ? (
             <div className="space-y-2">
               <Label htmlFor="scheduledDate">Tarih</Label>
-              <div className="relative rounded-2xl border border-border bg-surface-1/40 px-3 py-1.5">
+              <div className="relative">
                 <CalendarDays
                   className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                   aria-hidden
@@ -347,7 +347,7 @@ export function OpsStaffAppointmentCreateForm({
                   name="scheduledDate"
                   type="date"
                   defaultValue={defaultDate}
-                  className="border-0 bg-transparent pl-9 shadow-none focus-visible:ring-0"
+                  className="pl-9"
                   disabled={isDisabled}
                 />
               </div>
