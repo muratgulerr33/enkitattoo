@@ -55,6 +55,7 @@ export const serviceIntakes = pgTable(
     collectedAmountCents: integer("collected_amount_cents").notNull().default(0),
     notes: text("notes"),
     appointmentId: bigint("appointment_id", { mode: "number" }).references(() => appointments.id),
+    artistUserId: bigint("artist_user_id", { mode: "number" }).references(() => users.id),
     createdByUserId: bigint("created_by_user_id", { mode: "number" })
       .notNull()
       .references(() => users.id),
@@ -74,5 +75,6 @@ export const serviceIntakes = pgTable(
     index("service_intakes_service_type_idx").on(table.serviceType),
     index("service_intakes_created_by_idx").on(table.createdByUserId),
     index("service_intakes_appointment_id_idx").on(table.appointmentId),
+    index("service_intakes_artist_user_id_idx").on(table.artistUserId),
   ]
 );

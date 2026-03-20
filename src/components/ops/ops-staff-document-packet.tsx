@@ -13,10 +13,7 @@ type OpsStaffDocumentPacketProps = {
   packet: StaffDocumentPacket;
 };
 
-const COPY_LABELS = {
-  1: ["Müşteri nüshası"] as const,
-  2: ["Müşteri nüshası", "Stüdyo nüshası"] as const,
-} satisfies Record<1 | 2, readonly string[]>;
+const UNASSIGNED_ARTIST_LABEL = "Kayıtlı değil";
 
 function formatDate(value: Date): string {
   return new Intl.DateTimeFormat("tr-TR", {
@@ -48,56 +45,54 @@ function getCustomerName(packet: StaffDocumentPacket): string {
   );
 }
 
-function ContractCopy({
-  packet,
-  copyLabel,
-}: {
-  packet: StaffDocumentPacket;
-  copyLabel: string;
-}) {
+function ContractCopy({ packet }: { packet: StaffDocumentPacket }) {
   const customerName = getCustomerName(packet);
   const scheduledAt = `${formatSessionDate(packet.scheduledDate)} · ${packet.scheduledTime}`;
 
   return (
-    <article className="document-packet-copy border border-border bg-card shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
+    <article className="document-packet-copy border border-border/85 bg-card shadow-[0_20px_52px_rgba(15,23,42,0.07)]">
       <div className="document-packet-sheet document-contract-sheet flex min-h-[272mm] flex-col px-6 py-6 text-foreground sm:px-8 sm:py-7">
-        <header className="space-y-3 border-b border-border pb-3">
-          <div className="flex items-start justify-between gap-4 text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+        <header className="space-y-4 border-b border-border/80 pb-4">
+          <div className="flex items-start justify-between gap-5 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
             <div className="space-y-1">
               <p>Sayı</p>
-              <p className="text-[13px] font-semibold tracking-[0.08em] text-foreground">
+              <p className="text-[15px] font-semibold tracking-[0.06em] text-foreground">
                 {packet.displayNo}
               </p>
             </div>
 
             <div className="space-y-1 text-right">
-              <p>Sözleşme tarihi</p>
-              <p className="text-[13px] font-semibold tracking-normal text-foreground">
+              <p>Kayıt tarihi</p>
+              <p className="text-[15px] font-semibold tracking-normal text-foreground">
                 {formatDate(packet.contractDate)}
               </p>
             </div>
           </div>
 
-          <div className="space-y-2 text-center">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              {copyLabel}
+          <div className="space-y-2.5 text-center">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              Operasyon sözleşme kaydı
             </p>
-            <h1 className="text-[1.38rem] font-semibold tracking-[-0.02em] text-foreground sm:text-[1.55rem]">
+            <h1 className="mx-auto max-w-[26rem] text-[1.4rem] font-semibold tracking-[-0.025em] text-foreground sm:text-[1.6rem]">
               Enki Tattoo Dövme ve Piercing Sözleşmesi
             </h1>
           </div>
         </header>
 
-        <section className="flex-1 py-4">
+        <section className="flex-1 py-5">
           <LegalMarkdown
             markdown={packet.legal.markdown}
             className="document-contract-body space-y-3 text-[12px] leading-[1.48] text-foreground [&>h2]:hidden [&>h3]:hidden [&>ol]:space-y-1.5 [&>ol]:pl-5 [&>ol]:leading-[1.48] [&>p]:text-foreground [&>p]:leading-[1.48]"
           />
         </section>
 
-        <footer className="border-t border-border pt-4">
+        <footer className="border-t border-border/80 pt-5">
           <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
-            <section className="space-y-3">
+            <section className="space-y-3.5 rounded-[1.25rem] border border-border/75 bg-surface-1/28 p-4">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                Müşteri bilgisi
+              </p>
+
               <div className="space-y-1">
                 <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                   İsim Soyisim
@@ -124,29 +119,40 @@ function ContractCopy({
               </div>
             </section>
 
-            <section className="space-y-2.5 text-[12px] leading-[1.45]">
-              <div className="flex items-end justify-between gap-4 border-b border-border pb-1.5">
+            <section className="space-y-3 rounded-[1.25rem] border border-border/75 bg-card p-4 text-[12px] leading-[1.45]">
+              <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                İşlem bilgisi
+              </p>
+
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
                 <span className="text-muted-foreground">İşlem Tipi</span>
                 <span className="text-right font-medium text-foreground">
                   {getServiceTypeLabel(packet.serviceType)}
                 </span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 border-b border-border pb-1.5">
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
                 <span className="text-muted-foreground">İşlem Tarihi ve Saati</span>
-                <span className="text-right font-medium text-foreground">{scheduledAt}</span>
+                <span className="text-right font-semibold text-foreground">{scheduledAt}</span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 border-b border-border pb-1.5">
-                <span className="text-muted-foreground">Toplam Tutar</span>
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
+                <span className="text-muted-foreground">Artist</span>
                 <span className="text-right font-medium text-foreground">
+                  {packet.artistName ?? UNASSIGNED_ARTIST_LABEL}
+                </span>
+              </div>
+
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
+                <span className="text-muted-foreground">Toplam Tutar</span>
+                <span className="text-right font-semibold text-foreground">
                   {formatOpsMoneyDisplay(packet.totalAmountCents)}
                 </span>
               </div>
 
-              <div className="flex items-end justify-between gap-4 border-b border-border pb-1.5">
-                <span className="text-muted-foreground">Alınan Kapora</span>
-                <span className="text-right font-medium text-foreground">
+              <div className="flex items-end justify-between gap-4 border-b border-border/80 pb-2">
+                <span className="text-muted-foreground">Kapora</span>
+                <span className="text-right font-semibold text-foreground">
                   {formatOpsMoneyDisplay(packet.collectedAmountCents)}
                 </span>
               </div>
@@ -160,7 +166,6 @@ function ContractCopy({
 
 export function OpsStaffDocumentPacket({ packet }: OpsStaffDocumentPacketProps) {
   const [copyCount, setCopyCount] = useState<1 | 2>(2);
-  const copyLabels = COPY_LABELS[copyCount];
 
   return (
     <div className="document-packet-preview safe-pl-edge-12 safe-pr-edge-12 safe-pt safe-pb-24 mx-auto flex w-full max-w-[216mm] flex-col gap-4 px-3 pt-3 pb-6 sm:px-5 sm:pt-5 sm:pb-8">
@@ -206,8 +211,8 @@ export function OpsStaffDocumentPacket({ packet }: OpsStaffDocumentPacketProps) 
       </div>
 
       <div className="space-y-4 pb-1 sm:pb-2">
-        {copyLabels.map((copyLabel) => (
-          <ContractCopy key={copyLabel} packet={packet} copyLabel={copyLabel} />
+        {Array.from({ length: copyCount }, (_, copyIndex) => (
+          <ContractCopy key={`contract-copy-${copyIndex + 1}`} packet={packet} />
         ))}
       </div>
     </div>

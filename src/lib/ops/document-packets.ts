@@ -1,10 +1,12 @@
 import { eq } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { getDb } from "@/db";
 import {
   serviceIntakes,
   userProfiles,
   users,
 } from "@/db/schema";
+import { getArtistPresentationLabel } from "@/lib/ops/artists";
 import {
   getLegalDocumentById,
   getOpsApprovalReaderMarkdown,
@@ -27,6 +29,7 @@ export type StaffDocumentPacket = {
     displayName: string | null;
     phone: string | null;
   };
+  artistName: string | null;
   legal: {
     markdown: string;
   };
@@ -40,6 +43,8 @@ export async function getStaffDocumentPacket(
   serviceIntakeId: number
 ): Promise<StaffDocumentPacket | null> {
   const db = getDb();
+  const artistUsers = alias(users, "document_packet_artist_users");
+  const artistProfiles = alias(userProfiles, "document_packet_artist_profiles");
   const rows = await db
     .select({
       serviceIntakeId: serviceIntakes.id,
@@ -53,10 +58,17 @@ export async function getStaffDocumentPacket(
       fullName: userProfiles.fullName,
       displayName: userProfiles.displayName,
       phone: users.phone,
+      artistUserId: serviceIntakes.artistUserId,
+      artistEmail: artistUsers.email,
+      artistPhone: artistUsers.phone,
+      artistFullName: artistProfiles.fullName,
+      artistDisplayName: artistProfiles.displayName,
     })
     .from(serviceIntakes)
     .innerJoin(users, eq(users.id, serviceIntakes.customerUserId))
     .leftJoin(userProfiles, eq(userProfiles.userId, users.id))
+    .leftJoin(artistUsers, eq(artistUsers.id, serviceIntakes.artistUserId))
+    .leftJoin(artistProfiles, eq(artistProfiles.userId, artistUsers.id))
     .where(eq(serviceIntakes.id, serviceIntakeId))
     .limit(1);
 
@@ -84,6 +96,16 @@ export async function getStaffDocumentPacket(
       displayName: row.displayName,
       phone: row.phone,
     },
+    artistName:
+      row.artistUserId === null
+        ? null
+        : getArtistPresentationLabel({
+            userId: row.artistUserId,
+            email: row.artistEmail,
+            phone: row.artistPhone,
+            fullName: row.artistFullName,
+            displayName: row.artistDisplayName,
+          }),
     legal: {
       markdown: getOpsApprovalReaderMarkdown(legalDocument.markdown),
     },

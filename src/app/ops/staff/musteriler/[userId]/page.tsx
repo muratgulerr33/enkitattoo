@@ -40,10 +40,8 @@ function getAppointmentStatusClassName(
 
 function getCustomerContactLine(customer: {
   phone: string | null;
-  email: string | null;
 }): string | null {
-  const items = [customer.phone, customer.email].filter(Boolean);
-  return items.length ? items.join(" · ") : null;
+  return customer.phone?.trim() || null;
 }
 
 function getAppointmentEmptyMessage(section: "upcoming" | "past"): string {
@@ -138,15 +136,6 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                 {getFieldValue(customer.phone)}
               </p>
             </div>
-
-            <div className="min-w-0">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                E-posta
-              </p>
-              <p className="mt-1 break-words text-sm text-foreground/80">
-                {getFieldValue(customer.email)}
-              </p>
-            </div>
           </CardContent>
         </Card>
 
@@ -156,7 +145,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
           </CardHeader>
           <CardContent className="pt-0">
             {latestServiceIntake ? (
-              <div className="space-y-4">
+              <div className="space-y-3.5">
                 <div className="rounded-[1.7rem] border border-border bg-card px-4 py-4">
                   <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
                     Son işlem
@@ -175,16 +164,16 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                       Toplam
                     </p>
-                    <p className="mt-1 text-sm font-medium text-foreground">
+                    <p className="mt-1 text-sm font-semibold text-foreground">
                       {formatOpsMoneyDisplay(latestServiceIntake.totalAmountCents)}
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-border bg-card px-4 py-3">
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                      Alınan
+                      Kapora
                     </p>
-                    <p className="mt-1 text-sm font-medium text-foreground">
+                    <p className="mt-1 text-sm font-semibold text-foreground">
                       {formatOpsMoneyDisplay(latestServiceIntake.collectedAmountCents)}
                     </p>
                   </div>
@@ -193,7 +182,7 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                     <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                       Kalan
                     </p>
-                    <p className="mt-1 text-sm font-medium text-foreground">
+                    <p className="mt-1 text-sm font-semibold text-foreground">
                       {formatOpsMoneyDisplay(latestServiceRemainingAmountCents)}
                     </p>
                   </div>
@@ -238,7 +227,10 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
             <CardContent className="space-y-3">
               {customer.upcomingAppointments.length ? (
                 customer.upcomingAppointments.map((appointment) => (
-                  <div key={appointment.id} className="rounded-[1.45rem] border border-border px-4 py-3">
+                  <div
+                    key={appointment.id}
+                    className="rounded-[1.45rem] border border-border bg-card px-4 py-3.5"
+                  >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <p className="min-w-0 text-sm font-medium text-foreground">
                         {formatAppointmentDateLong(appointment.appointmentDate)} ·{" "}
@@ -255,7 +247,14 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                       </Badge>
                     </div>
                     {appointment.notes ? (
-                      <p className="mt-2 text-sm text-muted-foreground">{appointment.notes}</p>
+                      <div className="mt-3 rounded-xl bg-surface-1/45 px-3 py-2.5">
+                        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                          Not
+                        </p>
+                        <p className="mt-1 text-sm leading-5 text-foreground/82">
+                          {appointment.notes}
+                        </p>
+                      </div>
                     ) : null}
                   </div>
                 ))
@@ -274,7 +273,10 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
             <CardContent className="space-y-3">
               {customer.pastAppointments.length ? (
                 customer.pastAppointments.map((appointment) => (
-                  <div key={appointment.id} className="rounded-[1.45rem] border border-border px-4 py-3">
+                  <div
+                    key={appointment.id}
+                    className="rounded-[1.45rem] border border-border bg-card px-4 py-3.5"
+                  >
                     <div className="flex flex-wrap items-start justify-between gap-3">
                       <p className="min-w-0 text-sm font-medium text-foreground">
                         {formatAppointmentDateLong(appointment.appointmentDate)} ·{" "}
@@ -291,7 +293,14 @@ export default async function OpsStaffCustomerDetailPage({ params }: PageProps) 
                       </Badge>
                     </div>
                     {appointment.notes ? (
-                      <p className="mt-2 text-sm text-muted-foreground">{appointment.notes}</p>
+                      <div className="mt-3 rounded-xl bg-surface-1/45 px-3 py-2.5">
+                        <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
+                          Not
+                        </p>
+                        <p className="mt-1 text-sm leading-5 text-foreground/82">
+                          {appointment.notes}
+                        </p>
+                      </div>
                     ) : null}
                   </div>
                 ))

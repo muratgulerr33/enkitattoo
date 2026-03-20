@@ -2,6 +2,7 @@ import { and, asc, eq, isNull } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { getDb, type Db } from "@/db";
 import { userProfiles, userRoles, users } from "@/db/schema";
+import type { UserRole } from "@/db/schema/users";
 import { writeAuditLog } from "./audit";
 import { assertPhoneIsAvailable } from "./auth/users";
 import { hashPassword } from "./auth/password";
@@ -29,6 +30,18 @@ export type ArtistManagementOverview = {
   };
   artists: ArtistListItem[];
 };
+
+export type ActiveArtistOption = {
+  userId: number;
+  label: string;
+  email: string | null;
+  phone: string | null;
+};
+
+type ArtistPresentation = Pick<
+  ArtistListItem,
+  "userId" | "email" | "phone" | "fullName" | "displayName"
+>;
 
 function getChangedFields(
   values: Array<{
@@ -90,6 +103,71 @@ async function listPureArtists(
     );
 
   return rows;
+}
+
+function isPureArtistSession(roles: UserRole[]): boolean {
+  return roles.includes("artist") && !roles.includes("admin");
+}
+
+export function getArtistPresentationLabel(
+  artist: ArtistPresentation,
+  fallback = `Artist #${artist.userId}`
+): string {
+  return artist.displayName ?? artist.fullName ?? artist.email ?? artist.phone ?? fallback;
+}
+
+export async function listActiveArtistOptions(
+  executor: Pick<Db, "select"> = getDb()
+): Promise<ActiveArtistOption[]> {
+  const artists = await listPureArtists(executor);
+
+  return artists
+    .filter((artist) => artist.isActive)
+    .map((artist) => ({
+      userId: artist.userId,
+      label: getArtistPresentationLabel(artist),
+      email: artist.email,
+      phone: artist.phone,
+    }));
+}
+
+export async function resolveStaffArtistAssignment(input: {
+  requestedArtistUserId: number | null;
+  sessionUserId: number;
+  sessionUserRoles: UserRole[];
+  executor?: Pick<Db, "select">;
+}): Promise<number> {
+  const artistOptions = await listActiveArtistOptions(input.executor);
+
+  if (input.requestedArtistUserId !== null) {
+    const selectedArtist = artistOptions.find(
+      (artist) => artist.userId === input.requestedArtistUserId
+    );
+
+    if (!selectedArtist) {
+      throw new Error("Seçilen artist kullanılamıyor.");
+    }
+
+    return selectedArtist.userId;
+  }
+
+  if (!artistOptions.length) {
+    throw new Error("Aktif artist bulunamadı.");
+  }
+
+  if (isPureArtistSession(input.sessionUserRoles)) {
+    const currentArtist = artistOptions.find((artist) => artist.userId === input.sessionUserId);
+
+    if (currentArtist) {
+      return currentArtist.userId;
+    }
+  }
+
+  if (artistOptions.length === 1) {
+    return artistOptions[0].userId;
+  }
+
+  throw new Error("Artist seçin.");
 }
 
 async function getManagedArtistOrThrow(

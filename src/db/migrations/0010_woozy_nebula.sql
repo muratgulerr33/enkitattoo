@@ -1,0 +1,3 @@
+ALTER TABLE "service_intakes" ADD COLUMN "artist_user_id" bigint;--> statement-breakpoint
+ALTER TABLE "service_intakes" ADD CONSTRAINT "service_intakes_artist_user_id_users_id_fk" FOREIGN KEY ("artist_user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "service_intakes_artist_user_id_idx" ON "service_intakes" USING btree ("artist_user_id");

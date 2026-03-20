@@ -46,6 +46,7 @@ import {
   getTodayDateValue,
   shiftMonthValue,
 } from "@/lib/ops/appointment-calendar";
+import type { UserRole } from "@/db/schema/users";
 import { formatOpsMoneyDisplay } from "@/lib/ops/money";
 import { cn } from "@/lib/utils";
 
@@ -56,6 +57,8 @@ const INITIAL_ACTION_STATE: OpsAppointmentActionState = {
   success: null,
 };
 
+const UNASSIGNED_ARTIST_LABEL = "Kayıtlı değil";
+
 type AppointmentCustomerOption = {
   id: number;
   label: string;
@@ -64,6 +67,8 @@ type AppointmentCustomerOption = {
 
 type StaffServiceSummary = {
   id: number;
+  artistUserId: number | null;
+  artistName: string | null;
   serviceType: "tattoo" | "piercing";
   totalAmountCents: number;
   collectedAmountCents: number;
@@ -100,6 +105,12 @@ type OpsStaffAppointmentsWorkspaceProps = {
   initialSelectedDay: string | null;
   sessions: StaffServiceSessionView[];
   customerOptions: AppointmentCustomerOption[];
+  artistOptions: Array<{
+    id: number;
+    label: string;
+  }>;
+  currentStaffUserId: number;
+  currentStaffRoles: UserRole[];
 };
 
 function sortCustomerOptions(options: AppointmentCustomerOption[]): AppointmentCustomerOption[] {
@@ -274,51 +285,64 @@ function AppointmentServiceSummarySection({
   emptyMessage: string;
 }) {
   return (
-    <section className="rounded-[1.7rem] border border-border bg-card p-4">
+    <section className="rounded-[1.55rem] border border-border bg-card p-3.5 sm:p-4">
       <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
         İşlem özeti
       </p>
 
       {serviceSummary ? (
-        <div className="mt-3 grid gap-3 sm:grid-cols-2">
-          <div className="rounded-2xl border border-border px-4 py-3">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              İşlem tipi
-            </p>
-            <p className="mt-1 text-sm font-medium text-foreground">
-              {getServiceTypeLabel(serviceSummary.serviceType)}
-            </p>
+        <div className="mt-3 space-y-2.5">
+          <div className="grid gap-2.5 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-surface-1/35 px-3.5 py-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                İşlem tipi
+              </p>
+              <p className="mt-1 text-sm font-medium text-foreground">
+                {getServiceTypeLabel(serviceSummary.serviceType)}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-surface-1/35 px-3.5 py-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Artist
+              </p>
+              <p className="mt-1 text-sm font-medium text-foreground">
+                {serviceSummary.artistName ?? UNASSIGNED_ARTIST_LABEL}
+              </p>
+            </div>
           </div>
 
-          <div className="rounded-2xl border border-border px-4 py-3">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Toplam
-            </p>
-            <p className="mt-1 text-sm font-medium text-foreground">
-              {formatOpsMoneyDisplay(serviceSummary.totalAmountCents)}
-            </p>
-          </div>
+          <div className="grid gap-2.5 sm:grid-cols-3">
+            <div className="rounded-2xl border border-border px-3.5 py-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Toplam
+              </p>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {formatOpsMoneyDisplay(serviceSummary.totalAmountCents)}
+              </p>
+            </div>
 
-          <div className="rounded-2xl border border-border px-4 py-3">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Alınan
-            </p>
-            <p className="mt-1 text-sm font-medium text-foreground">
-              {formatOpsMoneyDisplay(serviceSummary.collectedAmountCents)}
-            </p>
-          </div>
+            <div className="rounded-2xl border border-border px-3.5 py-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Kapora
+              </p>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {formatOpsMoneyDisplay(serviceSummary.collectedAmountCents)}
+              </p>
+            </div>
 
-          <div className="rounded-2xl border border-border px-4 py-3">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Kalan
-            </p>
-            <p className="mt-1 text-sm font-medium text-foreground">
-              {formatOpsMoneyDisplay(getRemainingAmountCents(serviceSummary))}
-            </p>
+            <div className="rounded-2xl border border-border px-3.5 py-3">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Kalan
+              </p>
+              <p className="mt-1 text-sm font-semibold text-foreground">
+                {formatOpsMoneyDisplay(getRemainingAmountCents(serviceSummary))}
+              </p>
+            </div>
           </div>
         </div>
       ) : (
-        <div className="mt-3 rounded-2xl border border-dashed border-border px-4 py-5 text-sm text-muted-foreground">
+        <div className="mt-3 rounded-2xl border border-dashed border-border px-4 py-4 text-sm text-muted-foreground">
           {emptyMessage}
         </div>
       )}
@@ -326,9 +350,46 @@ function AppointmentServiceSummarySection({
   );
 }
 
+function AppointmentContextCard({
+  customerName,
+  scheduledDate,
+  scheduledTime,
+}: {
+  customerName: string;
+  scheduledDate: string;
+  scheduledTime: string;
+}) {
+  return (
+    <section className="rounded-[1.55rem] border border-border bg-surface-1/45 px-4 py-3.5">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-1">
+          <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+            Müşteri
+          </p>
+          <p className="text-base font-semibold text-foreground">{customerName}</p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
+            <CalendarDays className="size-4" aria-hidden />
+            {formatAppointmentDateLong(scheduledDate)}
+          </Badge>
+          <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
+            <Clock3 className="size-4" aria-hidden />
+            {scheduledTime}
+          </Badge>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function AppointmentFormSheet({
   formState,
   customerOptions,
+  artistOptions,
+  currentStaffUserId,
+  currentStaffRoles,
   daySessions,
   onOpenChange,
   createMode,
@@ -336,6 +397,12 @@ function AppointmentFormSheet({
 }: {
   formState: FormState | null;
   customerOptions: AppointmentCustomerOption[];
+  artistOptions: Array<{
+    id: number;
+    label: string;
+  }>;
+  currentStaffUserId: number;
+  currentStaffRoles: UserRole[];
   daySessions: StaffServiceSessionView[];
   onOpenChange: (open: boolean) => void;
   createMode: boolean;
@@ -355,6 +422,8 @@ function AppointmentFormSheet({
       : formState.session.scheduledTime;
   const defaultCustomerUserId =
     formState.mode === "edit" ? formState.session.customerUserId : undefined;
+  const defaultArtistUserId =
+    formState.mode === "edit" ? formState.session.serviceSummary?.artistUserId : undefined;
   const defaultNotes = formState.mode === "edit" ? formState.session.notes : null;
   const defaultServiceType =
     formState.mode === "edit" ? formState.session.serviceSummary?.serviceType : "tattoo";
@@ -382,7 +451,7 @@ function AppointmentFormSheet({
           "mx-auto overflow-hidden rounded-t-[2.1rem] p-0",
           createMode
             ? "max-h-[88vh] w-full max-w-2xl lg:inset-x-auto lg:right-6 lg:left-auto lg:top-20 lg:bottom-6 lg:max-h-none lg:h-[calc(100vh-7rem)] lg:w-[28rem] lg:max-w-[28rem] lg:rounded-[2rem] lg:border"
-            : "max-h-[92vh] w-full max-w-3xl lg:inset-x-auto lg:right-6 lg:left-auto lg:top-16 lg:bottom-6 lg:max-h-none lg:h-[calc(100vh-5.5rem)] lg:w-[38rem] lg:max-w-[38rem] lg:rounded-[2rem] lg:border"
+            : "max-h-[90vh] w-full max-w-3xl lg:inset-x-auto lg:right-6 lg:left-auto lg:top-16 lg:bottom-6 lg:max-h-none lg:h-[calc(100vh-5.5rem)] lg:w-[36rem] lg:max-w-[36rem] lg:rounded-[2rem] lg:border"
         )}
       >
         <div className="flex h-full max-h-[92vh] flex-col bg-background">
@@ -406,17 +475,14 @@ function AppointmentFormSheet({
             </div>
           </SheetHeader>
 
-          <div className="overflow-y-auto px-5 py-5 sm:px-6">
+          <div className="overflow-y-auto px-5 py-4 pb-5 sm:px-6">
             {formState.mode === "edit" ? (
-              <div className="mb-4 space-y-4">
-                <div className="rounded-[1.7rem] border border-border bg-surface-1/55 px-4 py-3">
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                    Müşteri
-                  </p>
-                  <p className="mt-1 text-sm font-medium text-foreground">
-                    {formState.session.customerName}
-                  </p>
-                </div>
+              <div className="mb-3 space-y-3">
+                <AppointmentContextCard
+                  customerName={formState.session.customerName}
+                  scheduledDate={formState.session.scheduledDate}
+                  scheduledTime={formState.session.scheduledTime}
+                />
 
                 <AppointmentServiceSummarySection
                   serviceSummary={formState.session.serviceSummary}
@@ -436,10 +502,14 @@ function AppointmentFormSheet({
               source={source}
               mode={formState.mode}
               customerOptions={customerOptions}
+              artistOptions={artistOptions}
+              currentStaffUserId={currentStaffUserId}
+              currentStaffRoles={currentStaffRoles}
               onCustomerCreated={onCustomerCreated}
               defaultDate={defaultDate}
               defaultTime={defaultTime}
               defaultCustomerUserId={defaultCustomerUserId}
+              defaultArtistUserId={defaultArtistUserId}
               defaultNotes={defaultNotes}
               defaultServiceType={defaultServiceType}
               defaultTotalAmountCents={defaultTotalAmountCents}
@@ -493,9 +563,9 @@ function AppointmentDetailSheet({
         side="bottom"
         showCloseButton={false}
         data-testid="appointments-detail-sheet"
-        className="mx-auto max-h-[68vh] w-full max-w-xl overflow-hidden rounded-t-[2rem] p-0 lg:inset-x-auto lg:left-1/2 lg:right-auto lg:top-1/2 lg:bottom-auto lg:max-h-[70vh] lg:w-[30rem] lg:max-w-[30rem] lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-[2rem] lg:border"
+        className="mx-auto max-h-[76vh] w-full max-w-xl overflow-hidden rounded-t-[2rem] p-0 lg:inset-x-auto lg:left-1/2 lg:right-auto lg:top-1/2 lg:bottom-auto lg:max-h-[78vh] lg:w-[29rem] lg:max-w-[29rem] lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-[2rem] lg:border"
       >
-        <div className="flex h-full max-h-[68vh] flex-col bg-background lg:max-h-[70vh]">
+        <div className="flex h-full max-h-[76vh] flex-col bg-background lg:max-h-[78vh]">
           <SheetHandle />
           <SheetHeader className="border-b border-border bg-surface-1/40 px-5 py-3 text-left sm:px-6">
             <div className="flex items-center justify-between gap-3">
@@ -514,38 +584,19 @@ function AppointmentDetailSheet({
             </div>
           </SheetHeader>
 
-          <div className="space-y-4 overflow-y-auto px-5 py-4 sm:px-6">
-            <section className="space-y-4 rounded-[1.7rem] border border-border bg-surface-1/70 p-4">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="space-y-1">
-                  <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                    Müşteri
-                  </p>
-                  <p className="text-xl font-semibold text-foreground">{session.customerName}</p>
-                  {session.customerEmail ? (
-                    <p className="text-sm text-muted-foreground">{session.customerEmail}</p>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
-                  <CalendarDays className="size-4" aria-hidden />
-                  {formatAppointmentDateLong(session.scheduledDate)}
-                </Badge>
-                <Badge variant="outline" className="rounded-full px-3 py-1 text-sm font-medium">
-                  <Clock3 className="size-4" aria-hidden />
-                  {session.scheduledTime}
-                </Badge>
-              </div>
-            </section>
+          <div className="space-y-3.5 overflow-y-auto px-5 py-4 pb-5 sm:px-6">
+            <AppointmentContextCard
+              customerName={session.customerName}
+              scheduledDate={session.scheduledDate}
+              scheduledTime={session.scheduledTime}
+            />
 
             <AppointmentServiceSummarySection
               serviceSummary={session.serviceSummary}
               emptyMessage="Bağlı işlem özeti yok."
             />
 
-            <section className="rounded-[1.7rem] border border-border bg-card p-4">
+            <section className="rounded-[1.55rem] border border-border bg-card p-3.5 sm:p-4">
               <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
                 Not
               </p>
@@ -560,7 +611,7 @@ function AppointmentDetailSheet({
               </p>
             ) : null}
 
-            <div className="flex flex-col gap-3 border-t border-border pt-3">
+            <div className="flex flex-col gap-3 border-t border-border pt-2.5">
               {canOpenPacket ? (
                 <Button asChild size="cta" className="w-full">
                   <Link href={`/ops/staff/belgeler/${session.serviceIntakeId}`}>
@@ -800,6 +851,9 @@ export function OpsStaffAppointmentsWorkspace({
   initialSelectedDay,
   sessions,
   customerOptions,
+  artistOptions,
+  currentStaffUserId,
+  currentStaffRoles,
 }: OpsStaffAppointmentsWorkspaceProps) {
   const [availableCustomerOptions, setAvailableCustomerOptions] = useState(() =>
     sortCustomerOptions(customerOptions)
@@ -1039,6 +1093,9 @@ export function OpsStaffAppointmentsWorkspace({
       <AppointmentFormSheet
         formState={viewMode === "create" || viewMode === "edit" ? formState : null}
         customerOptions={availableCustomerOptions}
+        artistOptions={artistOptions}
+        currentStaffUserId={currentStaffUserId}
+        currentStaffRoles={currentStaffRoles}
         daySessions={formState?.mode === "create" && selectedDay ? selectedDaySessions : []}
         onOpenChange={handleFormOpenChange}
         createMode={viewMode === "create"}

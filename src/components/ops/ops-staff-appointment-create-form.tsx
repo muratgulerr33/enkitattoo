@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import type { UserRole } from "@/db/schema/users";
 import { formatAppointmentDateLong } from "@/lib/ops/appointment-calendar";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +39,12 @@ type StaffAppointmentCreateFormProps = {
     label: string;
     email: string | null;
   }>;
+  artistOptions: Array<{
+    id: number;
+    label: string;
+  }>;
+  currentStaffUserId: number;
+  currentStaffRoles: UserRole[];
   onCustomerCreated?: (customer: {
     id: number;
     label: string;
@@ -46,6 +53,7 @@ type StaffAppointmentCreateFormProps = {
   defaultDate: string;
   defaultTime: string;
   defaultCustomerUserId?: number;
+  defaultArtistUserId?: number | null;
   defaultNotes?: string | null;
   defaultServiceType?: "tattoo" | "piercing";
   defaultTotalAmountCents?: number | null;
@@ -83,12 +91,52 @@ function toAmountInputValue(
     .replace(".", ",");
 }
 
+function getDefaultArtistUserId(input: {
+  artistOptions: Array<{
+    id: number;
+    label: string;
+  }>;
+  currentStaffUserId: number;
+  currentStaffRoles: UserRole[];
+  defaultArtistUserId?: number | null;
+}): string {
+  if (
+    typeof input.defaultArtistUserId === "number" &&
+    input.artistOptions.some((artist) => artist.id === input.defaultArtistUserId)
+  ) {
+    return input.defaultArtistUserId.toString();
+  }
+
+  const isPureArtist =
+    input.currentStaffRoles.includes("artist") && !input.currentStaffRoles.includes("admin");
+
+  if (isPureArtist) {
+    const currentArtist = input.artistOptions.find(
+      (artist) => artist.id === input.currentStaffUserId
+    );
+
+    if (currentArtist) {
+      return currentArtist.id.toString();
+    }
+  }
+
+  if (input.artistOptions.length === 1) {
+    return input.artistOptions[0].id.toString();
+  }
+
+  return "";
+}
+
 export function OpsStaffAppointmentCreateForm({
   customerOptions,
+  artistOptions,
+  currentStaffUserId,
+  currentStaffRoles,
   onCustomerCreated,
   defaultDate,
   defaultTime,
   defaultCustomerUserId,
+  defaultArtistUserId,
   defaultNotes,
   defaultServiceType = "tattoo",
   defaultTotalAmountCents,
@@ -101,6 +149,12 @@ export function OpsStaffAppointmentCreateForm({
   onSuccess,
   dateMode = "editable",
 }: StaffAppointmentCreateFormProps) {
+  const resolvedDefaultArtistUserId = getDefaultArtistUserId({
+    artistOptions,
+    currentStaffUserId,
+    currentStaffRoles,
+    defaultArtistUserId,
+  });
   const [sessionSource, setSessionSource] = useState<SessionSource>(source);
   const action =
     mode === "edit"
@@ -121,6 +175,7 @@ export function OpsStaffAppointmentCreateForm({
   const [selectedCustomerUserId, setSelectedCustomerUserId] = useState(
     (defaultCustomerUserId ?? customerOptions[0]?.id)?.toString() ?? ""
   );
+  const [selectedArtistUserId, setSelectedArtistUserId] = useState(resolvedDefaultArtistUserId);
   const [createCustomerPending, startCreateCustomerTransition] = useTransition();
   const [totalAmountInput, setTotalAmountInput] = useState(() =>
     toAmountInputValue(defaultTotalAmountCents)
@@ -138,6 +193,16 @@ export function OpsStaffAppointmentCreateForm({
   useEffect(() => {
     setSessionSource(source);
   }, [source]);
+
+  useEffect(() => {
+    setSelectedArtistUserId((current) => {
+      if (current && artistOptions.some((artist) => artist.id.toString() === current)) {
+        return current;
+      }
+
+      return resolvedDefaultArtistUserId;
+    });
+  }, [artistOptions, resolvedDefaultArtistUserId]);
 
   useEffect(() => {
     setTotalAmountInput(toAmountInputValue(defaultTotalAmountCents));
@@ -291,7 +356,7 @@ export function OpsStaffAppointmentCreateForm({
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2 sm:col-span-2">
+          <div className="space-y-2">
             <Label htmlFor="serviceType">İşlem tipi</Label>
             <div className="relative rounded-xl border border-border bg-background">
               <select
@@ -315,6 +380,44 @@ export function OpsStaffAppointmentCreateForm({
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="artistUserId">Artist</Label>
+            <div className="relative rounded-xl border border-border bg-background">
+              <select
+                id="artistUserId"
+                name="artistUserId"
+                value={selectedArtistUserId}
+                className={cn(
+                  selectClassName,
+                  "h-11 rounded-xl border-0 bg-transparent pr-10 shadow-none focus-visible:ring-0"
+                )}
+                disabled={isDisabled || !artistOptions.length}
+                onChange={(event) => setSelectedArtistUserId(event.target.value)}
+                data-testid="artist-select"
+              >
+                {artistOptions.length > 1 ? <option value="">Artist seçin</option> : null}
+                {artistOptions.length ? (
+                  artistOptions.map((artist) => (
+                    <option key={artist.id} value={artist.id}>
+                      {artist.label}
+                    </option>
+                  ))
+                ) : (
+                  <option value="">Aktif artist yok</option>
+                )}
+              </select>
+              <ChevronDown
+                className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden
+              />
+            </div>
+            {!artistOptions.length ? (
+              <p className="text-xs leading-5 text-muted-foreground">
+                İşlem kaydı açmak için önce aktif bir artist hesabı gerekli.
+              </p>
+            ) : null}
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="totalAmount">Toplam tutar (TL)</Label>
             <Input
               id="totalAmount"
@@ -329,7 +432,7 @@ export function OpsStaffAppointmentCreateForm({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="collectedAmount">Alınan tutar (TL)</Label>
+            <Label htmlFor="collectedAmount">Kapora (TL)</Label>
             <Input
               id="collectedAmount"
               name="collectedAmount"

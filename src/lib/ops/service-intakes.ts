@@ -1,4 +1,5 @@
-import { and, asc, desc, eq, gte, inArray, lte } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, isNull, lte } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 import { getDb } from "@/db";
 import {
   serviceIntakes,
@@ -8,6 +9,7 @@ import {
   userRoles,
   users,
 } from "@/db/schema";
+import { getArtistPresentationLabel } from "./artists";
 import { writeAuditLog } from "./audit";
 import { postServiceIntakeCashDelta } from "./cashbook";
 
@@ -22,6 +24,7 @@ export type ServiceIntakeRecord = {
   collectedAmountCents: number;
   notes: string | null;
   appointmentId: number | null;
+  artistUserId: number | null;
   createdByUserId: number;
   updatedByUserId: number | null;
   createdAt: Date;
@@ -37,6 +40,7 @@ export type CreateServiceIntakeInput = {
   totalAmountCents: number;
   collectedAmountCents: number;
   notes: string | null;
+  artistUserId: number;
   createdByUserId: number;
 };
 
@@ -55,10 +59,15 @@ export type UpdateWalkInServiceIntakeInput = {
   totalAmountCents: number;
   collectedAmountCents: number;
   notes: string | null;
+  artistUserId: number;
   updatedByUserId: number;
 };
 
-export type StaffWalkInServiceIntakeRecord = ServiceIntakeRecord & {
+export type ServiceIntakeSummaryRecord = ServiceIntakeRecord & {
+  artistName: string | null;
+};
+
+export type StaffWalkInServiceIntakeRecord = ServiceIntakeSummaryRecord & {
   customerName: string;
   customerEmail: string | null;
 };
@@ -104,6 +113,26 @@ function getCustomerDisplayName(row: {
   );
 }
 
+function getArtistDisplayName(row: {
+  artistUserId: number | null;
+  artistFullName: string | null;
+  artistDisplayName: string | null;
+  artistEmail: string | null;
+  artistPhone: string | null;
+}): string | null {
+  if (row.artistUserId === null) {
+    return null;
+  }
+
+  return getArtistPresentationLabel({
+    userId: row.artistUserId,
+    fullName: row.artistFullName,
+    displayName: row.artistDisplayName,
+    email: row.artistEmail,
+    phone: row.artistPhone,
+  });
+}
+
 async function assertCustomerUserExists(
   customerUserId: number,
   executor: Pick<ReturnType<typeof getDb>, "select"> = getDb()
@@ -123,6 +152,37 @@ async function assertCustomerUserExists(
   }
 }
 
+async function assertActiveArtistUserExists(
+  artistUserId: number,
+  executor: Pick<ReturnType<typeof getDb>, "select"> = getDb()
+): Promise<void> {
+  const artistRole = alias(userRoles, "service_intake_artist_role");
+  const adminRole = alias(userRoles, "service_intake_admin_role");
+  const userRole = alias(userRoles, "service_intake_user_role");
+  const rows = await executor
+    .select({ id: users.id })
+    .from(users)
+    .innerJoin(
+      artistRole,
+      and(eq(artistRole.userId, users.id), eq(artistRole.role, "artist"))
+    )
+    .leftJoin(adminRole, and(eq(adminRole.userId, users.id), eq(adminRole.role, "admin")))
+    .leftJoin(userRole, and(eq(userRole.userId, users.id), eq(userRole.role, "user")))
+    .where(
+      and(
+        eq(users.id, artistUserId),
+        eq(users.isActive, true),
+        isNull(adminRole.id),
+        isNull(userRole.id)
+      )
+    )
+    .limit(1);
+
+  if (!rows[0]) {
+    throw new Error("Seçilen artist kullanılamıyor.");
+  }
+}
+
 function mapRow(row: {
   id: number;
   customerUserId: number;
@@ -134,6 +194,7 @@ function mapRow(row: {
   collectedAmountCents: number;
   notes: string | null;
   appointmentId: number | null;
+  artistUserId: number | null;
   createdByUserId: number;
   updatedByUserId: number | null;
   createdAt: Date;
@@ -150,6 +211,7 @@ export async function createServiceIntake(
 
   return db.transaction(async (tx) => {
     await assertCustomerUserExists(input.customerUserId, tx);
+    await assertActiveArtistUserExists(input.artistUserId, tx);
 
     const insertedRows = await tx
       .insert(serviceIntakes)
@@ -162,6 +224,7 @@ export async function createServiceIntake(
         totalAmountCents: input.totalAmountCents,
         collectedAmountCents: input.collectedAmountCents,
         notes: input.notes,
+        artistUserId: input.artistUserId,
         createdByUserId: input.createdByUserId,
         updatedByUserId: input.createdByUserId,
         createdAt: now,
@@ -178,6 +241,7 @@ export async function createServiceIntake(
         collectedAmountCents: serviceIntakes.collectedAmountCents,
         notes: serviceIntakes.notes,
         appointmentId: serviceIntakes.appointmentId,
+        artistUserId: serviceIntakes.artistUserId,
         createdByUserId: serviceIntakes.createdByUserId,
         updatedByUserId: serviceIntakes.updatedByUserId,
         createdAt: serviceIntakes.createdAt,
@@ -204,6 +268,7 @@ export async function createServiceIntake(
           scheduledTime: inserted.scheduledTime,
           totalAmountCents: inserted.totalAmountCents,
           collectedAmountCents: inserted.collectedAmountCents,
+          artistUserId: inserted.artistUserId,
           hasNotes: Boolean(inserted.notes),
         },
       },
@@ -254,6 +319,7 @@ export async function attachServiceIntakeAppointment(
         collectedAmountCents: serviceIntakes.collectedAmountCents,
         notes: serviceIntakes.notes,
         appointmentId: serviceIntakes.appointmentId,
+        artistUserId: serviceIntakes.artistUserId,
         createdByUserId: serviceIntakes.createdByUserId,
         updatedByUserId: serviceIntakes.updatedByUserId,
         createdAt: serviceIntakes.createdAt,
@@ -291,6 +357,7 @@ export async function updateWalkInServiceIntake(
 
   return db.transaction(async (tx) => {
     await assertCustomerUserExists(input.customerUserId, tx);
+    await assertActiveArtistUserExists(input.artistUserId, tx);
 
     const currentRows = await tx
       .select({
@@ -325,6 +392,7 @@ export async function updateWalkInServiceIntake(
         collectedAmountCents: input.collectedAmountCents,
         notes: input.notes,
         appointmentId: null,
+        artistUserId: input.artistUserId,
         updatedByUserId: input.updatedByUserId,
         updatedAt: now,
       })
@@ -345,6 +413,7 @@ export async function updateWalkInServiceIntake(
         collectedAmountCents: serviceIntakes.collectedAmountCents,
         notes: serviceIntakes.notes,
         appointmentId: serviceIntakes.appointmentId,
+        artistUserId: serviceIntakes.artistUserId,
         createdByUserId: serviceIntakes.createdByUserId,
         updatedByUserId: serviceIntakes.updatedByUserId,
         createdAt: serviceIntakes.createdAt,
@@ -367,6 +436,7 @@ export async function updateWalkInServiceIntake(
           scheduledTime: updated.scheduledTime,
           totalAmountCents: updated.totalAmountCents,
           collectedAmountCents: updated.collectedAmountCents,
+          artistUserId: updated.artistUserId,
           hasNotes: Boolean(updated.notes),
         },
       },
@@ -410,6 +480,7 @@ export async function getLatestServiceIntakeForCustomer(
       collectedAmountCents: serviceIntakes.collectedAmountCents,
       notes: serviceIntakes.notes,
       appointmentId: serviceIntakes.appointmentId,
+      artistUserId: serviceIntakes.artistUserId,
       createdByUserId: serviceIntakes.createdByUserId,
       updatedByUserId: serviceIntakes.updatedByUserId,
       createdAt: serviceIntakes.createdAt,
@@ -426,12 +497,14 @@ export async function getLatestServiceIntakeForCustomer(
 
 export async function listLatestServiceIntakesByAppointmentIds(
   appointmentIds: number[]
-): Promise<ServiceIntakeRecord[]> {
+): Promise<ServiceIntakeSummaryRecord[]> {
   if (!appointmentIds.length) {
     return [];
   }
 
   const db = getDb();
+  const artistUsers = alias(users, "service_intake_artist_users");
+  const artistProfiles = alias(userProfiles, "service_intake_artist_profiles");
   const rows = await db
     .select({
       id: serviceIntakes.id,
@@ -444,23 +517,33 @@ export async function listLatestServiceIntakesByAppointmentIds(
       collectedAmountCents: serviceIntakes.collectedAmountCents,
       notes: serviceIntakes.notes,
       appointmentId: serviceIntakes.appointmentId,
+      artistUserId: serviceIntakes.artistUserId,
       createdByUserId: serviceIntakes.createdByUserId,
       updatedByUserId: serviceIntakes.updatedByUserId,
       createdAt: serviceIntakes.createdAt,
       updatedAt: serviceIntakes.updatedAt,
+      artistEmail: artistUsers.email,
+      artistPhone: artistUsers.phone,
+      artistFullName: artistProfiles.fullName,
+      artistDisplayName: artistProfiles.displayName,
     })
     .from(serviceIntakes)
+    .leftJoin(artistUsers, eq(artistUsers.id, serviceIntakes.artistUserId))
+    .leftJoin(artistProfiles, eq(artistProfiles.userId, artistUsers.id))
     .where(inArray(serviceIntakes.appointmentId, appointmentIds))
     .orderBy(desc(serviceIntakes.createdAt), desc(serviceIntakes.id));
 
-  const latestRowsByAppointmentId = new Map<number, ServiceIntakeRecord>();
+  const latestRowsByAppointmentId = new Map<number, ServiceIntakeSummaryRecord>();
 
   for (const row of rows) {
     if (row.appointmentId === null || latestRowsByAppointmentId.has(row.appointmentId)) {
       continue;
     }
 
-    latestRowsByAppointmentId.set(row.appointmentId, mapRow(row));
+    latestRowsByAppointmentId.set(row.appointmentId, {
+      ...mapRow(row),
+      artistName: getArtistDisplayName(row),
+    });
   }
 
   return [...latestRowsByAppointmentId.values()];
@@ -471,6 +554,8 @@ export async function listWalkInServiceIntakesForMonth(
 ): Promise<StaffWalkInServiceIntakeRecord[]> {
   const { startDate, endDate } = getMonthBounds(monthValue);
   const db = getDb();
+  const artistUsers = alias(users, "walk_in_artist_users");
+  const artistProfiles = alias(userProfiles, "walk_in_artist_profiles");
   const rows = await db
     .select({
       id: serviceIntakes.id,
@@ -483,6 +568,7 @@ export async function listWalkInServiceIntakesForMonth(
       collectedAmountCents: serviceIntakes.collectedAmountCents,
       notes: serviceIntakes.notes,
       appointmentId: serviceIntakes.appointmentId,
+      artistUserId: serviceIntakes.artistUserId,
       createdByUserId: serviceIntakes.createdByUserId,
       updatedByUserId: serviceIntakes.updatedByUserId,
       createdAt: serviceIntakes.createdAt,
@@ -490,10 +576,16 @@ export async function listWalkInServiceIntakesForMonth(
       email: users.email,
       fullName: userProfiles.fullName,
       displayName: userProfiles.displayName,
+      artistEmail: artistUsers.email,
+      artistPhone: artistUsers.phone,
+      artistFullName: artistProfiles.fullName,
+      artistDisplayName: artistProfiles.displayName,
     })
     .from(serviceIntakes)
     .innerJoin(users, eq(users.id, serviceIntakes.customerUserId))
     .leftJoin(userProfiles, eq(userProfiles.userId, users.id))
+    .leftJoin(artistUsers, eq(artistUsers.id, serviceIntakes.artistUserId))
+    .leftJoin(artistProfiles, eq(artistProfiles.userId, artistUsers.id))
     .where(
       and(
         eq(serviceIntakes.flowType, "walk_in"),
@@ -511,5 +603,6 @@ export async function listWalkInServiceIntakesForMonth(
     ...mapRow(row),
     customerName: getCustomerDisplayName(row),
     customerEmail: row.email ?? null,
+    artistName: getArtistDisplayName(row),
   }));
 }

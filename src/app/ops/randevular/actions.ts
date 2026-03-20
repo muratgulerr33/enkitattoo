@@ -15,6 +15,7 @@ import {
   updateAppointmentStatus,
 } from "@/lib/ops/appointments";
 import { createCustomerRecord } from "@/lib/ops/customers";
+import { resolveStaffArtistAssignment } from "@/lib/ops/artists";
 import {
   attachServiceIntakeAppointment,
   createServiceIntake,
@@ -63,11 +64,14 @@ const SAFE_APPOINTMENT_ACTION_ERROR_MESSAGES = new Set([
   "Durum seçimi geçerli değil.",
   "İşlem tipi seçin.",
   "İşlem tipi geçerli değil.",
+  "Artist seçin.",
+  "Seçilen artist kullanılamıyor.",
+  "Aktif artist bulunamadı.",
   "Toplam tutarı girin.",
   "Toplam tutarı kontrol edin.",
-  "Alınan tutarı girin.",
-  "Alınan tutarı kontrol edin.",
-  "Alınan tutar toplam tutardan büyük olamaz.",
+  "Kapora girin.",
+  "Kaporayı kontrol edin.",
+  "Kapora toplam tutardan büyük olamaz.",
   "İşlem bulunamadı.",
   "İşlem kaydı bulunamadı.",
   APPOINTMENT_DELETE_WITH_CASH_ENTRIES_MESSAGE,
@@ -108,6 +112,26 @@ function toRequiredNumber(value: FormDataEntryValue | null, message: string): nu
   }
 
   const parsed = Number(value);
+
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new Error(message);
+  }
+
+  return parsed;
+}
+
+function toOptionalNumber(value: FormDataEntryValue | null, message: string): number | null {
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const normalized = value.trim();
+
+  if (!normalized) {
+    return null;
+  }
+
+  const parsed = Number(normalized);
 
   if (!Number.isInteger(parsed) || parsed <= 0) {
     throw new Error(message);
@@ -346,6 +370,7 @@ function getServiceSessionFormValues(formData: FormData): {
   customerUserId: number;
   scheduledDate: string;
   scheduledTime: string;
+  requestedArtistUserId: number | null;
   serviceType: ServiceIntakeServiceType;
   totalAmountCents: number;
   collectedAmountCents: number;
@@ -354,6 +379,7 @@ function getServiceSessionFormValues(formData: FormData): {
   const customerUserId = toRequiredNumber(formData.get("customerUserId"), "Müşteri seçin.");
   const scheduledDate = getScheduledDateValue(formData);
   const scheduledTime = getScheduledTimeValue(formData);
+  const requestedArtistUserId = toOptionalNumber(formData.get("artistUserId"), "Artist seçin.");
   const rawServiceType = toRequiredString(formData.get("serviceType"), "İşlem tipi seçin.");
   const totalAmountCents = toAmountCents(
     formData.get("totalAmount"),
@@ -361,7 +387,7 @@ function getServiceSessionFormValues(formData: FormData): {
   );
   const collectedAmountCents = toOptionalAmountCents(
     formData.get("collectedAmount"),
-    "Alınan tutarı kontrol edin."
+    "Kaporayı kontrol edin."
   );
   const notes = toNullableText(formData.get("notes"), 1200);
 
@@ -370,13 +396,14 @@ function getServiceSessionFormValues(formData: FormData): {
   }
 
   if (collectedAmountCents > totalAmountCents) {
-    throw new Error("Alınan tutar toplam tutardan büyük olamaz.");
+    throw new Error("Kapora toplam tutardan büyük olamaz.");
   }
 
   return {
     customerUserId,
     scheduledDate,
     scheduledTime,
+    requestedArtistUserId,
     serviceType: rawServiceType,
     totalAmountCents,
     collectedAmountCents,
@@ -394,11 +421,17 @@ export async function createStaffAppointmentAction(
       customerUserId,
       scheduledDate,
       scheduledTime,
+      requestedArtistUserId,
       serviceType,
       totalAmountCents,
       collectedAmountCents,
       notes,
     } = getServiceSessionFormValues(formData);
+    const artistUserId = await resolveStaffArtistAssignment({
+      requestedArtistUserId,
+      sessionUserId: sessionUser.id,
+      sessionUserRoles: sessionUser.roles,
+    });
 
     const appointment = await createAppointment({
       customerUserId,
@@ -415,6 +448,7 @@ export async function createStaffAppointmentAction(
       serviceType,
       scheduledDate,
       scheduledTime,
+      artistUserId,
       totalAmountCents,
       collectedAmountCents,
       notes,
@@ -463,11 +497,17 @@ export async function createStaffWalkInAction(
       customerUserId,
       scheduledDate,
       scheduledTime,
+      requestedArtistUserId,
       serviceType,
       totalAmountCents,
       collectedAmountCents,
       notes,
     } = getServiceSessionFormValues(formData);
+    const artistUserId = await resolveStaffArtistAssignment({
+      requestedArtistUserId,
+      sessionUserId: access.user.id,
+      sessionUserRoles: access.user.roles,
+    });
 
     await createServiceIntake({
       customerUserId,
@@ -475,6 +515,7 @@ export async function createStaffWalkInAction(
       serviceType,
       scheduledDate,
       scheduledTime,
+      artistUserId,
       totalAmountCents,
       collectedAmountCents,
       notes,
@@ -692,17 +733,24 @@ export async function updateStaffAppointmentAction(
       customerUserId,
       scheduledDate,
       scheduledTime,
+      requestedArtistUserId,
       serviceType,
       totalAmountCents,
       collectedAmountCents,
       notes,
     } = getServiceSessionFormValues(formData);
+    const artistUserId = await resolveStaffArtistAssignment({
+      requestedArtistUserId,
+      sessionUserId: sessionUser.id,
+      sessionUserRoles: sessionUser.roles,
+    });
 
     const result = await updateAppointment({
       appointmentId,
       customerUserId,
       appointmentDate: scheduledDate,
       appointmentTime: scheduledTime,
+      artistUserId,
       serviceType,
       totalAmountCents,
       collectedAmountCents,
@@ -752,11 +800,17 @@ export async function updateStaffWalkInAction(
       customerUserId,
       scheduledDate,
       scheduledTime,
+      requestedArtistUserId,
       serviceType,
       totalAmountCents,
       collectedAmountCents,
       notes,
     } = getServiceSessionFormValues(formData);
+    const artistUserId = await resolveStaffArtistAssignment({
+      requestedArtistUserId,
+      sessionUserId: access.user.id,
+      sessionUserRoles: access.user.roles,
+    });
 
     const updated = await updateWalkInServiceIntake({
       serviceIntakeId,
@@ -764,6 +818,7 @@ export async function updateStaffWalkInAction(
       serviceType,
       scheduledDate,
       scheduledTime,
+      artistUserId,
       totalAmountCents,
       collectedAmountCents,
       notes,

@@ -1,4 +1,6 @@
 import { OpsStaffAppointmentsWorkspace } from "@/components/ops/ops-staff-appointments-workspace";
+import { requireOpsSessionArea } from "@/lib/ops/auth/guards";
+import { listActiveArtistOptions } from "@/lib/ops/artists";
 import {
   getDefaultSelectedDay,
   isDateInMonth,
@@ -22,11 +24,14 @@ type PageProps = {
 export default async function OpsStaffAppointmentsPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const monthValue = parseMonthValue(params.month);
-  const [monthAppointments, customerOptions, monthWalkIns] = await Promise.all([
-    listAppointmentsForMonth(monthValue),
-    listCustomerOptions(),
-    listWalkInServiceIntakesForMonth(monthValue),
-  ]);
+  const [sessionUser, monthAppointments, customerOptions, monthWalkIns, artistOptions] =
+    await Promise.all([
+      requireOpsSessionArea("staff"),
+      listAppointmentsForMonth(monthValue),
+      listCustomerOptions(),
+      listWalkInServiceIntakesForMonth(monthValue),
+      listActiveArtistOptions(),
+    ]);
   const scheduledMonthAppointments = monthAppointments.filter(
     (appointment) => appointment.status === "scheduled"
   );
@@ -60,6 +65,8 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
 
         return {
           id: serviceIntake.id,
+          artistUserId: serviceIntake.artistUserId,
+          artistName: serviceIntake.artistName,
           serviceType: serviceIntake.serviceType,
           totalAmountCents: serviceIntake.totalAmountCents,
           collectedAmountCents: serviceIntake.collectedAmountCents,
@@ -79,6 +86,8 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
     notes: serviceIntake.notes,
     serviceSummary: {
       id: serviceIntake.id,
+      artistUserId: serviceIntake.artistUserId,
+      artistName: serviceIntake.artistName,
       serviceType: serviceIntake.serviceType,
       totalAmountCents: serviceIntake.totalAmountCents,
       collectedAmountCents: serviceIntake.collectedAmountCents,
@@ -97,6 +106,12 @@ export default async function OpsStaffAppointmentsPage({ searchParams }: PagePro
       initialSelectedDay={initialSelectedDay}
       sessions={[...scheduledAppointments, ...walkInSessions]}
       customerOptions={customerOptions}
+      artistOptions={artistOptions.map((artist) => ({
+        id: artist.userId,
+        label: artist.label,
+      }))}
+      currentStaffUserId={sessionUser.id}
+      currentStaffRoles={sessionUser.roles}
     />
   );
 }

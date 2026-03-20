@@ -75,6 +75,7 @@ export type UpdateAppointmentInput = {
   customerUserId: number;
   appointmentDate: string;
   appointmentTime: string;
+  artistUserId: number;
   serviceType: ServiceIntakeServiceType;
   totalAmountCents: number;
   collectedAmountCents: number;
@@ -778,6 +779,7 @@ export async function updateAppointment(
           totalAmountCents: input.totalAmountCents,
           collectedAmountCents: input.collectedAmountCents,
           notes,
+          artistUserId: input.artistUserId,
           updatedByUserId: input.actorUserId,
           updatedAt: now,
         })
@@ -811,6 +813,7 @@ export async function updateAppointment(
               scheduledTime: appointmentTime,
               totalAmountCents: input.totalAmountCents,
               collectedAmountCents: input.collectedAmountCents,
+              artistUserId: input.artistUserId,
               hasNotes: Boolean(notes),
             },
           },
