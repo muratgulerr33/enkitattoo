@@ -91,7 +91,7 @@ Bu dosya yaşayan UI kontratlarının evidir. Tarihçe anlatmaz; mevcut shell, c
 - Staff görünür aksiyonları yeni işlem, düzenle ve sil ile sınırlıdır; status yönetimi bu yüzeyde görünmez.
 - Current runtime IA appointment-first kalır; yeni route veya tab açılmaz. Unified service session workspace aynı `/ops/staff/randevular` yüzeyinde, month root’u bozmadan selected day/detail/create-edit katmanında görünür olur.
 - Staff day agenda current runtime’da appointment ve walk-in kayıtlarını aynı liste içinde gösterir; visible ürün dili source badge göstermez, sıra aynı gün/saat içinde deterministic kalır.
-- Staff create formu current runtime’da tek visible işlem formudur; source selector görünmez. Ortak alanlar müşteri, artist, işlem tipi, tarih, saat, toplam, kapora ve not olarak aynı kalır.
+- Staff create formu current runtime’da tek visible işlem formudur; source selector görünmez. Ortak alanlar müşteri, artist, işlem tipi, tarih, saat, toplam, kapora ve not olarak aynı kalır. Create sheet seçili gün ile prefill açılır ama tarih alanı form içinden düzenlenebilir kalır.
 - Staff service session formu current runtime’da `noValidate` yaklaşımıyla browser native required tooltip’ine yaslanmaz; boş/bozuk alanlar aynı sheet içinde app-level hata metniyle görünür.
 - Staff service session formunda `Kapora` opsiyoneldir; boş bırakılabilir veya `0` olabilir. Yardımcı copy bunu açıkça opsiyonel anlatır.
 - Staff service session tarafında current runtime PR-C ile `Kapora` değişimleri otomatik kasa satırı üretir; pozitif delta tahsilat, negatif delta düzeltme olarak görünür. `Toplam`, tarih, saat, müşteri ve not değişimi tek başına kasa satırı üretmez.

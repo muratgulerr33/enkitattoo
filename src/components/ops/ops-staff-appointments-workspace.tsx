@@ -514,7 +514,7 @@ function AppointmentFormSheet({
               defaultServiceType={defaultServiceType}
               defaultTotalAmountCents={defaultTotalAmountCents}
               defaultCollectedAmountCents={defaultCollectedAmountCents}
-              dateMode={formState.mode === "edit" ? "editable" : "context"}
+              dateMode="editable"
               onSuccess={() => onOpenChange(false)}
             />
           </div>
@@ -1020,19 +1020,28 @@ export function OpsStaffAppointmentsWorkspace({
                     className={cn(
                       "group relative isolate flex min-h-[4.45rem] w-full flex-col overflow-hidden rounded-[1.15rem] border px-1.5 py-1.5 text-left transition-[transform,background-color,color,border-color,box-shadow] duration-150 hover:bg-muted/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.99] sm:min-h-24 sm:px-2.5 sm:py-2.5 xl:min-h-[8.25rem] xl:px-4 xl:py-3",
                       cell.isSelected
-                        ? "border-foreground bg-foreground text-background shadow-[0_18px_40px_rgba(15,23,42,0.24)] ring-2 ring-foreground/12"
+                        ? "border-foreground bg-foreground text-background shadow-[0_20px_44px_rgba(15,23,42,0.28)] ring-2 ring-foreground/16"
                         : cell.count
                           ? "border-foreground/18 bg-surface-1 text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.34)]"
                           : "border-border/85 bg-card text-foreground"
                     )}
                   >
+                    {cell.isSelected ? (
+                      <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-x-3 top-2 h-[3px] rounded-full bg-background/92 shadow-[0_1px_10px_rgba(255,255,255,0.28)] sm:inset-x-4 xl:inset-x-5"
+                      />
+                    ) : null}
+
                     <div className="flex items-start justify-between gap-1.5 sm:gap-2">
                       <span
                         data-testid={`month-cell-day-${cell.date}`}
                         className={cn(
                           "inline-flex size-7 items-center justify-center rounded-full text-sm font-semibold sm:size-8 sm:text-base xl:size-10 xl:text-lg",
                           cell.isToday && cell.isSelected
-                            ? "bg-background text-foreground ring-2 ring-background/65 shadow-sm"
+                            ? "bg-background text-foreground ring-2 ring-background/70 shadow-[0_4px_14px_rgba(255,255,255,0.2)]"
+                            : cell.isSelected
+                              ? "bg-background/12 text-background ring-1 ring-background/28"
                             : cell.isToday
                               ? "bg-background text-foreground ring-2 ring-foreground/34"
                               : "bg-transparent"
@@ -1075,7 +1084,7 @@ export function OpsStaffAppointmentsWorkspace({
 
       {showRootFab ? (
         <AppointmentFab
-          className="fixed right-4 bottom-[calc(env(safe-area-inset-bottom)+4.4rem)] z-20 shadow-[0_18px_34px_rgba(15,23,42,0.2)] sm:right-5 sm:bottom-[calc(env(safe-area-inset-bottom)+4.55rem)] md:bottom-6 xl:hidden"
+          className="fixed right-4 bottom-[calc(env(safe-area-inset-bottom)+5.4rem)] z-20 shadow-[0_18px_34px_rgba(15,23,42,0.2)] sm:right-5 sm:bottom-[calc(env(safe-area-inset-bottom)+5.7rem)] md:bottom-6 xl:hidden"
           onClick={() => startCreateForDay(rootFabDay)}
           testId="appointments-root-fab"
         />
