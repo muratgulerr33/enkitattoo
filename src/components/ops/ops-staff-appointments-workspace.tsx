@@ -501,17 +501,11 @@ function AppointmentFormSheet({
 
           <div className="overflow-y-auto px-4 py-3 pb-4 sm:px-5 sm:py-3.5 sm:pb-5">
             {formState.mode === "edit" ? (
-              <div className="mb-2.5 grid gap-2.5 sm:mb-3 md:grid-cols-2">
+              <div className="mb-2.5 sm:mb-3">
                 <AppointmentContextCard
                   customerName={formState.session.customerName}
                   scheduledDate={formState.session.scheduledDate}
                   scheduledTime={formState.session.scheduledTime}
-                  compact
-                />
-
-                <AppointmentServiceSummarySection
-                  serviceSummary={formState.session.serviceSummary}
-                  emptyMessage="Bağlı işlem özeti yok."
                   compact
                 />
               </div>
