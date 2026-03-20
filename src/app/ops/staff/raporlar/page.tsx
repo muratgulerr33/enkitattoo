@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Filter } from "lucide-react";
+import { Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -141,20 +141,9 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
 
   return (
     <div className="ops-page-shell space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div className="ops-page-header">
-          <p className="text-base font-semibold tracking-tight text-foreground sm:text-lg">Rapor</p>
-          <p className="ops-page-intro">
-            Tarih aralığı ve operasyon filtreleriyle hareketleri görüntüleyin.
-          </p>
-        </div>
-
-        <Button asChild variant="outline" size="sm" className="rounded-lg sm:shrink-0">
-          <Link href="/ops/staff/kasa">
-            Defteri aç
-            <ArrowRight className="size-4" aria-hidden />
-          </Link>
-        </Button>
+      <div className="ops-page-header">
+        <p className="text-base font-semibold tracking-tight text-foreground sm:text-lg">Rapor</p>
+        <p className="ops-page-intro">Hareketleri filtreleyip özetleyin.</p>
       </div>
 
       <Card>
@@ -163,7 +152,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
             <Filter className="size-4" aria-hidden />
             Filtreler
           </CardTitle>
-          <CardDescription>{reports.range.label}</CardDescription>
+          <CardDescription>Görmek istediğiniz hareketleri daraltın.</CardDescription>
         </CardHeader>
 
         <CardContent className="pt-4">
@@ -259,10 +248,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
       </Card>
 
       <section className="space-y-2">
-        <div className="space-y-1">
-          <p className="text-sm font-medium text-foreground">Özet</p>
-          <p className="text-xs text-muted-foreground">{reports.range.label}</p>
-        </div>
+        <p className="text-sm font-medium text-foreground">Özet</p>
 
         <MetricGrid
           items={[
@@ -296,7 +282,7 @@ export default async function OpsStaffReportsPage({ searchParams }: PageProps) {
 
       <ReportsList
         title="Hareketler"
-        description={`${reports.range.label} için ${reports.entries.length} kayıt bulundu.`}
+        description={`${reports.entries.length} kayıt bulundu.`}
         entries={reports.entries}
       />
     </div>

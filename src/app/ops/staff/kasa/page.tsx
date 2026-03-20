@@ -315,7 +315,10 @@ export default async function OpsStaffCashPage({ searchParams }: PageProps) {
           </Card>
         </div>
 
-        <Card className="order-3 border-border/70 bg-surface-1/35 xl:order-2 xl:sticky xl:top-24">
+        <Card
+          id="manuel-giris"
+          className="order-3 scroll-mt-20 border-border/70 bg-surface-1/35 xl:order-2 xl:sticky xl:top-24 xl:scroll-mt-24"
+        >
           <CardHeader className="gap-1 border-b pb-4">
             <p className="text-xs text-muted-foreground">{selectedDateLabel}</p>
             <CardTitle className="text-base">Manuel giriş</CardTitle>

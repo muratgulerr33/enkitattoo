@@ -9,7 +9,6 @@ import type { OpsNavItem } from "@/lib/ops/navigation";
 import {
   CalendarDays,
   CalendarRange,
-  ChevronLeft,
   FileText,
   ShieldCheck,
   UserRound,
@@ -25,6 +24,11 @@ type OpsShellProps = {
 };
 
 const iconClassName = "size-4 shrink-0";
+
+type OpsHeaderAction = {
+  href: string;
+  label: string;
+};
 
 function isActivePath(pathname: string, href: string): boolean {
   if (
@@ -63,6 +67,24 @@ function OpsNavIcon({ href }: { href: string }) {
   }
 
   return <UserRound className={iconClassName} aria-hidden />;
+}
+
+function getHeaderAction(pathname: string): OpsHeaderAction | null {
+  if (pathname === "/ops/staff/raporlar") {
+    return {
+      href: "/ops/staff/kasa",
+      label: "Defteri aç",
+    };
+  }
+
+  if (pathname === "/ops/staff/kasa") {
+    return {
+      href: "/ops/staff/kasa#manuel-giris",
+      label: "Manuel giriş",
+    };
+  }
+
+  return null;
 }
 
 function OpsNavLink({
@@ -125,6 +147,7 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
   const pathname = usePathname();
   const roleSummary = sessionUser.roles.map(formatRoleLabel).join(", ");
   const isStaffDocumentPacketRoute = pathname.startsWith("/ops/staff/belgeler/");
+  const headerAction = getHeaderAction(pathname);
 
   if (isStaffDocumentPacketRoute) {
     return <div className="min-h-viewport bg-background text-foreground">{children}</div>;
@@ -148,17 +171,11 @@ export function OpsShell({ areaLabel, navItems, sessionUser, children }: OpsShel
             </div>
           </div>
 
-          <Button
-            asChild
-            variant="ghost"
-            size="icon-sm"
-            className="shrink-0 rounded-lg sm:h-8 sm:w-auto sm:px-2.5"
-          >
-            <Link href="/ops/cikis" aria-label="Çıkış">
-              <ChevronLeft className="size-4" aria-hidden />
-              <span className="sr-only sm:not-sr-only">Çıkış</span>
-            </Link>
-          </Button>
+          {headerAction ? (
+            <Button asChild variant="outline" size="sm" className="shrink-0 rounded-lg">
+              <Link href={headerAction.href}>{headerAction.label}</Link>
+            </Button>
+          ) : null}
         </div>
 
         <div className="app-container max-w-[92rem] hidden gap-2 overflow-x-auto pb-2 md:flex">

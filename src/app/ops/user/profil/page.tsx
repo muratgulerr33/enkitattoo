@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { OpsPasswordChangeForm } from "@/components/ops/ops-password-change-form";
 import { OpsProfileForm } from "@/components/ops/ops-profile-form";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -42,6 +44,20 @@ export default async function OpsUserProfilePage() {
         </CardHeader>
         <CardContent className="pt-4">
           <OpsPasswordChangeForm />
+        </CardContent>
+      </Card>
+
+      <Card className="overflow-hidden">
+        <CardHeader className="gap-2 border-b pb-4">
+          <div className="space-y-1">
+            <CardTitle>Oturum</CardTitle>
+            <CardDescription>Bu cihazdaki oturumunuzu buradan kapatabilirsiniz.</CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-4">
+          <Button asChild variant="outline" size="sm" className="rounded-lg">
+            <Link href="/ops/cikis">Çıkış</Link>
+          </Button>
         </CardContent>
       </Card>
     </div>

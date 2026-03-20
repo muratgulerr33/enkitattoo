@@ -1,6 +1,8 @@
+import Link from "next/link";
 import { OpsArtistManagement } from "@/components/ops/ops-artist-management";
 import { OpsPasswordChangeForm } from "@/components/ops/ops-password-change-form";
 import { OpsProfileForm } from "@/components/ops/ops-profile-form";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -106,6 +108,20 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
               <OpsPasswordChangeForm />
             </CardContent>
           </Card>
+
+          <Card className="overflow-hidden">
+            <CardHeader className="gap-2 border-b pb-4">
+              <div className="space-y-1">
+                <CardTitle>Oturum</CardTitle>
+                <CardDescription>Bu cihazdaki ops oturumunuzu buradan kapatabilirsiniz.</CardDescription>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <Button asChild variant="outline" size="sm" className="rounded-lg">
+                <Link href="/ops/cikis">Çıkış</Link>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
 
         {isAdmin && artistOverview ? (
@@ -135,7 +151,7 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
                 <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   Ana akış
                 </p>
-                <p className="mt-1 text-sm text-foreground">İşlemler, müşteriler, kasa ve raporlar aynı staff akışındadır.</p>
+                <p className="mt-1 text-sm text-foreground">İşlemler, müşteriler, rapor ve kasa aynı staff akışındadır.</p>
               </div>
 
               <div className="rounded-2xl border border-border/80 bg-background/75 px-4 py-3">
