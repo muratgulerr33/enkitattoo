@@ -765,7 +765,7 @@ function AppointmentDayWorkspacePanel({
   }
 
   return (
-    <Card className={cn("overflow-hidden xl:sticky xl:top-24", className)}>
+    <Card className={cn("overflow-hidden min-[1440px]:sticky min-[1440px]:top-24", className)}>
       <CardHeader className="gap-2.5 border-b bg-surface-1/35 px-4 py-3 sm:gap-3 sm:px-5 sm:py-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 space-y-1">
@@ -981,7 +981,7 @@ export function OpsStaffAppointmentsWorkspace({
       data-testid="appointments-workspace"
       data-view-mode={viewMode}
     >
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(24rem,0.8fr)] xl:items-start xl:gap-5">
+      <div className="grid gap-4 min-[1440px]:grid-cols-[minmax(0,1.28fr)_minmax(22rem,0.72fr)] min-[1440px]:items-start min-[1440px]:gap-5">
         <Card
           className="-mx-4 -mt-3 gap-0 overflow-hidden rounded-none border-x-0 border-t-0 py-0 shadow-none sm:-mx-6 sm:-mt-4 md:gap-6 md:py-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm xl:py-5"
           data-testid="appointments-month-card"
