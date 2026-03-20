@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import {
   CalendarDays,
   ChevronLeft,
@@ -507,17 +507,6 @@ function AppointmentFormSheet({
           </SheetHeader>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3 pb-4 sm:px-5 sm:py-3.5 sm:pb-5">
-            {formState.mode === "edit" ? (
-              <div className="mb-2.5 sm:mb-3">
-                <AppointmentContextCard
-                  customerName={formState.session.customerName}
-                  scheduledDate={formState.session.scheduledDate}
-                  scheduledTime={formState.session.scheduledTime}
-                  compact
-                />
-              </div>
-            ) : null}
-
             <OpsStaffAppointmentCreateForm
               key={
                 formState.mode === "edit"
@@ -776,7 +765,7 @@ function AppointmentDayWorkspacePanel({
   }
 
   return (
-    <Card className={cn("order-2 overflow-hidden xl:sticky xl:top-24", className)}>
+    <Card className={cn("overflow-hidden xl:sticky xl:top-24", className)}>
       <CardHeader className="gap-2.5 border-b bg-surface-1/35 px-4 py-3 sm:gap-3 sm:px-5 sm:py-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 space-y-1">
@@ -896,8 +885,6 @@ export function OpsStaffAppointmentsWorkspace({
   const [viewMode, setViewMode] = useState<ViewMode>("root");
   const [activeSessionKey, setActiveSessionKey] = useState<string | null>(null);
   const [formState, setFormState] = useState<FormState | null>(null);
-  const dayWorkspaceRef = useRef<HTMLDivElement | null>(null);
-  const previousSelectedDayRef = useRef<string | null>(initialSelectedDay);
 
   useEffect(() => {
     setAvailableCustomerOptions(sortCustomerOptions(customerOptions));
@@ -906,45 +893,6 @@ export function OpsStaffAppointmentsWorkspace({
   useEffect(() => {
     setSelectedDay(initialSelectedDay);
   }, [initialSelectedDay]);
-
-  useEffect(() => {
-    if (!selectedDay || typeof window === "undefined") {
-      previousSelectedDayRef.current = selectedDay;
-      return;
-    }
-
-    if (selectedDay === previousSelectedDayRef.current) {
-      return;
-    }
-
-    previousSelectedDayRef.current = selectedDay;
-
-    if (window.innerWidth >= 1280) {
-      return;
-    }
-
-    const panel = dayWorkspaceRef.current;
-
-    if (!panel) {
-      return;
-    }
-
-    const frameId = window.requestAnimationFrame(() => {
-      const rect = panel.getBoundingClientRect();
-      const targetTop = Math.max(0, window.scrollY + rect.top - 88);
-
-      if (Math.abs(window.scrollY - targetTop) < 40) {
-        return;
-      }
-
-      window.scrollTo({
-        top: targetTop,
-        behavior: "smooth",
-      });
-    });
-
-    return () => window.cancelAnimationFrame(frameId);
-  }, [selectedDay]);
 
   const countsByDate = new Map<string, number>();
 
@@ -1035,7 +983,7 @@ export function OpsStaffAppointmentsWorkspace({
     >
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1.2fr)_minmax(24rem,0.8fr)] xl:items-start xl:gap-5">
         <Card
-          className="-mx-4 -mt-3 order-1 gap-0 overflow-hidden rounded-none border-x-0 border-t-0 py-0 shadow-none sm:-mx-6 sm:-mt-4 md:gap-6 md:py-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm xl:py-5"
+          className="-mx-4 -mt-3 gap-0 overflow-hidden rounded-none border-x-0 border-t-0 py-0 shadow-none sm:-mx-6 sm:-mt-4 md:gap-6 md:py-4 lg:mx-0 lg:mt-0 lg:rounded-[2rem] lg:border lg:border-border/80 lg:bg-card lg:shadow-sm xl:py-5"
           data-testid="appointments-month-card"
         >
           <CardHeader className="border-b px-1.5 py-2.5 sm:px-3 sm:py-3 lg:px-6 lg:py-4 xl:px-7 2xl:px-8">
@@ -1140,7 +1088,7 @@ export function OpsStaffAppointmentsWorkspace({
           </CardContent>
         </Card>
 
-        <div ref={dayWorkspaceRef}>
+        <div className="order-2">
           <AppointmentDayWorkspacePanel
             selectedDay={selectedDay}
             selectedDayLabel={selectedDayLabel}

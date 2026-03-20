@@ -437,14 +437,7 @@ export function OpsStaffAppointmentCreateForm({
           </>
         ) : null}
 
-        <div
-          className={cn(
-            "grid gap-4",
-            dateMode === "editable"
-              ? "sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]"
-              : "sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]"
-          )}
-        >
+        <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="scheduledTime">Saat</Label>
             <div className="relative">
@@ -485,7 +478,7 @@ export function OpsStaffAppointmentCreateForm({
           ) : null}
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="serviceType">İşlem tipi</Label>
             <div className="relative rounded-xl border border-border bg-background">
@@ -548,7 +541,7 @@ export function OpsStaffAppointmentCreateForm({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
           <div className="space-y-2">
             <Label htmlFor="totalAmount">Toplam tutar (TL)</Label>
             <Input
@@ -635,7 +628,7 @@ export function OpsStaffAppointmentCreateForm({
           >
             <DialogContent
               showCloseButton
-              className="top-auto bottom-2 left-1/2 flex h-[min(90vh,calc(100vh-1rem))] w-[calc(100%-1rem)] max-w-none translate-x-[-50%] translate-y-0 flex-col gap-0 overflow-hidden rounded-[2rem] border p-0 sm:max-w-[36rem] md:max-w-[38rem] lg:top-1/2 lg:bottom-auto lg:max-w-[34rem] lg:translate-y-[-50%]"
+              className="top-auto bottom-2 left-1/2 flex h-[min(84vh,calc(100vh-1rem))] w-[calc(100%-1rem)] max-w-none translate-x-[-50%] translate-y-0 flex-col gap-0 overflow-hidden rounded-[2rem] border bg-background p-0 sm:h-[min(82vh,calc(100vh-2rem))] sm:max-w-[36rem] md:max-w-[38rem] lg:top-1/2 lg:bottom-auto lg:h-auto lg:max-w-[34rem] lg:translate-y-[-50%]"
             >
               <DialogHeader className="border-b px-4 py-3 text-left sm:px-5">
                 <DialogTitle>Müşteri seç</DialogTitle>
@@ -689,7 +682,7 @@ export function OpsStaffAppointmentCreateForm({
                         }}
                       >
                         <UserPlus className="size-3.5" aria-hidden />
-                        Yeni müşteri ekle
+                        Yeni müşteri
                       </Button>
                     </div>
 
@@ -773,13 +766,13 @@ export function OpsStaffAppointmentCreateForm({
                           setShowInlineCustomerEmail(false);
                         }}
                       >
-                        Müşteri listesi
+                        Listeden seç
                       </Button>
                     </div>
                   </div>
 
                   <div
-                    className="min-h-0 flex-1 overflow-y-auto px-4 py-3 pb-4 sm:px-5"
+                    className="min-h-0 flex-1 overflow-y-auto px-4 py-3 pb-6 sm:px-5"
                     onKeyDown={(event) => {
                       if (event.key !== "Enter" || isDisabled) {
                         return;
@@ -867,7 +860,7 @@ export function OpsStaffAppointmentCreateForm({
                         </p>
                       ) : null}
 
-                      <div className="sticky bottom-0 -mx-4 border-t border-border/70 bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.25rem)] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/88 sm:-mx-5 sm:px-5">
+                      <div className="sticky bottom-0 -mx-4 mt-2 border-t border-border/70 bg-background/95 px-4 pb-[calc(env(safe-area-inset-bottom)+0.35rem)] pt-3 backdrop-blur supports-[backdrop-filter]:bg-background/88 sm:-mx-5 sm:px-5">
                         <Button
                           type="button"
                           size="cta"
