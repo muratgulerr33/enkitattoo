@@ -57,8 +57,6 @@ const INITIAL_ACTION_STATE: OpsAppointmentActionState = {
   success: null,
 };
 
-const UNASSIGNED_ARTIST_LABEL = "Kayıtlı değil";
-
 type AppointmentCustomerOption = {
   id: number;
   label: string;
@@ -292,27 +290,16 @@ function AppointmentServiceSummarySection({
 
       {serviceSummary ? (
         <div className="mt-3 space-y-2.5">
-          <div className="grid gap-2.5 sm:grid-cols-2">
-            <div className="rounded-2xl border border-border bg-surface-1/35 px-3.5 py-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                İşlem tipi
-              </p>
-              <p className="mt-1 text-sm font-medium text-foreground">
-                {getServiceTypeLabel(serviceSummary.serviceType)}
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-border bg-surface-1/35 px-3.5 py-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Artist
-              </p>
-              <p className="mt-1 text-sm font-medium text-foreground">
-                {serviceSummary.artistName ?? UNASSIGNED_ARTIST_LABEL}
-              </p>
-            </div>
+          <div className="rounded-2xl border border-border bg-surface-1/35 px-3.5 py-3">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              İşlem tipi
+            </p>
+            <p className="mt-1 text-sm font-medium text-foreground">
+              {getServiceTypeLabel(serviceSummary.serviceType)}
+            </p>
           </div>
 
-          <div className="grid gap-2.5 sm:grid-cols-3">
+          <div className="grid gap-2.5 sm:grid-cols-2">
             <div className="rounded-2xl border border-border px-3.5 py-3">
               <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 Toplam
@@ -328,15 +315,6 @@ function AppointmentServiceSummarySection({
               </p>
               <p className="mt-1 text-sm font-semibold text-foreground">
                 {formatOpsMoneyDisplay(serviceSummary.collectedAmountCents)}
-              </p>
-            </div>
-
-            <div className="rounded-2xl border border-border px-3.5 py-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                Kalan
-              </p>
-              <p className="mt-1 text-sm font-semibold text-foreground">
-                {formatOpsMoneyDisplay(getRemainingAmountCents(serviceSummary))}
               </p>
             </div>
           </div>
@@ -1024,13 +1002,6 @@ export function OpsStaffAppointmentsWorkspace({
                           : "border-border/85 bg-card text-foreground hover:bg-surface-1/45"
                     )}
                   >
-                    {cell.isSelected ? (
-                      <span
-                        aria-hidden
-                        className="pointer-events-none absolute inset-x-3 top-2 h-[3px] rounded-full bg-background/92 shadow-[0_1px_10px_rgba(255,255,255,0.28)] sm:inset-x-4 xl:inset-x-5"
-                      />
-                    ) : null}
-
                     <div className="flex items-start justify-between gap-1.5 sm:gap-2">
                       <span
                         data-testid={`month-cell-day-${cell.date}`}
