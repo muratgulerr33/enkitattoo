@@ -481,8 +481,8 @@ function AppointmentFormSheet({
         className={cn(
           "mx-auto overflow-hidden rounded-t-[2.1rem] p-0",
           createMode
-            ? "max-h-[90vh] w-full max-w-2xl md:max-h-[88vh] md:max-w-[34rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:right-5 lg:left-auto lg:top-18 lg:bottom-4 lg:max-h-none lg:h-[calc(100vh-5.5rem)] lg:w-[27rem] lg:max-w-[27rem] lg:rounded-[2rem] lg:border xl:w-[28rem] xl:max-w-[28rem]"
-            : "max-h-[92vh] w-full max-w-3xl md:max-h-[89vh] md:max-w-[42rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:right-5 lg:left-auto lg:top-14 lg:bottom-4 lg:max-h-none lg:h-[calc(100vh-4.5rem)] lg:w-[34rem] lg:max-w-[34rem] lg:rounded-[2rem] lg:border xl:w-[35rem] xl:max-w-[35rem]"
+            ? "max-h-[90vh] w-full max-w-2xl md:max-h-[88vh] md:max-w-[34rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:right-5 lg:left-auto lg:top-4 lg:bottom-4 lg:max-h-none lg:w-[27rem] lg:max-w-[27rem] lg:rounded-[2rem] lg:border xl:w-[28rem] xl:max-w-[28rem]"
+            : "max-h-[92vh] w-full max-w-3xl md:max-h-[89vh] md:max-w-[42rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:right-5 lg:left-auto lg:top-4 lg:bottom-4 lg:max-h-none lg:w-[34rem] lg:max-w-[34rem] lg:rounded-[2rem] lg:border xl:w-[35rem] xl:max-w-[35rem]"
         )}
       >
         <div className="flex h-full min-h-0 max-h-[92vh] flex-col bg-background md:max-h-[89vh] lg:max-h-none">
@@ -582,9 +582,9 @@ function AppointmentDetailSheet({
         side="bottom"
         showCloseButton={false}
         data-testid="appointments-detail-sheet"
-        className="mx-auto max-h-[82vh] w-full max-w-xl overflow-hidden rounded-t-[2rem] p-0 md:max-h-[80vh] md:max-w-[34rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:left-1/2 lg:right-auto lg:top-1/2 lg:bottom-auto lg:max-h-[76vh] lg:w-[28rem] lg:max-w-[28rem] lg:-translate-x-1/2 lg:-translate-y-1/2 lg:rounded-[2rem] lg:border"
+        className="mx-auto max-h-[82vh] w-full max-w-xl overflow-hidden rounded-t-[2rem] p-0 md:max-h-[80vh] md:max-w-[34rem] md:rounded-[2rem] md:border lg:inset-x-auto lg:left-1/2 lg:right-auto lg:top-4 lg:bottom-4 lg:max-h-none lg:w-[28rem] lg:max-w-[28rem] lg:-translate-x-1/2 lg:translate-y-0 lg:rounded-[2rem] lg:border"
       >
-        <div className="flex h-full min-h-0 max-h-[82vh] flex-col bg-background md:max-h-[80vh] lg:max-h-[76vh]">
+        <div className="flex h-full min-h-0 max-h-[82vh] flex-col bg-background md:max-h-[80vh] lg:max-h-none">
           <SheetHandle />
           <SheetHeader className="border-b border-border bg-surface-1/40 px-4 py-2.5 text-left sm:px-5 sm:py-3">
             <div className="flex items-center justify-between gap-3">
