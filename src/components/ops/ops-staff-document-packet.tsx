@@ -163,7 +163,7 @@ export function OpsStaffDocumentPacket({ packet }: OpsStaffDocumentPacketProps) 
   const [copyCount, setCopyCount] = useState<1 | 2>(2);
 
   return (
-    <div className="document-root light isolate bg-white text-black [color-scheme:light]">
+    <div className="document-root light isolate bg-background text-foreground [color-scheme:light]">
       <div className="document-packet-preview safe-pl-edge-12 safe-pr-edge-12 safe-pt safe-pb-24 mx-auto flex w-full max-w-[216mm] flex-col gap-4 px-3 pt-3 pb-6 sm:px-5 sm:pt-5 sm:pb-8">
       <div className="document-packet-screenbar sticky top-0 z-20 border border-border bg-background/94 px-3 py-3 shadow-[0_12px_30px_rgba(15,23,42,0.06)] backdrop-blur supports-[backdrop-filter]:bg-background/88">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
