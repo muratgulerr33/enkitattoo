@@ -39,7 +39,7 @@ Canonical public route seti ve SEO sahipliği `docs/SSOT.md` içindedir. Public 
 
 Ops route, yetki, tablo ve audit sözleşmesi `docs/SSOT.md` içindedir. Local çalışma, bootstrap, smoke-check ve preview pratiği `docs/OPS.md` ile `docs/WORKFLOW.md` içindedir.
 
-Current runtime ile planned roadmap ayrı tutulur. Repo içinde doğrulanan ops runtime; staff top-level surfaces için `İşlemler / Müşteriler / Kasa / Profil` setinde source-neutral tek işlem dili, unified staff day workspace, service-intake delta’larından otomatik kasa ve `serviceIntakeId` bazlı operasyon sözleşmesi preview + browser print + 1/2 copy akışını içerir. User/deeper runtime tarafında combined consent kalabilir; staff top-level surfaces bu dijital onay dilini visible badge/kopya olarak taşımaz. Dijital imza, upload ve PDF exporter repo içinde olmadığı sürece current runtime sayılmaz.
+Current runtime ile planned roadmap ayrı tutulur. Repo içinde doğrulanan ops runtime; staff top-level surfaces için `İşlemler / Müşteriler / Rapor / Ayarlar` setinde source-neutral tek işlem dili, unified staff day workspace, service-intake delta’larından otomatik kasa ve `serviceIntakeId` bazlı operasyon sözleşmesi preview + browser print + 1/2 copy akışını içerir. User/deeper runtime tarafında combined consent kalabilir; staff top-level surfaces bu dijital onay dilini visible badge/kopya olarak taşımaz. Dijital imza, upload ve PDF exporter repo içinde olmadığı sürece current runtime sayılmaz.
 
 ## Dokümanlar
 
