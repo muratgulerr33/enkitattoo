@@ -118,7 +118,9 @@ export default async function OpsStaffProfilePage({ searchParams }: PageProps) {
             </CardHeader>
             <CardContent className="pt-4">
               <Button asChild variant="outline" size="sm" className="rounded-lg">
-                <Link href="/ops/cikis">Çıkış</Link>
+                <Link href="/ops/cikis" prefetch={false}>
+                  Çıkış
+                </Link>
               </Button>
             </CardContent>
           </Card>

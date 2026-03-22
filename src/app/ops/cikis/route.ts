@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { writeAuditLogBestEffort } from "@/lib/ops/audit";
+import { OPS_LOGIN_PATH } from "@/lib/ops/auth/constants";
 import { clearOpsSession, readOpsSession } from "@/lib/ops/auth/session";
 
-export async function GET(request: Request) {
+export async function GET() {
   const session = await readOpsSession();
   await clearOpsSession();
 
@@ -18,5 +19,10 @@ export async function GET(request: Request) {
     });
   }
 
-  return NextResponse.redirect(new URL("/ops/giris", request.url), 303);
+  return new NextResponse(null, {
+    status: 303,
+    headers: {
+      Location: OPS_LOGIN_PATH,
+    },
+  });
 }

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { unstable_rethrow } from "next/navigation";
 import { getOpsSessionUser, requireOpsSessionArea } from "@/lib/ops/auth/guards";
 import { changeOpsUserPassword } from "@/lib/ops/auth/users";
 import {
@@ -55,6 +56,18 @@ async function requireAuthenticatedSettingsUser() {
   return sessionUser;
 }
 
+function toActionFailure(
+  error: unknown,
+  fallbackMessage: string
+): OpsSettingsActionState {
+  unstable_rethrow(error);
+
+  return {
+    error: error instanceof Error ? error.message : fallbackMessage,
+    success: null,
+  };
+}
+
 export async function updateOwnProfileAction(
   _previousState: OpsSettingsActionState,
   formData: FormData
@@ -99,10 +112,7 @@ export async function updateOwnProfileAction(
       success: "Ayarlar kaydedildi.",
     };
   } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : "Ayarlar kaydedilemedi.",
-      success: null,
-    };
+    return toActionFailure(error, "Ayarlar kaydedilemedi.");
   }
 }
 
@@ -164,10 +174,7 @@ export async function changeOwnPasswordAction(
       success: "Şifre değiştirildi.",
     };
   } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : "Şifre değiştirilemedi.",
-      success: null,
-    };
+    return toActionFailure(error, "Şifre değiştirilemedi.");
   }
 }
 
@@ -232,10 +239,7 @@ export async function createArtistAction(
       success: "Artist oluşturuldu.",
     };
   } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : "Artist oluşturulamadı.",
-      success: null,
-    };
+    return toActionFailure(error, "Artist oluşturulamadı.");
   }
 }
 
@@ -285,10 +289,7 @@ export async function updateArtistAction(
       success: "Artist güncellendi.",
     };
   } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : "Artist güncellenemedi.",
-      success: null,
-    };
+    return toActionFailure(error, "Artist güncellenemedi.");
   }
 }
 
@@ -322,9 +323,6 @@ export async function updateArtistStatusAction(
       success: nextStatus === "active" ? "Artist aktifleştirildi." : "Artist pasife alındı.",
     };
   } catch (error) {
-    return {
-      error: error instanceof Error ? error.message : "Artist durumu güncellenemedi.",
-      success: null,
-    };
+    return toActionFailure(error, "Artist durumu güncellenemedi.");
   }
 }
