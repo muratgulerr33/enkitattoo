@@ -70,6 +70,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
+  const adsId = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
   const requestHeaders = await headers();
   const requestedLocale = requestHeaders.get("x-next-intl-locale")?.toLowerCase();
   const htmlLang = locales.includes(requestedLocale as (typeof locales)[number])
@@ -88,7 +90,7 @@ export default async function RootLayout({
         >
           {children}
           <Toaster />
-          <GA4 />
+          <GA4 gaId={gaId} adsId={adsId} />
         </ThemeProvider>
       </body>
     </html>
