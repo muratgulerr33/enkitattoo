@@ -29,6 +29,7 @@ Current runtime ile planned roadmap burada da ayrıdır: staff visible top-level
 - `OPS_BOOTSTRAP_FULL_NAME`
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_GA_ID` yalnız analytics için opsiyoneldir
+- `NEXT_PUBLIC_GOOGLE_ADS_ID` yalnız analytics için opsiyoneldir
 
 ### Canonical dosyalar
 
@@ -99,6 +100,7 @@ Current runtime ile planned roadmap burada da ayrıdır: staff visible top-level
 | Locale bypass | `/ops` ailesi | locale rewrite katmanına girmez |
 | Default locale | `/`, `/kesfet`, `/piercing`, `/galeri-tasarim`, `/artistler`, `/iletisim` | prefixsiz `tr` açılır |
 | Prefixli locale | `/en`, `/en/kesfet`, `/en/piercing` | 404 olmaz, message load kırılmaz |
+| Public analytics click tracking | public WhatsApp ve telefon CTA/link yüzeyleri | mevcut merkezi `GA4` mount + Google tag loader korunur; `G-ZWL345NDWV` ve `AW-18028275720` config’leri birlikte görünür, WhatsApp click `AW-18028275720/sYP-CMLB1I0cEIjQxpRD`, telefon click `AW-18028275720/TufoCK2SzY0cEIjQxpRD` conversion event’ini tek kez üretir, `/ops` altında click tracking çalışmaz ve page-view conversion eklenmez |
 | UI copy | giriş, bottom nav, başlık alanları | bariz iç sistem dili veya kırpılma kalmaz |
 
 ## 7) Audit Doğrulama Temeli

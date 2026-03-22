@@ -3,6 +3,7 @@
 import { Suspense, useEffect } from "react";
 import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
+import { getGoogleAdsClickSendTo } from "@/lib/analytics/google-ads";
 
 type GtagCommand = "config" | "consent" | "event" | "js" | "set";
 
@@ -76,6 +77,38 @@ function PageViewTracker({ gaId, adsId }: GA4Props) {
       window.gtag?.("config", adsId, { page_path: pagePath });
     }
   }, [adsId, gaId, pathname, query]);
+
+  useEffect(() => {
+    if (!adsId || pathname.startsWith("/ops")) {
+      return;
+    }
+
+    function handleDocumentClick(event: MouseEvent) {
+      if (event.defaultPrevented || !(event.target instanceof Element)) {
+        return;
+      }
+
+      const anchor = event.target.closest("a[href]");
+
+      if (!(anchor instanceof HTMLAnchorElement)) {
+        return;
+      }
+
+      const sendTo = getGoogleAdsClickSendTo(anchor);
+
+      if (!sendTo) {
+        return;
+      }
+
+      window.gtag?.("event", "conversion", { send_to: sendTo });
+    }
+
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [adsId, pathname]);
 
   return null;
 }
