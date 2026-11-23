@@ -18,7 +18,6 @@ const textActionClass =
 
 export function SiteFooter() {
   const t = useTranslations();
-  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="mt-8 border-t border-border bg-background/85 xl:mt-12">
@@ -91,8 +90,12 @@ export function SiteFooter() {
           </section>
 
           <section className="min-w-0 self-end text-sm text-muted-foreground xl:text-right">
-            <p className="font-medium text-foreground/90">© {currentYear} Enki Tattoo Studio</p>
-            <p>{t("footer.rightsReserved")}</p>
+            <ExternalLink
+              href="https://mcwebportal.com/tr/"
+              className="inline-flex min-h-11 max-w-full items-center rounded-lg px-2 text-sm font-medium text-foreground/90 underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            >
+              © 2026 MC Web Portal Uygulama ve Yazılım Hizmetleri
+            </ExternalLink>
           </section>
         </div>
       </div>
